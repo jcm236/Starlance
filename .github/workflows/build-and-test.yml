@@ -64,6 +64,7 @@ jobs:
       - name: Release with Note
         uses: softprops/action-gh-release@v2.2.1
         with:
+          tag_name: ${github.event.number}
           files: |
             build/libs
         env:
