@@ -8,6 +8,9 @@ on:
       - opened
       - synchronize
 
+permissions:
+   contents: write
+
 concurrency:
   group: build-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
