@@ -57,3 +57,6 @@ jobs:
           }
           output ARTIFACT_ID "${{ steps.artifact.outputs.artifact-id }}"
           output ARTIFACT_URL "${{ steps.artifact.outputs.artifact-url }}"
+  release:
+    name: Release to Github Packages
+    uses: ./.github/workflows/gradle-publish.yml
