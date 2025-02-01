@@ -59,6 +59,7 @@ jobs:
           output ARTIFACT_URL "${{ steps.artifact.outputs.artifact-url }}"
   release:
     name: Release to Github Packages
+    needs: test
     uses: ./.github/workflows/gradle-publish.yml
     permissions:
       contents: read
