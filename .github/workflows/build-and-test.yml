@@ -60,3 +60,7 @@ jobs:
   release:
     name: Release to Github Packages
     uses: ./.github/workflows/gradle-publish.yml
+    permissions:
+      contents: read
+      packages: write
+
