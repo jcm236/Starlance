@@ -12,6 +12,7 @@
     "MixinShipAssemblyKt",
     "MixinSpacesuitwornLogicProcedure",
     "MixinVSGameUtilsKt",
+    "VSPhysicsPipelineStageMixin",
     "accessor.ServerShipObjectWorldAccessor"
   ],
   "client": [

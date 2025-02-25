@@ -52,10 +52,10 @@ public class VSCHBlocks {
 					.strength(5f)
 					.noOcclusion()));
 
-	/*public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock("magnet_block",
+	public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock("magnet_block",
 			() -> new MagnetBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
 					.strength(5f)
-					.noOcclusion()));*/
+					.noOcclusion()));
 
 
 	//below is just tools used in adding the block

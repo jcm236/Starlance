@@ -1,18 +1,18 @@
 package net.jcm.vsch.ship;
 
-import java.util.Map;
+import java.text.NumberFormat;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
+import com.mojang.datafixers.util.Pair;
+import net.jcm.vsch.util.LevelBlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
-import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.ShipForcesInducer;
+import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
-import org.valkyrienskies.core.impl.program.VSCoreImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
@@ -38,9 +38,15 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	 */
 	public Map<BlockPos, DraggerData> draggers = new ConcurrentHashMap<>();
 
+	public Map<BlockPos, MagnetData> magnets = new ConcurrentHashMap<>();
+	public static Map<LevelBlockPos, MagnetData> worldMagnets = new ConcurrentHashMap<>();
+
 	private String dimensionId = null;
 
 	public VSCHForceInducedShips() {}
+
+	public static final float PERMEABILITY = 0.05f;
+	public static final float MAX_FORCE = 10000.0f;
 
 	public VSCHForceInducedShips(String dimensionId) {
 		this.dimensionId = dimensionId;
@@ -49,6 +55,11 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	@Override
 	public void applyForces(@NotNull PhysShip physicShip) {
 		PhysShipImpl physShip = (PhysShipImpl) physicShip;
+
+
+		double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
+
+//		((ShipObjectServer)VSGameUtilsKt.getShipObjectWorld(ValkyrienSkiesMod.getCurrentServer()).getAllShips().getById(physShip.getId())).
 		// Apply thrusters force
 		thrusters.forEach((pos, data) -> {
 			// Get current thrust from thruster
@@ -152,6 +163,89 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 			physShip.applyInvariantForce(force);
 			physShip.applyInvariantTorque(rotForce);
 		});
+
+
+		QueryableShipData<ServerShip> allShips = VSGameUtilsKt.getShipObjectWorld(ValkyrienSkiesMod.getCurrentServer()).getAllShips();
+		ServerShip shipOn = allShips.getById(physShip.getId());
+
+		if (shipOn != null) {
+//			Map<Vector3d, Pair<Vector3d, Double>> allMagnets = new HashMap<>();
+//
+//			new HashMap<>(worldMagnets).forEach((levelPos, data) -> {
+//				if (Objects.equals(levelPos.level, shipOn.getChunkClaimDimension())) allMagnets.put(VectorConversionsMCKt.toJOMLD(levelPos), new Pair<>(data.direction, data.force));
+//			});
+//
+//			allShips.getIntersecting(VectorConversionsMCKt.toJOML(VectorConversionsMCKt.toMinecraft(shipOn.getWorldAABB()).inflate(25.0))).forEach(ship -> {
+//				if (!ship.getChunkClaimDimension().equals(shipOn.getChunkClaimDimension()) || ship == shipOn) return;
+//				new HashMap<>(getOrCreate(ship).magnets).forEach((pos, data) -> {
+//					allMagnets.put(ship.getTransform().getShipToWorld().transformPosition(VectorConversionsMCKt.toJOMLD(pos).add(.5,.5,.5)), new Pair<>(ship.getTransform().getShipToWorldRotation().transform(data.direction, new Vector3d()), data.force));
+//				});
+//			});
+//
+//
+//			new HashMap<>(magnets).forEach((bPos, data) -> {
+//				Vector3d pos0 = physShip.getTransform().getShipToWorld().transformPosition(VectorConversionsMCKt.toJOMLD(bPos).add(.5,.5,.5), new Vector3d());
+//
+//				Vector3d dir0 = physShip.getTransform().getShipToWorldRotation().transform(data.direction, new Vector3d());
+//
+//				double force0 = data.force;
+//
+//				Vector3d accF1 = new Vector3d();
+//				Vector3d accF2 = new Vector3d();
+//				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//				allMagnets.forEach((pos1, pair) -> {
+//					if (pos0.equals(pos1)) return;
+//					Vector3d force1 = calculateGilbertForce(pos0.fma(0.5, dir0), dir0, force0, pos1.fma(0.5, pair.getFirst()), pair.getFirst(), pair.getSecond()).negate();
+//					Vector3d force2 = calculateGilbertForce(pos0.fma(-0.5, dir0), dir0, force0, pos1.fma(0.5, pair.getFirst()), pair.getFirst(), pair.getSecond());
+//					Vector3d force3 = calculateGilbertForce(pos0.fma(0.5, dir0), dir0, force0, pos1.fma(-0.5, pair.getFirst()), pair.getFirst(), pair.getSecond());
+//					Vector3d force4 = calculateGilbertForce(pos0.fma(-0.5, dir0), dir0, force0, pos1.fma(-0.5, pair.getFirst()), pair.getFirst(), pair.getSecond()).negate();
+//
+//					double force = force0 * pair.getSecond();
+//
+//					accF1.add(force1.mul(force));
+//					accF2.add(force2.mul(force));
+//					accF1.add(force3.mul(force));
+//					accF2.add(force4.mul(force));
+//
+//					System.out.println();
+//					System.out.println(accF1.toString(NumberFormat.getInstance()));
+//					System.out.println(accF2.toString(NumberFormat.getInstance()));
+//					System.out.println();
+//				});
+//
+//				Vector3d posShip0 = VectorConversionsMCKt.toJOMLD(bPos).add(.5,.5,.5).fma(0.5, data.direction).sub(physShip.getTransform().getPositionInShip());
+//				Vector3d posShip1 = VectorConversionsMCKt.toJOMLD(bPos).add(-.5,.5,.5).fma(0.5, data.direction).sub(physShip.getTransform().getPositionInShip());
+//
+//				if (accF1.lengthSquared() > MAX_FORCE * MAX_FORCE) accF1.normalize(MAX_FORCE);
+//				if (accF2.lengthSquared() > MAX_FORCE * MAX_FORCE) accF1.normalize(MAX_FORCE);
+//
+////				System.out.println();
+////				System.out.println(accF1.toString(NumberFormat.getInstance()));
+////				System.out.println(accF2.toString(NumberFormat.getInstance()));
+////				System.out.println(posShip0.toString(NumberFormat.getInstance()));
+////				System.out.println(posShip1.toString(NumberFormat.getInstance()));
+//
+//				physShip.applyInvariantForceToPos(accF1, posShip0);
+//				physShip.applyInvariantForceToPos(accF2, posShip1);
+//
+//			});
+		}
+	}
+
+
+	private Vector3d calculateGilbertForce(Vector3d m1, Vector3d dir1, double force1, Vector3d m2, Vector3d dir2, double force2) {
+
+		Vector3d r = m2.sub(m1, new Vector3d());
+		double dist = r.length();
+		double part0 = PERMEABILITY * force1 * force2;
+		double part1 = 4 * Math.PI * dist;
+
+		double f = (part0 / part1);
+		System.out.println();
+		System.out.println(f);
+		System.out.println();
+
+		return r.normalize(new Vector3d()).mul(f);
 	}
 
 	private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
@@ -191,6 +285,14 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 
 	public void removeDragger(BlockPos pos) {
 		draggers.remove(pos);
+	}
+
+	public void addMagnet(BlockPos pos, MagnetData data) {
+		magnets.put(pos, data);
+	}
+
+	public void removeMagnet(BlockPos pos) {
+		magnets.remove(pos);
 	}
 
 	@Nullable

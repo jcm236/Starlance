@@ -1,6 +1,5 @@
 package net.jcm.vsch.event;
 
-import net.jcm.vsch.util.TeleportUtils;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
