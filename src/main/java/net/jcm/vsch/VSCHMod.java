@@ -4,9 +4,9 @@ import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
 import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
-import net.jcm.vsch.compat.create.ponder.VSCHRegistrateBlocks;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
@@ -34,6 +34,7 @@ public class VSCHMod {
 		VSCHConfig.register(ModLoadingContext.get());
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
+		VSCHTags.register();
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
 
@@ -45,7 +46,7 @@ public class VSCHMod {
 		modBus.addListener(this::registerRenderers);
 
 		if (CompatMods.CREATE.isLoaded()) {
-			VSCHRegistrateBlocks.register();
+			VSCHPonderRegistrateBlocks.register();
 		}
 	}
 
@@ -58,7 +59,7 @@ public class VSCHMod {
 	}
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-		//event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
+		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
 
