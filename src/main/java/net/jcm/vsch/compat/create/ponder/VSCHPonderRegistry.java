@@ -1,11 +1,12 @@
-package net.jcm.vsch.compat.create;
+package net.jcm.vsch.compat.create.ponder;
 
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.compat.create.ponder.scenes.DragInducerScene;
+import net.jcm.vsch.compat.create.ponder.scenes.ThrusterScenes;
 
 public class VSCHPonderRegistry {
     private static final PonderRegistrationHelper HELPER = new PonderRegistrationHelper(VSCHMod.MODID);
-
 
     public static void register() {
 

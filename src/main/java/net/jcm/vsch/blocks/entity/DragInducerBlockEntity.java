@@ -4,11 +4,9 @@ import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.compat.cc.DragInducerPeripheral;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.compat.cc.peripherals.DragInducerPeripheral;
 import net.jcm.vsch.ship.DraggerData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
-import net.lointain.cosmos.init.CosmosModParticleTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,10 +15,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -64,10 +60,6 @@ public class DragInducerBlockEntity extends BlockEntity implements ParticleBlock
 			this.isPeripheralMode = on;
 			this.setChanged();
 		}
-	}
-
-	public DraggerData getDraggerData() {
-		return this.draggerData;
 	}
 
 	@Override
@@ -125,7 +117,7 @@ public class DragInducerBlockEntity extends BlockEntity implements ParticleBlock
 			this.draggerData.on = this.isEnabled();
 		}
 
-		// ----- Add thruster to the force appliers for the current level ----- //
+		// ----- Add this block to the force appliers for the current level ----- //
 
 		int signal = level.getBestNeighborSignal(pos);
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);

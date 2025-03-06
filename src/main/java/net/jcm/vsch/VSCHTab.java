@@ -12,6 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHTab {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, VSCHMod.MODID);
+
 	public static final RegistryObject<CreativeModeTab> TAB = REGISTRY.register("starlance",
 			() -> CreativeModeTab.builder().title(Component.translatable("vsch.itemtab")).icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get())).displayItems((parameters, tabData) -> {
 

@@ -128,9 +128,6 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 			}
 		});
 
-		// Prep for draggers
-
-
 		// Apply draggers force
 		draggers.forEach((pos, data) -> {
 			Vector3dc linearVelocity = physShip.getPoseVel().getVel();
@@ -140,16 +137,7 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 				return;
 			}
 
-			// Get position relative to center of mass
 
-			// ChatGPT math, I suck at this stuff lol:
-			// Get rotational velocity as the cross product of angular velocity and relative position
-			//angularVelocity.cross(relativePosition, rotationalVelocity);
-
-			// Add linear and rotational velocities
-			//Vector3d totalVelocity = new Vector3d(linearVelocity).add(rotationalVelocity);
-
-			//Vector3d acceleration = totalVelocity.negate();
 			Vector3d acceleration = linearVelocity.negate(new Vector3d());
 			Vector3d force = acceleration.mul(physShip.getInertia().getShipMass());
 

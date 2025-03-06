@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.create;
+package net.jcm.vsch.compat.create.ponder;
 
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;

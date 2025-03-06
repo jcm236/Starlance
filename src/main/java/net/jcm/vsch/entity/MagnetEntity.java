@@ -25,7 +25,7 @@ public class MagnetEntity extends Entity {
 
 	public MagnetEntity(EntityType<MagnetEntity> magnetEntityEntityType, Level level) {
 		super(magnetEntityEntityType, level);
-		this.noPhysics = true; // Prevents collision with blocks
+		this.noPhysics = true;
 		this.setInvisible(true);
 	}
 

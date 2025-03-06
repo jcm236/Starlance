@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.create;
+package net.jcm.vsch.compat.create.ponder;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderRegistry;

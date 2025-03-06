@@ -21,9 +21,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GravityInducerBlock extends Block implements EntityBlock {
 
-	private static final RotShape SHAPE = RotShapes.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-	private final DirectionalShape GRAVITYSHAPE = DirectionalShape.south(SHAPE);
-
 	public GravityInducerBlock(Properties properties) {
 		super(properties);
 	}

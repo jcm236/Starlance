@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.create;
+package net.jcm.vsch.compat.create.ponder.scenes;
 
 import com.simibubi.create.foundation.ponder.*;
 import com.simibubi.create.foundation.ponder.element.InputWindowElement;

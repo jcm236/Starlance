@@ -1,14 +1,10 @@
 package net.jcm.vsch;
 
-import com.mojang.logging.LogUtils;
-import net.jcm.vsch.entity.VSCHEntities;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
 import net.jcm.vsch.event.AtmosphericCollision;
-import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -32,9 +28,10 @@ public class VSCHEvents {
 
 	@SubscribeEvent
 	public static void onServerStart(ServerStartedEvent event) {
-		GravityInducer.gravityDatas = CosmosModVariables.WorldVariables.get(event.getServer().overworld()).gravity_data;
+		GravityInducer.all_gravity_data = CosmosModVariables.WorldVariables.get(event.getServer().overworld()).gravity_data;
 	}
 
+	// For next vs update
 	//	@SubscribeEvent
 	//	public static void shipLoad(VSEvents.ShipLoadEvent event) {
 	////		Gravity.setAll(event.getServer().overworld());

@@ -4,7 +4,7 @@ import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
 import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.compat.cc.ThrusterPeripheral;
+import net.jcm.vsch.compat.cc.peripherals.ThrusterPeripheral;
 import net.jcm.vsch.ship.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
@@ -106,10 +106,6 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	public void setThrusterMode(ThrusterData.ThrusterMode mode) {
 		this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(AbstractThrusterBlock.MODE, mode));
 		this.thrusterData.mode = mode;
-	}
-
-	public ThrusterData getThrusterData() {
-		return this.thrusterData;
 	}
 
 	@Override

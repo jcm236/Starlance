@@ -1,4 +1,4 @@
-Cosmic Horisons x VS2 compat
+# Cosmic Horizons x Valkyrien Skies
 
 Current (done) features:
 - Redstone thrusters (global and position modes)
@@ -16,3 +16,8 @@ Planned features:
 - Captains chair, allows warping of VS ships and priority over planet coll GUI
 - CC Compat
 - Fixed multiplayer :(
+
+
+## Contributing
+We welcome contributions, and will generally approve PR's if we agree with their features.
+Please read [the contributing guide](CONTRIBUTING.md) for more info

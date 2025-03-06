@@ -19,8 +19,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHBlocks {
 	public static final DeferredRegister<Block> BLOCKS =
-			DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID); //this when registering a block doesnt make an item!
-
+			DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
 
 	public static final RegistryObject<Block> THRUSTER_BLOCK = registerBlock("thruster_block",
 			() -> new ThrusterBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
@@ -58,22 +57,16 @@ public class VSCHBlocks {
 					.noOcclusion()));
 
 
-	//below is just tools used in adding the block
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
-		RegistryObject<T> toReturn = BLOCKS.register(name, block); //registers the block
-		registerBlockItem(name, toReturn); //registers the item for the block
-		return toReturn; //returns something or other idk
+		RegistryObject<T> toReturn = BLOCKS.register(name, block);
+		registerBlockItem(name, toReturn);
+		return toReturn;
 	}
 
-
-	//since when registering it doesnt have an item, this function manually adds an item
 	private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
 		return VSCHItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
 	}
 
-
-
-	//register
 	public static void register(IEventBus eventBus) {
 		BLOCKS.register(eventBus);
 	}

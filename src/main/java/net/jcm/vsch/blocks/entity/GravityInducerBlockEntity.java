@@ -20,14 +20,15 @@ import java.util.List;
 
 public class GravityInducerBlockEntity extends BlockEntity implements ParticleBlockEntity {
 	private static final double MIN_FORCE = 0.01;
+
 	public GravityInducerBlockEntity(BlockPos pos, BlockState blockState) {
 		super(VSCHBlockEntities.GRAVITY_INDUCER_BLOCK_ENTITY.get(), pos, blockState);
 	}
 
-
 	public double getAttractDistance() {
 		return VSCHConfig.GRAVITY_DISTANCE.get().doubleValue();
 	}
+
 	public double getMaxForce() {
 		return VSCHConfig.GRAVITY_MAX_FORCE.get().doubleValue();
 	}

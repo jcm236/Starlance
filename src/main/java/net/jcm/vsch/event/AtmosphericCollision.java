@@ -63,23 +63,12 @@ public class AtmosphericCollision {
 				if (ship.getTransform().getPositionInWorld().y() > atmoData.getDouble("atmosphere_y")) {
 
 					// ----- Get destination x, y, z and dimension ----- //
+					//TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
 					double posX = atmoData.getDouble("origin_x"); // + Mth.nextInt(RandomSource.create(), -10, 10)
 					double posY = atmoData.getDouble("origin_y"); // + Mth.nextInt(RandomSource.create(), -5, 5)
 					double posZ = atmoData.getDouble("origin_z"); // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 					String gotoDimension = atmoData.getString("travel_to");
-
-					/*ServerPlayer player = level.getRandomPlayer();
-					// System.out.println(totalAABB);
-					// System.out.println(level.getEntities(null, totalAABB));
-					if (player != null) {
-						// More debug
-						System.out.println("Player: " + player.getPosition(0));
-						// System.out.println("Prev: "+prevWorldAABB);
-						// System.out.println("Current: "+currentWorldAABB);
-						// System.out.println("Total: "+totalAABB);
-
-					}*/
 
 					new TeleportationHandler(VSCHUtils.dimToLevel(ValkyrienSkiesMod.getCurrentServer(), gotoDimension), level, false).handleTeleport(ship, new Vector3d(posX, posY, posZ));
 
