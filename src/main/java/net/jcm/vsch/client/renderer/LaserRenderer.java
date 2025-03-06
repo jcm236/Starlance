@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -47,8 +48,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			final Vec3 color = laser.getColor();
 			final Vec3 path = to.subtract(from);
 			final float length = (float) (path.length());
-			final Vector3f direction = path.toVector3f().normalize();
-			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
+			final Quaternionf rotation = be.getBlockState().getValue(DirectionalBlock.FACING).getRotation();
 
 			renderBeaconBeam(
 				be, rotation,
