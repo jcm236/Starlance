@@ -49,12 +49,24 @@ public class LaserContext {
 		return this.props;
 	}
 
+	public final Vec3 getColor() {
+		return this.getLaserProperties().getColor();
+	}
+
 	public final LaserEmitter getEmitter() {
 		return this.emitter;
 	}
 
 	public final LaserEmitter getLastRedirecter() {
 		return this.lastRedirecter;
+	}
+
+	public final Vec3 getEmitPosition() {
+		return this.lastRedirecter.getLocation();
+	}
+
+	public final Vec3 getHitPosition() {
+		return this.hit == null ? null : this.hit.getLocation();
 	}
 
 	public final boolean hasRedirected() {
@@ -115,7 +127,7 @@ public class LaserContext {
 		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
-		System.out.println("laser result: " + result.getType() + " pos: " + result.getBlockPos() + " location: " + result.getLocation());
+		System.out.println("laser result: " + result.getType() + " from: " + origin + " source: " + blockPos + " pos: " + result.getBlockPos() + " location: " + result.getLocation());
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
@@ -167,8 +179,12 @@ public class LaserContext {
 	}
 
 	public void readFromNBT(Level level, CompoundTag data) {
+		this.props.readFromNBT(data);
 		this.lastRedirecter = LaserEmitter.parseFromNBT(level, data.getCompound("LastRedirecter"));
 		this.redirected = data.getInt("Redirected");
+		if (data.contains("Hit")) {
+			this.hit = SerializeUtil.hitResultFromNBT(level, data.getCompound("Hit"));
+		}
 	}
 
 	static class LaserClipContext extends ClipContext {

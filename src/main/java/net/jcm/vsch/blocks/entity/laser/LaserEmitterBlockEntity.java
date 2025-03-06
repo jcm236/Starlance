@@ -52,10 +52,9 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		if (laser.isEmpty()) {
 			this.firedLaser = null;
 		} else {
-			System.out.println("loading laser: " + laser);
 			this.firedLaser = new LaserContext();
 			this.firedLaser.readFromNBT(this.getLevel(), laser);
-			this.laserLastTick = 2;
+			this.laserLastTick = 20;
 		}
 	}
 

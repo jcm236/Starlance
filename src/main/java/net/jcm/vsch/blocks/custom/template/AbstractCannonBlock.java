@@ -53,7 +53,7 @@ public abstract class AbstractCannonBlock<T extends AbstractCannonBlockEntity> e
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		Direction dir = ctx.getNearestLookingDirection();
+		Direction dir = ctx.getNearestLookingDirection().getOpposite();
 		Player player = ctx.getPlayer();
 		if (player != null && player.isShiftKeyDown()) {
 			dir = dir.getOpposite();
