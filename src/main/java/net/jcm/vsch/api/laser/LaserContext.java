@@ -16,13 +16,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.jcm.vsch.util.SerializeUtil;
 
+import java.util.Random;
+
 public class LaserContext {
+	private static final Random RND = new Random();
+
 	private final LaserProperties props;
 	private LaserEmitter emitter;
 	private LaserEmitter lastRedirecter;
 	private int redirected;
-	private HitResult hit = null;
 	private boolean canceled = false;
+	private double maxLength = 0;
+	private HitResult hit = null;
+	private LaserProperties onHitProps = null;
 	int tickRedirected;
 
 	public LaserContext() {
@@ -45,8 +51,35 @@ public class LaserContext {
 		this(props, emitter, emitter, 0, 0);
 	}
 
+	/**
+	 * getLaserProperties returns the laser's original properties.
+	 *
+	 * @return the {@link LaserProperties} when laser is emitting
+	 * @see getLaserOnHitProperties
+	 * @see LaserProperties
+	 */
 	public LaserProperties getLaserProperties() {
 		return this.props;
+	}
+
+	/**
+	 * getLaserOnHitProperties returns the laser's properties after hit.
+	 *
+	 * @return the {@link LaserProperties} when laser is hit
+	 * @throws IllegalStateException if laser is not fired
+	 * @see getLaserProperties
+	 * @see LaserProperties
+	 */
+	public LaserProperties getLaserOnHitProperties() {
+		if (this.hit == null) {
+			throw new IllegalStateException("Laser not hit yet!");
+		}
+		if (this.onHitProps == null) {
+			double distance = this.hit.getLocation().distanceTo(this.lastRedirecter.getLocation());
+			double loss = this.maxLength == -1 ? 0 : 1 - (distance / this.maxLength);
+			this.onHitProps = this.props.afterLoss(loss);
+		}
+		return this.onHitProps;
 	}
 
 	public final Vec3 getColor() {
@@ -106,6 +139,10 @@ public class LaserContext {
 		this.canceled = true;
 	}
 
+	public final boolean canceled() {
+		return this.canceled;
+	}
+
 	public Vec3 getInputDirection() {
 		return this.lastRedirecter.getDirection();
 	}
@@ -121,21 +158,21 @@ public class LaserContext {
 		final Vec3 dir = this.lastRedirecter.getDirection();
 		final double airDensity = 1; // TODO: Api.getAirDensity(level);
 		final double length = 128 / Math.max(0.125, airDensity); // TODO; dynamic length based on air density
-		final Vec3 dest = origin.add(dir.scale(length));
+		this.maxLength = airDensity < 0.125 ? -1 : length;
+		final Vec3 dest = origin.add(dir.scale((length)));
 
 		final BlockHitResult result = level.clip(new LaserClipContext(origin, dest, null, blockPos));
 		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
-		System.out.println("laser result: " + result.getType() + " from: " + origin + " source: " + blockPos + " pos: " + result.getBlockPos() + " location: " + result.getLocation());
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			attachment.beforeProcessLaser(this, block, targetPos);
-			if (this.canceled) {
-				return;
-			}
+		}
+		if (this.canceled) {
+			return;
 		}
 		final ILaserProcessor processor;
 		if (block.getBlock() instanceof ILaserProcessor proc) {
@@ -146,6 +183,9 @@ public class LaserContext {
 			processor = LaserContext::destroyBlockProcessor;
 		}
 		processor.onLaserHit(this);
+		for (ILaserAttachment attachment : this.props.getAttachments()) {
+			attachment.afterProcessLaser(this, block, targetPos);
+		}
 	}
 
 	public LaserContext redirectWith(LaserProperties props, LaserEmitter newEmitter) {
@@ -163,7 +203,8 @@ public class LaserContext {
 		final int strength = laser.props.r / 256;
 		final double speed = laser.props.g / 256.0, accurate = laser.props.b / 256.0;
 		final double lostChance = accurate / strength;
-		final boolean willLost = lostChance < 1;
+		final boolean willLost = lostChance < 1 && RND.nextDouble() >= lostChance;
+		// level.destroyBlock(hitResult.getBlockPos());
 		System.out.println("destorying strength: " + strength + ", speed: " + speed + ", lostChance: " + lostChance);
 	}
 

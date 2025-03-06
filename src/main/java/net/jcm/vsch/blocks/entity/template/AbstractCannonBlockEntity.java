@@ -79,5 +79,5 @@ public abstract class AbstractCannonBlockEntity extends BlockEntity implements P
 
 	public abstract void partChanged(Direction dir, AbstractCannonBlockEntity be);
 
-	public abstract void signalChanged(int oldSignal, int newSignal);
+	public void signalChanged(int oldSignal, int newSignal) {}
 }

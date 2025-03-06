@@ -39,7 +39,6 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 
 	@Override
 	public void onLaserFired(LaserContext laser) {
-		System.out.println("onLaserFired: " + laser);
 		this.firedLaser = laser;
 		this.laserLastTick = 2;
 		this.markUpdated();
@@ -54,7 +53,7 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		} else {
 			this.firedLaser = new LaserContext();
 			this.firedLaser.readFromNBT(this.getLevel(), laser);
-			this.laserLastTick = 20;
+			this.laserLastTick = 2;
 		}
 	}
 
@@ -67,14 +66,14 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		return data;
 	}
 
-	@Override
-	public void signalChanged(int oldSignal, int newSignal) {
-		if (newSignal == 0) {
-			return;
-		}
-		LaserProperties props = new LaserProperties(this.r, this.g, this.b);
-		LaserUtil.fireLaser(props, LaserEmitter.fromBlockEntity(this, this.facing));
-	}
+	// @Override
+	// public void signalChanged(int oldSignal, int newSignal) {
+	// 	if (newSignal == 0) {
+	// 		return;
+	// 	}
+	// 	LaserProperties props = new LaserProperties(this.r, this.g, this.b);
+	// 	LaserUtil.fireLaser(props, LaserEmitter.fromBlockEntity(this, this.facing));
+	// }
 
 	public void tickLaser() {
 		if (this.laserLastTick > 0) {
@@ -88,6 +87,9 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
 		this.tickLaser();
+		if (this.redstone > 0) {
+			LaserUtil.fireLaser(new LaserProperties(this.r, this.g, this.b), LaserEmitter.fromBlockEntity(this, this.facing));
+		}
 	}
 
 	@Override

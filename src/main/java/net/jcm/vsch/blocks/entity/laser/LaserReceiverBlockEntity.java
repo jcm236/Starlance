@@ -1,0 +1,70 @@
+package net.jcm.vsch.blocks.entity.laser;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+
+import net.jcm.vsch.api.laser.ILaserProcessor;
+import net.jcm.vsch.api.laser.LaserContext;
+import net.jcm.vsch.api.laser.LaserEmitter;
+import net.jcm.vsch.api.laser.LaserProperties;
+import net.jcm.vsch.api.laser.LaserUtil;
+import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
+
+import java.util.Collections;
+import java.util.List;
+
+public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity implements ILaserProcessor {
+	private int r;
+	private int g;
+	private int b;
+	private int lastR = 0;
+	private int lastG = 0;
+	private int lastB = 0;
+	private int analogOutput = 0;
+
+	public LaserReceiverBlockEntity(BlockPos pos, BlockState state) {
+		super("laser_receiver", VSCHBlockEntities.LASER_RECEIVER_BLOCK_ENTITY.get(), pos, state);
+		this.r = 256;
+		this.g = 0;
+		this.b = 0;
+	}
+
+	@Override
+	public void onLaserHit(final LaserContext ctx) {
+		final BlockHitResult hit = (BlockHitResult) (ctx.getHitResult());
+		if (hit.getDirection().getOpposite() != this.facing) {
+			return;
+		}
+		final LaserProperties props = ctx.getLaserProperties();
+		this.lastR += props.r;
+		this.lastG += props.g;
+		this.lastB += props.b;
+	}
+
+	public int getAnalogOutput() {
+		return this.analogOutput;
+	}
+
+	@Override
+	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
+		final double distR = (double)(this.r - this.lastR), distG = (double)(this.g - this.lastG), distB = (double)(this.b - this.lastB);
+		this.lastR = 0;
+		this.lastG = 0;
+		this.lastB = 0;
+		final double dist = Math.sqrt(distR * distR + distG * distG + distB * distB);
+		int newOutput = (int) (Math.min(Math.max(1 - (dist / 255), 0), 1) * 15);
+		if (this.analogOutput != newOutput) {
+			this.analogOutput = newOutput;
+			this.setChanged();
+		}
+	}
+
+	@Override
+	public void tickParticles(Level level, BlockPos pos, BlockState state) {}
+}

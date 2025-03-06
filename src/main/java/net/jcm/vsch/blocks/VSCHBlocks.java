@@ -16,7 +16,10 @@ import net.minecraftforge.registries.RegistryObject;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
+import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
+import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -65,6 +68,16 @@ public class VSCHBlocks {
 				.strength(6f, 1f)
 				.noOcclusion(),
 			LaserEmitterBlockEntity::new
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_RECEIVER_BLOCK = registerBlock("laser_receiver_block",
+		() -> new LaserReceiverBlock<>(
+			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+				.sound(SoundType.GLASS)
+				.strength(6f, 1f)
+				.noOcclusion(),
+			LaserReceiverBlockEntity::new
 		)
 	);
 

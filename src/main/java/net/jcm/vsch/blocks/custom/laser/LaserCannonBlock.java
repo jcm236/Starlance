@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.custom;
+package net.jcm.vsch.blocks.custom.laser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
