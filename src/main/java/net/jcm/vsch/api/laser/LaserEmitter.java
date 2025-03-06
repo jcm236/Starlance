@@ -69,12 +69,12 @@ public abstract class LaserEmitter {
 		Vec3 direction = Vec3.atLowerCornerOf(facing.getNormal());
 		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, worldPos);
 		if (ship != null) {
+			// TODO: clean this up?
 			Matrix4dc transform = ship.getShipToWorld();
 			Vector3d dest = new Vector3d(worldPos.x, worldPos.y, worldPos.z);
-			transform.transformPosition(dest);
+			dest = transform.transformPosition(dest);
 			worldPos = new Vec3(dest.x, dest.y, dest.z);
-			transform.transformDirection(dest.set(direction.x, direction.y, direction.z));
-			direction = new Vec3(dest.x, dest.y, dest.z);
+			// VS already transforms beacon beams to ship rotation, so we don't need to
 		}
 		return fromBlock(level, worldPos, direction, blockPos, be);
 	}
