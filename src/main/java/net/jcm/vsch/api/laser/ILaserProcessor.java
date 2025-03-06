@@ -1,6 +1,6 @@
 package net.jcm.vsch.api.laser;
 
-@FunctionalInterface
 public interface ILaserProcessor {
+	int getMaxLaserStrength();
 	void onLaserHit(LaserContext ctx);
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -76,7 +77,7 @@ public class LaserContext {
 		}
 		if (this.onHitProps == null) {
 			double distance = this.hit.getLocation().distanceTo(this.lastRedirecter.getLocation());
-			double loss = this.maxLength == -1 ? 0 : 1 - (distance / this.maxLength);
+			double loss = this.maxLength == -1 ? 0 : distance / this.maxLength;
 			this.onHitProps = this.props.afterLoss(loss);
 		}
 		return this.onHitProps;
@@ -92,6 +93,10 @@ public class LaserContext {
 
 	public final LaserEmitter getLastRedirecter() {
 		return this.lastRedirecter;
+	}
+
+	public final Level getLevel() {
+		return this.lastRedirecter.getLevel();
 	}
 
 	public final Vec3 getEmitPosition() {
@@ -168,7 +173,8 @@ public class LaserContext {
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
-		for (ILaserAttachment attachment : this.props.getAttachments()) {
+		final LaserProperties props = this.getLaserOnHitProperties();
+		for (ILaserAttachment attachment : props.getAttachments()) {
 			attachment.beforeProcessLaser(this, block, targetPos);
 		}
 		if (this.canceled) {
@@ -180,9 +186,13 @@ public class LaserContext {
 		} else if (level.getBlockEntity(targetPos) instanceof ILaserProcessor proc) {
 			processor = proc;
 		} else {
-			processor = LaserContext::destroyBlockProcessor;
+			processor = null;
 		}
-		processor.onLaserHit(this);
+		if (processor == null || processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
+			LaserContext.destroyBlockProcessor(this);
+		} else {
+			processor.onLaserHit(this);
+		}
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			attachment.afterProcessLaser(this, block, targetPos);
 		}
@@ -200,12 +210,23 @@ public class LaserContext {
 		if (!(laser.getHitResult() instanceof BlockHitResult hitResult)) {
 			return;
 		}
-		final int strength = laser.props.r / 256;
-		final double speed = laser.props.g / 256.0, accurate = laser.props.b / 256.0;
+		if (hitResult.getType() != HitResult.Type.BLOCK) {
+			return;
+		}
+		final Level level = laser.getLevel();
+		final BlockPos pos = hitResult.getBlockPos();
+		final BlockState state = level.getBlockState(pos);
+		final LaserProperties props = laser.getLaserOnHitProperties();
+		final double accurate = props.r / 256.0, speed = props.g / 256.0;
+		final int strength = props.b / 256;
 		final double lostChance = accurate / strength;
-		final boolean willLost = lostChance < 1 && RND.nextDouble() >= lostChance;
-		// level.destroyBlock(hitResult.getBlockPos());
-		System.out.println("destorying strength: " + strength + ", speed: " + speed + ", lostChance: " + lostChance);
+		if (strength == 0) {
+			return;
+		}
+		level.destroyBlock(pos, false);
+		if (lostChance >= 1 || RND.nextDouble() < lostChance) {
+    	Block.dropResources(state, level, pos, state.hasBlockEntity() ? level.getBlockEntity(pos) : null);
+		}
 	}
 
 	public CompoundTag writeToNBT(CompoundTag data) {

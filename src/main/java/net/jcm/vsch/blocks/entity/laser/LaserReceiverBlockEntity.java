@@ -36,12 +36,17 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 	}
 
 	@Override
+	public int getMaxLaserStrength() {
+		return 256 * 16;
+	}
+
+	@Override
 	public void onLaserHit(final LaserContext ctx) {
 		final BlockHitResult hit = (BlockHitResult) (ctx.getHitResult());
 		if (hit.getDirection().getOpposite() != this.facing) {
 			return;
 		}
-		final LaserProperties props = ctx.getLaserProperties();
+		final LaserProperties props = ctx.getLaserOnHitProperties();
 		this.lastR += props.r;
 		this.lastG += props.g;
 		this.lastB += props.b;
