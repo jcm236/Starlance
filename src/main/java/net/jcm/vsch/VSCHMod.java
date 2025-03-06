@@ -11,8 +11,11 @@ import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.particle.VSCHParticles;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -34,6 +37,9 @@ public class VSCHMod {
 		VSCHConfig.register(ModLoadingContext.get());
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
+		VSCHParticles.register(modBus);
+
+
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
 
@@ -60,6 +66,8 @@ public class VSCHMod {
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		//event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
+
+
 }
 
 

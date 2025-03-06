@@ -3,6 +3,7 @@ package net.jcm.vsch.client.renderer;
 import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.jcm.vsch.particle.custom.LaserHitParticle;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -25,11 +26,14 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.util.VectorConversionsKt;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.jcm.vsch.api.laser.ILaserSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
+import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.Vector3fcUtilKt;
 
 import java.util.List;
 
@@ -79,6 +83,10 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				new float[]{(float) (color.x), (float) (color.y), (float) (color.z)},
 				0.05f, 0.09f
 			);
+
+			Vec3 pos = to.subtract(direction.x / 5, direction.y / 5, direction.z / 5);
+			// TODO: detect if block were hitting is a laser reciever/reflecter/whatever, and if so don't do these particles
+			LaserHitParticle.spawnConeOfParticles(be.getLevel(), (float) pos.x, (float) pos.y, (float) pos.z, Vector3fcUtilKt.toVec3(direction), 5);
 		}
 	}
 

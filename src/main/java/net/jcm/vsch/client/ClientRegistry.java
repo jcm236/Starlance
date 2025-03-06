@@ -1,4 +1,4 @@
-package de.srendi.advancedperipherals.client;
+package net.jcm.vsch.client;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
