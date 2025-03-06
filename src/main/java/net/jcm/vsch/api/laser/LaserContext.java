@@ -200,7 +200,7 @@ public class LaserContext {
 			if (this.source != null && this.source.equals(pos)) {
 				return Shapes.empty();
 			}
-			if (blockState.canOcclude()) {
+			if (!blockState.canOcclude()) {
 				return blockState.getVisualShape(level, pos, CollisionContext.empty());
 			}
 			return blockState.getCollisionShape(level, pos, CollisionContext.empty());
