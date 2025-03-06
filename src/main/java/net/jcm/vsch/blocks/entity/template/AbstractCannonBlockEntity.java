@@ -17,8 +17,9 @@ import java.util.EnumMap;
 
 public abstract class AbstractCannonBlockEntity extends BlockEntity implements ParticleBlockEntity {
 	private final String peripheralType;
-	private final Direction facing;
-	private EnumMap<Direction, AbstractCannonBlockEntity> neighbors = new EnumMap<>(Direction.class);
+	protected final Direction facing;
+	protected final EnumMap<Direction, AbstractCannonBlockEntity> neighbors = new EnumMap<>(Direction.class);
+	protected int redstone = 0;
 
 	protected AbstractCannonBlockEntity(String peripheralType, BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -29,11 +30,13 @@ public abstract class AbstractCannonBlockEntity extends BlockEntity implements P
 	@Override
 	public void load(CompoundTag data) {
 		super.load(data);
+		this.redstone = data.getByte("Redstone");
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag data) {
 		super.saveAdditional(data);
+		data.putByte("Redstone", (byte) (this.redstone));
 	}
 
 	@Override
@@ -47,11 +50,22 @@ public abstract class AbstractCannonBlockEntity extends BlockEntity implements P
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
+	public void markUpdated() {
+		this.setChanged();
+		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+	}
+
 	public void neighborChanged(Block block, BlockPos neighborPos, boolean moving) {
 		if (!(this.getLevel() instanceof ServerLevel level)) {
 			return;
 		}
 		final BlockPos pos = this.getBlockPos();
+		final int newRedstone = level.getBestNeighborSignal(pos);
+		if (newRedstone != this.redstone) {
+			final int oldSignal = this.redstone;
+			this.redstone = newRedstone;
+			this.signalChanged(oldSignal, newRedstone);
+		}
 		final Direction dir = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
 		final BlockEntity be = level.getBlockEntity(neighborPos);
 		final AbstractCannonBlockEntity cbe = (be instanceof AbstractCannonBlockEntity acbe && this.isValidPart(dir, acbe)) ? acbe : null;
@@ -64,4 +78,6 @@ public abstract class AbstractCannonBlockEntity extends BlockEntity implements P
 	public abstract boolean isValidPart(Direction dir, AbstractCannonBlockEntity be);
 
 	public abstract void partChanged(Direction dir, AbstractCannonBlockEntity be);
+
+	public abstract void signalChanged(int oldSignal, int newSignal);
 }

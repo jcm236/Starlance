@@ -1,5 +1,6 @@
 package net.jcm.vsch.api.laser;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Collection;
@@ -12,6 +13,10 @@ public class LaserProperties {
 	public int g;
 	public int b;
 	private final List<ILaserAttachment> attachments;
+
+	public LaserProperties() {
+		this(0, 0, 0, new LinkedList<>());
+	}
 
 	private LaserProperties(int r, int g, int b, List<ILaserAttachment> attachments) {
 		this.r = r;
@@ -55,5 +60,19 @@ public class LaserProperties {
 			(int)(b * (1 - loss)),
 			new LinkedList<>(this.attachments)
 		);
+	}
+
+	public CompoundTag writeToNBT(CompoundTag data) {
+		data.putIntArray("Color", new int[]{this.r, this.g, this.b});
+		return data;
+	}
+
+	public void readFromNBT(CompoundTag data) {
+		final int[] color = data.getIntArray("Color");
+		if (color.length == 3) {
+			this.r = color[0];
+			this.g = color[1];
+			this.b = color[2];
+		}
 	}
 }

@@ -1,12 +1,14 @@
 package net.jcm.vsch.blocks.entity;
 
-import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.blocks.VSCHBlocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 
 public class VSCHBlockEntities {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -41,6 +43,11 @@ public class VSCHBlockEntities {
 			BLOCK_ENTITIES.register("dock",
 					() -> BlockEntityType.Builder.of(DockerBlockEntity::new, VSCHBlocks.DOCKER_BLOCK.get())
 							.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserEmitterBlockEntity>> LASER_EMITTER_BLOCK_ENTITY =
+			BLOCK_ENTITIES.register("laser_emitter_block",
+					() -> BlockEntityType.Builder.of(LaserEmitterBlockEntity::new, VSCHBlocks.LASER_EMITTER_BLOCK.get())
+					.build(null));
 
 	public static void register(IEventBus eventBus) {
 		BLOCK_ENTITIES.register(eventBus);

@@ -1,6 +1,7 @@
 package net.jcm.vsch.api.laser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -13,14 +14,20 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.jcm.vsch.util.SerializeUtil;
+
 public class LaserContext {
 	private final LaserProperties props;
-	private final LaserEmitter emitter;
-	private final LaserEmitter lastRedirecter;
-	private final int redirected;
+	private LaserEmitter emitter;
+	private LaserEmitter lastRedirecter;
+	private int redirected;
 	private HitResult hit = null;
 	private boolean canceled = false;
 	int tickRedirected;
+
+	public LaserContext() {
+		this(new LaserProperties(), null, null, 0, 0);
+	}
 
 	protected LaserContext(
 		LaserProperties props,
@@ -51,7 +58,7 @@ public class LaserContext {
 	}
 
 	public final boolean hasRedirected() {
-		return this.lastRedirecter != this.emitter;
+		return this.redirected > 0;
 	}
 
 	public final int redirected() {
@@ -105,18 +112,19 @@ public class LaserContext {
 		final Vec3 dest = origin.add(dir.scale(length));
 
 		final BlockHitResult result = level.clip(new LaserClipContext(origin, dest, null, blockPos));
+		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
+		System.out.println("laser result: " + result.getType() + " pos: " + result.getBlockPos() + " location: " + result.getLocation());
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
-			attachment.beforeLaserHit(this, block, targetPos);
+			attachment.beforeProcessLaser(this, block, targetPos);
 			if (this.canceled) {
 				return;
 			}
 		}
-		this.onHit(result);
 		final ILaserProcessor processor;
 		if (block.getBlock() instanceof ILaserProcessor proc) {
 			processor = proc;
@@ -144,6 +152,23 @@ public class LaserContext {
 		final double speed = laser.props.g / 256.0, accurate = laser.props.b / 256.0;
 		final double lostChance = accurate / strength;
 		final boolean willLost = lostChance < 1;
+		System.out.println("destorying strength: " + strength + ", speed: " + speed + ", lostChance: " + lostChance);
+	}
+
+	public CompoundTag writeToNBT(CompoundTag data) {
+		this.props.writeToNBT(data);
+		CompoundTag comp = new CompoundTag();
+		data.put("LastRedirecter", this.lastRedirecter.writeToNBT(comp));
+		data.putInt("Redirected", this.redirected);
+		if (this.hit != null) {
+			data.put("Hit", SerializeUtil.hitResultToNBT(this.hit));
+		}
+		return data;
+	}
+
+	public void readFromNBT(Level level, CompoundTag data) {
+		this.lastRedirecter = LaserEmitter.parseFromNBT(level, data.getCompound("LastRedirecter"));
+		this.redirected = data.getInt("Redirected");
 	}
 
 	static class LaserClipContext extends ClipContext {
