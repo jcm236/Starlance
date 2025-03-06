@@ -3,30 +3,30 @@
     "facing=north": {
       "model": "minecraft:block/sticky_piston",
       "y": 0,
-      "x": 180
+      "x": 0
     },
     "facing=east": {
       "model": "minecraft:block/sticky_piston",
       "x": 0,
-      "y": 270
+      "y": 90
     },
     "facing=south": {
       "model": "minecraft:block/sticky_piston",
       "x": 0,
-      "y": 0
+      "y": 180
     },
     "facing=west": {
       "model": "minecraft:block/sticky_piston",
       "x": 0,
-      "y": -270
+      "y": -90
     },
     "facing=up": {
       "model": "minecraft:block/sticky_piston",
-      "x": 90
+      "x": -90
     },
     "facing=down": {
       "model": "minecraft:block/sticky_piston",
-      "x": -90
+      "x": 90
     }
   }
 }

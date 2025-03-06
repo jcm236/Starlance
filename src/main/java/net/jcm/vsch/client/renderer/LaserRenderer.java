@@ -9,21 +9,27 @@ import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.jcm.vsch.api.laser.ILaserSource;
 import net.jcm.vsch.api.laser.LaserContext;
+import net.jcm.vsch.api.laser.LaserEmitter;
 
 import java.util.List;
 
@@ -41,6 +47,12 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		if (!(be instanceof ILaserSource source)) {
 			return;
 		}
+		final BlockPos blockPos = be.getBlockPos();
+		final Vector3d blockCorner = new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(be.getLevel(), blockPos);
+		if (ship != null) {
+			ship.getShipToWorld().transformPosition(blockCorner);
+		}
 		final List<LaserContext> lasers = source.getEmittingLasers();
 		for (final LaserContext laser : lasers) {
 			final Vec3 from = laser.getEmitPosition();
@@ -48,10 +60,18 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			final Vec3 color = laser.getColor();
 			final Vec3 path = to.subtract(from);
 			final float length = (float) (path.length());
-			final Quaternionf rotation = be.getBlockState().getValue(DirectionalBlock.FACING).getRotation();
+			final Vector3f direction = path.toVector3f().normalize();
+			// TODO: find a way to bypass VS renderer
+			final Vector3d translation = new Vector3d(from.x, from.y, from.z).sub(blockCorner);
+			if (ship != null) {
+				ship.getWorldToShip().transformDirection(direction);
+				ship.getWorldToShip().transformDirection(translation);
+			}
+			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
 
 			renderBeaconBeam(
-				be, rotation,
+				be,
+				translation, rotation,
 				poseStack, bufferSource,
 				BeaconRenderer.BEAM_LOCATION,
 				partialTick,
@@ -80,7 +100,8 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 	// TODO: these code are taken from AdvancedPeripherals.
 	// We eventually should develop own laser renderer but not beacon beam.
 	private static void renderBeaconBeam(
-		BlockEntity be, Quaternionf rotation,
+		BlockEntity be,
+		Vector3d translation, Quaternionf rotation,
 		PoseStack pPoseStack, MultiBufferSource pBufferSource,
 		ResourceLocation pBeamLocation,
 		float pPartialTick,
@@ -91,7 +112,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		long pGameTime = be.getLevel().getGameTime();
 		float maxX = pYOffset + pHeight;
 		pPoseStack.pushPose();
-		pPoseStack.translate(0.5D, 0.5D, 0.5D);
+		pPoseStack.translate(translation.x, translation.y, translation.z);
 		float degrees = Math.floorMod(pGameTime, 360) + pPartialTick;
 		float reversedDegrees = pHeight < 0 ? degrees : -degrees;
 		float time = Mth.frac(reversedDegrees * 0.2F - Mth.floor(reversedDegrees * 0.1F));

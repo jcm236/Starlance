@@ -12,7 +12,7 @@ import net.jcm.vsch.util.rot.RotShapes;
 import java.util.function.BiFunction;
 
 public class LaserCannonBlock<T extends AbstractLaserCannonBlockEntity> extends AbstractCannonBlock<T> {
-	private static final RotShape SHAPE = RotShapes.box(2.0, 0.0, 3.0, 14.0, 16.0, 14.0);
+	private static final RotShape SHAPE = RotShapes.box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 
 	private final BiFunction<BlockPos, BlockState, T> blockEntityFactory;
 

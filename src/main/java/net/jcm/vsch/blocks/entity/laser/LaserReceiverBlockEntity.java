@@ -43,7 +43,7 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 	@Override
 	public void onLaserHit(final LaserContext ctx) {
 		final BlockHitResult hit = (BlockHitResult) (ctx.getHitResult());
-		if (hit.getDirection().getOpposite() != this.facing) {
+		if (hit.getDirection() != this.facing) {
 			return;
 		}
 		final LaserProperties props = ctx.getLaserOnHitProperties();

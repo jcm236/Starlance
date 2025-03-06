@@ -9,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 
 public class VSCHBlockEntities {
@@ -52,6 +53,11 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<LaserReceiverBlockEntity>> LASER_RECEIVER_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_receiver_block",
 			() -> BlockEntityType.Builder.of(LaserReceiverBlockEntity::new, VSCHBlocks.LASER_RECEIVER_BLOCK.get())
+			.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserFlatMirrorBlockEntity>> LASER_FLAT_MIRROR_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("laser_flat_mirror_block",
+			() -> BlockEntityType.Builder.of(LaserFlatMirrorBlockEntity::new, VSCHBlocks.LASER_FLAT_MIRROR_BLOCK.get())
 			.build(null));
 
 	public static void register(IEventBus eventBus) {

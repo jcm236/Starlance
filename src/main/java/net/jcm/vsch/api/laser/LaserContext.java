@@ -9,7 +9,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -240,20 +242,21 @@ public class LaserContext {
 		return data;
 	}
 
-	public void readFromNBT(Level level, CompoundTag data) {
+	public LaserContext readFromNBT(Level level, CompoundTag data) {
 		this.props.readFromNBT(data);
 		this.lastRedirecter = LaserEmitter.parseFromNBT(level, data.getCompound("LastRedirecter"));
 		this.redirected = data.getInt("Redirected");
 		if (data.contains("Hit")) {
 			this.hit = SerializeUtil.hitResultFromNBT(level, data.getCompound("Hit"));
 		}
+		return this;
 	}
 
 	static class LaserClipContext extends ClipContext {
 		private final BlockPos source;
 
 		protected LaserClipContext(Vec3 from, Vec3 to, Entity entity, BlockPos source) {
-			super(from, to, Block.COLLIDER, Fluid.NONE, null);
+			super(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null);
 			this.source = source;
 		}
 
@@ -262,8 +265,9 @@ public class LaserContext {
 			if (this.source != null && this.source.equals(pos)) {
 				return Shapes.empty();
 			}
-			if (!blockState.canOcclude()) {
-				return blockState.getVisualShape(level, pos, CollisionContext.empty());
+			final net.minecraft.world.level.block.Block block = blockState.getBlock();
+			if (block instanceof AbstractGlassBlock || block instanceof IronBarsBlock) {
+				return Shapes.empty();
 			}
 			return blockState.getCollisionShape(level, pos, CollisionContext.empty());
 		}

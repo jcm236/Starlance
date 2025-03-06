@@ -15,6 +15,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Mod.EventBusSubscriber
 public final class LaserUtil {
 	private static final int MAX_REDIRECT_PER_TICK = 4;
 	private static final Queue<LaserContext> laserQueue = new ConcurrentLinkedQueue<>();

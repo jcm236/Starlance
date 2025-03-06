@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import net.jcm.vsch.api.laser.ILaserSource;
 import net.jcm.vsch.api.laser.LaserContext;
@@ -38,28 +39,27 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 	}
 
 	@Override
-	public void onLaserFired(LaserContext laser) {
+	public void onLaserFired(final LaserContext laser) {
 		this.firedLaser = laser;
 		this.laserLastTick = 2;
 		this.markUpdated();
 	}
 
 	@Override
-	public void load(CompoundTag data) {
+	public void load(final CompoundTag data) {
 		super.load(data);
-		CompoundTag laser = data.getCompound("Laser");
+		final CompoundTag laser = data.getCompound("Laser");
 		if (laser.isEmpty()) {
 			this.firedLaser = null;
 		} else {
-			this.firedLaser = new LaserContext();
-			this.firedLaser.readFromNBT(this.getLevel(), laser);
-			this.laserLastTick = 2;
+			this.firedLaser = new LaserContext().readFromNBT(this.getLevel(), laser);
+			this.laserLastTick = 3;
 		}
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
-		CompoundTag data = super.getUpdateTag();
+		final CompoundTag data = super.getUpdateTag();
 		if (this.firedLaser != null) {
 			data.put("Laser", this.firedLaser.writeToNBT(new CompoundTag()));
 		}
@@ -88,7 +88,10 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
 		this.tickLaser();
 		if (this.redstone > 0) {
-			LaserUtil.fireLaser(new LaserProperties(this.r, this.g, this.b), LaserEmitter.fromBlockEntity(this, this.facing));
+			LaserUtil.fireLaser(
+				new LaserProperties(this.r, this.g, this.b),
+				LaserEmitter.fromBlockEntityCenter(this, Vec3.atLowerCornerOf(this.facing.getNormal()))
+			);
 		}
 	}
 

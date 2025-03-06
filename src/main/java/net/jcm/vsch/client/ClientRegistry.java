@@ -15,5 +15,6 @@ public class ClientRegistry {
 	@SubscribeEvent
 	public static void registeringRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(VSCHBlockEntities.LASER_EMITTER_BLOCK_ENTITY.get(), LaserRenderer::new);
+		event.registerBlockEntityRenderer(VSCHBlockEntities.LASER_FLAT_MIRROR_BLOCK_ENTITY.get(), LaserRenderer::new);
 	}
 }

@@ -58,23 +58,30 @@ public abstract class LaserEmitter {
 		this.direction = SerializeUtil.vec3FromLongArray(data.getLongArray("Dir"));
 	}
 
-	public static LaserEmitter fromBlock(Level level, Vec3 pos, Vec3 direction, BlockPos blockPos, BlockEntity be) {
+	public static LaserEmitter fromBlock(
+		final Level level,
+		final Vec3 pos, final Vec3 direction,
+		final BlockPos blockPos, final BlockEntity be
+	) {
 		return new BlockLaserEmitter(level, pos, direction, blockPos, be);
 	}
 
-	public static LaserEmitter fromBlockEntity(final BlockEntity be, final Direction facing) {
+	public static LaserEmitter fromBlockEntity(final BlockEntity be, final Vec3 pos, final Vec3 direction) {
+		return fromBlock(be.getLevel(), pos, direction, be.getBlockPos(), be);
+	}
+
+	public static LaserEmitter fromBlockEntityCenter(final BlockEntity be, Vec3 direction) {
 		final Level level = be.getLevel();
 		final BlockPos blockPos = be.getBlockPos();
 		Vec3 worldPos = Vec3.atCenterOf(blockPos);
-		Vec3 direction = Vec3.atLowerCornerOf(facing.getNormal());
-		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, worldPos);
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
 		if (ship != null) {
-			// TODO: clean this up?
 			Matrix4dc transform = ship.getShipToWorld();
 			Vector3d dest = new Vector3d(worldPos.x, worldPos.y, worldPos.z);
-			dest = transform.transformPosition(dest);
+			transform.transformPosition(dest);
 			worldPos = new Vec3(dest.x, dest.y, dest.z);
-			// VS already transforms beacon beams to ship rotation, so we don't need to
+			transform.transformDirection(dest.set(direction.x, direction.y, direction.z));
+			direction = new Vec3(dest.x, dest.y, dest.z);
 		}
 		return fromBlock(level, worldPos, direction, blockPos, be);
 	}
