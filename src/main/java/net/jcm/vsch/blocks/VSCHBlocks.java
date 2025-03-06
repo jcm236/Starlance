@@ -20,7 +20,9 @@ import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatMirrorBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -83,10 +85,20 @@ public class VSCHBlocks {
 	);
 
 	public static final RegistryObject<Block> LASER_FLAT_MIRROR_BLOCK = registerBlock("laser_flat_mirror_block",
-		() -> new LaserFlatMirrorBlock(
+		() -> new LaserFlatMirrorBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
 				.strength(1f, 0.3f)
-				.noOcclusion()
+				.noOcclusion(),
+			LaserFlatMirrorBlockEntity::new
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK = registerBlock("laser_semi_transparent_flat_mirror_block",
+		() -> new LaserFlatMirrorBlock<>(
+			BlockBehaviour.Properties.copy(Blocks.GLASS)
+				.strength(1f, 0.3f)
+				.noOcclusion(),
+			LaserSemiTransparentFlatMirrorBlockEntity::new
 		)
 	);
 

@@ -12,6 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -252,6 +254,24 @@ public class LaserContext {
 		return this;
 	}
 
+	private static boolean isBlockLaserPassable(Block block) {
+		if (block instanceof AbstractGlassBlock && !(block instanceof StainedGlassBlock)) {
+			return true;
+		}
+		if (block instanceof IronBarsBlock && !(block instanceof StainedGlassPaneBlock)) {
+			return true;
+		}
+		return false;
+	}
+
+	private static VoxelShape getBlockCollisionShapeForLaser(BlockState blockState, BlockGetter level, BlockPos pos) {
+		final Block block = blockState.getBlock();
+		if (isBlockLaserPassable(block)) {
+			return Shapes.empty();
+		}
+		return blockState.getCollisionShape(level, pos, CollisionContext.empty());
+	}
+
 	static class LaserClipContext extends ClipContext {
 		private final BlockPos source;
 
@@ -265,11 +285,7 @@ public class LaserContext {
 			if (this.source != null && this.source.equals(pos)) {
 				return Shapes.empty();
 			}
-			final net.minecraft.world.level.block.Block block = blockState.getBlock();
-			if (block instanceof AbstractGlassBlock || block instanceof IronBarsBlock) {
-				return Shapes.empty();
-			}
-			return blockState.getCollisionShape(level, pos, CollisionContext.empty());
+			return getBlockCollisionShapeForLaser(blockState, level, pos);
 		}
 	}
 }

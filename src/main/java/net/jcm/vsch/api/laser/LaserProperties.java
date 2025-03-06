@@ -29,6 +29,21 @@ public class LaserProperties {
 		this(r, g, b, new LinkedList<>());
 	}
 
+	@Override
+	public String toString() {
+		return String.format("<LaserProperties (%d, %d, %d) %d attachments>", this.r, this.g, this.b, this.attachments.size());
+	}
+
+	@Override
+	public LaserProperties clone() {
+		return new LaserProperties(
+			this.r,
+			this.g,
+			this.b,
+			new LinkedList<>(this.attachments)
+		);
+	}
+
 	public LaserProperties withAttachment(ILaserAttachment attachment) {
 		this.attachments.add(attachment);
 		return this;

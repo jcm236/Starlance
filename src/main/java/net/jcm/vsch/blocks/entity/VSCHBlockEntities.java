@@ -11,6 +11,7 @@ import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
 
 public class VSCHBlockEntities {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, VSCHMod.MODID);
@@ -58,6 +59,11 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<LaserFlatMirrorBlockEntity>> LASER_FLAT_MIRROR_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_flat_mirror_block",
 			() -> BlockEntityType.Builder.of(LaserFlatMirrorBlockEntity::new, VSCHBlocks.LASER_FLAT_MIRROR_BLOCK.get())
+			.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserSemiTransparentFlatMirrorBlockEntity>> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("laser_semi_transparent_flat_mirror_block",
+			() -> BlockEntityType.Builder.of(LaserSemiTransparentFlatMirrorBlockEntity::new, VSCHBlocks.LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK.get())
 			.build(null));
 
 	public static void register(IEventBus eventBus) {
