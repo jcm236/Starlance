@@ -37,7 +37,7 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 
 	@Override
 	public int getMaxLaserStrength() {
-		return 256 * 16;
+		return 256 * 16 - (this.lastR + this.lastG + this.lastB);
 	}
 
 	@Override

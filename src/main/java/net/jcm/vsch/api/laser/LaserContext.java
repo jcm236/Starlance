@@ -24,6 +24,7 @@ import net.jcm.vsch.util.SerializeUtil;
 import java.util.Random;
 
 public class LaserContext {
+	public static final int MAX_LENGTH = 128; // Laser's max length in blocks per 256 RGB
 	private static final Random RND = new Random();
 
 	private final LaserProperties props;
@@ -138,13 +139,8 @@ public class LaserContext {
 
 	/**
 	 * Prevent the laser to make any effect.
-	 *
-	 * @throws IllegalStateException if the HitResult is already been set
 	 */
 	public final void cancel() {
-		if (this.hit != null) {
-			throw new IllegalStateException("Cannot cancel after laser is hit.");
-		}
 		this.canceled = true;
 	}
 
@@ -166,24 +162,24 @@ public class LaserContext {
 		final Vec3 origin = this.lastRedirecter.getLocation();
 		final Vec3 dir = this.lastRedirecter.getDirection();
 		final double airDensity = 1; // TODO: Api.getAirDensity(level);
-		final double length = 128 / Math.max(0.125, airDensity); // TODO; dynamic length based on air density
+		final double length = MAX_LENGTH * this.props.getStrength() / Math.max(0.125, airDensity);
 		this.maxLength = airDensity < 0.125 ? -1 : length;
 		final Vec3 dest = origin.add(dir.scale((length)));
 
-		final BlockHitResult result = level.clip(new LaserClipContext(origin, dest, null, blockPos));
+		final BlockHitResult result = level.clip(new LaserClipContext(this, origin, dest, null, blockPos));
 		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
-		final LaserProperties props = this.getLaserOnHitProperties();
-		for (ILaserAttachment attachment : props.getAttachments()) {
+		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			attachment.beforeProcessLaser(this, block, targetPos);
 		}
 		if (this.canceled) {
 			return;
 		}
+		final LaserProperties props = this.getLaserOnHitProperties();
 		final ILaserProcessor processor;
 		if (block.getBlock() instanceof ILaserProcessor proc) {
 			processor = proc;
@@ -197,7 +193,7 @@ public class LaserContext {
 		} else {
 			processor.onLaserHit(this);
 		}
-		for (ILaserAttachment attachment : this.props.getAttachments()) {
+		for (ILaserAttachment attachment : props.getAttachments()) {
 			attachment.afterProcessLaser(this, block, targetPos);
 		}
 	}
@@ -254,7 +250,14 @@ public class LaserContext {
 		return this;
 	}
 
-	private static boolean isBlockLaserPassable(Block block) {
+	private boolean isBlockLaserPassable(BlockState state, BlockGetter level, BlockPos pos) {
+		for (ILaserAttachment attachment : this.props.getAttachments()) {
+			final Boolean res = attachment.canPassThroughBlock(this, state, level, pos);
+			if (res != null) {
+				return res;
+			}
+		}
+		final Block block = state.getBlock();
 		if (block instanceof AbstractGlassBlock && !(block instanceof StainedGlassBlock)) {
 			return true;
 		}
@@ -264,28 +267,31 @@ public class LaserContext {
 		return false;
 	}
 
-	private static VoxelShape getBlockCollisionShapeForLaser(BlockState blockState, BlockGetter level, BlockPos pos) {
-		final Block block = blockState.getBlock();
-		if (isBlockLaserPassable(block)) {
+	private VoxelShape getBlockCollisionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		final Block block = state.getBlock();
+
+		if (this.isBlockLaserPassable(state, level, pos)) {
 			return Shapes.empty();
 		}
-		return blockState.getCollisionShape(level, pos, CollisionContext.empty());
+		return state.getCollisionShape(level, pos, CollisionContext.empty());
 	}
 
 	static class LaserClipContext extends ClipContext {
+		private final LaserContext laser;
 		private final BlockPos source;
 
-		protected LaserClipContext(Vec3 from, Vec3 to, Entity entity, BlockPos source) {
+		protected LaserClipContext(LaserContext laser, Vec3 from, Vec3 to, Entity entity, BlockPos source) {
 			super(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null);
+			this.laser = laser;
 			this.source = source;
 		}
 
 		@Override
-		public VoxelShape getBlockShape(BlockState blockState, BlockGetter level, BlockPos pos) {
+		public VoxelShape getBlockShape(BlockState state, BlockGetter level, BlockPos pos) {
 			if (this.source != null && this.source.equals(pos)) {
 				return Shapes.empty();
 			}
-			return getBlockCollisionShapeForLaser(blockState, level, pos);
+			return this.laser.getBlockCollisionShape(state, level, pos);
 		}
 	}
 }
