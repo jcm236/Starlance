@@ -21,6 +21,7 @@ import net.jcm.vsch.blocks.custom.laser.LaserEmitterBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
@@ -71,6 +72,16 @@ public class VSCHBlocks {
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)
 				.noOcclusion()
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_EXPLOSIVE_PROCESSOR_BLOCK = registerBlock("laser_explosive_processor_block",
+		() -> new LaserCannonBlock<>(
+			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+				.sound(SoundType.GLASS)
+				.strength(6f, 1f)
+				.noOcclusion(),
+			LaserExplosiveProcessorBlockEntity::new
 		)
 	);
 

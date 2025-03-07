@@ -10,6 +10,7 @@ import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
@@ -50,6 +51,11 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<LaserEmitterBlockEntity>> LASER_EMITTER_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_emitter_block",
 			() -> BlockEntityType.Builder.of(LaserEmitterBlockEntity::new, VSCHBlocks.LASER_EMITTER_BLOCK.get())
+			.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserExplosiveProcessorBlockEntity>> LASER_EXPLOSIVE_PROCESSOR_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("laser_explosive_processor_block",
+			() -> BlockEntityType.Builder.of(LaserExplosiveProcessorBlockEntity::new, VSCHBlocks.LASER_EXPLOSIVE_PROCESSOR_BLOCK.get())
 			.build(null));
 
 	public static final RegistryObject<BlockEntityType<LaserReceiverBlockEntity>> LASER_RECEIVER_BLOCK_ENTITY =

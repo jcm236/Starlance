@@ -1,7 +1,6 @@
 package net.jcm.vsch.blocks.entity.laser;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -9,22 +8,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.jcm.vsch.api.laser.ILaserSource;
-import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 
-import java.util.Collections;
-import java.util.List;
-
-public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity implements ILaserSource {
+public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity {
 	private int r;
 	private int g;
 	private int b;
-	private LaserContext firedLaser = null;
-	private int laserLastTick = 0;
 
 	public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
 		super("laser_emitter", VSCHBlockEntities.LASER_EMITTER_BLOCK_ENTITY.get(), pos, state);
@@ -39,70 +31,33 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		this.b = b;
 	}
 
-	@Override
-	public List<LaserContext> getEmittingLasers() {
-		return this.firedLaser == null ? Collections.emptyList() : Collections.singletonList(this.firedLaser);
-	}
-
-	@Override
-	public void onLaserFired(final LaserContext laser) {
-		this.firedLaser = laser;
-		this.laserLastTick = 2;
-		this.markUpdated();
-	}
-
-	@Override
-	public void load(final CompoundTag data) {
-		super.load(data);
-		final CompoundTag laser = data.getCompound("Laser");
-		if (laser.isEmpty()) {
-			this.firedLaser = null;
-		} else {
-			this.firedLaser = new LaserContext().readFromNBT(this.getLevel(), laser);
-			this.laserLastTick = 3;
-		}
-	}
-
-	@Override
-	public CompoundTag getUpdateTag() {
-		final CompoundTag data = super.getUpdateTag();
-		if (this.firedLaser != null) {
-			data.put("Laser", this.firedLaser.writeToNBT(new CompoundTag()));
-		}
-		return data;
-	}
-
 	// @Override
 	// public void signalChanged(int oldSignal, int newSignal) {
-	// 	if (newSignal == 0) {
+	// 	if (newSignal == 0 || oldSignal != 0) {
 	// 		return;
 	// 	}
-	// 	LaserProperties props = new LaserProperties(this.r, this.g, this.b);
-	// 	LaserUtil.fireLaser(props, LaserEmitter.fromBlockEntity(this, this.facing));
+	// 	this.fireLaser(props, LaserEmitter.fromBlockEntity(this, this.facing));
 	// }
-
-	public void tickLaser() {
-		if (this.laserLastTick > 0) {
-			this.laserLastTick--;
-			if (this.laserLastTick == 0) {
-				this.firedLaser = null;
-			}
-		}
-	}
 
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
-		this.tickLaser();
+		super.tickForce(level, pos, state);
 		if (this.redstone > 0) {
-			LaserUtil.fireLaser(
-				new LaserProperties(this.r, this.g, this.b),
-				LaserEmitter.fromBlockEntityCenter(this, Vec3.atLowerCornerOf(this.facing.getNormal()))
-			);
+			this.fireLaser();
 		}
 	}
 
-	@Override
-	public void tickParticles(Level level, BlockPos pos, BlockState state) {
-		this.tickLaser();
+	public void fireLaser() {
+		LaserProperties props = new LaserProperties(this.r, this.g, this.b);
+		AbstractLaserCannonBlockEntity current = this;
+		while (true) {
+			final AbstractLaserCannonBlockEntity next = current.getNeighbor(this.facing);
+			if (next == null || !next.canProcessLaser(this.facing)) {
+				break;
+			}
+			current = next;
+			props = current.processLaser(props);
+		}
+		LaserUtil.fireLaser(props, current.createEmitter(this));
 	}
 }

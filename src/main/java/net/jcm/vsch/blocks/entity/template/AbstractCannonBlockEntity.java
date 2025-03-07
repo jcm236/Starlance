@@ -75,6 +75,10 @@ public abstract class AbstractCannonBlockEntity extends BlockEntity implements P
 		}
 	}
 
+	public AbstractCannonBlockEntity getNeighbor(Direction dir) {
+		return this.neighbors.get(dir);
+	}
+
 	public abstract boolean isValidPart(Direction dir, AbstractCannonBlockEntity be);
 
 	public abstract void partChanged(Direction dir, AbstractCannonBlockEntity be);

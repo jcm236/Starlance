@@ -24,22 +24,23 @@ public interface ILaserAttachment {
 	}
 
 	/**
-	 * beforeProcessLaser will be invoked when a laser hits a block.
+	 * beforeProcessLaser will be invoked before the laser is going to process a block.
 	 * You can invoke {@link LaserContext#cancel} to cancel further processing,
 	 * and {@link LaserContext#getHitResult} will return the HitResult.
 	 *
-	 * @param ctx   The {@link LaserContext}
-	 * @param state The {@link BlockState} of the hitting block
-	 * @param pos   The position of the hitting block
+	 * @param ctx       The {@link LaserContext}
+	 * @param state     The {@link BlockState} of the hitting block
+	 * @param pos       The position of the hitting block
+	 * @param processor The processor, may be {@code null} if no processor were found and the default processor will put in use
 	 *
 	 * @see afterProcessLaser
 	 * @see LaserContext.cancel
 	 * @see LaserContext.getHitResult
 	 */
-	default void beforeProcessLaser(LaserContext ctx, BlockState state, BlockPos pos) {}
+	default void beforeProcessLaser(LaserContext ctx, BlockState state, BlockPos pos, ILaserProcessor processor) {}
 
 	/**
-	 * afterProcessLaser will be invoked after a laser processed a block.
+	 * afterProcessLaser will be invoked after the laser processed a block.
 	 *
 	 * @param ctx      The {@link LaserContext}
 	 * @param oldState The block's {@link BlockState} before laser processed

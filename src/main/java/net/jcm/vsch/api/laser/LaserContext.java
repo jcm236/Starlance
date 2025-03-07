@@ -180,12 +180,6 @@ public class LaserContext {
 		if (result.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
-		for (ILaserAttachment attachment : this.props.getAttachments()) {
-			attachment.beforeProcessLaser(this, block, targetPos);
-		}
-		if (this.canceled) {
-			return;
-		}
 		final LaserProperties props = this.getLaserOnHitProperties();
 		final ILaserProcessor processor;
 		if (block.getBlock() instanceof ILaserProcessor proc) {
@@ -194,6 +188,12 @@ public class LaserContext {
 			processor = proc;
 		} else {
 			processor = null;
+		}
+		for (ILaserAttachment attachment : this.props.getAttachments()) {
+			attachment.beforeProcessLaser(this, block, targetPos, processor);
+		}
+		if (this.canceled) {
+			return;
 		}
 		if (processor == null || processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
 			LaserUtil.blockDestroyProcessor(this);

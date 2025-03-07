@@ -96,7 +96,7 @@ public final class LaserUtil {
 		final BlockPos pos = hitResult.getBlockPos();
 		final BlockState state = level.getBlockState(pos);
 		final LaserProperties props = laser.getLaserOnHitProperties();
-		final float accurate = props.r / 256.0f;
+		final float accurate = props.r / 128.0f;
 		final float speed = props.g / 256.0f + 0.5f;
 		final int strength = props.b / 256;
 		final int tire = getTire(state);
