@@ -29,11 +29,11 @@ import net.jcm.vsch.util.rot.RotShapes;
 
 import java.util.function.BiFunction;
 
-public class LaserFlatMirrorBlock<T extends AbstractLaserLenBlockEntity> extends DirectionalBlock implements EntityBlock {
+public class LaserFlatLenBlock<T extends AbstractLaserLenBlockEntity> extends DirectionalBlock implements EntityBlock {
 	private static final DirectionalShape SHAPE = DirectionalShape.down(RotShapes.box(1.0, 7.0, 1.0, 15.0, 9.0, 15.0));
 	private final BiFunction<BlockPos, BlockState, T> blockEntityFactory;
 
-	public LaserFlatMirrorBlock(BlockBehaviour.Properties properties, BiFunction<BlockPos, BlockState, T> blockEntityFactory) {
+	public LaserFlatLenBlock(BlockBehaviour.Properties properties, BiFunction<BlockPos, BlockState, T> blockEntityFactory) {
 		super(properties);
 		this.blockEntityFactory = blockEntityFactory;
 		this.registerDefaultState(this.defaultBlockState()

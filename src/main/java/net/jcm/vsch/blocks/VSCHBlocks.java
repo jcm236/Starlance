@@ -17,7 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
 import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserFlatMirrorBlock;
+import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
@@ -85,7 +85,7 @@ public class VSCHBlocks {
 	);
 
 	public static final RegistryObject<Block> LASER_FLAT_MIRROR_BLOCK = registerBlock("laser_flat_mirror_block",
-		() -> new LaserFlatMirrorBlock<>(
+		() -> new LaserFlatLenBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
 				.strength(1f, 0.3f)
 				.noOcclusion(),
@@ -94,7 +94,7 @@ public class VSCHBlocks {
 	);
 
 	public static final RegistryObject<Block> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK = registerBlock("laser_semi_transparent_flat_mirror_block",
-		() -> new LaserFlatMirrorBlock<>(
+		() -> new LaserFlatLenBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
 				.strength(1f, 0.3f)
 				.noOcclusion(),
