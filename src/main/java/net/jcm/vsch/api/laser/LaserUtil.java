@@ -165,7 +165,7 @@ public final class LaserUtil {
 			return;
 		}
 		final int key = blockPosToChunkInt(pos);
-		if (prog < 0 || prog >= 1) {
+		if (prog <= 0 || prog >= 1) {
 			map.remove(key);
 			return;
 		}
