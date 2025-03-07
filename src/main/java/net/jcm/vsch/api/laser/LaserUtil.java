@@ -92,6 +92,7 @@ public final class LaserUtil {
 		if (hitResult.getType() != HitResult.Type.BLOCK) {
 			return;
 		}
+
 		final Level level = laser.getLevel();
 		final BlockPos pos = hitResult.getBlockPos();
 		final BlockState state = level.getBlockState(pos);
@@ -99,6 +100,7 @@ public final class LaserUtil {
 		final float accurate = props.r / 128.0f;
 		final float speed = props.g / 256.0f + 0.5f;
 		final int strength = props.b / 256;
+
 		final int tire = getTire(state);
 		if (strength < tire) {
 			return;
@@ -107,6 +109,7 @@ public final class LaserUtil {
 		if (destroySpeed == -1) {
 			return;
 		}
+
 		final float digSpeed = speed / destroySpeed / 20;
 		final float digProg = LaserUtil.getDigProgressAt(level, pos) + digSpeed;
 		LaserUtil.setDigProgressAt(level, pos, digProg);
