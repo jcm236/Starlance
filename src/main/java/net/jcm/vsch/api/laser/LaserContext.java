@@ -167,6 +167,9 @@ public class LaserContext {
 		final Vec3 dest = origin.add(dir.scale((length)));
 
 		final BlockHitResult result = level.clip(new LaserClipContext(this, origin, dest, null, blockPos));
+		if (this.canceled) {
+			return;
+		}
 		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
@@ -253,6 +256,9 @@ public class LaserContext {
 	private boolean isBlockLaserPassable(BlockState state, BlockGetter level, BlockPos pos) {
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			final Boolean res = attachment.canPassThroughBlock(this, state, level, pos);
+			if (this.canceled) {
+				return false;
+			}
 			if (res != null) {
 				return res;
 			}
@@ -272,6 +278,9 @@ public class LaserContext {
 
 		if (this.isBlockLaserPassable(state, level, pos)) {
 			return Shapes.empty();
+		}
+		if (this.canceled) {
+			return Shapes.block();
 		}
 		return state.getCollisionShape(level, pos, CollisionContext.empty());
 	}
