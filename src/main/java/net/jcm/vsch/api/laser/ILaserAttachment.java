@@ -9,7 +9,7 @@ public interface ILaserAttachment {
 	 * canPassThroughBlock will be invoked when a laser passing a block.
 	 * You can invoke {@link LaserContext#cancel} to immediately cancel further processing.
 	 *
-	 * @param ctx   The {@link LaserContext} 
+	 * @param ctx   The {@link LaserContext}
 	 * @param state The {@link BlockState} of the hitting block
 	 * @param level The level of the hitting block
 	 * @param pos   The position of the hitting block
@@ -28,10 +28,11 @@ public interface ILaserAttachment {
 	 * You can invoke {@link LaserContext#cancel} to cancel further processing,
 	 * and {@link LaserContext#getHitResult} will return the HitResult.
 	 *
-	 * @param ctx   The {@link LaserContext} 
+	 * @param ctx   The {@link LaserContext}
 	 * @param state The {@link BlockState} of the hitting block
 	 * @param pos   The position of the hitting block
 	 *
+	 * @see afterProcessLaser
 	 * @see LaserContext.cancel
 	 * @see LaserContext.getHitResult
 	 */
@@ -40,9 +41,35 @@ public interface ILaserAttachment {
 	/**
 	 * afterProcessLaser will be invoked after a laser processed a block.
 	 *
-	 * @param ctx      The {@link LaserContext} 
+	 * @param ctx      The {@link LaserContext}
 	 * @param oldState The block's {@link BlockState} before laser processed
 	 * @param pos      The block's position
+	 *
+	 * @see beforeProcessLaser
 	 */
 	default void afterProcessLaser(LaserContext ctx, BlockState oldState, BlockPos pos) {}
+
+	/**
+	 * beforeMergeLaser will be invoked before the attached laser is merging to another.
+	 * After this method is invoked, the attachment will never be use again on the original context.
+	 * You can invoke {@link LaserContext#cancel} to cancel the merge and further processing on the laser.
+	 *
+	 * @param ctx    The attached {@link LaserContext}
+	 * @param target The {@link LaserContext} which going to be merge to
+	 *
+	 * @see afterMergeLaser
+	 * @see LaserContext.cancel
+	 */
+	default void beforeMergeLaser(LaserContext ctx, LaserContext target) {}
+
+	/**
+	 * afterMergeLaser will be invoked after the attached laser is merged to another.
+	 * If needed, attachment can attach itself to the target laser in this method.
+	 *
+	 * @param ctx    The attached {@link LaserContext}
+	 * @param target The {@link LaserContext} which being merged to
+	 *
+	 * @see beforeMergeLaser
+	 */
+	default void afterMergeLaser(LaserContext ctx, LaserContext target) {}
 }

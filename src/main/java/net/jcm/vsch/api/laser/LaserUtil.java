@@ -57,4 +57,19 @@ public final class LaserUtil {
 		laser.tickRedirected = 0;
 		queueLaser(laser);
 	}
+
+	public static void mergeLaser(final LaserContext original, final LaserContext target) {
+		final LaserProperties props = original.getLaserOnHitProperties();
+		for (ILaserAttachment attachment : props.getAttachments()) {
+			attachment.beforeMergeLaser(original, target);
+			if (original.canceled()) {
+				return;
+			}
+		}
+		final LaserProperties targetProps = target.getLaserProperties();
+		targetProps.mergeFrom(props);
+		for (ILaserAttachment attachment : props.getAttachments()) {
+			attachment.afterMergeLaser(original, target);
+		}
+	}
 }

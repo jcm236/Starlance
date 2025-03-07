@@ -8,6 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
@@ -64,6 +65,11 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<LaserSemiTransparentFlatMirrorBlockEntity>> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_semi_transparent_flat_mirror_block",
 			() -> BlockEntityType.Builder.of(LaserSemiTransparentFlatMirrorBlockEntity::new, VSCHBlocks.LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK.get())
+			.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserCondensingLenBlockEntity>> LASER_CONDENSING_LEN_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("laser_condensing_len_block",
+			() -> BlockEntityType.Builder.of(LaserCondensingLenBlockEntity::new, VSCHBlocks.LASER_CONDENSING_LEN_BLOCK.get())
 			.build(null));
 
 	public static void register(IEventBus eventBus) {

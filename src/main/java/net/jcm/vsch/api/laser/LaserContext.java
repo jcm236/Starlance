@@ -139,11 +139,18 @@ public class LaserContext {
 
 	/**
 	 * Prevent the laser to make any effect.
+	 *
+	 * @see canceled
 	 */
 	public final void cancel() {
 		this.canceled = true;
 	}
 
+	/**
+	 * Check if the context has been canceled.
+	 *
+	 * @see cancel
+	 */
 	public final boolean canceled() {
 		return this.canceled;
 	}
@@ -167,10 +174,10 @@ public class LaserContext {
 		final Vec3 dest = origin.add(dir.scale((length)));
 
 		final BlockHitResult result = level.clip(new LaserClipContext(this, origin, dest, null, blockPos));
+		this.onHit(result);
 		if (this.canceled) {
 			return;
 		}
-		this.onHit(result);
 		final BlockPos targetPos = result.getBlockPos();
 		final BlockState block = level.getBlockState(targetPos);
 		if (result.getType() != HitResult.Type.BLOCK) {

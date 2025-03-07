@@ -19,6 +19,7 @@ import net.jcm.vsch.blocks.custom.*;
 import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
+import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
@@ -99,6 +100,15 @@ public class VSCHBlocks {
 				.strength(1f, 0.3f)
 				.noOcclusion(),
 			LaserSemiTransparentFlatMirrorBlockEntity::new
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_CONDENSING_LEN_BLOCK = registerBlock("laser_condensing_len_block",
+		() -> new LaserFlatLenBlock<>(
+			BlockBehaviour.Properties.copy(Blocks.GLASS)
+				.strength(1f, 0.3f)
+				.noOcclusion(),
+			LaserCondensingLenBlockEntity::new
 		)
 	);
 

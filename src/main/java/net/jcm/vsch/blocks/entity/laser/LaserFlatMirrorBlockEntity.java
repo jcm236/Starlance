@@ -1,19 +1,11 @@
 package net.jcm.vsch.blocks.entity.laser;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
@@ -21,7 +13,7 @@ import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 
-public class LaserFlatMirrorBlockEntity extends AbstractLaserLenBlockEntity {
+public class LaserFlatMirrorBlockEntity extends AbstractDirectionalLaserLenBlockEntity {
 	public LaserFlatMirrorBlockEntity(BlockPos pos, BlockState state) {
 		super(VSCHBlockEntities.LASER_FLAT_MIRROR_BLOCK_ENTITY.get(), pos, state);
 	}
@@ -48,15 +40,5 @@ public class LaserFlatMirrorBlockEntity extends AbstractLaserLenBlockEntity {
 				LaserEmitter.fromBlockEntity(this, hitPos, new Vec3(outputDir.x, outputDir.y, outputDir.z))
 			)
 		);
-	}
-
-	public Vector3d getPanelNormal() {
-		final Vec3i facing = this.getBlockState().getValue(DirectionalBlock.FACING).getNormal();
-		final Vector3d direction = new Vector3d(facing.getX(), facing.getY(), facing.getZ());
-		final Ship ship = VSGameUtilsKt.getShipManagingPos(this.getLevel(), this.getBlockPos());
-		if (ship != null) {
-			ship.getShipToWorld().transformDirection(direction);
-		}
-		return direction;
 	}
 }

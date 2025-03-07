@@ -68,6 +68,12 @@ public class LaserProperties {
 		return color;
 	}
 
+	public void mergeFrom(final LaserProperties other) {
+		this.r += other.r;
+		this.g += other.g;
+		this.b += other.b;
+	}
+
 	public LaserProperties afterLoss(double loss) {
 		return new LaserProperties(
 			(int)(r * (1 - loss)),
