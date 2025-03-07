@@ -1,6 +1,7 @@
 package net.jcm.vsch.blocks.custom.laser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.jcm.vsch.blocks.custom.template.AbstractCannonBlock;
@@ -16,7 +17,7 @@ public class LaserCannonBlock<T extends AbstractLaserCannonBlockEntity> extends 
 
 	private final BiFunction<BlockPos, BlockState, T> blockEntityFactory;
 
-	public LaserCannonBlock(Properties properties, BiFunction<BlockPos, BlockState, T> blockEntityFactory) {
+	public LaserCannonBlock(BlockBehaviour.Properties properties, BiFunction<BlockPos, BlockState, T> blockEntityFactory) {
 		super(properties, DirectionalShape.down(SHAPE));
 		this.blockEntityFactory = blockEntityFactory;
 	}

@@ -33,6 +33,12 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		this.b = 0;
 	}
 
+	public void setColor(int r, int g, int b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+
 	@Override
 	public List<LaserContext> getEmittingLasers() {
 		return this.firedLaser == null ? Collections.emptyList() : Collections.singletonList(this.firedLaser);

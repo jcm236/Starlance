@@ -17,10 +17,10 @@ import net.minecraftforge.registries.RegistryObject;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
 import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
+import net.jcm.vsch.blocks.custom.laser.LaserEmitterBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
@@ -66,12 +66,11 @@ public class VSCHBlocks {
 					.noOcclusion()));*/
 
 	public static final RegistryObject<Block> LASER_EMITTER_BLOCK = registerBlock("laser_emitter_block",
-		() -> new LaserCannonBlock<>(
+		() -> new LaserEmitterBlock(
 			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)
-				.noOcclusion(),
-			LaserEmitterBlockEntity::new
+				.noOcclusion()
 		)
 	);
 
