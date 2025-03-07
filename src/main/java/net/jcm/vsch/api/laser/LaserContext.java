@@ -2,9 +2,6 @@ package net.jcm.vsch.api.laser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -15,17 +12,17 @@ import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.StainedGlassBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.jcm.vsch.util.SerializeUtil;
 
-import java.util.Random;
-
 public class LaserContext {
 	public static final int MAX_LENGTH = 128; // Laser's max length in blocks per 256 RGB
-	private static final Random RND = new Random();
 
 	private final LaserProperties props;
 	private LaserEmitter emitter;
@@ -199,7 +196,7 @@ public class LaserContext {
 			processor = null;
 		}
 		if (processor == null || processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
-			LaserContext.destroyBlockProcessor(this);
+			LaserUtil.blockDestroyProcessor(this);
 		} else {
 			processor.onLaserHit(this);
 		}
@@ -214,30 +211,6 @@ public class LaserContext {
 			this.emitter, newEmitter,
 			this.redirected + 1, this.tickRedirected + 1
 		);
-	}
-
-	private static void destroyBlockProcessor(LaserContext laser) {
-		if (!(laser.getHitResult() instanceof BlockHitResult hitResult)) {
-			return;
-		}
-		if (hitResult.getType() != HitResult.Type.BLOCK) {
-			return;
-		}
-		final Level level = laser.getLevel();
-		final BlockPos pos = hitResult.getBlockPos();
-		final BlockState state = level.getBlockState(pos);
-		final LaserProperties props = laser.getLaserOnHitProperties();
-		final double accurate = props.r / 256.0, speed = props.g / 256.0;
-		final int strength = props.b / 256;
-		if (strength == 0) {
-			return;
-		}
-		// TODO: implement FakePlayer and use Level.destroyBlockProgress instead
-		level.destroyBlock(pos, false);
-		final double lostChance = accurate / strength;
-		if (lostChance >= 1 || RND.nextDouble() < lostChance) {
-    	Block.dropResources(state, level, pos, state.hasBlockEntity() ? level.getBlockEntity(pos) : null);
-		}
 	}
 
 	public CompoundTag writeToNBT(CompoundTag data) {
