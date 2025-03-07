@@ -229,11 +229,12 @@ public class LaserContext {
 		final LaserProperties props = laser.getLaserOnHitProperties();
 		final double accurate = props.r / 256.0, speed = props.g / 256.0;
 		final int strength = props.b / 256;
-		final double lostChance = accurate / strength;
 		if (strength == 0) {
 			return;
 		}
+		// TODO: implement FakePlayer and use Level.destroyBlockProgress instead
 		level.destroyBlock(pos, false);
+		final double lostChance = accurate / strength;
 		if (lostChance >= 1 || RND.nextDouble() < lostChance) {
     	Block.dropResources(state, level, pos, state.hasBlockEntity() ? level.getBlockEntity(pos) : null);
 		}
