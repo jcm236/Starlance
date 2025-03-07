@@ -62,6 +62,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			final Vec3 from = laser.getEmitPosition();
 			final Vec3 to = laser.getHitPosition();
 			final Vec3 color = laser.getColor();
+			final float[] colors = new float[]{(float) (color.x), (float) (color.y), (float) (color.z)};
 			final Vec3 path = to.subtract(from);
 			final float length = (float) (path.length());
 			final Vector3f direction = path.toVector3f().normalize();
@@ -80,13 +81,13 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				BeaconRenderer.BEAM_LOCATION,
 				partialTick,
 				1, 0, length,
-				new float[]{(float) (color.x), (float) (color.y), (float) (color.z)},
+				colors,
 				0.05f, 0.09f
 			);
 
 			Vec3 pos = to.subtract(direction.x / 5, direction.y / 5, direction.z / 5);
 			// TODO: detect if block were hitting is a laser reciever/reflecter/whatever, and if so don't do these particles
-			LaserHitParticle.spawnConeOfParticles(be.getLevel(), (float) pos.x, (float) pos.y, (float) pos.z, Vector3fcUtilKt.toVec3(direction), 5);
+			LaserHitParticle.spawnConeOfParticles(be.getLevel(), (float) pos.x, (float) pos.y, (float) pos.z, Vector3fcUtilKt.toVec3(direction), 5, colors);
 		}
 	}
 

@@ -6,11 +6,10 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value= Dist.CLIENT)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ParticleFactoryRegister {
-    @SubscribeEvent
-    public static void registerFactories(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(VSCHParticles.LASER_HIT_PARTICLE.get(), LaserHitParticle.Provider::new);
-    }
+	@SubscribeEvent
+	public static void registerFactories(RegisterParticleProvidersEvent event) {
+		event.registerSpriteSet(VSCHParticles.LASER_HIT_PARTICLE.get(), LaserHitParticle.Provider::new);
+	}
 }
-
