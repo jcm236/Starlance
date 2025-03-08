@@ -21,6 +21,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.jcm.vsch.util.SerializeUtil;
 
+import java.util.function.Consumer;
+
 public class LaserContext {
 	public static final int MAX_LENGTH = 128; // Laser's max length in blocks per 256 RGB
 
@@ -196,7 +198,10 @@ public class LaserContext {
 			return;
 		}
 		if (processor == null || processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
-			LaserUtil.blockDestroyProcessor(this);
+			Consumer<LaserContext> defProcessor = LaserUtil.getDefaultBlockProcessor(this);
+			if (defProcessor != null) {
+				defProcessor.accept(this);
+			}
 		} else {
 			processor.onLaserHit(this);
 		}
