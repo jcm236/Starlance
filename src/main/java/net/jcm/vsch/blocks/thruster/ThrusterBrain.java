@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +47,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	private static final String ENERGY_TAG_NAME = "Energy";
 	private static final String TANKS_TAG_NAME = "Tanks";
 	private static final int FLUID_TANK_CAPACITY = 10000;
+	private static final int THRUSTER_MAX_DIMENSION = 32;
 
 	private final ThrusterData thrusterData;
 	private final ThrusterEngine engine;
@@ -179,7 +181,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		this.storedEnergy = Math.min(this.maxEnergy, data.getInt(ENERGY_TAG_NAME));
 		if (data.contains(TANKS_TAG_NAME)) {
-			ListTag tanks = data.getList(TANKS_TAG_NAME, 10);
+			ListTag tanks = data.getList(TANKS_TAG_NAME, Tag.TAG_COMPOUND);
 			if (tanks.size() == this.tanks.length) {
 				for (int i = 0; i < this.tanks.length; i++) {
 					FluidTank tank = this.tanks[i];
@@ -272,7 +274,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		if (this.facing.getAxis().choose(newPos.getX() - atPos.getX(), newPos.getY() - atPos.getY(), newPos.getZ() - atPos.getZ()) != 0) {
 			return;
 		}
-		final int MAX_SIZE = 32;
 		int minX, minY, minZ, maxX, maxY, maxZ;
 		BlockPos dataPos = this.getDataBlock().getBlockPos();
 		minX = maxX = dataPos.getX();
@@ -297,7 +298,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 				maxZ = z;
 			}
 		}
-		if (maxX - minX > MAX_SIZE || maxY - minY > MAX_SIZE || maxZ - minZ > MAX_SIZE) {
+		if (maxX - minX > THRUSTER_MAX_DIMENSION || maxY - minY > THRUSTER_MAX_DIMENSION || maxZ - minZ > THRUSTER_MAX_DIMENSION) {
 			return;
 		}
 
