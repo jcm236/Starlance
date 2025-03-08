@@ -45,6 +45,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	private static final String PERIPHERAL_MOD_TAG_NAME = "PeripheralMode";
 	private static final String ENERGY_TAG_NAME = "Energy";
 	private static final String TANKS_TAG_NAME = "Tanks";
+	private static final int FLUID_TANK_CAPACITY = 10000;
 
 	private final ThrusterData thrusterData;
 	private final ThrusterEngine engine;
@@ -77,7 +78,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		this.tanks = new FluidTank[this.engine.getTanks()];
 		for (int i = 0; i < this.tanks.length; i++) {
-			this.tanks[i] = new FluidTank(10000 * count);
+			this.tanks[i] = new FluidTank(FLUID_TANK_CAPACITY * count);
 		}
 	}
 
@@ -182,7 +183,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			if (tanks.size() == this.tanks.length) {
 				for (int i = 0; i < this.tanks.length; i++) {
 					FluidTank tank = this.tanks[i];
-					tank.setCapacity(10000 * count);
+					tank.setCapacity(FLUID_TANK_CAPACITY * count);
 					tank.readFromNBT(tanks.getCompound(i));
 				}
 			}
@@ -309,7 +310,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.storedEnergy += newBrain.storedEnergy;
 		for (int i = 0; i < this.tanks.length; i++) {
 			FluidTank tank = this.tanks[i];
-			tank.setCapacity(10000 * count);
+			tank.setCapacity(FLUID_TANK_CAPACITY * count);
 			tank.fill(newBrain.tanks[i].getFluid(), IFluidHandler.FluidAction.EXECUTE);
 		}
 		this.getDataBlock().sendUpdate();
@@ -340,7 +341,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		for (int i = 0; i < this.tanks.length; i++) {
 			FluidTank tank = this.tanks[i];
 			FluidStack stack = tank.getFluid();
-			tank.setCapacity(10000 * count);
+			tank.setCapacity(FLUID_TANK_CAPACITY * count);
 			if (stack.isEmpty()) {
 				continue;
 			}
