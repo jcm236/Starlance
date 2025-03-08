@@ -32,7 +32,7 @@ public class LaserContext {
 	private boolean canceled = false;
 	private double maxLength = 0;
 	private HitResult hit = null;
-	private boolean isDefaultProcessor = false;
+	private boolean isEndPointProcessor = false;
 	private LaserProperties onHitProps = null;
 	int tickRedirected;
 
@@ -139,7 +139,7 @@ public class LaserContext {
 	}
 
 	public boolean shouldRenderOnHitParticles() {
-		return this.isDefaultProcessor;
+		return this.isEndPointProcessor;
 	}
 
 	/**
@@ -189,14 +189,22 @@ public class LaserContext {
 			return;
 		}
 		final LaserProperties props = this.getLaserOnHitProperties();
-		final ILaserProcessor processor;
+		ILaserProcessor processor;
 		if (block.getBlock() instanceof ILaserProcessor proc) {
 			processor = proc;
 		} else if (level.getBlockEntity(targetPos) instanceof ILaserProcessor proc) {
 			processor = proc;
 		} else {
-			processor = null;
-			this.isDefaultProcessor = true;
+			processor = LaserUtil.getDefaultBlockProcessor(this);
+		}
+		if (processor != null) {
+			this.isEndPointProcessor = processor.isEndPoint();
+		}
+		if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
+			processor = LaserUtil.getDefaultBlockProcessor(this);
+			if (processor == null) {
+				return;
+			}
 		}
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			attachment.beforeProcessLaser(this, block, targetPos, processor);
@@ -204,14 +212,7 @@ public class LaserContext {
 		if (this.canceled) {
 			return;
 		}
-		if (processor == null || processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
-			Consumer<LaserContext> defProcessor = LaserUtil.getDefaultBlockProcessor(this);
-			if (defProcessor != null) {
-				defProcessor.accept(this);
-			}
-		} else {
-			processor.onLaserHit(this);
-		}
+		processor.onLaserHit(this);
 		for (ILaserAttachment attachment : props.getAttachments()) {
 			attachment.afterProcessLaser(this, block, targetPos);
 		}
@@ -230,6 +231,7 @@ public class LaserContext {
 		CompoundTag comp = new CompoundTag();
 		data.put("LastRedirecter", this.lastRedirecter.writeToNBT(comp));
 		data.putInt("Redirected", this.redirected);
+		data.putBoolean("Ended", this.isEndPointProcessor);
 		if (this.hit != null) {
 			data.put("Hit", SerializeUtil.hitResultToNBT(this.hit));
 		}
@@ -240,6 +242,7 @@ public class LaserContext {
 		this.props.readFromNBT(data);
 		this.lastRedirecter = LaserEmitter.parseFromNBT(level, data.getCompound("LastRedirecter"));
 		this.redirected = data.getInt("Redirected");
+		this.isEndPointProcessor = data.getBoolean("Ended");
 		if (data.contains("Hit")) {
 			this.hit = SerializeUtil.hitResultFromNBT(level, data.getCompound("Hit"));
 		}

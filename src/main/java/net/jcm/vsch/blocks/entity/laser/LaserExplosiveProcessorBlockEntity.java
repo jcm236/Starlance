@@ -41,7 +41,7 @@ public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlock
 	public class ExplosiveAttachment implements ILaserAttachment {
 		@Override
 		public void beforeProcessLaser(LaserContext ctx, BlockState oldState, BlockPos pos, ILaserProcessor processor) {
-			if (ctx.canceled() || processor != null) {
+			if (ctx.canceled() || !processor.isEndPoint()) {
 				return;
 			}
 			ctx.cancel();

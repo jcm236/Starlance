@@ -37,7 +37,6 @@ public class LaserEntity extends Entity {
 		this.life = life;
 		if (laser != null) {
 			this.entityData.set(DATA_LASER, laser.writeToNBT(new CompoundTag()));
-			this.entityData.set(DATA_LIFE, life);
 			final Vec3 pos = laser.getEmitPosition();
 			this.absMoveTo(pos.x, pos.y, pos.z);
 		}
@@ -48,7 +47,6 @@ public class LaserEntity extends Entity {
 	}
 
 	public static LaserEntity createAndAdd(final LaserContext laser, final int life) {
-		// TODO: reuse entity to prevent network lag cause flash.
 		final Level level = laser.getLevel();
 		final LaserEntity entity = new LaserEntity(VSCHEntities.LASER_ENTITY.get(), level, laser, life);
 		level.addFreshEntity(entity);
@@ -77,7 +75,6 @@ public class LaserEntity extends Entity {
 	@Override
 	protected void defineSynchedData() {
 		this.entityData.define(DATA_LASER, new CompoundTag());
-		this.entityData.define(DATA_LIFE, 0);
 	}
 
 	@Override
@@ -88,11 +85,11 @@ public class LaserEntity extends Entity {
 
 	@Override
 	public void tick() {
-		if (this.life == -1) {
-			this.life = this.entityData.get(DATA_LIFE);
+		if (!(this.level() instanceof ServerLevel)) {
+			return;
 		}
 		this.life--;
-		if (this.life < 0) {
+		if (this.life <= 0) {
 			this.discard();
 			return;
 		}

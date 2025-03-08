@@ -31,11 +31,12 @@ public interface ILaserAttachment {
 	 * @param ctx       The {@link LaserContext}
 	 * @param state     The {@link BlockState} of the hitting block
 	 * @param pos       The position of the hitting block
-	 * @param processor The processor, may be {@code null} if no processor were found and the default processor will put in use
+	 * @param processor The processor, will never be {@code null}
 	 *
 	 * @see afterProcessLaser
 	 * @see LaserContext.cancel
 	 * @see LaserContext.getHitResult
+	 * @see ILaserProcessor.isEndPoint
 	 */
 	default void beforeProcessLaser(LaserContext ctx, BlockState state, BlockPos pos, ILaserProcessor processor) {}
 

@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber
 public final class LaserUtil {
 	private static final int MAX_REDIRECT_PER_TICK = 4;
-	private static final Map<Class<? extends Block>, Consumer<LaserContext>> DEFAULT_PROCESSOR_MAP = new HashMap<>();
+	private static final Map<Class<? extends Block>, ILaserProcessor> DEFAULT_PROCESSOR_MAP = new HashMap<>();
 	private static final Queue<LaserContext> LASER_QUEUE = new ConcurrentLinkedQueue<>();
 
 	private LaserUtil() {}
@@ -87,14 +87,18 @@ public final class LaserUtil {
 		LaserEntity.createAndAdd(laser, 1);
 	}
 
-	public static Consumer<LaserContext> registerDefaultBlockProcessor(Class<? extends Block> clazz, Consumer<LaserContext> processor) {
+	public static ILaserProcessor registerDefaultBlockProcessor(Class<? extends Block> clazz, Consumer<LaserContext> processor) {
+		return registerDefaultBlockProcessor(clazz, ILaserProcessor.fromEndPoint(processor));
+	}
+
+	public static ILaserProcessor registerDefaultBlockProcessor(Class<? extends Block> clazz, ILaserProcessor processor) {
 		if (processor == null) {
 			return DEFAULT_PROCESSOR_MAP.remove(clazz);
 		}
 		return DEFAULT_PROCESSOR_MAP.put(clazz, processor);
 	}
 
-	public static Consumer<LaserContext> getDefaultBlockProcessor(LaserContext laser) {
+	public static ILaserProcessor getDefaultBlockProcessor(LaserContext laser) {
 		if (!(laser.getHitResult() instanceof BlockHitResult hitResult)) {
 			return null;
 		}
@@ -106,7 +110,7 @@ public final class LaserUtil {
 		final BlockState state = level.getBlockState(pos);
 		final Block block = state.getBlock();
 		for (Class<?> blockClass = block.getClass(); Block.class.isAssignableFrom(blockClass); blockClass = blockClass.getSuperclass()) {
-			final Consumer<LaserContext> processor = DEFAULT_PROCESSOR_MAP.get(blockClass);
+			final ILaserProcessor processor = DEFAULT_PROCESSOR_MAP.get(blockClass);
 			if (processor != null) {
 				return processor;
 			}

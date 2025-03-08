@@ -16,6 +16,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.jcm.vsch.accessor.LevelChunkAccessor;
+import net.jcm.vsch.api.laser.ILaserProcessor;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
@@ -30,8 +31,9 @@ public final class DefaultLaserProcessors {
 
 	public static void register() {
 		LaserUtil.registerDefaultBlockProcessor(Block.class, DefaultLaserProcessors::blockDestroyProcessor);
-		LaserUtil.registerDefaultBlockProcessor(StainedGlassBlock.class, DefaultLaserProcessors::stainedGlassProcessor);
-		LaserUtil.registerDefaultBlockProcessor(StainedGlassPaneBlock.class, DefaultLaserProcessors::stainedGlassProcessor);
+		final ILaserProcessor stainedGlassProcessor = new StainedGlassProcessor();
+		LaserUtil.registerDefaultBlockProcessor(StainedGlassBlock.class, stainedGlassProcessor);
+		LaserUtil.registerDefaultBlockProcessor(StainedGlassPaneBlock.class, stainedGlassProcessor);
 	}
 
 	private static void blockDestroyProcessor(LaserContext laser) {
@@ -70,27 +72,35 @@ public final class DefaultLaserProcessors {
 		}
 	}
 
-	private static void stainedGlassProcessor(LaserContext laser) {
-		final BlockHitResult hitResult = (BlockHitResult) (laser.getHitResult());
-		final Level level = laser.getLevel();
-		final BlockPos pos = hitResult.getBlockPos();
-		final BlockState state = level.getBlockState(pos);
-		final LaserProperties props = laser.getLaserOnHitProperties();
-
-		if (!(state.getBlock() instanceof BeaconBeamBlock beamBlock)) {
-			return;
+	private static final class StainedGlassProcessor implements ILaserProcessor {
+		@Override
+		public int getMaxLaserStrength() {
+			return 256 * 6;
 		}
-		final DyeColor dyeColor = beamBlock.getColor();
-		final int color = dyeColor.getTextColor();
-		props.r = (props.r * ((color >> 16) & 0xff)) / 0xff;
-		props.g = (props.g * ((color >> 8) & 0xff)) / 0xff;
-		props.b = (props.b * (color & 0xff)) / 0xff;
-		LaserUtil.fireRedirectedLaser(
-			laser.redirectWith(
-				props,
-				LaserEmitter.fromBlock(level, hitResult.getLocation(), laser.getInputDirection(), pos, null)
-			)
-		);
+
+		@Override
+		public void onLaserHit(LaserContext laser) {
+			final BlockHitResult hitResult = (BlockHitResult) (laser.getHitResult());
+			final Level level = laser.getLevel();
+			final BlockPos pos = hitResult.getBlockPos();
+			final BlockState state = level.getBlockState(pos);
+			final LaserProperties props = laser.getLaserOnHitProperties();
+
+			if (!(state.getBlock() instanceof BeaconBeamBlock beamBlock)) {
+				return;
+			}
+			final DyeColor dyeColor = beamBlock.getColor();
+			final int color = dyeColor.getTextColor();
+			props.r = (props.r * ((color >> 16) & 0xff)) / 0xff;
+			props.g = (props.g * ((color >> 8) & 0xff)) / 0xff;
+			props.b = (props.b * (color & 0xff)) / 0xff;
+			LaserUtil.fireRedirectedLaser(
+				laser.redirectWith(
+					props,
+					LaserEmitter.fromBlock(level, hitResult.getLocation(), laser.getInputDirection(), pos, null)
+				)
+			);
+		}
 	}
 
 	private static int getTire(BlockState state) {
