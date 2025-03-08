@@ -13,24 +13,10 @@ public class JadeCompat implements IWailaPlugin {
 
     @Override
     public void register(IWailaCommonRegistration registration) {
-        //TODO register data providers
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(ThrusterBlockComponentProvider.INSTANCE, AbstractThrusterBlock.class);
-//        registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
-//            if (hitResult==null){return accessor;}
-//            if (hitResult.getType() == HitResult.Type.BLOCK) {
-//                // Get block state
-//                BlockHitResult blockHit = (BlockHitResult) hitResult;
-//                BlockPos blockPos = blockHit.getBlockPos();
-//                if (accessor == null){return null;};
-//                Level level = accessor.getLevel();
-//                BlockState blockState = level.getBlockState(blockPos);
-//                return registration.blockAccessor().blockState(blockState).build();
-//            }
-//            return accessor;
-//        });
     }
 }
