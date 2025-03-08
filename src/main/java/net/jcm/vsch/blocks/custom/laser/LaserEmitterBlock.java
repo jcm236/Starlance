@@ -43,12 +43,12 @@ public class LaserEmitterBlock extends LaserCannonBlock<LaserEmitterBlockEntity>
 			return InteractionResult.PASS;
 		}
 
-		final DyeColor color = item.getDyeColor();
+		final DyeColor dyeColor = item.getDyeColor();
 		if (!player.isCreative()) {
 			stack.shrink(1);
 		}
-		final float[] colors = color.getTextureDiffuseColors();
-		emitter.setColor((int) (colors[0] * 255), (int) (colors[1] * 255), (int) (colors[2] * 255));
+		final int color = dyeColor.getTextColor();
+		emitter.setColor((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff);
 		return InteractionResult.SUCCESS;
 	}
 }

@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.jcm.vsch.api.laser.ILaserProcessor;
-import net.jcm.vsch.api.laser.ILaserSource;
+import net.jcm.vsch.api.laser.ILaserSyncedSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
@@ -20,7 +20,7 @@ import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractLaserLenBlockEntity extends BlockEntity implements ILaserProcessor, ILaserSource, ParticleBlockEntity {
+public abstract class AbstractLaserLenBlockEntity extends BlockEntity implements ILaserProcessor, ILaserSyncedSource, ParticleBlockEntity {
 	private final List<LaserContext> emittingLasers = new ArrayList<>();
 	private int laserLastTick = 0;
 	private int lasering = 0;

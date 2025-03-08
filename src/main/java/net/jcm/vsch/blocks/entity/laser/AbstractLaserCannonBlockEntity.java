@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.jcm.vsch.api.laser.ILaserSource;
+import net.jcm.vsch.api.laser.ILaserSyncedSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
@@ -19,7 +19,7 @@ import net.jcm.vsch.blocks.entity.template.AbstractCannonBlockEntity;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractLaserCannonBlockEntity extends AbstractCannonBlockEntity implements ILaserSource {
+public abstract class AbstractLaserCannonBlockEntity extends AbstractCannonBlockEntity implements ILaserSyncedSource {
 	private LaserContext firedLaser = null;
 	private int laserLastTick = 0;
 

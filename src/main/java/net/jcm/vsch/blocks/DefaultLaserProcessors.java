@@ -2,17 +2,22 @@ package net.jcm.vsch.blocks;
 
 import it.unimi.dsi.fastutil.ints.Int2FloatOpenHashMap;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BeaconBeamBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.BlockHitResult;
 
 import net.jcm.vsch.accessor.LevelChunkAccessor;
 import net.jcm.vsch.api.laser.LaserContext;
+import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
 
@@ -25,11 +30,12 @@ public final class DefaultLaserProcessors {
 
 	public static void register() {
 		LaserUtil.registerDefaultBlockProcessor(Block.class, DefaultLaserProcessors::blockDestroyProcessor);
+		LaserUtil.registerDefaultBlockProcessor(StainedGlassBlock.class, DefaultLaserProcessors::stainedGlassProcessor);
+		LaserUtil.registerDefaultBlockProcessor(StainedGlassPaneBlock.class, DefaultLaserProcessors::stainedGlassProcessor);
 	}
 
 	private static void blockDestroyProcessor(LaserContext laser) {
-		BlockHitResult hitResult = (BlockHitResult) (laser.getHitResult());
-
+		final BlockHitResult hitResult = (BlockHitResult) (laser.getHitResult());
 		final Level level = laser.getLevel();
 		final BlockPos pos = hitResult.getBlockPos();
 		final BlockState state = level.getBlockState(pos);
@@ -42,6 +48,7 @@ public final class DefaultLaserProcessors {
 		if (strength < tire) {
 			return;
 		}
+
 		final float destroySpeed = state.getDestroySpeed(level, pos);
 		if (destroySpeed == -1) {
 			return;
@@ -61,6 +68,29 @@ public final class DefaultLaserProcessors {
 		if (dropChance >= 1 || dropChance > 0 && RND.nextDouble() < dropChance) {
 			Block.dropResources(state, level, pos, state.hasBlockEntity() ? level.getBlockEntity(pos) : null);
 		}
+	}
+
+	private static void stainedGlassProcessor(LaserContext laser) {
+		final BlockHitResult hitResult = (BlockHitResult) (laser.getHitResult());
+		final Level level = laser.getLevel();
+		final BlockPos pos = hitResult.getBlockPos();
+		final BlockState state = level.getBlockState(pos);
+		final LaserProperties props = laser.getLaserOnHitProperties();
+
+		if (!(state.getBlock() instanceof BeaconBeamBlock beamBlock)) {
+			return;
+		}
+		final DyeColor dyeColor = beamBlock.getColor();
+		final int color = dyeColor.getTextColor();
+		props.r = (props.r * ((color >> 16) & 0xff)) / 0xff;
+		props.g = (props.g * ((color >> 8) & 0xff)) / 0xff;
+		props.b = (props.b * (color & 0xff)) / 0xff;
+		LaserUtil.fireRedirectedLaser(
+			laser.redirectWith(
+				props,
+				LaserEmitter.fromBlock(level, hitResult.getLocation(), laser.getInputDirection(), pos, null)
+			)
+		);
 	}
 
 	private static int getTire(BlockState state) {

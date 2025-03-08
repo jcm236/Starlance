@@ -29,6 +29,7 @@ import net.jcm.vsch.particle.VSCHParticles;
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
+	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
 
 	public VSCHMod() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();

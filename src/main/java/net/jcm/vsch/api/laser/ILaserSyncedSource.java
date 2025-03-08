@@ -4,7 +4,7 @@ import net.jcm.vsch.api.laser.LaserContext;
 
 import java.util.List;
 
-public interface ILaserSource {
+public interface ILaserSyncedSource {
 	/**
 	 * getEmittingLasers returns a {@link List} that represents directly emitted lasers from this source.
 	 *

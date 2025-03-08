@@ -9,11 +9,15 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -29,9 +33,11 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.util.VectorConversionsKt;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
-import net.jcm.vsch.api.laser.ILaserSource;
+import net.jcm.vsch.api.laser.ILaserSyncedSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
+import net.jcm.vsch.api.laser.LaserProperties;
+import net.jcm.vsch.entity.LaserEntity;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.Vector3fcUtilKt;
 
@@ -48,12 +54,14 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 
 	@Override
 	public void render(BlockEntity be, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-		if (!(be instanceof ILaserSource source)) {
+		if (!(be instanceof ILaserSyncedSource source)) {
 			return;
 		}
+		final Level level = be.getLevel();
+		final long gameTime = level.getGameTime();
 		final BlockPos blockPos = be.getBlockPos();
 		final Vector3d blockCorner = new Vector3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-		final Ship ship = VSGameUtilsKt.getShipManagingPos(be.getLevel(), blockPos);
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
 		if (ship != null) {
 			ship.getShipToWorld().transformPosition(blockCorner);
 		}
@@ -61,7 +69,8 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		for (final LaserContext laser : lasers) {
 			final Vec3 from = laser.getEmitPosition();
 			final Vec3 to = laser.getHitPosition();
-			final Vec3 color = laser.getColor();
+			final LaserProperties props = laser.getLaserProperties();
+			final Vec3 color = props.getColor();
 			final float[] colors = new float[]{(float) (color.x), (float) (color.y), (float) (color.z)};
 			final Vec3 path = to.subtract(from);
 			final float length = (float) (path.length());
@@ -74,20 +83,31 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			}
 			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
 
+			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 10), 1);
+			final float innerRadius = 0.05f * size;
+			final float outerRadius = 0.09f * size;
+
 			renderBeaconBeam(
-				be,
+				gameTime,
 				translation, rotation,
 				poseStack, bufferSource,
 				BeaconRenderer.BEAM_LOCATION,
 				partialTick,
 				1, 0, length,
 				colors,
-				0.05f, 0.09f
+				innerRadius, outerRadius
 			);
 
-			Vec3 pos = to.subtract(direction.x / 5, direction.y / 5, direction.z / 5);
-			// TODO: detect if block were hitting is a laser reciever/reflecter/whatever, and if so don't do these particles
-			LaserHitParticle.spawnConeOfParticles(be.getLevel(), (float) pos.x, (float) pos.y, (float) pos.z, Vector3fcUtilKt.toVec3(direction), 5, colors);
+			if (laser.shouldRenderOnHitParticles()) {
+				final Vec3 pos = to.subtract(path.normalize().scale(0.2));
+				LaserHitParticle.spawnConeOfParticles(
+					level,
+					(float) pos.x, (float) pos.y, (float) pos.z,
+					Vector3fcUtilKt.toVec3(direction),
+					5,
+					colors
+				);
+			}
 		}
 	}
 
@@ -106,10 +126,87 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		return true;
 	}
 
+	public static class LaserEntityRenderer extends EntityRenderer<LaserEntity> {
+		public LaserEntityRenderer(EntityRendererProvider.Context ctx) {
+			super(ctx);
+		}
+
+		@Override
+		protected int getSkyLightLevel(LaserEntity entity, BlockPos pos) {
+			return 15;
+		}
+
+		@Override
+		protected int getBlockLightLevel(LaserEntity entity, BlockPos pos) {
+			return 15;
+		}
+
+		@Override
+		public boolean shouldRender(LaserEntity entity, Frustum frustum, double x, double y, double z) {
+			return true;
+		}
+
+		@Override
+		public void render(
+			LaserEntity entity,
+			float unknown, float partialTick,
+			PoseStack poseStack, MultiBufferSource bufferSource,
+			int packedLight
+		) {
+			final LaserContext laser = entity.getLaser();
+			if (laser == null) {
+				return;
+			}
+			final Level level = entity.level();
+			final long gameTime = level.getGameTime();
+			final Vec3 from = laser.getEmitPosition();
+			final Vec3 to = laser.getHitPosition();
+			final LaserProperties props = laser.getLaserProperties();
+			final Vec3 color = props.getColor();
+			final float[] colors = new float[]{(float) (color.x), (float) (color.y), (float) (color.z)};
+			final Vec3 path = to.subtract(from);
+			final float length = (float) (path.length());
+			final Vector3f direction = path.toVector3f().normalize();
+			final Vector3d translation = new Vector3d(0, 0, 0);
+			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
+
+			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 10), 1);
+			final float innerRadius = 0.05f * size;
+			final float outerRadius = 0.09f * size;
+
+			renderBeaconBeam(
+				gameTime,
+				translation, rotation,
+				poseStack, bufferSource,
+				BeaconRenderer.BEAM_LOCATION,
+				partialTick,
+				1, 0, length,
+				colors,
+				innerRadius, outerRadius
+			);
+
+			if (laser.shouldRenderOnHitParticles()) {
+				final Vec3 pos = to.subtract(path.normalize().scale(0.2));
+				LaserHitParticle.spawnConeOfParticles(
+					level,
+					(float) pos.x, (float) pos.y, (float) pos.z,
+					Vector3fcUtilKt.toVec3(direction),
+					5,
+					colors
+				);
+			}
+		}
+
+		@Override
+		public ResourceLocation getTextureLocation(LaserEntity entity) {
+			return null;
+		}
+	}
+
 	// TODO: these code are taken from AdvancedPeripherals.
 	// We eventually should develop own laser renderer but not beacon beam.
 	private static void renderBeaconBeam(
-		BlockEntity be,
+		long gameTime,
 		Vector3d translation, Quaternionf rotation,
 		PoseStack pPoseStack, MultiBufferSource pBufferSource,
 		ResourceLocation pBeamLocation,
@@ -118,7 +215,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		float[] pColors,
 		float pBeamRadius, float pGlowRadius
 	) {
-		long pGameTime = be.getLevel().getGameTime();
+		long pGameTime = gameTime;
 		float maxX = pYOffset + pHeight;
 		pPoseStack.pushPose();
 		pPoseStack.translate(translation.x, translation.y, translation.z);

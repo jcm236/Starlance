@@ -1,6 +1,7 @@
 package net.jcm.vsch.api.laser;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,6 +11,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import net.jcm.vsch.entity.LaserEntity;
+import net.jcm.vsch.network.VSCHNetwork;
+import net.jcm.vsch.network.s2c.LaserContextPacketS2C;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +31,7 @@ public final class LaserUtil {
 	private LaserUtil() {}
 
 	@SubscribeEvent
-	public static void onServerTick(TickEvent.ServerTickEvent event) {
+	public static void onServerTick(final TickEvent.ServerTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) {
 			return;
 		}
@@ -36,23 +41,25 @@ public final class LaserUtil {
 		}
 	}
 
-	private static void processLaser(LaserContext laser) {
+	private static void processLaser(final LaserContext laser) {
 		laser.fire();
 		final LaserEmitter emitter = laser.getLastRedirecter();
-		if (emitter.getSource() instanceof ILaserSource source) {
+		if (emitter.getSource() instanceof ILaserSyncedSource source) {
 			source.onLaserFired(laser);
+		} else {
+			syncLaser(laser);
 		}
 	}
 
-	public static void queueLaser(LaserContext laser) {
+	public static void queueLaser(final LaserContext laser) {
 		LASER_QUEUE.add(laser);
 	}
 
-	public static void fireLaser(LaserProperties props, LaserEmitter emitter) {
+	public static void fireLaser(final LaserProperties props, final LaserEmitter emitter) {
 		processLaser(new LaserContext(props, emitter));
 	}
 
-	public static void fireRedirectedLaser(LaserContext laser) {
+	public static void fireRedirectedLaser(final LaserContext laser) {
 		if (laser.tickRedirected < MAX_REDIRECT_PER_TICK) {
 			processLaser(laser);
 			return;
@@ -74,6 +81,10 @@ public final class LaserUtil {
 		for (ILaserAttachment attachment : props.getAttachments()) {
 			attachment.afterMergeLaser(original, target);
 		}
+	}
+
+	private static void syncLaser(final LaserContext laser) {
+		LaserEntity.createAndAdd(laser, 1);
 	}
 
 	public static Consumer<LaserContext> registerDefaultBlockProcessor(Class<? extends Block> clazz, Consumer<LaserContext> processor) {

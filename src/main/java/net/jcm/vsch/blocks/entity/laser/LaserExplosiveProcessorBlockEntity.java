@@ -17,7 +17,6 @@ import net.minecraft.world.phys.Vec3;
 
 import net.jcm.vsch.api.laser.ILaserAttachment;
 import net.jcm.vsch.api.laser.ILaserProcessor;
-import net.jcm.vsch.api.laser.ILaserSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;

@@ -8,9 +8,8 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StainedGlassBlock;
-import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -33,6 +32,7 @@ public class LaserContext {
 	private boolean canceled = false;
 	private double maxLength = 0;
 	private HitResult hit = null;
+	private boolean isDefaultProcessor = false;
 	private LaserProperties onHitProps = null;
 	int tickRedirected;
 
@@ -58,6 +58,8 @@ public class LaserContext {
 
 	/**
 	 * getLaserProperties returns the laser's original properties.
+	 * If you want to process based on the properties the laser has,
+	 * you usuallay should use {@link getLaserOnHitProperties} instead.
 	 *
 	 * @return the {@link LaserProperties} when laser is emitting
 	 * @see getLaserOnHitProperties
@@ -136,6 +138,10 @@ public class LaserContext {
 		this.hit = hit;
 	}
 
+	public boolean shouldRenderOnHitParticles() {
+		return this.isDefaultProcessor;
+	}
+
 	/**
 	 * Prevent the laser to make any effect.
 	 *
@@ -190,6 +196,7 @@ public class LaserContext {
 			processor = proc;
 		} else {
 			processor = null;
+			this.isDefaultProcessor = true;
 		}
 		for (ILaserAttachment attachment : this.props.getAttachments()) {
 			attachment.beforeProcessLaser(this, block, targetPos, processor);
@@ -253,7 +260,7 @@ public class LaserContext {
 		if (block instanceof AbstractGlassBlock && !(block instanceof StainedGlassBlock)) {
 			return true;
 		}
-		if (block instanceof IronBarsBlock && !(block instanceof StainedGlassPaneBlock)) {
+		if (block == Blocks.GLASS_PANE) {
 			return true;
 		}
 		return false;
