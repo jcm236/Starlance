@@ -26,6 +26,10 @@ public class ThrusterData {
 		public ThrusterMode toggle() {
 			return this == POSITION ? GLOBAL : POSITION;
 		}
+
+		public Boolean isPositional(){
+			return this == POSITION;
+		}
 	}
 
 	public final Vector3d dir;

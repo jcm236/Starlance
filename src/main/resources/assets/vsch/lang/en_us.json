@@ -6,16 +6,21 @@
 	"vsch.position": " §ePOSITION",
 	"vsch.error.thruster_modes_disabled": "Thruster mode toggling is disabled!",
 	"vsch.error.thruster_not_on_ship": "Thruster not on a ship",
+
 	"block.vsch.thruster_block": "Thruster",
 	"block.vsch.drag_inducer_block": "Drag inducer",
 	"block.vsch.air_thruster_block": "Air thruster",
 	"block.vsch.powerful_thruster_block": "Powerful thruster",
+
 	"item.vsch.wrench": "Wrench",
 	"item.vsch.magnet_boot": "Magnet Boots",
+
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
+
 	"vsch.ponder.thrusters.header": "Thrusters",
 	"vsch.ponder.thrusters.text_1": "Thrusters need to be powered with redstone to thrust",
 	"vsch.ponder.thrusters.text_2": "Redstone level can control strength",
+
 	"vsch.ponder.thruster_modes.header": "Thruster Modes",
 	"vsch.ponder.thruster_modes.text_1": "By default, thrusters are in POSITION mode",
 	"vsch.ponder.thruster_modes.text_2": "This means they will apply force based on where they are",
@@ -23,8 +28,11 @@
 	"vsch.ponder.thruster_modes.text_4": "Using a wrench, a thruster can be changed to GLOBAL mode",
 	"vsch.ponder.thruster_modes.text_5": "In GLOBAL mode it applies force without position",
 	"vsch.ponder.thruster_modes.text_6": "This prevents unwanted rotation",
+
 	"vsch.ponder.drag_inducer.header": "Drag inducer",
 	"vsch.ponder.drag_inducer.text_1": "Sometimes, it can be hard to slow down in space",
 	"vsch.ponder.drag_inducer.text_2": "This is where the drag inducer comes in",
-	"vsch.ponder.drag_inducer.text_3": "When powered with redstone, the drag inducer will try to slow you down in all directions"
+	"vsch.ponder.drag_inducer.text_3": "When powered with redstone, the drag inducer will try to slow you down in all directions",
+
+	"create.tooltip.vsch.thruster.mode": "Mode: "
 }

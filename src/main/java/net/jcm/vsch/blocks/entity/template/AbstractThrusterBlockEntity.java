@@ -1,20 +1,27 @@
 package net.jcm.vsch.blocks.entity.template;
 
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.utility.Lang;
 import dan200.computercraft.shared.Capabilities;
 
+import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.ThrusterPeripheral;
+import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.ship.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -30,7 +37,9 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity {
+import java.util.List;
+
+public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity, IHaveGoggleInformation {
 	private final String typeString;
 	private final ThrusterData thrusterData;
 	private volatile float power = 0;
@@ -248,5 +257,16 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	private static float getPowerByRedstone(Level level, BlockPos pos) {
 		return (float)(level.getBestNeighborSignal(pos)) / 15;
+	}
+
+	@Override
+	public ItemStack getIcon(boolean isPlayerSneaking) {
+		return new ItemStack(VSCHItems.WRENCH.get());
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		Lang.translate("tooltip.vsch.thruster.mode", new Object[]{0}).add(Component.literal(this.getThrusterMode().toString()).withStyle(this.getThrusterMode().isPositional() ? ChatFormatting.YELLOW : ChatFormatting.GOLD)).forGoggles(tooltip);
+		return true;
 	}
 }
