@@ -1,11 +1,11 @@
-package net.jcm.vsch.blocks.custom.laser;
+package net.jcm.vsch.blocks.custom.laser.cannon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.jcm.vsch.blocks.entity.laser.LaserDetectProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserDetectProcessorBlockEntity;
 
 public class LaserDetectProcessorBlock extends LaserCannonBlock<LaserDetectProcessorBlockEntity> {
 	public LaserDetectProcessorBlock(BlockBehaviour.Properties properties) {

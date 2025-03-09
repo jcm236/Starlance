@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.entity.laser;
+package net.jcm.vsch.blocks.entity.laser.cannon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

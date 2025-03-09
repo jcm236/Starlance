@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.entity.laser;
+package net.jcm.vsch.blocks.entity.laser.len;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

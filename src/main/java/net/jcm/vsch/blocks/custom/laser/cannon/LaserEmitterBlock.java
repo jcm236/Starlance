@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.custom.laser;
+package net.jcm.vsch.blocks.custom.laser.cannon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.template.IColoredBlockEntity;
 
 public class LaserEmitterBlock extends LaserCannonBlock<LaserEmitterBlockEntity> {

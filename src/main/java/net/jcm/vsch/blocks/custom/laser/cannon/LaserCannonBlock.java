@@ -1,11 +1,11 @@
-package net.jcm.vsch.blocks.custom.laser;
+package net.jcm.vsch.blocks.custom.laser.cannon;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.jcm.vsch.blocks.custom.template.AbstractCannonBlock;
-import net.jcm.vsch.blocks.entity.laser.AbstractLaserCannonBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.AbstractLaserCannonBlockEntity;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShape;
 import net.jcm.vsch.util.rot.RotShapes;

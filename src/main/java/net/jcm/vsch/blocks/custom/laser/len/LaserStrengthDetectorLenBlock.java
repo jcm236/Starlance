@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.custom.laser;
+package net.jcm.vsch.blocks.custom.laser.len;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.jcm.vsch.blocks.entity.laser.LaserStrengthDetectorLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserStrengthDetectorLenBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;

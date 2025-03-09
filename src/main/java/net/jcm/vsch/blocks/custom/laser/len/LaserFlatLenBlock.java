@@ -1,4 +1,4 @@
-package net.jcm.vsch.blocks.custom.laser;
+package net.jcm.vsch.blocks.custom.laser.len;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.jcm.vsch.blocks.custom.template.AbstractCannonBlock;
-import net.jcm.vsch.blocks.entity.laser.AbstractLaserLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.AbstractLaserLenBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;

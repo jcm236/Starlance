@@ -16,19 +16,17 @@ import net.minecraftforge.registries.RegistryObject;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
-import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserDetectProcessorBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserEmitterBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
-import net.jcm.vsch.blocks.custom.laser.LaserStrengthDetectorLenBlock;
-import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserDetectProcessorBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserStrengthDetectorLenBlockEntity;
+import net.jcm.vsch.blocks.custom.laser.cannon.LaserCannonBlock;
+import net.jcm.vsch.blocks.custom.laser.cannon.LaserDetectProcessorBlock;
+import net.jcm.vsch.blocks.custom.laser.cannon.LaserEmitterBlock;
+import net.jcm.vsch.blocks.custom.laser.cannon.LaserReceiverBlock;
+import net.jcm.vsch.blocks.custom.laser.len.LaserFlatLenBlock;
+import net.jcm.vsch.blocks.custom.laser.len.LaserStrengthDetectorLenBlock;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserDetectProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserExplosiveProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserCondensingLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserFlatMirrorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserSemiTransparentFlatMirrorBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -70,8 +68,8 @@ public class VSCHBlocks {
 					.strength(5f)
 					.noOcclusion()));*/
 
-	public static final RegistryObject<Block> LASER_EMITTER_BLOCK = registerBlock("laser_emitter_block",
-		() -> new LaserEmitterBlock(
+	public static final RegistryObject<Block> LASER_DETECT_PROCESSOR_BLOCK = registerBlock("laser_detect_processor_block",
+		() -> new LaserDetectProcessorBlock(
 			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)
@@ -79,8 +77,8 @@ public class VSCHBlocks {
 		)
 	);
 
-	public static final RegistryObject<Block> LASER_DETECT_PROCESSOR_BLOCK = registerBlock("laser_detect_processor_block",
-		() -> new LaserDetectProcessorBlock(
+	public static final RegistryObject<Block> LASER_EMITTER_BLOCK = registerBlock("laser_emitter_block",
+		() -> new LaserEmitterBlock(
 			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)
@@ -116,6 +114,14 @@ public class VSCHBlocks {
 		)
 	);
 
+	public static final RegistryObject<Block> LASER_CONDENSING_LEN_BLOCK = registerBlock("laser_condensing_len_block",
+		() -> new LaserFlatLenBlock<>(
+			BlockBehaviour.Properties.copy(Blocks.GLASS)
+				.strength(1f, 0.3f)
+				.noOcclusion(),
+			LaserCondensingLenBlockEntity::new
+		)
+	);
 	public static final RegistryObject<Block> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK = registerBlock("laser_semi_transparent_flat_mirror_block",
 		() -> new LaserFlatLenBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
@@ -125,14 +131,6 @@ public class VSCHBlocks {
 		)
 	);
 
-	public static final RegistryObject<Block> LASER_CONDENSING_LEN_BLOCK = registerBlock("laser_condensing_len_block",
-		() -> new LaserFlatLenBlock<>(
-			BlockBehaviour.Properties.copy(Blocks.GLASS)
-				.strength(1f, 0.3f)
-				.noOcclusion(),
-			LaserCondensingLenBlockEntity::new
-		)
-	);
 
 	public static final RegistryObject<Block> LASER_STRENGTH_DETECTOR_LEN_BLOCK = registerBlock("laser_strength_detector_len_block",
 		() -> new LaserStrengthDetectorLenBlock(
