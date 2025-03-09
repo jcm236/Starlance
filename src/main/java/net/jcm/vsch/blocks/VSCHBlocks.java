@@ -17,10 +17,12 @@ import net.minecraftforge.registries.RegistryObject;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
 import net.jcm.vsch.blocks.custom.laser.LaserCannonBlock;
+import net.jcm.vsch.blocks.custom.laser.LaserDetectProcessorBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserEmitterBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserDetectProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
@@ -68,6 +70,15 @@ public class VSCHBlocks {
 
 	public static final RegistryObject<Block> LASER_EMITTER_BLOCK = registerBlock("laser_emitter_block",
 		() -> new LaserEmitterBlock(
+			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+				.sound(SoundType.GLASS)
+				.strength(6f, 1f)
+				.noOcclusion()
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_DETECT_PROCESSOR_BLOCK = registerBlock("laser_detect_processor_block",
+		() -> new LaserDetectProcessorBlock(
 			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)

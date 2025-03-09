@@ -24,23 +24,29 @@ import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 
 public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlockEntity {
-	public LaserExplosiveProcessorBlockEntity(BlockPos pos, BlockState state) {
+	public LaserExplosiveProcessorBlockEntity(final BlockPos pos, final BlockState state) {
 		super("laser_explosive_processor", VSCHBlockEntities.LASER_EXPLOSIVE_PROCESSOR_BLOCK_ENTITY.get(), pos, state);
 	}
 
 	@Override
-	public boolean canProcessLaser(Direction dir) {
+	public boolean canProcessLaser(final Direction dir) {
 		return dir == this.facing;
 	}
 
 	@Override
-	public LaserProperties processLaser(LaserProperties props) {
-		return props.withAttachment(new ExplosiveAttachment());
+	public LaserProperties processLaser(final LaserProperties props) {
+		return props.withAttachment(ExplosiveAttachment.INSTANCE);
 	}
 
-	public class ExplosiveAttachment implements ILaserAttachment {
+	public static class ExplosiveAttachment implements ILaserAttachment {
+		public static final ExplosiveAttachment INSTANCE = new ExplosiveAttachment();
+
 		@Override
-		public void beforeProcessLaser(LaserContext ctx, BlockState oldState, BlockPos pos, ILaserProcessor processor) {
+		public void beforeProcessLaser(
+			final LaserContext ctx,
+			final BlockState oldState, final BlockPos pos,
+			final ILaserProcessor processor
+		) {
 			if (ctx.canceled() || !processor.isEndPoint()) {
 				return;
 			}

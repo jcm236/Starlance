@@ -30,6 +30,7 @@ public class LaserContext {
 	private LaserEmitter lastRedirecter;
 	private int redirected;
 	private boolean canceled = false;
+	protected double traveled = -1;
 	private double maxLength = 0;
 	private HitResult hit = null;
 	private boolean isEndPointProcessor = false;
@@ -71,6 +72,7 @@ public class LaserContext {
 
 	/**
 	 * getLaserOnHitProperties returns the laser's properties after hit.
+	 * it should always returns same property instance on same context.
 	 *
 	 * @return the {@link LaserProperties} when laser is hit
 	 * @throws IllegalStateException if laser is not fired
@@ -82,8 +84,7 @@ public class LaserContext {
 			throw new IllegalStateException("Laser not hit yet!");
 		}
 		if (this.onHitProps == null) {
-			double distance = this.hit.getLocation().distanceTo(this.lastRedirecter.getLocation());
-			double loss = this.maxLength == -1 ? 0 : distance / this.maxLength;
+			double loss = this.maxLength == -1 ? 0 : this.traveled / this.maxLength;
 			this.onHitProps = this.props.afterLoss(loss);
 		}
 		return this.onHitProps;
@@ -121,21 +122,35 @@ public class LaserContext {
 		return this.redirected;
 	}
 
+	/**
+	 * @see onHit
+	 */
 	public final HitResult getHitResult() {
 		return this.hit;
 	}
 
 	/**
-	 * onHit set the context's hit result
+	 * @see onHit
+	 */
+	public final double getTraveled() {
+		return this.traveled;
+	}
+
+	/**
+	 * onHit set the context's hit result and traveled distance
 	 *
 	 * @param hit The {@link HitResult}, must not be null
 	 * @throws IllegalStateException if the HitResult is already been set
+	 *
+	 * @see getHitResult
+	 * @see getTraveled
 	 */
-	protected final void onHit(HitResult hit) {
+	protected void onHit(HitResult hit) {
 		if (this.hit != null) {
 			throw new IllegalStateException("Laser's hit result has already been set");
 		}
 		this.hit = hit;
+		this.traveled = hit.getLocation().distanceTo(this.getEmitPosition());
 	}
 
 	public boolean shouldRenderOnHitParticles() {

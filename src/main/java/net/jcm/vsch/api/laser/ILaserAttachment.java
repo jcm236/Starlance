@@ -70,8 +70,9 @@ public interface ILaserAttachment {
 	 *
 	 * @param ctx    The attached {@link LaserContext}
 	 * @param target The {@link LaserContext} which being merged to
+	 * @param props  The target laser's {@link LaserProperties}
 	 *
 	 * @see beforeMergeLaser
 	 */
-	default void afterMergeLaser(LaserContext ctx, LaserContext target) {}
+	default void afterMergeLaser(LaserContext ctx, LaserContext target, LaserProperties props) {}
 }

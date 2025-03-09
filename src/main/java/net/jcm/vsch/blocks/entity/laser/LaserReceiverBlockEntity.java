@@ -15,11 +15,12 @@ import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
+import net.jcm.vsch.blocks.entity.template.IColoredBlockEntity;
 
 import java.util.Collections;
 import java.util.List;
 
-public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity implements ILaserProcessor {
+public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity implements ILaserProcessor, IColoredBlockEntity {
 	private int r;
 	private int g;
 	private int b;
@@ -33,6 +34,17 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 		this.r = 256;
 		this.g = 0;
 		this.b = 0;
+	}
+
+	@Override
+	public int[] getColor() {
+		return new int[]{this.r, this.g, this.b};
+	}
+
+	public void setColor(int r, int g, int b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
 	}
 
 	@Override

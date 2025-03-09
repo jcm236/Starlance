@@ -34,6 +34,12 @@ public class LaserProperties {
 		return String.format("<LaserProperties (%d, %d, %d) %d attachments>", this.r, this.g, this.b, this.attachments.size());
 	}
 
+	/**
+	 * Create a shadow copy of the properties.
+	 * Attachments list will also be shadow copied.
+	 *
+	 * @return shadow copy of the properties
+	 */
 	@Override
 	public LaserProperties clone() {
 		return new LaserProperties(
@@ -83,11 +89,17 @@ public class LaserProperties {
 		);
 	}
 
+	/**
+	 * Save the properities to NBT without attachments
+	 */
 	public CompoundTag writeToNBT(CompoundTag data) {
 		data.putIntArray("Color", new int[]{this.r, this.g, this.b});
 		return data;
 	}
 
+	/**
+	 * Load the properities from NBT
+	 */
 	public void readFromNBT(CompoundTag data) {
 		final int[] color = data.getIntArray("Color");
 		if (color.length == 3) {

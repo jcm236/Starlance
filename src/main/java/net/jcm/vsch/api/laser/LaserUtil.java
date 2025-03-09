@@ -79,7 +79,7 @@ public final class LaserUtil {
 		final LaserProperties targetProps = target.getLaserProperties();
 		targetProps.mergeFrom(props);
 		for (ILaserAttachment attachment : props.getAttachments()) {
-			attachment.afterMergeLaser(original, target);
+			attachment.afterMergeLaser(original, target, targetProps);
 		}
 	}
 
