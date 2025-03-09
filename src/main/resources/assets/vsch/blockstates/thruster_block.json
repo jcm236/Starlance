@@ -1,32 +1,32 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "vsch:block/thruster",
-      "x": 90,
-      "y": 0 
-    },
-    "facing=east": {
-      "model": "vsch:block/thruster",
-      "x": 90,
-      "y": 90
-    },
-    "facing=south": {
-      "model": "vsch:block/thruster",
-      "x": 90,
-      "y": 180
-    },
-    "facing=west": {
-      "model": "vsch:block/thruster",
-      "x": 90,
-      "y": 270
-    },
-    "facing=up": {
-      "model": "vsch:block/thruster",
-      "x": 0
-    },
-    "facing=down": {
-      "model": "vsch:block/thruster",
-      "x": 180
-    }
-  }
+	"variants": {
+		"facing=north": {
+			"model": "vsch:block/thruster",
+			"x": 90,
+			"y": 0 
+		},
+		"facing=east": {
+			"model": "vsch:block/thruster",
+			"x": 90,
+			"y": 90
+		},
+		"facing=south": {
+			"model": "vsch:block/thruster",
+			"x": 90,
+			"y": 180
+		},
+		"facing=west": {
+			"model": "vsch:block/thruster",
+			"x": 90,
+			"y": 270
+		},
+		"facing=up": {
+			"model": "vsch:block/thruster",
+			"x": 0
+		},
+		"facing=down": {
+			"model": "vsch:block/thruster",
+			"x": 180
+		}
+	}
 }
