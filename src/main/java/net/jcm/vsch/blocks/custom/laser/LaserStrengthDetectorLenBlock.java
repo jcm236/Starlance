@@ -2,7 +2,6 @@ package net.jcm.vsch.blocks.custom.laser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,24 +19,29 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.jcm.vsch.blocks.custom.template.AbstractCannonBlock;
-import net.jcm.vsch.blocks.entity.laser.AbstractLaserLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserStrengthDetectorLenBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;
 
-import java.util.function.BiFunction;
+public class LaserStrengthDetectorLenBlock extends DirectionalBlock implements EntityBlock {
+	private static final DirectionalShape SHAPE = DirectionalShape.down(RotShapes.box(3.0, 0.0, 3.0, 13.0, 10.0, 13.0));
 
-public class LaserFlatLenBlock<T extends AbstractLaserLenBlockEntity> extends DirectionalBlock implements EntityBlock {
-	private static final DirectionalShape SHAPE = DirectionalShape.down(RotShapes.box(1.0, 7.0, 1.0, 15.0, 9.0, 15.0));
-	private final BiFunction<BlockPos, BlockState, T> blockEntityFactory;
-
-	public LaserFlatLenBlock(BlockBehaviour.Properties properties, BiFunction<BlockPos, BlockState, T> blockEntityFactory) {
+	public LaserStrengthDetectorLenBlock(BlockBehaviour.Properties properties) {
 		super(properties);
-		this.blockEntityFactory = blockEntityFactory;
 		this.registerDefaultState(this.defaultBlockState()
-			.setValue(FACING, Direction.NORTH)
+			.setValue(FACING, Direction.DOWN)
 		);
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+		return level.getBlockEntity(pos) instanceof LaserStrengthDetectorLenBlockEntity be ? be.getAnalogOutput() : 0;
 	}
 
 	@Override
@@ -58,18 +62,14 @@ public class LaserFlatLenBlock<T extends AbstractLaserLenBlockEntity> extends Di
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		Direction dir = ctx.getNearestLookingDirection().getOpposite();
-		Player player = ctx.getPlayer();
-		if (player != null && player.isShiftKeyDown()) {
-			dir = dir.getOpposite();
-		}
+		Direction dir = ctx.getClickedFace().getOpposite();
 		return this.defaultBlockState()
 			.setValue(BlockStateProperties.FACING, dir);
 	}
 
 	@Override
-	public T newBlockEntity(BlockPos pos, BlockState state) {
-		return this.blockEntityFactory.apply(pos, state);
+	public LaserStrengthDetectorLenBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new LaserStrengthDetectorLenBlockEntity(pos, state);
 	}
 
 	@Override

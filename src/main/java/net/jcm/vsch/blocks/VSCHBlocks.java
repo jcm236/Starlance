@@ -21,12 +21,14 @@ import net.jcm.vsch.blocks.custom.laser.LaserDetectProcessorBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserEmitterBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserFlatLenBlock;
 import net.jcm.vsch.blocks.custom.laser.LaserReceiverBlock;
+import net.jcm.vsch.blocks.custom.laser.LaserStrengthDetectorLenBlock;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserDetectProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserStrengthDetectorLenBlockEntity;
 
 import java.util.function.Supplier;
 
@@ -97,12 +99,11 @@ public class VSCHBlocks {
 	);
 
 	public static final RegistryObject<Block> LASER_RECEIVER_BLOCK = registerBlock("laser_receiver_block",
-		() -> new LaserReceiverBlock<>(
+		() -> new LaserReceiverBlock(
 			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
 				.sound(SoundType.GLASS)
 				.strength(6f, 1f)
-				.noOcclusion(),
-			LaserReceiverBlockEntity::new
+				.noOcclusion()
 		)
 	);
 
@@ -130,6 +131,14 @@ public class VSCHBlocks {
 				.strength(1f, 0.3f)
 				.noOcclusion(),
 			LaserCondensingLenBlockEntity::new
+		)
+	);
+
+	public static final RegistryObject<Block> LASER_STRENGTH_DETECTOR_LEN_BLOCK = registerBlock("laser_strength_detector_len_block",
+		() -> new LaserStrengthDetectorLenBlock(
+			BlockBehaviour.Properties.copy(Blocks.GLASS)
+				.strength(1f, 0.3f)
+				.noOcclusion()
 		)
 	);
 

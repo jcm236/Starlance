@@ -59,7 +59,7 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 			return;
 		}
 		this.analogOutput = output;
-		this.markUpdated();
+		this.setChanged();
 	}
 
 	public Map<String, Object> getDetails() {

@@ -9,12 +9,13 @@ import net.minecraftforge.registries.RegistryObject;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.laser.LaserCondensingLenBlockEntity;
-import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserDetectProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserExplosiveProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserFlatMirrorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserReceiverBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.LaserSemiTransparentFlatMirrorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.LaserStrengthDetectorLenBlockEntity;
 
 public class VSCHBlockEntities {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, VSCHMod.MODID);
@@ -82,6 +83,11 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<LaserCondensingLenBlockEntity>> LASER_CONDENSING_LEN_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_condensing_len_block",
 			() -> BlockEntityType.Builder.of(LaserCondensingLenBlockEntity::new, VSCHBlocks.LASER_CONDENSING_LEN_BLOCK.get())
+			.build(null));
+
+	public static final RegistryObject<BlockEntityType<LaserStrengthDetectorLenBlockEntity>> LASER_STRENGTH_DETECTOR_LEN_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("laser_strength_detector_len_block",
+			() -> BlockEntityType.Builder.of(LaserStrengthDetectorLenBlockEntity::new, VSCHBlocks.LASER_STRENGTH_DETECTOR_LEN_BLOCK.get())
 			.build(null));
 
 	public static void register(IEventBus eventBus) {

@@ -1,13 +1,12 @@
 package net.jcm.vsch.blocks.entity.laser;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+
+import org.joml.Vector3d;
 
 import net.jcm.vsch.api.laser.ILaserProcessor;
 import net.jcm.vsch.api.laser.LaserContext;
@@ -17,10 +16,7 @@ import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.blocks.entity.template.IColoredBlockEntity;
 
-import java.util.Collections;
-import java.util.List;
-
-public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity implements IColoredBlockEntity, ILaserProcessor {
+public class LaserStrengthDetectorLenBlockEntity extends AbstractDirectionalLaserLenBlockEntity implements IColoredBlockEntity, ILaserProcessor {
 	private int r;
 	private int g;
 	private int b;
@@ -29,11 +25,8 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 	private int lastB = 0;
 	private int analogOutput = 0;
 
-	public LaserReceiverBlockEntity(BlockPos pos, BlockState state) {
-		super("laser_receiver", VSCHBlockEntities.LASER_RECEIVER_BLOCK_ENTITY.get(), pos, state);
-		this.r = 256;
-		this.g = 0;
-		this.b = 0;
+	public LaserStrengthDetectorLenBlockEntity(BlockPos pos, BlockState state) {
+		super(VSCHBlockEntities.LASER_STRENGTH_DETECTOR_LEN_BLOCK_ENTITY.get(), pos, state);
 	}
 
 	@Override
@@ -52,20 +45,27 @@ public class LaserReceiverBlockEntity extends AbstractLaserCannonBlockEntity imp
 	}
 
 	@Override
-	public int getMaxLaserStrength() {
-		return 256 * 16 - (this.lastR + this.lastG + this.lastB);
+	public int getMaxLaserStrengthPerTick() {
+		return 256 * 16;
 	}
 
 	@Override
 	public void onLaserHit(final LaserContext ctx) {
-		final BlockHitResult hit = (BlockHitResult) (ctx.getHitResult());
-		if (hit.getDirection() != this.facing) {
-			return;
-		}
+		super.onLaserHit(ctx);
 		final LaserProperties props = ctx.getLaserOnHitProperties();
+		final Vec3 hitPos = ctx.getHitPosition();
+		final Vec3 inputDir = ctx.getInputDirection();
+
 		this.lastR += props.r;
 		this.lastG += props.g;
 		this.lastB += props.b;
+
+		LaserUtil.fireRedirectedLaser(
+			ctx.redirectWith(
+				props,
+				LaserEmitter.fromBlockEntity(this, hitPos, inputDir)
+			)
+		);
 	}
 
 	@Override
