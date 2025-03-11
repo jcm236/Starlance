@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.LazyOptional;
 
 import net.jcm.vsch.api.laser.ILaserAttachment;
 import net.jcm.vsch.api.laser.ILaserProcessor;
@@ -25,7 +26,7 @@ import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 
 public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlockEntity {
 	public LaserExplosiveProcessorBlockEntity(final BlockPos pos, final BlockState state) {
-		super("laser_explosive_processor", VSCHBlockEntities.LASER_EXPLOSIVE_PROCESSOR_BLOCK_ENTITY.get(), pos, state);
+		super(VSCHBlockEntities.LASER_EXPLOSIVE_PROCESSOR_BLOCK_ENTITY.get(), pos, state);
 	}
 
 	@Override
@@ -36,6 +37,11 @@ public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlock
 	@Override
 	public LaserProperties processLaser(final LaserProperties props) {
 		return props.withAttachment(ExplosiveAttachment.INSTANCE);
+	}
+
+	@Override
+	protected LazyOptional<?> getPeripheral() {
+		return LazyOptional.empty();
 	}
 
 	public static class ExplosiveAttachment implements ILaserAttachment {

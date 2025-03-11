@@ -23,8 +23,8 @@ public abstract class AbstractLaserCannonBlockEntity extends AbstractCannonBlock
 	private LaserContext firedLaser = null;
 	private int laserLastTick = 0;
 
-	protected AbstractLaserCannonBlockEntity(String peripheralType, BlockEntityType<?> type, BlockPos pos, BlockState state) {
-		super(peripheralType, type, pos, state);
+	protected AbstractLaserCannonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.LazyOptional;
 
 import net.jcm.vsch.api.laser.ILaserAttachment;
 import net.jcm.vsch.api.laser.ILaserProcessor;
@@ -27,6 +28,8 @@ import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
+import net.jcm.vsch.blocks.entity.template.IAnalogOutputBlockEntity;
+import net.jcm.vsch.compat.cc.peripherals.laser.LaserDetectProcessorPeripheral;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +40,9 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEntity {
+public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEntity implements IAnalogOutputBlockEntity {
 	public LaserDetectProcessorBlockEntity(BlockPos pos, BlockState state) {
-		super("laser_detect_processor", VSCHBlockEntities.LASER_DETECT_PROCESSOR_BLOCK_ENTITY.get(), pos, state);
+		super(VSCHBlockEntities.LASER_DETECT_PROCESSOR_BLOCK_ENTITY.get(), pos, state);
 	}
 
 	private volatile double distance;
@@ -50,6 +53,7 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 		return this.distance;
 	}
 
+	@Override
 	public int getAnalogOutput() {
 		return this.analogOutput;
 	}
@@ -89,6 +93,11 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 		}
 		first.blocks.add(this);
 		return props;
+	}
+
+	@Override
+	protected LazyOptional<?> getPeripheral() {
+		return LazyOptional.of(() -> new LaserDetectProcessorPeripheral(this));
 	}
 
 	private static Map<String, Object> relativePositionToMap(final Vec3 posDiff, final Direction frontDir, final Direction upDir) {

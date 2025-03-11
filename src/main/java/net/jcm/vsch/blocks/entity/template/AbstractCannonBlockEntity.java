@@ -15,15 +15,13 @@ import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 
 import java.util.EnumMap;
 
-public abstract class AbstractCannonBlockEntity extends BlockEntity implements ParticleBlockEntity {
-	private final String peripheralType;
+public abstract class AbstractCannonBlockEntity extends AbstractCCBlockEntity implements ParticleBlockEntity {
 	protected final Direction facing;
 	protected final EnumMap<Direction, AbstractCannonBlockEntity> neighbors = new EnumMap<>(Direction.class);
 	protected int redstone = 0;
 
-	protected AbstractCannonBlockEntity(String peripheralType, BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	protected AbstractCannonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-		this.peripheralType = peripheralType;
 		this.facing = state.getValue(DirectionalBlock.FACING);
 	}
 

@@ -13,11 +13,6 @@ public class LaserDetectProcessorBlock extends LaserCannonBlock<LaserDetectProce
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
 		return level.getBlockEntity(pos) instanceof LaserDetectProcessorBlockEntity be ? be.getAnalogOutput() : 0;
 	}
