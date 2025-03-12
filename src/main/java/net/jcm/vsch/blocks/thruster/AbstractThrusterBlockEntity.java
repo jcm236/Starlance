@@ -164,6 +164,10 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			level.setBlockAndUpdate(pos, state.setValue(AbstractThrusterBlock.LIT, powered));
 		}
 
+		if (!(level.getBlockState(pos).getBlock() instanceof AbstractThrusterBlock<?>)){
+			level.removeBlockEntity(pos);
+		}
+
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
 		if (ships == null) {
 			return;
@@ -172,6 +176,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		if (ships.getThrusterAtPos(pos) == null) {
 			ships.addThruster(pos, this.brain.getThrusterData());
 		}
+
 	}
 
 	protected ParticleOptions getThrusterParticleType() {
