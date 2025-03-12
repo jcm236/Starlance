@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.Tags;
 
 import net.jcm.vsch.accessor.LevelChunkAccessor;
 import net.jcm.vsch.api.laser.ILaserProcessor;
@@ -46,7 +47,7 @@ public final class DefaultLaserProcessors {
 		final float speed = props.g / 256.0f + 0.5f;
 		final int strength = props.b / 256;
 
-		final int tire = getTire(state);
+		final int tire = getBlockTire(state);
 		if (strength < tire) {
 			return;
 		}
@@ -103,17 +104,20 @@ public final class DefaultLaserProcessors {
 		}
 	}
 
-	private static int getTire(BlockState state) {
+	private static int getBlockTire(BlockState state) {
+		if (state.is(Tags.Blocks.NEEDS_NETHERITE_TOOL)) {
+			return 6;
+		}
 		if (state.is(BlockTags.NEEDS_DIAMOND_TOOL)) {
 			return 5;
 		}
 		if (state.is(BlockTags.NEEDS_IRON_TOOL)) {
 			return 4;
 		}
-		if (state.is(BlockTags.NEEDS_STONE_TOOL)) {
+		if (state.is(BlockTags.NEEDS_STONE_TOOL) || state.is(Tags.Blocks.NEEDS_GOLD_TOOL)) {
 			return 3;
 		}
-		if (state.requiresCorrectToolForDrops()) {
+		if (state.is(Tags.Blocks.NEEDS_WOOD_TOOL)) {
 			return 2;
 		}
 		return 1;
