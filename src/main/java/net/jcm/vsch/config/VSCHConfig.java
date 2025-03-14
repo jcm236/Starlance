@@ -1,5 +1,9 @@
 package net.jcm.vsch.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import net.jcm.vsch.ship.ThrusterData.ThrusterMode;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -8,17 +12,31 @@ import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VSCHConfig {
+	private static final Gson GSON = new GsonBuilder().create();
+	private static final TypeToken<Map<String, Integer>> STRING_INT_MAP_TYPE = new TypeToken<Map<String, Integer>>(){};
+
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
 	public static final ForgeConfigSpec.ConfigValue<ThrusterMode> THRUSTER_MODE;
+
 	public static final ForgeConfigSpec.ConfigValue<Number> THRUSTER_STRENGTH;
+	public static final ForgeConfigSpec.ConfigValue<Integer> THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.ConfigValue<String> THRUSTER_FUEL_CONSUME_RATES;
+
 	public static final ForgeConfigSpec.ConfigValue<Number> AIR_THRUSTER_STRENGTH;
+	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_MAX_WATER_CONSUME_RATE;
+
 	public static final ForgeConfigSpec.ConfigValue<Number> POWERFUL_THRUSTER_STRENGTH;
+	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
@@ -37,9 +55,18 @@ public class VSCHConfig {
 
 		THRUSTER_TOGGLE = BUILDER.comment("Thruster Mode Toggling").define("thruster_mode_toggle", true);
 		THRUSTER_MODE = BUILDER.comment("Default Thruster Mode").defineEnum("thruster_default_mode", ThrusterMode.POSITION);
+
 		THRUSTER_STRENGTH = BUILDER.comment("Thruster max force. (Newtons)").define("thruster_strength", 120000);
+		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").define("thruster_energy_consume_rate", 0);
+		THRUSTER_FUEL_CONSUME_RATES = BUILDER.comment("Thruster fuel consume rates. (mB/t)").define("thruster_fuel_consume_rates", getDefaultThrusterFuelConsumeRates());
+
 		AIR_THRUSTER_STRENGTH = BUILDER.comment("Air thruster max force. (Newtons)").define("air_thruster_strength", 7500);
+		AIR_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Air thruster energy consume rate. (FE/t)").define("air_thruster_energy_consume_rate", 0);
+		AIR_THRUSTER_MAX_WATER_CONSUME_RATE = BUILDER.comment("Air thruster water consume rate when in a dimension that has less air density. (mB/t)").define("air_thruster_max_water_consume_rate", 0);
+
 		POWERFUL_THRUSTER_STRENGTH = BUILDER.comment("Powerful thruster max force. (Newtons)").define("powerful_thruster_strength", 450000);
+		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").define("powerful_thruster_energy_consume_rate", 0);
+		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").define("powerful_thruster_fuel_consume_rate", 0);
 
 		BUILDER.pop();
 
@@ -62,5 +89,19 @@ public class VSCHConfig {
 
 	public static void register(ModLoadingContext context){
 		context.registerConfig(ModConfig.Type.SERVER, VSCHConfig.SPEC, "vsch-config.toml");
+	}
+
+	private static String getDefaultThrusterFuelConsumeRates() {
+		Map<String, Integer> rates = new HashMap<>();
+		// rates.put("minecraft:lava", 32);
+		return GSON.toJson(rates);
+	}
+
+	public static Map<String, Integer> getThrusterFuelConsumeRates() {
+		final String fuels = THRUSTER_FUEL_CONSUME_RATES.get();
+		if (fuels.isEmpty()) {
+			return new HashMap<>();
+		}
+		return GSON.fromJson(fuels, STRING_INT_MAP_TYPE);
 	}
 }

@@ -66,8 +66,6 @@ public class GravityInducerBlockEntity extends BlockEntity implements ParticleBl
 			double scaledForce = Math.min(maxDistance * maxDistance / distance * MIN_FORCE, getMaxForce());
 
 			Vec3 force = direction.scale(scaledForce);
-			System.out.println(entity);
-			System.out.println(force);
 			entity.push(force.x, force.y, force.z);
 		}
 	}

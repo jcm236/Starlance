@@ -1,14 +1,15 @@
-package net.jcm.vsch.blocks.entity.template;
-
-import dan200.computercraft.shared.Capabilities;
+package net.jcm.vsch.blocks.thruster;
 
 import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
-import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.compat.cc.peripherals.ThrusterPeripheral;
+import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
+import net.jcm.vsch.blocks.thruster.ThrusterBrain;
+import net.jcm.vsch.blocks.thruster.ThrusterEngine;
+import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
 import net.jcm.vsch.ship.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,112 +22,99 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import org.slf4j.Logger;
 
 public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity {
-	private final String typeString;
-	private final ThrusterData thrusterData;
-	private volatile float power = 0;
-	private volatile boolean powerChanged = false;
-	// Peripheral mode determines if the throttle is controlled by redstone, or by CC computers
-	private volatile boolean isPeripheralMode = false;
-	private boolean wasPeripheralMode = true;
-	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
+	private static final Logger LOGGER = LogUtils.getLogger();
 
-	protected AbstractThrusterBlockEntity(String typeStr, BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	private static final String BRAIN_POS_TAG_NAME = "BrainPos";
+	private static final String BRAIN_DATA_TAG_NAME = "BrainData";
+	private ThrusterBrain brain;
+	private BlockPos brainPos = null;
+	private final Map<Capability<?>, LazyOptional<?>> capsCache = new HashMap<>();
+
+	protected AbstractThrusterBlockEntity(String peripheralType, BlockEntityType<?> type, BlockPos pos, BlockState state, ThrusterEngine engine) {
 		super(type, pos, state);
 
-		this.typeString = typeStr;
-		this.thrusterData = new ThrusterData(
-			VectorConversionsMCKt.toJOMLD(state.getValue(DirectionalBlock.FACING).getNormal()),
-			0,
-			state.getValue(AbstractThrusterBlock.MODE));
+		this.brain = new ThrusterBrain(this, peripheralType, state.getValue(DirectionalBlock.FACING), engine);
 	}
 
-	public String getTypeString() {
-		return this.typeString;
+	public ThrusterBrain getBrain() {
+		return this.brain;
 	}
 
-	public abstract float getMaxThrottle();
-
-	public float getThrottle() {
-		return getPower() * getMaxThrottle();
-	}
-
-	/**
-	 * @return thruster power between 0.0~1.0
-	 */
-	public float getPower() {
-		return this.power;
-	}
-
-	public void setPower(float power) {
-		setPower(power, true);
-	}
-
-	protected void setPower(float power, boolean update) {
-		float newPower = Math.min(Math.max(power, 0), 1);
-		if (this.power == newPower) {
-			return;
-		}
-		this.power = newPower;
-		if (update) {
-			this.markPowerChanged();
-		}
-	}
-
-	public boolean getPeripheralMode() {
-		return this.isPeripheralMode;
-	}
-
-	public void setPeripheralMode(boolean on) {
-		if (this.isPeripheralMode != on) {
-			this.isPeripheralMode = on;
-			this.setChanged();
-		}
-	}
-
-	protected void markPowerChanged() {
-		this.powerChanged = true;
-		this.setChanged();
-		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+	public void setBrain(ThrusterBrain brain) {
+		this.brain = brain;
+		this.capsCache.forEach((k, v) -> {
+			v.invalidate();
+		});
+		this.capsCache.clear();
 	}
 
 	public ThrusterData.ThrusterMode getThrusterMode() {
-		return this.getBlockState().getValue(AbstractThrusterBlock.MODE);
+		return this.brain.getThrusterMode();
 	}
 
 	public void setThrusterMode(ThrusterData.ThrusterMode mode) {
-		this.getLevel().setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(AbstractThrusterBlock.MODE, mode));
-		this.thrusterData.mode = mode;
+		this.brain.setThrusterMode(mode);
+	}
+
+	public float getCurrentPower() {
+		return this.brain.getCurrentPower();
 	}
 
 	@Override
 	public void load(CompoundTag data) {
-		this.setPower(data.getFloat("Power"), false);
-		this.isPeripheralMode = CompatMods.COMPUTERCRAFT.isLoaded() && data.getBoolean("PeripheralMode");
-		this.thrusterData.throttle = this.getThrottle();
 		super.load(data);
+		BlockPos pos = this.getBlockPos();
+		if (data.contains(BRAIN_POS_TAG_NAME, 7)) {
+			byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
+			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
+			if (this.getLevel() != null) {
+				this.resolveBrain();
+			}
+		} else if (data.contains(BRAIN_DATA_TAG_NAME, 10)) {
+			CompoundTag brainData = data.getCompound(BRAIN_DATA_TAG_NAME);
+			this.brain.readFromNBT(brainData);
+		}
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag data) {
 		super.saveAdditional(data);
-		data.putFloat("Power", this.getPower());
-		data.putBoolean("PeripheralMode", this.getPeripheralMode());
+		AbstractThrusterBlockEntity dataBlock = this.brain.getDataBlock();
+		if (this.brainPos != null) {
+			BlockPos pos = this.brainPos.subtract(this.getBlockPos());
+			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(pos.getX()), (byte)(pos.getY()), (byte)(pos.getZ())});
+		} else if (dataBlock == this) {
+			CompoundTag brainData = new CompoundTag();
+			this.brain.writeToNBT(brainData);
+			data.put(BRAIN_DATA_TAG_NAME, brainData);
+		} else {
+			BlockPos pos = dataBlock.getBlockPos().subtract(this.getBlockPos());
+			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(pos.getX()), (byte)(pos.getY()), (byte)(pos.getZ())});
+		}
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag data = super.getUpdateTag();
-		data.putFloat("Power", this.getPower());
+		this.saveAdditional(data);
 		return data;
 	}
 
@@ -135,38 +123,50 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
+	void sendUpdate() {
+		this.setChanged();
+		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+	}
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
-		if (CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) {
-			if (!lazyPeripheral.isPresent()) {
-				lazyPeripheral = LazyOptional.of(() -> new ThrusterPeripheral(this));
-			}
-			return lazyPeripheral.cast();
+		LazyOptional<T> result = (LazyOptional<T>) capsCache.computeIfAbsent(cap, (c) -> this.brain.getCapability(c, direction).lazyMap(v -> v));
+		if (result.isPresent()) {
+			return result;
 		}
 		return super.getCapability(cap, direction);
 	}
 
 	public void neighborChanged(Block block, BlockPos pos, boolean moving) {
-		if (!this.isPeripheralMode) {
-			this.updatePowerByRedstone();
+		this.brain.neighborChanged(this, block, pos, moving);
+	}
+
+	private void resolveBrain() {
+		BlockEntity be = this.getLevel().getBlockEntity(this.brainPos);
+		if (be instanceof AbstractThrusterBlockEntity thruster) {
+			ThrusterBrain newBrain = thruster.getBrain();
+			if (this.brain != newBrain) {
+				newBrain.addThruster(this);
+				this.setBrain(newBrain);
+			}
+			this.brainPos = null;
+		} else if (this.getLevel() instanceof ServerLevel) {
+			LOGGER.warn("Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
+			this.brainPos = null;
 		}
 	}
 
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
-		// If we have changed peripheral mode, and we aren't peripheral mode
-		if (this.wasPeripheralMode != this.isPeripheralMode && !this.isPeripheralMode) {
-			this.updatePowerByRedstone();
+		if (this.brainPos != null) {
+			this.resolveBrain();
 		}
-		this.wasPeripheralMode = this.isPeripheralMode;
-
-		if (this.powerChanged) {
-			this.powerChanged = false;
-			this.thrusterData.throttle = this.getThrottle();
+		if (this.brain.getDataBlock() == this) {
+			this.brain.tick(level);
 		}
 
 		boolean isLit = state.getValue(AbstractThrusterBlock.LIT);
-		boolean powered = getPower() > 0;
+		boolean powered = this.brain.getPower() > 0;
 		if (powered != isLit) {
 			level.setBlockAndUpdate(pos, state.setValue(AbstractThrusterBlock.LIT, powered));
 		}
@@ -177,13 +177,8 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		}
 
 		if (ships.getThrusterAtPos(pos) == null) {
-			ships.addThruster(pos, this.thrusterData);
+			ships.addThruster(pos, this.brain.getThrusterData());
 		}
-	}
-
-	private void updatePowerByRedstone() {
-		float newPower = getPowerByRedstone(this.getLevel(), this.getBlockPos());
-		this.setPower(newPower);
 	}
 
 	protected ParticleOptions getThrusterParticleType() {
@@ -196,6 +191,10 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	@Override
 	public void tickParticles(Level level, BlockPos pos, BlockState state) {
+		if (this.brainPos != null) {
+			this.resolveBrain();
+		}
+
 		Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
 		// If we aren't on a ship, then we skip
 		if (ship == null) {
@@ -203,7 +202,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		}
 
 		// If we are unpowered, do no particles
-		if (getPower() == 0.0) {
+		if (this.getCurrentPower() == 0.0) {
 			return;
 		}
 
@@ -225,13 +224,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		double y = pos.y - direction.y;
 		double z = pos.z - direction.z;
 
-		Vector3d speed = new Vector3d(direction).mul(-getPower());
+		Vector3d speed = new Vector3d(direction).mul(-this.getCurrentPower());
 
 		speed.mul(0.6);
 
 		// All that for one particle per tick...
 		level.addParticle(
-				getThrusterParticleType(),
+				this.getThrusterParticleType(),
 				x, y, z,
 				speed.x, speed.y, speed.z
 				);
@@ -240,7 +239,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 		// Ok ok, two particles per tick
 		level.addParticle(
-				getThrusterSmokeParticleType(),
+				this.getThrusterSmokeParticleType(),
 				x, y, z,
 				speed.x, speed.y, speed.z
 				);
