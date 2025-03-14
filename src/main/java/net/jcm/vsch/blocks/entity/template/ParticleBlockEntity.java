@@ -22,12 +22,12 @@ public interface ParticleBlockEntity {
 
 	void tickParticles(Level level, BlockPos pos, BlockState state);
 
-	public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+	public static void clientTicker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		ParticleBlockEntity be = (ParticleBlockEntity) blockEntity;
 		be.clientTick(level, pos, state, be);
 	}
 
-	public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+	public static void serverTicker(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		ParticleBlockEntity be = (ParticleBlockEntity) blockEntity;
 		be.serverTick(level, pos, state, be);
 	}

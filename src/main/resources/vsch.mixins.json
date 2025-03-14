@@ -6,6 +6,7 @@
   "refmap": "mixins.vsch.refmap.json",
   "mixins": [
     "MixinEntity",
+    "MixinLevelChunk",
     "MixinLightRenderer",
     "MixinLivingEntityProcedure",
     "MixinMob",
