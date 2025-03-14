@@ -1,0 +1,10 @@
+{
+  "vertex": "vsch:core/blit_screen",
+  "fragment": "vsch:core/blit_cull",
+  "textures": {
+    "MainDepthSampler": {
+      "type": "framebuffer",
+      "name": "veil:post:depth"
+    }
+  }
+}

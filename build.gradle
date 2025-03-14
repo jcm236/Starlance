@@ -212,6 +212,15 @@ dependencies {
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all")
 
+
+    implementation fg.deobf("foundry.veil:Veil-forge-${project.minecraft_version}:${project.veil_version}") {
+        transitive = false
+    }
+
+    jarJar ("foundry.veil:veil-neoforge-${project.minecraft_version}:${project.veil_version}") {
+        jarJar.ranged(it, "[${project.veil_version},)")
+    }
+
     //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")
 
     //RUNTIME
