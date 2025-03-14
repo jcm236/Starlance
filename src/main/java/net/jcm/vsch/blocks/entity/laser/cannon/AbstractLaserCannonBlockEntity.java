@@ -50,9 +50,7 @@ public abstract class AbstractLaserCannonBlockEntity extends AbstractCannonBlock
 	}
 
 	@Override
-	public void partChanged(Direction dir, AbstractCannonBlockEntity be) {
-		// System.out.println("partChanged: " + this + ": " + dir + " = " + be);
-	}
+	public void partChanged(Direction dir, AbstractCannonBlockEntity be) {}
 
 	public boolean canProcessLaser(Direction dir) {
 		return false;

@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 
+import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
@@ -22,7 +23,7 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 	private int g;
 	private int b;
 	private int analogOutput = 0;
-	private int cooldown = 0;
+	int cooldown = 0;
 
 	public LaserEmitterBlockEntity(BlockPos pos, BlockState state) {
 		super(VSCHBlockEntities.LASER_EMITTER_BLOCK_ENTITY.get(), pos, state);
@@ -40,6 +41,10 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 		this.r = r;
 		this.g = g;
 		this.b = b;
+	}
+
+	public int getCooldown() {
+		return this.cooldown;
 	}
 
 	@Override
@@ -65,11 +70,35 @@ public class LaserEmitterBlockEntity extends AbstractLaserCannonBlockEntity impl
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
 		super.tickForce(level, pos, state);
+		if (this.redstone > 0 && this.fireLaser()) {
+			this.cooldown = 4;
+		}
 		if (this.cooldown == 0 && this.analogOutput != 0) {
 			this.analogOutput = 0;
 			this.setChanged();
+		} else if (this.cooldown > 0) {
+			this.cooldown--;
 		}
-		this.cooldown--;
+	}
+
+	public boolean emitLaser(final LaserContext ctx) {
+		if (this.cooldown > 0) {
+			return false;
+		}
+		LaserProperties props = ctx.getLaserProperties();
+		AbstractLaserCannonBlockEntity current = this;
+		while (true) {
+			final AbstractLaserCannonBlockEntity next = current.getNeighbor(this.facing);
+			if (next == null || !next.canProcessLaser(this.facing)) {
+				break;
+			}
+			current = next;
+			props = current.processLaser(props);
+		}
+		LaserUtil.fireRedirectedLaser(ctx.redirectWith(props, current.createEmitter(this)));
+		this.analogOutput = 15;
+		this.setChanged();
+		return true;
 	}
 
 	public boolean fireLaser() {
