@@ -1,11 +1,17 @@
 package net.jcm.vsch.particle.custom;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,13 +23,35 @@ import java.util.Random;
 
 public class LaserHitParticle extends TextureSheetParticle {
 	private static final Random RND = new Random();
+	private static final ResourceLocation BLOOM_BUFFER = new ResourceLocation("vsch", "bloom");
 	private static final double SPREAD_ANGLE = Math.toRadians(22.5);
+	private static final ParticleRenderType RENDER_TYPE = new ParticleRenderType() {
+		public void begin(BufferBuilder p_107455_, TextureManager p_107456_) {
+			AdvancedFbo buffer = VeilRenderSystem.renderer().getFramebufferManager().getFramebuffer(BLOOM_BUFFER);
+			if (buffer != null) buffer.bind(false);
+			RenderSystem.depthMask(true);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			p_107455_.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+		}
 
+		public void end(Tesselator p_107458_) {
+			p_107458_.end();
+			AdvancedFbo.getMainFramebuffer().bind(true);
+		}
+
+		public String toString() {
+			return "PARTICLE_SHEET_TRANSLUCENT_BLOOM";
+		}
+	};
 	private final SpriteSet sprites;
 
 	protected LaserHitParticle(ClientLevel level, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
 		super(level, x, y, z, vx, vy, vz);
 		this.sprites = spriteSet;
+
+
 
 		// Set initial velocity
 		this.xd = vx;
@@ -52,7 +80,7 @@ public class LaserHitParticle extends TextureSheetParticle {
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+		return RENDER_TYPE;
 	}
 
 	@Override

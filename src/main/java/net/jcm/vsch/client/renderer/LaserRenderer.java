@@ -3,6 +3,8 @@ package net.jcm.vsch.client.renderer;
 import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import net.jcm.vsch.particle.custom.LaserHitParticle;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -45,7 +47,7 @@ import java.util.List;
 
 public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 	private static final Vector3f DEFAULT_DIR = new Vector3f(0, 1, 0);
-
+	private static final ResourceLocation BLOOM_BUFFER = new ResourceLocation("vsch", "bloom");
 	private final BlockEntityRendererProvider.Context ctx;
 
 	public LaserRenderer(BlockEntityRendererProvider.Context ctx) {
@@ -215,10 +217,15 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		float[] pColors,
 		float pBeamRadius, float pGlowRadius
 	) {
+
+		AdvancedFbo buffer = VeilRenderSystem.renderer().getFramebufferManager().getFramebuffer(BLOOM_BUFFER);
+		if (buffer != null) buffer.bind(true);
+
 		long pGameTime = gameTime;
 		float maxX = pYOffset + pHeight;
 		pPoseStack.pushPose();
 		pPoseStack.translate(translation.x, translation.y, translation.z);
+
 		float degrees = Math.floorMod(pGameTime, 360) + pPartialTick;
 		float reversedDegrees = pHeight < 0 ? degrees : -degrees;
 		float time = Mth.frac(reversedDegrees * 0.2F - Mth.floor(reversedDegrees * 0.1F));
@@ -231,12 +238,11 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		float f15 = -1.0F + time;
 		float f16 = pHeight * pTextureScale * (0.5F / pBeamRadius) + f15;
 		renderPart(pPoseStack, pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, false)), r, g, b, 1.0F, pYOffset, maxX, 0.0F, pBeamRadius, pBeamRadius, 0.0F, -pBeamRadius, 0.0F, 0.0F, -pBeamRadius, 0.0F, 1.0F, f16, f15);
+		pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, true));
 		pPoseStack.popPose();
-		pPoseStack.mulPose(rotation);
-		f15 = -1.0F + time;
-		f16 = pHeight * pTextureScale + f15;
-		renderPart(pPoseStack, pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, true)), r, g, b, 0.225F, pYOffset, maxX, -pGlowRadius, -pGlowRadius, pGlowRadius, -pGlowRadius, -pBeamRadius, pGlowRadius, pGlowRadius, pGlowRadius, 0.0F, 1.0F, f16, f15);
 		pPoseStack.popPose();
+
+		AdvancedFbo.getMainFramebuffer().bind(true);
 	}
 
 	private static void renderPart(PoseStack pPoseStack, VertexConsumer pConsumer, float pRed, float pGreen, float pBlue, float pAlpha, int pMinY, float pMaxY, float pX0, float pZ0, float pX1, float pZ1, float pX2, float pZ2, float pX3, float pZ3, float pMinU, float pMaxU, float pMinV, float pMaxV) {
