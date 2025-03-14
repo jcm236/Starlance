@@ -1,5 +1,7 @@
 package net.jcm.vsch;
 
+import foundry.veil.api.client.render.VeilRenderSystem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +32,7 @@ import net.jcm.vsch.particle.VSCHParticles;
 public class VSCHMod {
 	public static final String MODID = "vsch";
 	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
+	private static final ResourceLocation BLOOM_PIPELINE = new ResourceLocation("vsch", "bloom");
 
 	public VSCHMod() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -66,6 +69,8 @@ public class VSCHMod {
 			VSCHPonderRegistry.register();
 			VSCHPonderTags.register();
 		}
+
+		VeilRenderSystem.renderer().getPostProcessingManager().add(BLOOM_PIPELINE);
 	}
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

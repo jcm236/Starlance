@@ -89,7 +89,7 @@ public abstract class AbstractLaserCannonBlockEntity extends AbstractCannonBlock
 		if (this.laserLastTick > 0) {
 			this.laserLastTick--;
 			if (this.laserLastTick == 0) {
-				this.firedLaser = null;
+//				this.firedLaser = null;
 			}
 		}
 	}

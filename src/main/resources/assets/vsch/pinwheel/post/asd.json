@@ -1,0 +1,39 @@
+{
+  "stages": [
+    {
+      "type": "veil:mask",
+      "depth": true
+    },
+    {
+      "type": "veil:depth_function",
+      "function": "LEQUAL"
+    },
+    {
+      "type": "veil:copy",
+      "in": "veil:post",
+      "out": "swap",
+      "color": false,
+      "depth": true
+    },
+    {
+      "type": "veil:blit",
+      "shader": "vsch:core/blit_cull",
+      "in": "vsch:bloom",
+      "out": "swap",
+      "clear": true
+    },
+    {
+      "type": "veil:copy",
+      "in": "swap",
+      "out": "vsch:bloom"
+    }
+  ],
+  "framebuffers": {
+    "swap": {
+      "depth": true,
+      "format": "RGBA8",
+      "linear": true,
+      "autoClear": true
+    }
+  }
+}

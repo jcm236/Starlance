@@ -1,0 +1,4 @@
+{
+  "vertex": "vsch:core/blit_screen",
+  "fragment": "vsch:blur/blur"
+}
