@@ -38,9 +38,6 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	 */
 	public Map<BlockPos, DraggerData> draggers = new ConcurrentHashMap<>();
 
-	public Map<BlockPos, MagnetData> magnets = new ConcurrentHashMap<>();
-	public static Map<LevelBlockPos, MagnetData> worldMagnets = new ConcurrentHashMap<>();
-
 	private String dimensionId = null;
 
 	public VSCHForceInducedShips() {}
@@ -273,14 +270,6 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 
 	public void removeDragger(BlockPos pos) {
 		draggers.remove(pos);
-	}
-
-	public void addMagnet(BlockPos pos, MagnetData data) {
-		magnets.put(pos, data);
-	}
-
-	public void removeMagnet(BlockPos pos) {
-		magnets.remove(pos);
 	}
 
 	@Nullable
