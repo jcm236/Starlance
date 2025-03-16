@@ -36,6 +36,9 @@ public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlock
 
 	@Override
 	public LaserProperties processLaser(final LaserProperties props) {
+		if (props.getAttachments().contains(ExplosiveAttachment.INSTANCE)) {
+			return props;
+		}
 		return props.withAttachment(ExplosiveAttachment.INSTANCE);
 	}
 
@@ -71,6 +74,13 @@ public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlock
 			final float radius = (float) Math.min(Math.max(Math.sqrt(Math.max(hard * hard - heat * heat, 0)) * focus, 0.5), 16);
 			final boolean fire = props.r >= 256;
 			level.explode(entity, source, damageCalculator, location, radius, fire, Level.ExplosionInteraction.TNT);
+		}
+
+		@Override
+		public void afterMergeLaser(LaserContext ctx, LaserContext target, LaserProperties props) {
+			if (!props.getAttachments().contains(this)) {
+				props.withAttachment(this);
+			}
 		}
 	}
 }
