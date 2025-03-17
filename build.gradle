@@ -11,35 +11,20 @@ buildscript {
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 		classpath 'org.parchmentmc:librarian:1.+'
-		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0'
-		classpath "org.jlleitschuh.gradle:ktlint-gradle:12.1.1"
-	   
-		// OPTIONAL Gradle plugin for Kotlin Serialization
-		//classpath 'org.jetbrains.kotlin:kotlin-serialization:1.6.10'
-
 	}
 }
 
 plugins {
-	// Adds the Kotlin Gradle plugin
-	id "org.jetbrains.kotlin.jvm" version "1.9.22"
-	// OPTIONAL Kotlin Serialization plugin
-	id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
 	id 'maven-publish'
-	id 'eclipse'
 	id 'idea'
 	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: "org.jetbrains.kotlin.jvm"
-
-//group = mod_version
 
 base {
 	archivesName = "${archives_base_name}-${mod_version}"
@@ -50,7 +35,6 @@ java {
 }
 
 minecraft {
-
 	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 
 	copyIdeResources = true

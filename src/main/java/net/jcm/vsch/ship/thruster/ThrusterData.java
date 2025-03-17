@@ -1,4 +1,4 @@
-package net.jcm.vsch.ship;
+package net.jcm.vsch.ship.thruster;
 
 import org.joml.Vector3d;
 

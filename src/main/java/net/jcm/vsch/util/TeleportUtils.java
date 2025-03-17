@@ -26,7 +26,7 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import java.util.*;
 
 /**
- * @deprecated functions have been migrated/upgraded to {@link TeleportationHandler}
+ * Deprecated. Use {@link TeleportationHandler} instead
  */
 @Deprecated(forRemoval = true)
 public class TeleportUtils {

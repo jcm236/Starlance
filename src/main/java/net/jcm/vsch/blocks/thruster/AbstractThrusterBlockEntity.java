@@ -2,10 +2,7 @@ package net.jcm.vsch.blocks.thruster;
 
 import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.blocks.thruster.ThrusterBrain;
-import net.jcm.vsch.blocks.thruster.ThrusterEngine;
-import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.ship.ThrusterData;
+import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 
@@ -22,13 +19,9 @@ import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
@@ -36,7 +29,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+
 import org.slf4j.Logger;
 
 public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity {

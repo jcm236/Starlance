@@ -4,26 +4,13 @@ package net.jcm.vsch.blocks.custom;
 import net.jcm.vsch.blocks.custom.template.BlockWithEntity;
 import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.config.VSCHConfig;
-import net.jcm.vsch.ship.DraggerData;
-import net.jcm.vsch.ship.ThrusterData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
-import net.jcm.vsch.util.rot.DirectionalShape;
-import net.jcm.vsch.util.rot.RotShape;
-import net.jcm.vsch.util.rot.RotShapes;
-import net.lointain.cosmos.init.CosmosModItems;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -31,7 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.BlockHitResult;
 
 
 public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {

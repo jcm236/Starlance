@@ -9,7 +9,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.thruster.ThrusterBrain;
 import net.jcm.vsch.config.VSCHConfig;
-import net.jcm.vsch.ship.ThrusterData;
+import net.jcm.vsch.ship.thruster.ThrusterData;
 
 public class ThrusterPeripheral implements IPeripheral {
 	private final ThrusterBrain brain;

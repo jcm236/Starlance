@@ -1,12 +1,10 @@
 package net.jcm.vsch.blocks.custom.template;
 
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
-
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.items.VSCHItems;
-import net.jcm.vsch.ship.ThrusterData.ThrusterMode;
+import net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShape;
@@ -35,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;

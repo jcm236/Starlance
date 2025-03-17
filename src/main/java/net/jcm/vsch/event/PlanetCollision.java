@@ -27,8 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
@@ -39,19 +37,19 @@ public class PlanetCollision {
 
 	public static void planetCollisionTick(ServerLevel level, LevelAccessor world) {
 		String dimension = level.dimension().location().toString();
-		for (Ship ship : VSGameUtilsKt.getAllShips(level)) {
+		for (Ship ship : VSCHUtils.getAllLoadedShips(level)) {
 
 			AABB currentAABB = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB());
 			Vec3 shipCenter = currentAABB.getCenter();
 
 			CompoundTag nearestPlanet = VSCHUtils.getNearestPlanet(world, shipCenter, dimension);
 			if (nearestPlanet == null) {
-				return;
+				continue;
 			}
 
 			Player nearestPlayer = getShipPlayer(ship, level);
 			if (nearestPlayer == null) {
-				return;
+				continue;
 			}
 
 			// Only continue rest of code if this ship is colliding with a planet
@@ -98,7 +96,7 @@ public class PlanetCollision {
 				double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
 				double posY = 550;
 				String dimension = planet.getString("travel_to");
-				if (dimension == "") {
+				if (dimension.isEmpty() ) {
 					logger.error("[VSCH]: Planet has no travel_to dimension. Please report this");
 					// We should in theory never get here if I've done my null checks correctly when getting the antennas in the first place
 					return;

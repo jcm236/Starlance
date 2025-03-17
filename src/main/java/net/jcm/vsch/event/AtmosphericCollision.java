@@ -1,10 +1,8 @@
 package net.jcm.vsch.event;
 
-import net.jcm.vsch.util.TeleportUtils;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.CompoundTag;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.jcm.vsch.VSCHMod;
@@ -15,21 +13,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class AtmosphericCollision {
 
 	public static final Logger logger = LogManager.getLogger(VSCHMod.MODID);
 
-	public static void interateShips(ServerLevel level) {
-		for (Ship ship: VSGameUtilsKt.getAllShips(level)) {
-
-		}
-	}
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
@@ -41,7 +31,7 @@ public class AtmosphericCollision {
 	 */
 	public static void atmosphericCollisionTick(ServerLevel level, LevelAccessor world) {
 
-		for (Ship ship : VSGameUtilsKt.getAllShips(level)) {
+		for (Ship ship : VSCHUtils.getAllLoadedShips(level)) {
 
 			// ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
 

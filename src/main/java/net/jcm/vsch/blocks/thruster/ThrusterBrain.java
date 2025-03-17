@@ -2,11 +2,10 @@ package net.jcm.vsch.blocks.thruster;
 
 import dan200.computercraft.shared.Capabilities;
 
-import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.ThrusterPeripheral;
 import net.jcm.vsch.config.VSCHConfig;
-import net.jcm.vsch.ship.ThrusterData;
+import net.jcm.vsch.ship.thruster.ThrusterData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +32,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
