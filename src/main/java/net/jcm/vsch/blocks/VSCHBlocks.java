@@ -123,6 +123,7 @@ public class VSCHBlocks {
 			LaserCondensingLenBlockEntity::new
 		)
 	);
+
 	public static final RegistryObject<Block> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK = registerBlock("laser_semi_transparent_flat_mirror_block",
 		() -> new LaserFlatLenBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
@@ -132,7 +133,6 @@ public class VSCHBlocks {
 		)
 	);
 
-
 	public static final RegistryObject<Block> LASER_STRENGTH_DETECTOR_LEN_BLOCK = registerBlock("laser_strength_detector_len_block",
 		() -> new LaserStrengthDetectorLenBlock(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
@@ -140,7 +140,6 @@ public class VSCHBlocks {
 				.noOcclusion()
 		)
 	);
-
 
 	public static final RegistryObject<Block> SCREEN_BLOCK = registerBlock("screen_block",
 		() -> new ScreenBlock(
