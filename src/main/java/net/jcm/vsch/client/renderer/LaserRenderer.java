@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -33,13 +35,12 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.util.VectorConversionsKt;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.laser.ILaserSyncedSource;
 import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.entity.LaserEntity;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
-import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.Vector3fcUtilKt;
 
 import java.util.List;
 
@@ -83,9 +84,8 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			}
 			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
 
-			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 10), 1);
-			final float innerRadius = 0.05f * size;
-			final float outerRadius = 0.09f * size;
+			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 16), 1);
+			final float radius = 0.05f * size;
 
 			renderBeaconBeam(
 				gameTime,
@@ -95,7 +95,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				partialTick,
 				1, 0, length,
 				colors,
-				innerRadius, outerRadius
+				radius
 			);
 
 			if (laser.shouldRenderOnHitParticles()) {
@@ -103,7 +103,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				LaserHitParticle.spawnConeOfParticles(
 					level,
 					(float) pos.x, (float) pos.y, (float) pos.z,
-					Vector3fcUtilKt.toVec3(direction),
+					new Vec3(direction.x, direction.y, direction.z),
 					5,
 					colors
 				);
@@ -170,9 +170,8 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 			final Vector3d translation = new Vector3d(0, 0, 0);
 			final Quaternionf rotation = new Quaternionf().rotationTo(DEFAULT_DIR, direction);
 
-			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 10), 1);
-			final float innerRadius = 0.05f * size;
-			final float outerRadius = 0.09f * size;
+			final float size = Math.max(Math.min((props.r + props.g + props.b) / (256 * 3), 16), 1);
+			final float radius = 0.05f * size;
 
 			renderBeaconBeam(
 				gameTime,
@@ -182,7 +181,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				partialTick,
 				1, 0, length,
 				colors,
-				innerRadius, outerRadius
+				radius
 			);
 
 			if (laser.shouldRenderOnHitParticles()) {
@@ -190,7 +189,7 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 				LaserHitParticle.spawnConeOfParticles(
 					level,
 					(float) pos.x, (float) pos.y, (float) pos.z,
-					Vector3fcUtilKt.toVec3(direction),
+					new Vec3(direction.x, direction.y, direction.z),
 					5,
 					colors
 				);
@@ -213,12 +212,18 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		float pPartialTick,
 		float pTextureScale, int pYOffset, float pHeight,
 		float[] pColors,
-		float pBeamRadius, float pGlowRadius
+		float pBeamRadius
 	) {
+		final AdvancedFbo buffer = VeilRenderSystem.renderer().getFramebufferManager().getFramebuffer(VSCHMod.BLOOM_PIPELINE);
+		if (buffer != null) {
+			buffer.bind(true);
+		}
+
 		long pGameTime = gameTime;
 		float maxX = pYOffset + pHeight;
 		pPoseStack.pushPose();
 		pPoseStack.translate(translation.x, translation.y, translation.z);
+
 		float degrees = Math.floorMod(pGameTime, 360) + pPartialTick;
 		float reversedDegrees = pHeight < 0 ? degrees : -degrees;
 		float time = Mth.frac(reversedDegrees * 0.2F - Mth.floor(reversedDegrees * 0.1F));
@@ -231,12 +236,10 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 		float f15 = -1.0F + time;
 		float f16 = pHeight * pTextureScale * (0.5F / pBeamRadius) + f15;
 		renderPart(pPoseStack, pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, false)), r, g, b, 1.0F, pYOffset, maxX, 0.0F, pBeamRadius, pBeamRadius, 0.0F, -pBeamRadius, 0.0F, 0.0F, -pBeamRadius, 0.0F, 1.0F, f16, f15);
+		pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, true));
 		pPoseStack.popPose();
-		pPoseStack.mulPose(rotation);
-		f15 = -1.0F + time;
-		f16 = pHeight * pTextureScale + f15;
-		renderPart(pPoseStack, pBufferSource.getBuffer(RenderType.beaconBeam(pBeamLocation, true)), r, g, b, 0.225F, pYOffset, maxX, -pGlowRadius, -pGlowRadius, pGlowRadius, -pGlowRadius, -pBeamRadius, pGlowRadius, pGlowRadius, pGlowRadius, 0.0F, 1.0F, f16, f15);
 		pPoseStack.popPose();
+		AdvancedFbo.getMainFramebuffer().bind(true);
 	}
 
 	private static void renderPart(PoseStack pPoseStack, VertexConsumer pConsumer, float pRed, float pGreen, float pBlue, float pAlpha, int pMinY, float pMaxY, float pX0, float pZ0, float pX1, float pZ1, float pX2, float pZ2, float pX3, float pZ3, float pMinU, float pMaxU, float pMinV, float pMaxV) {

@@ -1,0 +1,14 @@
+{
+	"vertex": "vsch:core/blit_screen",
+	"fragment": "vsch:bloom/bloom",
+	"textures": {
+		"BloomSampler": {
+			"type": "framebuffer",
+			"name": "vsch:bloom"
+		},
+		"BlurSampler": {
+			"type": "framebuffer",
+			"name": "vsch:bloom_blur"
+		}
+	}
+}

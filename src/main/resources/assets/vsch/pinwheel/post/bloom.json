@@ -1,0 +1,101 @@
+{
+	"stages": [
+		{
+			"type": "veil:mask",
+			"depth": true
+		},
+		{
+			"type": "veil:depth_function",
+			"function": "LEQUAL"
+		},
+		{
+			"type": "veil:copy",
+			"in": "veil:post",
+			"out": "swap",
+			"color": false,
+			"depth": true
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:core/blit_cull",
+			"in": "vsch:bloom",
+			"out": "swap",
+			"clear": true
+		},
+		{
+			"type": "veil:copy",
+			"in": "swap",
+			"out": "vsch:bloom"
+		},
+		{
+			"type": "veil:copy",
+			"in": "vsch:bloom",
+			"out": "layer1"
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:blur/blur_horizontal",
+			"in": "layer1",
+			"out": "layer2",
+			"clear": true
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:blur/blur_vertical",
+			"in": "layer2",
+			"out": "layer1",
+			"clear": true
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:blur/blur_horizontal",
+			"in": "layer1",
+			"out": "layer2",
+			"clear": false
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:blur/blur_vertical",
+			"in": "layer2",
+			"out": "layer1",
+			"clear": true
+		},
+		{
+			"type": "veil:copy",
+			"in": "layer1",
+			"out": "vsch:bloom_blur",
+			"clear": true
+		},
+		{
+			"type": "veil:blit",
+			"shader": "vsch:bloom/bloom",
+			"in": "minecraft:main",
+			"out": "veil:post",
+			"clear": false
+		}
+	],
+	"framebuffers": {
+		"swap": {
+			"depth": true,
+			"format": "RGBA16F",
+			"linear": true,
+			"autoClear": true
+		},
+		"layer1": {
+			"width": "q.screen_width / 2.0",
+			"height": "q.screen_height / 2.0",
+			"depth": true,
+			"format": "RGBA8",
+			"linear": true,
+			"autoClear": true
+		},
+		"layer2": {
+			"width": "q.screen_width / 4.0",
+			"height": "q.screen_height / 4.0",
+			"depth": false,
+			"format": "RGBA8",
+			"linear": true,
+			"autoClear": true
+		}
+	}
+}

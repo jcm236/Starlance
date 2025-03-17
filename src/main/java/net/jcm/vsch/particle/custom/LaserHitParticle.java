@@ -1,16 +1,31 @@
 package net.jcm.vsch.particle.custom;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import foundry.veil.api.client.render.VeilRenderSystem;
+import foundry.veil.api.client.render.framebuffer.AdvancedFbo;
+
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.particle.VSCHParticles;
 
 import java.util.Random;
@@ -18,6 +33,28 @@ import java.util.Random;
 public class LaserHitParticle extends TextureSheetParticle {
 	private static final Random RND = new Random();
 	private static final double SPREAD_ANGLE = Math.toRadians(22.5);
+	private static final ParticleRenderType PARTICLE_SHEET_TRANSLUCENT_BLOOM = new ParticleRenderType() {
+		public void begin(BufferBuilder builder, TextureManager textures) {
+			AdvancedFbo buffer = VeilRenderSystem.renderer().getFramebufferManager().getFramebuffer(VSCHMod.BLOOM_PIPELINE);
+			if (buffer != null) {
+				buffer.bind(false);
+			}
+			RenderSystem.depthMask(true);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+		}
+
+		public void end(Tesselator tesselator) {
+			tesselator.end();
+			AdvancedFbo.getMainFramebuffer().bind(true);
+		}
+
+		public String toString() {
+			return "PARTICLE_SHEET_TRANSLUCENT_BLOOM";
+		}
+	};
 
 	private final SpriteSet sprites;
 
@@ -52,18 +89,11 @@ public class LaserHitParticle extends TextureSheetParticle {
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-	}
-
-	@Override
-	public void render(VertexConsumer pBuffer, Camera pRenderInfo, float pPartialTicks) {
-		super.render(pBuffer, pRenderInfo, pPartialTicks);
+		return PARTICLE_SHEET_TRANSLUCENT_BLOOM;
 	}
 
 	public static void spawnConeOfParticles(Level level, float x, float y, float z, Vec3 dir, int iter, float[] color) {
 		for (int i = 0; i < iter; i++) {
-			// TODO: This is horrible ChatGPT code, PLEASE someone who knows more than me re-do this
-
 			final double randomAngle = RND.nextDouble() * 2 * Math.PI;
 			final double deviation = RND.nextDouble() * SPREAD_ANGLE;
 

@@ -1,5 +1,6 @@
 package net.jcm.vsch;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import foundry.veil.api.client.render.VeilRenderSystem;
 import org.valkyrienskies.core.impl.hooks.VSEvents;
 
 import net.jcm.vsch.blocks.DefaultLaserProcessors;
@@ -30,6 +32,7 @@ import net.jcm.vsch.particle.VSCHParticles;
 public class VSCHMod {
 	public static final String MODID = "vsch";
 	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
+	public static final ResourceLocation BLOOM_PIPELINE = new ResourceLocation(MODID, "bloom");
 
 	public VSCHMod() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -62,6 +65,8 @@ public class VSCHMod {
 
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)
 	private void onClientSetup(FMLClientSetupEvent event) {
+		VeilRenderSystem.renderer().getPostProcessingManager().add(BLOOM_PIPELINE);
+
 		if (CompatMods.CREATE.isLoaded()) {
 			VSCHPonderRegistry.register();
 			VSCHPonderTags.register();
@@ -72,8 +77,3 @@ public class VSCHMod {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
-
-
-
-
-
