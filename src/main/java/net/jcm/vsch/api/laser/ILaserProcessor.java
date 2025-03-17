@@ -16,7 +16,7 @@ public interface ILaserProcessor {
 	}
 }
 
-class EndPointProcessor implements ILaserProcessor {
+final class EndPointProcessor implements ILaserProcessor {
 	private final Consumer<LaserContext> processor;
 
 	EndPointProcessor(final Consumer<LaserContext> processor) {

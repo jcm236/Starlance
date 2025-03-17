@@ -50,7 +50,7 @@ public abstract class AbstractCannonBlockEntity extends AbstractCCBlockEntity im
 
 	public void markUpdated() {
 		this.setChanged();
-		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL_IMMEDIATE);
 	}
 
 	public void neighborChanged(Block block, BlockPos neighborPos, boolean moving) {

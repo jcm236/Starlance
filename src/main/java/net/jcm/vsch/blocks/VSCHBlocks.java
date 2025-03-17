@@ -16,6 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.custom.*;
+import net.jcm.vsch.blocks.custom.laser.ScreenBlock;
 import net.jcm.vsch.blocks.custom.laser.cannon.LaserCannonBlock;
 import net.jcm.vsch.blocks.custom.laser.cannon.LaserDetectProcessorBlock;
 import net.jcm.vsch.blocks.custom.laser.cannon.LaserEmitterBlock;
@@ -136,6 +137,16 @@ public class VSCHBlocks {
 		() -> new LaserStrengthDetectorLenBlock(
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
 				.strength(1f, 0.3f)
+				.noOcclusion()
+		)
+	);
+
+
+	public static final RegistryObject<Block> SCREEN_BLOCK = registerBlock("screen_block",
+		() -> new ScreenBlock(
+			BlockBehaviour.Properties.copy(Blocks.GLASS)
+				.strength(1f, 0.3f)
+				.lightLevel(ScreenBlock::getLightLevel)
 				.noOcclusion()
 		)
 	);

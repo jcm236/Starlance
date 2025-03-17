@@ -8,6 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.entity.laser.ScreenBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.cannon.LaserDetectProcessorBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.cannon.LaserEmitterBlockEntity;
 import net.jcm.vsch.blocks.entity.laser.cannon.LaserExplosiveProcessorBlockEntity;
@@ -49,6 +50,7 @@ public class VSCHBlockEntities {
 		BLOCK_ENTITIES.register("dock",
 			() -> BlockEntityType.Builder.of(DockerBlockEntity::new, VSCHBlocks.DOCKER_BLOCK.get())
 				.build(null));
+
 	public static final RegistryObject<BlockEntityType<LaserDetectProcessorBlockEntity>> LASER_DETECT_PROCESSOR_BLOCK_ENTITY =
 		BLOCK_ENTITIES.register("laser_detect_processor_block",
 			() -> BlockEntityType.Builder.of(LaserDetectProcessorBlockEntity::new, VSCHBlocks.LASER_DETECT_PROCESSOR_BLOCK.get())
@@ -88,6 +90,11 @@ public class VSCHBlockEntities {
 		BLOCK_ENTITIES.register("laser_strength_detector_len_block",
 			() -> BlockEntityType.Builder.of(LaserStrengthDetectorLenBlockEntity::new, VSCHBlocks.LASER_STRENGTH_DETECTOR_LEN_BLOCK.get())
 			.build(null));
+
+	public static final RegistryObject<BlockEntityType<ScreenBlockEntity>> SCREEN_BLOCK_ENTITY =
+		BLOCK_ENTITIES.register("screen_block",
+			() -> BlockEntityType.Builder.of(ScreenBlockEntity::new, VSCHBlocks.SCREEN_BLOCK.get())
+				.build(null));
 
 	public static void register(IEventBus eventBus) {
 		BLOCK_ENTITIES.register(eventBus);
