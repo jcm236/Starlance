@@ -1,7 +1,7 @@
 {
-  "variants": {
-    "": {
-      "model": "vsch:block/drag_inducer_block"
-    }
-  }
+	"variants": {
+		"": {
+			"model": "vsch:block/drag_inducer_block"
+		}
+	}
 }
