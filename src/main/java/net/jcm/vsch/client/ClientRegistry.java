@@ -9,6 +9,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.client.renderer.LaserRenderer;
+import net.jcm.vsch.client.renderer.ScreenBlockRenderer;
 
 @Mod.EventBusSubscriber(modid = VSCHMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientRegistry {
@@ -20,5 +21,6 @@ public class ClientRegistry {
 		event.registerBlockEntityRenderer(VSCHBlockEntities.LASER_FLAT_MIRROR_BLOCK_ENTITY.get(), LaserRenderer::new);
 		event.registerBlockEntityRenderer(VSCHBlockEntities.LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK_ENTITY.get(), LaserRenderer::new);
 		event.registerBlockEntityRenderer(VSCHBlockEntities.LASER_CONDENSING_LEN_BLOCK_ENTITY.get(), LaserRenderer::new);
+		event.registerBlockEntityRenderer(VSCHBlockEntities.SCREEN_BLOCK_ENTITY.get(), ScreenBlockRenderer::new);
 	}
 }

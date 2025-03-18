@@ -146,7 +146,6 @@ public class VSCHBlocks {
 			BlockBehaviour.Properties.copy(Blocks.GLASS)
 				.strength(1f, 0.3f)
 				.lightLevel(ScreenBlock::getLightLevel)
-				.noOcclusion()
 		)
 	);
 

@@ -3,7 +3,6 @@ package net.jcm.vsch.client.renderer;
 import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.jcm.vsch.particle.custom.LaserHitParticle;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -41,6 +40,7 @@ import net.jcm.vsch.api.laser.LaserContext;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.entity.LaserEntity;
+import net.jcm.vsch.particle.custom.LaserHitParticle;
 
 import java.util.List;
 
@@ -260,6 +260,6 @@ public class LaserRenderer implements BlockEntityRenderer<BlockEntity> {
 	}
 
 	private static void addVertex(Matrix4f pPose, Matrix3f pNormal, VertexConsumer pConsumer, float pRed, float pGreen, float pBlue, float pAlpha, float pY, float pX, float pZ, float pU, float pV) {
-		pConsumer.vertex(pPose, pX, pY, pZ).color(pRed, pGreen, pBlue, pAlpha).uv(pU, pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+		pConsumer.vertex(pPose, pX, pY, pZ).color(pRed, pGreen, pBlue, pAlpha).uv(pU, pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(0x00f000f0).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
 	}
 }

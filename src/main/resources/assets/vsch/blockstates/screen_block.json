@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "vsch:block/screen_block"
+    }
+  }
+}
