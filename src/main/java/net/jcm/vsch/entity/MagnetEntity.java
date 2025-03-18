@@ -1,8 +1,5 @@
 package net.jcm.vsch.entity;
 
-import net.jcm.vsch.blocks.VSCHBlocks;
-import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
-
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -25,6 +22,9 @@ import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
+
+import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
 
 public class MagnetEntity extends Entity implements IAttachableEntity {
 	public static final EntityTypeTest TESTER = EntityTypeTest.forClass(MagnetEntity.class);

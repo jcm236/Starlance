@@ -1,11 +1,10 @@
-package net.jcm.vsch.compat.cc;
+package net.jcm.vsch.compat.cc.peripherals;
 
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.entity.DragInducerBlockEntity;
-import net.jcm.vsch.ship.ThrusterData;
 
 public class DragInducerPeripheral implements IPeripheral {
 	private final DragInducerBlockEntity entity;

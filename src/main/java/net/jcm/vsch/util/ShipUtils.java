@@ -15,6 +15,10 @@ import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 import java.util.Objects;
 
 public class ShipUtils {
+    /**
+    * Gets the transform of a @link{Ship} when given its id.
+    * @param id Id of the ship (duh)
+    */
     public static ShipTransform transformFromId(Long id, ServerShipWorldCore shipWorld) {
         Ship ship = shipWorld.getAllShips().getById(id);
         if (ship == null) {

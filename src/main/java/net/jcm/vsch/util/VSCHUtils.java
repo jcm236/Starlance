@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.core.api.ships.QueryableShipData;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
@@ -540,6 +542,16 @@ public class VSCHUtils {
 
 		return nearestEntity;
 
+	}
+
+	public static List<LoadedServerShip> getAllLoadedShips(ServerLevel level){
+		List<LoadedServerShip> loadedships = new ArrayList<>();
+		for (Ship ship : VSGameUtilsKt.getAllShips(level)) {
+			if(ship instanceof LoadedServerShip loaded){
+				loadedships.add(loaded);
+			}
+		}
+		return loadedships;
 	}
 
 }

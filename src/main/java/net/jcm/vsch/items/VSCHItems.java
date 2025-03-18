@@ -13,20 +13,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHItems {
-	public static final DeferredRegister<Item> ITEMS =
-			DeferredRegister.create(ForgeRegistries.ITEMS, VSCHMod.MODID); //this bit does some mumbo-jumbo to set up for adding items
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, VSCHMod.MODID);
 
+	public static final RegistryObject<Item> WRENCH = ITEMS.register(
+		"wrench", 
+		() -> new WrenchItem(new Item.Properties())
+	);
 
-	public static final RegistryObject<Item> WRENCH = ITEMS.register("wrench", 
-			() -> new WrenchItem(new Item.Properties()));
-
-	public static final RegistryObject<Item> MAGNET_BOOT = ITEMS.register("magnet_boot",
-			() -> new MagnetBootItem(ArmorMaterials.IRON, Type.BOOTS, new Item.Properties()));
-
-
-	//registering
+	public static final RegistryObject<Item> MAGNET_BOOT = ITEMS.register(
+		"magnet_boot",
+		() -> new MagnetBootItem(ArmorMaterials.IRON, Type.BOOTS, new Item.Properties())
+	);
 
 	public static void register(IEventBus eventBus) {
-		ITEMS.register(eventBus); //this registers the items with the mod event bus
+		ITEMS.register(eventBus);
 	}
 }

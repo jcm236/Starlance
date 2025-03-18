@@ -47,8 +47,6 @@ public class VSCHBlockEntities {
 					() -> BlockEntityType.Builder.of(MagnetBlockEntity::new, VSCHBlocks.MAGNET_BLOCK.get())
 							.build(null));
 
-
-
 	public static void register(IEventBus eventBus) {
 		BLOCK_ENTITIES.register(eventBus);
 	}

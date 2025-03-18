@@ -1,10 +1,8 @@
 package net.jcm.vsch.event;
 
-import net.jcm.vsch.util.TeleportUtils;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.CompoundTag;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.jcm.vsch.VSCHMod;
@@ -15,21 +13,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class AtmosphericCollision {
 
 	public static final Logger logger = LogManager.getLogger(VSCHMod.MODID);
 
-	public static void interateShips(ServerLevel level) {
-		for (Ship ship: VSGameUtilsKt.getAllShips(level)) {
-
-		}
-	}
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
@@ -41,7 +31,7 @@ public class AtmosphericCollision {
 	 */
 	public static void atmosphericCollisionTick(ServerLevel level, LevelAccessor world) {
 
-		for (Ship ship : VSGameUtilsKt.getAllShips(level)) {
+		for (Ship ship : VSCHUtils.getAllLoadedShips(level)) {
 
 			// ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
 
@@ -64,23 +54,12 @@ public class AtmosphericCollision {
 				if (ship.getTransform().getPositionInWorld().y() > atmoData.getDouble("atmosphere_y")) {
 
 					// ----- Get destination x, y, z and dimension ----- //
+					//TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
 					double posX = atmoData.getDouble("origin_x"); // + Mth.nextInt(RandomSource.create(), -10, 10)
 					double posY = atmoData.getDouble("origin_y"); // + Mth.nextInt(RandomSource.create(), -5, 5)
 					double posZ = atmoData.getDouble("origin_z"); // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 					String gotoDimension = atmoData.getString("travel_to");
-
-					/*ServerPlayer player = level.getRandomPlayer();
-					// System.out.println(totalAABB);
-					// System.out.println(level.getEntities(null, totalAABB));
-					if (player != null) {
-						// More debug
-						System.out.println("Player: " + player.getPosition(0));
-						// System.out.println("Prev: "+prevWorldAABB);
-						// System.out.println("Current: "+currentWorldAABB);
-						// System.out.println("Total: "+totalAABB);
-
-					}*/
 
 					new TeleportationHandler(VSCHUtils.dimToLevel(ValkyrienSkiesMod.getCurrentServer(), gotoDimension), level, false).handleTeleport(ship, new Vector3d(posX, posY, posZ));
 

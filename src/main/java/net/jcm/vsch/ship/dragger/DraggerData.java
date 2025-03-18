@@ -1,6 +1,4 @@
-package net.jcm.vsch.ship;
-
-import org.joml.Vector3d;
+package net.jcm.vsch.ship.dragger;
 
 public class DraggerData {
 

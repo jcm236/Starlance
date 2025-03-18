@@ -1,4 +1,4 @@
-package net.jcm.vsch.ship;
+package net.jcm.vsch.ship.magnet;
 
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.joml.Vector3d;

@@ -10,8 +10,8 @@ import net.jcm.vsch.entity.MagnetEntity;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.ship.MagnetData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
-
 import net.jcm.vsch.util.VSCHUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

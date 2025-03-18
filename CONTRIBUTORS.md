@@ -1,19 +1,7 @@
-- illuc
-- ZeOttery
-- cosmology101
-- pancake______
-- Heisenberg1982
-- koap - Cannon model, Liquid fuel thruster block textures
-- MrSterner - 1.20.1 fixes
-- ewoudje - controls fix
-- cj05 - speed limiter
+Big contributors:
+- GuyApooye
+- Zyxkad
 
-<!--add categories like
-
-Artists:
-...
-Developers:
-...
-
-maybe ?
--->
+Minor contributors:
+- jamesgreen26
+- Diego32099

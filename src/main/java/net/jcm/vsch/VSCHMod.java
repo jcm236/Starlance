@@ -4,18 +4,16 @@ import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
 import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.compat.create.VSCHPonderRegistry;
-import net.jcm.vsch.compat.create.VSCHPonderTags;
-import net.jcm.vsch.compat.create.VSCHRegistrateBlocks;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
-import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -27,23 +25,16 @@ import org.valkyrienskies.core.impl.hooks.VSEvents;
 public class VSCHMod {
 	public static final String MODID = "vsch";
 
-	// Register blocks (thruster)
-	//private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHConfig.MOD_ID);
-	//public static final RegistryObject<Block> SAD_BLOCK = BLOCKS.register("thruster",
-	//        () -> new ThrusterBlock(Block.Properties.copy(Blocks.IRON_BLOCK)));
-
-	//public static final Logger logger = LogManager.getLogger(VSCHConfig.MOD_ID);
-
 	public VSCHMod() {
-		// Initialize logic here
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-		//BLOCKS.register(modBus);
+
 		VSCHItems.register(modBus);
 		VSCHBlocks.register(modBus);
 		VSCHBlockEntities.register(modBus);
 		VSCHConfig.register(ModLoadingContext.get());
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
+		VSCHTags.register();
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
 
@@ -55,7 +46,7 @@ public class VSCHMod {
 		modBus.addListener(this::registerRenderers);
 
 		if (CompatMods.CREATE.isLoaded()) {
-			VSCHRegistrateBlocks.register();
+			VSCHPonderRegistrateBlocks.register();
 		}
 	}
 
@@ -68,7 +59,7 @@ public class VSCHMod {
 	}
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-		//event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
+		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
 

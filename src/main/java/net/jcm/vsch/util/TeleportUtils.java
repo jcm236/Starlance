@@ -25,6 +25,9 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.*;
 
+/**
+ * Deprecated. Use {@link TeleportationHandler} instead
+ */
 @Deprecated(forRemoval = true)
 public class TeleportUtils {
     public static void teleportShipAndConstrained(Ship ship, ServerLevel level, String newDim, double x, double y, double z) {
