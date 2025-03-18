@@ -72,10 +72,6 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		return this.brain.getCurrentPower();
 	}
 
-	private void updateForce() {
-		this.thrusterData.setForce((force) -> force.set(this.facing).mul(this.getThrottle()));
-	}
-
 	@Override
 	public void load(CompoundTag data) {
 		super.load(data);

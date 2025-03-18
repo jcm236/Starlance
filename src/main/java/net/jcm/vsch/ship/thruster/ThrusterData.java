@@ -40,6 +40,10 @@ public class ThrusterData {
 		this.mode = mode;
 	}
 
+	public ThrusterData(ThrusterMode mode) {
+		this(new Vector3d(), mode);
+	}
+
 	public void setForce(Vector3dc force) {
 		synchronized (this.forceSwap) {
 			Vector3d f = this.force;

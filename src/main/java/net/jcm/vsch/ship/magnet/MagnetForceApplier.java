@@ -1,10 +1,14 @@
-package net.jcm.vsch.ship.thruster;
+package net.jcm.vsch.ship.magnet;
 
 import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.config.VSCHConfig;
+
 import net.minecraft.core.BlockPos;
+
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
@@ -23,44 +27,36 @@ public class MagnetForceApplier implements IVSCHForceApplier {
 
 	@Override
 	public void applyForces(BlockPos pos, PhysShipImpl physShip) {
-		// Get current thrust from thruster
-		float throttle = data.throttle;
-		if (throttle == 0.0f) {
+		final Vector3d centerPos = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		final Vector3f facing = data.facing;
+		final boolean isGenerator = data.isGenerator;
+		final MagnetData.ForceCalculator forceCalculator = data.forceCalculator;
+		final Vector3d frontForce = new Vector3d();
+		final Vector3d backForce = new Vector3d();
+		forceCalculator.calc(physShip, frontForce, backForce);
+		if (isGenerator) {
+			physShip.applyInvariantForce(frontForce);
+			physShip.applyInvariantTorque(backForce);
 			return;
 		}
 
-		// Transform force direction from ship relative to world relative
-		Vector3d tForce = physShip.getTransform().getShipToWorld().transformDirection(data.dir, new Vector3d());
-		tForce.mul(throttle);
-
-		Vector3dc linearVelocity = physShip.getPoseVel().getVel();
-
-		if (VSCHConfig.LIMIT_SPEED.get()) {
-			int maxSpeed = VSCHConfig.MAX_SPEED.get().intValue();
-			if (Math.abs(linearVelocity.length()) >= maxSpeed) {
-				double dotProduct = tForce.dot(linearVelocity);
-				if (dotProduct > 0) {
-					Vector3d tPos = VectorConversionsMCKt.toJOMLD(pos)
-							.add(0.5, 0.5, 0.5, new Vector3d())
-							.sub(physShip.getTransform().getPositionInShip());
-					Vector3d parallel = new Vector3d(tPos).mul(tForce.dot(tPos) / tForce.dot(tForce));
-					Vector3d perpendicular = new Vector3d(tForce).sub(parallel);
-
-					// rotate the ship
-					physShip.applyInvariantForceToPos(perpendicular, tPos);
-
-					// apply global force, since the force is perfectly lined up with the centre of gravity
-					applyScaledForce(physShip, linearVelocity, parallel, maxSpeed);
-					return;
-				}
-			}
+		final boolean hasFrontForce = frontForce.lengthSquared() != 0;
+		final boolean hasBackForce = backForce.lengthSquared() != 0;
+		if (!hasFrontForce && !hasBackForce) {
+			return;
 		}
+		final ShipTransform transform = physShip.getTransform();
+		final Vector3d frontPos = new Vector3d(facing.x / 2, facing.y / 2, facing.z / 2).add(centerPos).sub(transform.getPositionInShip());
+		final Vector3d backPos = frontPos.sub(facing, new Vector3d());
 
-		Vector3d tPos = VectorConversionsMCKt.toJOMLD(pos)
-				.add(0.5, 0.5, 0.5, new Vector3d())
-				.sub(physShip.getTransform().getPositionInShip());
+		// TODO: add speed limit
 
-		physShip.applyInvariantForceToPos(tForce, tPos);
+		if (hasFrontForce) {
+			physShip.applyInvariantForceToPos(frontForce, frontPos);
+		}
+		if (hasBackForce) {
+			physShip.applyInvariantForceToPos(backForce, backPos);
+		}
 	}
 
 	private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {

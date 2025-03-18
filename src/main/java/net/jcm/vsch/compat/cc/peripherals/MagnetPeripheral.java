@@ -5,7 +5,6 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
-import net.jcm.vsch.ship.ThrusterData;
 
 public class MagnetPeripheral implements IPeripheral {
 	private final MagnetBlockEntity entity;

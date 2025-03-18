@@ -10,37 +10,36 @@ import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 
 public class DraggerForceApplier implements IVSCHForceApplier {
 
-    private DraggerData data;
+	private DraggerData data;
 
-    public DraggerForceApplier(DraggerData data) {
-        this.data = data;
-    }
+	public DraggerForceApplier(DraggerData data) {
+		this.data = data;
+	}
 
-    public DraggerData getData(){
-        return this.data;
-    }
+	public DraggerData getData(){
+		return this.data;
+	}
 
-    @Override
-    public void applyForces(BlockPos pos, PhysShipImpl physShip) {
-        Vector3dc linearVelocity = physShip.getPoseVel().getVel();
-        Vector3dc angularVelocity = physShip.getPoseVel().getOmega();
+	@Override
+	public void applyForces(BlockPos pos, PhysShipImpl physShip) {
+		Vector3dc linearVelocity = physShip.getPoseVel().getVel();
+		Vector3dc angularVelocity = physShip.getPoseVel().getOmega();
 
-        if (!data.on) {
-            return;
-        }
+		if (!data.on) {
+			return;
+		}
 
+		Vector3d acceleration = linearVelocity.negate(new Vector3d());
+		Vector3d force = acceleration.mul(physShip.getInertia().getShipMass());
 
-        Vector3d acceleration = linearVelocity.negate(new Vector3d());
-        Vector3d force = acceleration.mul(physShip.getInertia().getShipMass());
+		force = VSCHUtils.clampVector(force, VSCHConfig.MAX_DRAG.get().intValue());
 
-        force = VSCHUtils.clampVector(force, VSCHConfig.MAX_DRAG.get().intValue());
+		Vector3d rotAcceleration = angularVelocity.negate(new Vector3d());
+		Vector3d rotForce = rotAcceleration.mul(physShip.getInertia().getShipMass());
 
-        Vector3d rotAcceleration = angularVelocity.negate(new Vector3d());
-        Vector3d rotForce = rotAcceleration.mul(physShip.getInertia().getShipMass());
+		rotForce = VSCHUtils.clampVector(rotForce, VSCHConfig.MAX_DRAG.get().intValue());
 
-        rotForce = VSCHUtils.clampVector(rotForce, VSCHConfig.MAX_DRAG.get().intValue());
-
-        physShip.applyInvariantForce(force);
-        physShip.applyInvariantTorque(rotForce);
-    }
+		physShip.applyInvariantForce(force);
+		physShip.applyInvariantTorque(rotForce);
+	}
 }
