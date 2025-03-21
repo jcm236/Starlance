@@ -16,19 +16,23 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
+	public static final BooleanProperty GENERATOR = BooleanProperty.create("generator");
 
 	public MagnetBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState()
-			.setValue(FACING, Direction.NORTH));
+			.setValue(FACING, Direction.NORTH)
+			.setValue(GENERATOR, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-		pBuilder.add(FACING);
+		pBuilder
+			.add(FACING)
+			.add(GENERATOR);
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 			dir = dir.getOpposite();
 		}
 		return defaultBlockState()
-			.setValue(BlockStateProperties.FACING, dir);
+			.setValue(FACING, dir);
 	}
 
 	@Override

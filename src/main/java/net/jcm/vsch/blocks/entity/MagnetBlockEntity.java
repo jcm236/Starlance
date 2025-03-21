@@ -3,6 +3,7 @@ package net.jcm.vsch.blocks.entity;
 import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.custom.template.BlockEntityWithEntity;
+import net.jcm.vsch.blocks.custom.MagnetBlock;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.MagnetPeripheral;
 import net.jcm.vsch.config.VSCHConfig;
@@ -41,6 +42,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.DoubleAdder;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,19 +62,21 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	private volatile boolean isPeripheralMode = false;
 	private boolean wasPeripheralMode = true;
 
-	private volatile boolean isGenerator = false;
+	private final AtomicReference<BlockState> updatingState = new AtomicReference<>();
+	private volatile boolean isGenerator;
 	private Vector3d lastVeloctiy = new Vector3d();
 	private final DoubleAdder lastGenerated = new DoubleAdder();
 
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
 	private final MagnetEnergyStorage energyStorage = new MagnetEnergyStorage(VSCHConfig.MAGNET_BLOCK_CONSUME_ENERGY.get().intValue());
 
-	private Map<MagnetBlockEntity, Duo<Vector3d>> cachedForces = new HashMap<>();
+	private Map<MagnetBlockEntity, DuoVector3d> cachedForces = new HashMap<>();
 
 	public MagnetBlockEntity(BlockPos pos, BlockState state) {
 		super(VSCHBlockEntities.MAGNET_BLOCK_ENTITY.get(), pos, state);
 		this.facing = Vec3.atLowerCornerOf(state.getValue(DirectionalBlock.FACING).getNormal());
-		this.magnetData = new MagnetData(this.facing.toVector3f());
+		this.isGenerator = state.getValue(MagnetBlock.GENERATOR);
+		this.magnetData = new MagnetData(this.facing.toVector3f(), this.isGenerator);
 	}
 
 	public float getAttractDistance() {
@@ -154,12 +158,18 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	}
 
 	public void setIsGenerator(boolean isGenerator) {
+		if (this.isGenerator == isGenerator) {
+			return;
+		}
 		this.isGenerator = isGenerator;
+		this.updatingState.updateAndGet(
+			(state) -> (state != null ? state : this.getBlockState()).setValue(MagnetBlock.GENERATOR, isGenerator));
 	}
 
 	protected void markPowerChanged() {
 		this.setChanged();
-		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+		BlockState state = this.getBlockState();
+		this.getLevel().sendBlockUpdated(this.getBlockPos(), state, state, Block.UPDATE_ALL_IMMEDIATE);
 	}
 
 	private static Vector3d getStandardForceTo(Vector3d selfPos, float angle, Vector3d pos, Vector3d dest) {
@@ -183,11 +193,13 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 		if (currentShip == null || currentShip.isStatic()) {
 			return Collections.emptyList();
 		}
-		final float maxDistance = this.getAttractDistance();
-		final float maxDistanceSqr = maxDistance * maxDistance;
+
 		Vector3f facing = this.getFacing();
 		Matrix4dc transform = currentShip.getShipToWorld();
 		Vector3d center = transform.transformPosition(new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5));
+
+		final float maxDistance = this.getAttractDistance();
+		final float maxDistanceSqr = maxDistance * maxDistance;
 
 		Vec3 axisX = new Vec3(transform.transformDirection(new Vector3f(maxDistance, 0, 0)));
 		Vec3 axisY = new Vec3(transform.transformDirection(new Vector3f(0, maxDistance, 0)));
@@ -235,11 +247,13 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	@Override
 	public void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
+		tag.putFloat("Power", this.power);
 		tag.putInt("StoredEnergy", this.energyStorage.stored);
 	}
 
 	@Override
 	public void load(CompoundTag tag) {
+		this.power = tag.getFloat("Power");
 		this.energyStorage.stored = tag.getInt("StoredEnergy");
 		super.load(tag);
 	}
@@ -250,9 +264,26 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 		}
 	}
 
+	private Vector3d getNorthPolePos() {
+			final Vector3d selfPos = this.getWorldPos();
+			final Vector3f selfFacing = this.getFacing().mul(0.4f);
+			return new Vector3d(selfPos).add(selfFacing);
+	}
+
+	private Vector3d getSouthPolePos() {
+			final Vector3d selfPos = this.getWorldPos();
+			final Vector3f selfFacing = this.getFacing().mul(0.4f);
+			return new Vector3d(selfPos).sub(selfFacing);
+	}
+
 	@Override
-	public void tickForce(ServerLevel level, BlockPos blockPos, BlockState state) {
+	public void tickForce(final ServerLevel level, final BlockPos blockPos, final BlockState state) {
 		super.tickForce(level, blockPos, state);
+
+		final BlockState updatingState = this.updatingState.getAndSet(null);
+		if (updatingState != null) {
+			level.setBlockAndUpdate(blockPos, updatingState);
+		}
 
 		if (this.wasPeripheralMode != this.isPeripheralMode && !this.isPeripheralMode) {
 			this.updatePowerByRedstone();
@@ -293,8 +324,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 			}
 		}
 
-		BlockPos selfBlockPos = this.getBlockPos();
-		Ship selfShip = VSGameUtilsKt.getShipObjectManagingPos(this.getLevel(), selfBlockPos);
+		Ship selfShip = VSGameUtilsKt.getShipObjectManagingPos(level, blockPos);
 		if (selfShip == null) {
 			return;
 		}
@@ -324,117 +354,108 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 		if (magnetBlocks.size() == 0) {
 			this.magnetData.forceCalculator = MagnetData.EMPTY_FORCE;
 		} else if (this.isGenerator) {
-			final double MAX_FORCE_MULTIPLIER = VSCHConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
-			Vector3d selfPosInShip = new Vector3d(selfBlockPos.getX() + 0.5, selfBlockPos.getY() + 0.5, selfBlockPos.getZ() + 0.5).sub(selfShip.getTransform().getPositionInShip());
-			double selfRadius = selfPosInShip.length();
-			this.magnetData.forceCalculator = (physShip, totalForce, totalTorque) -> {
-				final double tps = 3 * 20;
-				final double dt = 1.0 / tps;
-				final Vector3d selfPos = this.getWorldPos();
-				final double shipMass = physShip.getInertia().getShipMass();
-				double forceMultiplier = MAX_FORCE_MULTIPLIER * 2;
-				Vector3dc selfLinearVel = physShip.getPoseVel().getVel();
-				Vector3d selfAngularVel = physShip.getPoseVel().getOmega().mul(selfRadius, new Vector3d());
-				// TODO: need fix
-				selfAngularVel.set(
-					selfAngularVel.y * Math.sin(Math.atan2(selfPosInShip.z, selfPosInShip.x) + Math.PI / 2) +
-						selfAngularVel.z * Math.sin(Math.atan2(selfPosInShip.x, selfPosInShip.y) + Math.PI / 2),
-					selfAngularVel.x * Math.sin(Math.atan2(selfPosInShip.y, selfPosInShip.z) + Math.PI / 2) +
-						selfAngularVel.z * Math.cos(Math.atan2(selfPosInShip.x, selfPosInShip.y) + Math.PI / 2),
-					selfAngularVel.y * Math.cos(Math.atan2(selfPosInShip.z, selfPosInShip.x) + Math.PI / 2) +
-						selfAngularVel.x * Math.cos(Math.atan2(selfPosInShip.y, selfPosInShip.z) + Math.PI / 2)
-				);
-				selfShip.getShipToWorld().transformDirection(selfAngularVel);
-				Vector3d selfVelocity = new Vector3d(selfAngularVel);
-				double linearDist = selfLinearVel.length();
-				double angularDist = selfVelocity.length();
-				if (linearDist == 0 && angularDist == 0) {
-					return;
-				}
-				double linearWeight = linearDist / (linearDist + angularDist);
-				selfVelocity.add(selfLinearVel);
-				this.lastVeloctiy = new Vector3d(selfVelocity);
-				Vector3d velocityDiff = new Vector3d();
-				for (MagnetBlockEntity block : magnetBlocks) {
-					Vector3d pos = block.getWorldPos();
-					Vector3d otherVelocity = block.lastVeloctiy;
-					double dist = selfPos.distanceSquared(pos);
+			this.magnetData.forceCalculator = (physShip, totalForce, totalTorque) -> {};
+			// final double MAX_FORCE_MULTIPLIER = VSCHConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
+			// Vector3d selfPosInShip = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).sub(selfShip.getTransform().getPositionInShip());
+			// double selfRadius = selfPosInShip.length();
+			// this.magnetData.forceCalculator = (physShip, totalForce, totalTorque) -> {
+			// 	final double tps = 3 * 20;
+			// 	final double dt = 1.0 / tps;
+			// 	final Vector3d selfPos = this.getWorldPos();
+			// 	final double shipMass = physShip.getInertia().getShipMass();
+			// 	double forceMultiplier = MAX_FORCE_MULTIPLIER * 2;
+			// 	Vector3dc selfLinearVel = physShip.getPoseVel().getVel();
+			// 	final Vector3dc omega = physShip.getPoseVel().getOmega();
+			// 	// TODO: need fix
+			// 	final Vector3d selfAngularVel = omega.mul(selfRadius, new Vector3d());
+			// 	selfAngularVel.set(
+			// 		selfAngularVel.y * Math.sin(Math.atan2(selfPosInShip.z, selfPosInShip.x) + Math.PI / 2) +
+			// 			selfAngularVel.z * Math.sin(Math.atan2(selfPosInShip.x, selfPosInShip.y) + Math.PI / 2),
+			// 		selfAngularVel.x * Math.sin(Math.atan2(selfPosInShip.y, selfPosInShip.z) + Math.PI / 2) +
+			// 			selfAngularVel.z * Math.cos(Math.atan2(selfPosInShip.x, selfPosInShip.y) + Math.PI / 2),
+			// 		selfAngularVel.y * Math.cos(Math.atan2(selfPosInShip.z, selfPosInShip.x) + Math.PI / 2) +
+			// 			selfAngularVel.x * Math.cos(Math.atan2(selfPosInShip.y, selfPosInShip.z) + Math.PI / 2)
+			// 	);
+			// 	selfShip.getShipToWorld().transformDirection(selfAngularVel);
+			// 	Vector3d selfVelocity = new Vector3d(selfAngularVel);
+			// 	double linearDist = selfLinearVel.length();
+			// 	double angularDist = selfVelocity.length();
+			// 	if (linearDist == 0 && angularDist == 0) {
+			// 		return;
+			// 	}
+			// 	double linearWeight = linearDist / (linearDist + angularDist);
+			// 	selfVelocity.add(selfLinearVel);
+			// 	this.lastVeloctiy = new Vector3d(selfVelocity);
+			// 	Vector3d velocityDiff = new Vector3d();
+			// 	for (MagnetBlockEntity block : magnetBlocks) {
+			// 		Vector3d pos = block.getWorldPos();
+			// 		Vector3d otherVelocity = block.lastVeloctiy;
+			// 		double dist = selfPos.distanceSquared(pos);
 
-					otherVelocity.sub(selfVelocity, velocityDiff).mul(0.5);
-					block.lastGenerated.add(MAGNET_GENERATE_RATE * velocityDiff.length() * dt / dist);
+			// 		otherVelocity.sub(selfVelocity, velocityDiff).mul(0.5);
+			// 		block.lastGenerated.add(MAGNET_GENERATE_RATE * velocityDiff.length() * dt / dist);
 
-					velocityDiff.mul(forceMultiplier / dist);
-					Vector3d changingVel = velocityDiff.mul(dt / shipMass, new Vector3d());
-					totalForce.add(velocityDiff.mul(linearWeight, new Vector3d()));
-					if (angularDist > 0 && selfRadius > 0) {
-						velocityDiff.mul(1 - linearWeight);
-						selfShip.getWorldToShip().transformDirection(velocityDiff);
-						// TODO: need fix
-						totalTorque.add(
-							Math.copySign(Math.sqrt(velocityDiff.x * velocityDiff.x + velocityDiff.y * velocityDiff.y), -velocityDiff.x * velocityDiff.y) /
-								Math.sqrt(selfPosInShip.x * selfPosInShip.x + selfPosInShip.y * selfPosInShip.y),
-							Math.copySign(Math.sqrt(velocityDiff.y * velocityDiff.y + velocityDiff.z * velocityDiff.z), -velocityDiff.y * velocityDiff.z) /
-								Math.sqrt(selfPosInShip.y * selfPosInShip.y + selfPosInShip.z * selfPosInShip.z),
-							Math.copySign(Math.sqrt(velocityDiff.x * velocityDiff.x + velocityDiff.z * velocityDiff.z), -velocityDiff.x * velocityDiff.z) /
-								Math.sqrt(selfPosInShip.x * selfPosInShip.x + selfPosInShip.z * selfPosInShip.z)
-						);
-					}
+			// 		velocityDiff.mul(forceMultiplier / dist);
+			// 		Vector3d changingVel = velocityDiff.mul(dt / shipMass, new Vector3d());
+			// 		totalForce.add(velocityDiff.mul(linearWeight, new Vector3d()));
+			// 		if (angularDist > 0 && selfRadius > 0) {
+			// 			velocityDiff.mul(1 - linearWeight);
+			// 			selfShip.getWorldToShip().transformDirection(velocityDiff);
+			// 			// TODO: need fix
+			// 			totalTorque.add(-omega.x(), -omega.y(), -omega.z());
+			// 		}
 
-					selfVelocity.add(changingVel);
-					if (selfVelocity.lengthSquared() < 1e-6) {
-						break;
-					}
-				}
-			};
+			// 		selfVelocity.add(changingVel);
+			// 		if (selfVelocity.lengthSquared() < 1e-6) {
+			// 			break;
+			// 		}
+			// 	}
+			// };
 		} else {
 			this.magnetData.forceCalculator = (physShip, frontForce, backForce) -> {
 				final Vector3d selfPos = this.getWorldPos();
-				final Vector3f selfFacing = this.getFacing().mul(0.4f);
-				final Vector3d selfNorthPos = new Vector3d(selfPos).add(selfFacing);
-				final Vector3d selfSouthPos = new Vector3d(selfPos).sub(selfFacing);
-				final Vector3d otherNorthPos = new Vector3d();
-				final Vector3d otherSouthPos = new Vector3d();
+				final Vector3f selfFacing = this.getFacing();
+				final Vector3d selfNorthPos = this.getNorthPolePos();
+				final Vector3d selfSouthPos = this.getSouthPolePos();
 				final Vector3d forceDest = new Vector3d();
 				final Vector3d northTotalForce = new Vector3d();
 				final Vector3d southTotalForce = new Vector3d();
 				for (MagnetBlockEntity other : magnetBlocks) {
-					Duo<Vector3d> cachedForce = this.cachedForces.get(other);
+					DuoVector3d cachedForce = this.cachedForces.get(other);
 					if (cachedForce != null) {
-						frontForce.add(cachedForce.left());
-						backForce.add(cachedForce.right());
+						frontForce.add(cachedForce.north());
+						backForce.add(cachedForce.south());
 						continue;
 					}
 
 					final Vector3d pos = other.getWorldPos();
-					final Vector3f facing = other.getFacing().mul(0.4f);
-					otherNorthPos.set(pos).add(facing);
-					otherSouthPos.set(pos).sub(facing);
+					final Vector3f facing = other.getFacing();
+					final Vector3d otherNorthPos = other.getNorthPolePos();
+					final Vector3d otherSouthPos = other.getSouthPolePos();
 					final float angle = selfFacing.angle(facing);
 					final float power = selfPower * other.getActivatablePower();
 
 					// N-N
 					getStandardForceTo(selfNorthPos, angle, otherNorthPos, forceDest).mul(-power);
 					northTotalForce.set(forceDest);
-					System.out.println("N-N: " + forceDest);
 
 					// N-S
 					getStandardForceTo(selfNorthPos, angle, otherSouthPos, forceDest).mul(power);
 					northTotalForce.add(forceDest);
-					System.out.println("N-S: " + forceDest);
 
 					// S-N
 					getStandardForceTo(selfSouthPos, angle, otherNorthPos, forceDest).mul(power);
 					southTotalForce.set(forceDest);
-					System.out.println("S-N: " + forceDest);
 
 					// S-S
 					getStandardForceTo(selfSouthPos, angle, otherSouthPos, forceDest).mul(-power);
 					southTotalForce.add(forceDest);
-					System.out.println("S-S: " + forceDest);
 
 					frontForce.add(northTotalForce);
 					backForce.add(southTotalForce);
-					other.cachedForces.put(this, new Duo<>(northTotalForce.negate(new Vector3d()), southTotalForce.negate(new Vector3d())));
+					if (VSGameUtilsKt.isBlockInShipyard(other.getLevel(), other.getBlockPos())) {
+						other.cachedForces.put(this, new DuoVector3d(northTotalForce.negate(new Vector3d()), southTotalForce.negate(new Vector3d())));
+					}
 				}
 				this.cachedForces.clear();
 			};
@@ -503,5 +524,5 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 		}
 	}
 
-	private static record Duo<T>(T left, T right) {}
+	private static record DuoVector3d(Vector3d north, Vector3d south) {}
 }

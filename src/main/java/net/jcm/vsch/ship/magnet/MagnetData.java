@@ -9,11 +9,12 @@ import java.util.function.BiConsumer;
 public class MagnetData {
 	public static final ForceCalculator EMPTY_FORCE = (s, a, b) -> {};
 	public volatile Vector3f facing;
-	public volatile boolean isGenerator = false;
+	public volatile boolean isGenerator;
 	public volatile ForceCalculator forceCalculator = EMPTY_FORCE;
 
-	public MagnetData(Vector3f facing) {
+	public MagnetData(Vector3f facing, boolean isGenerator) {
 		this.facing = facing;
+		this.isGenerator = isGenerator;
 	}
 
 	@FunctionalInterface
