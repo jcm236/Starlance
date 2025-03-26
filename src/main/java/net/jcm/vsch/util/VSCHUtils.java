@@ -101,7 +101,7 @@ public class VSCHUtils {
 	 * ShipTransform} and its ship {@link org.joml.primitives.AABBic AABBic} (its
 	 * <b>shipyard</b> {@link org.joml.primitives.AABBic AABBic}) and returns a
 	 * world-based {@link org.joml.primitives.AABBd AABBd} using the transform <br>
-	 * </br>
+	 * <br>
 	 * Basically the same as
 	 * {@link org.valkyrienskies.core.api.ships.Ship#getWorldAABB()
 	 * Ship#getWorldAABB()} but can take in a specified transform and ship AABBic
@@ -134,7 +134,7 @@ public class VSCHUtils {
 	 * @return A {@link net.minecraft.server.level.ServerLevel ServerLevel} object
 	 *         in the VS dimension given
 	 * @see #dimToVSDim(String)
-	 * @todo Add error handling for if string isn't an existing dimension
+	 * TODO Add error handling for if string isn't an existing dimension
 	 */
 	public static ServerLevel VSDimToLevel(MinecraftServer server, String VSdimensionString) {
 		// Split 'minecraft:dimension:namespace:dimension_name' into [minecraft,
@@ -188,10 +188,10 @@ public class VSCHUtils {
 
 	/**
 	 * This function took us like 3 days to make. You better appreciate it. <br>
-	 * </br>
+	 * <br>
 	 * It will teleport the given ship, using the level, to the
 	 * dimension with id of newDim at x, y, z. <br>
-	 * </br>
+	 * <br>
 	 * But most importantly, it will also teleport any players or entities that are
 	 * currently being dragged by the ship to the new dimension, and their correct
 	 * position relative to the ship that was moved.
@@ -475,7 +475,7 @@ public class VSCHUtils {
 	/**
 	 * Gets a players Cosmos variables capability, or if it doesn't exist, creates a new one.
 	 * @param player The player to get the capability of
-	 * @todo Investigate: Is it giving the newly made variables cap to the player, or just returning a blank one to us
+	 * TODO Investigate: Is it giving the newly made variables cap to the player, or just returning a blank one to us
 	 */
 	public static CosmosModVariables.PlayerVariables getOrSetPlayerCap(Player player) {
 		return player.getCapability(CosmosModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new CosmosModVariables.PlayerVariables());
@@ -517,7 +517,7 @@ public class VSCHUtils {
 	/**
   * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
   * If no entities are found, returns null.  
-  * @todo change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
+  * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
   */
 	public static Entity getNearestEntityOfType(ServerLevel level, EntityType<?> entityType, Entity sourceEntity, double maxDistance) {
 		// Define the search bounding box

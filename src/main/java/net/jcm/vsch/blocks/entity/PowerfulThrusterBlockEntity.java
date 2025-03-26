@@ -15,6 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
+	private static final int HYDROGEN_SLOT = 0;
+	private static final int OXYGEN_SLOT = 1;
 
 	public PowerfulThrusterBlockEntity(BlockPos pos, BlockState state) {
 		super("powerful_thruster", VSCHBlockEntities.POWERFUL_THRUSTER_BLOCK_ENTITY.get(), pos, state,
@@ -42,8 +44,8 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		@Override
 		public boolean isValidFuel(int slot, Fluid fluid) {
 			return switch (slot) {
-			case 0 -> fluid.is(VSCHTags.Fluids.HYDROGEN);
-			case 1 -> fluid.is(VSCHTags.Fluids.OXYGEN);
+			case HYDROGEN_SLOT -> fluid.is(VSCHTags.Fluids.HYDROGEN);
+			case OXYGEN_SLOT -> fluid.is(VSCHTags.Fluids.OXYGEN);
 			default -> throw new IllegalArgumentException("fluid slot is not in range [0, 1]");
 			};
 		}
@@ -63,8 +65,8 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			int needsOxygen = (int)(Math.ceil(this.fuelConsumeRate * power * amount));
 			int needsHydrogen = needsOxygen * 2;
 			IFluidHandler fluidHandler = context.getFluidHandler();
-			FluidStack oxygenStack = fluidHandler.getFluidInTank(0);
-			FluidStack hydrogenStack = fluidHandler.getFluidInTank(1);
+			FluidStack oxygenStack = fluidHandler.getFluidInTank(OXYGEN_SLOT);
+			FluidStack hydrogenStack = fluidHandler.getFluidInTank(HYDROGEN_SLOT);
 			int avaliableHydrogen = Math.min(needsHydrogen, hydrogenStack.getAmount());
 			int avaliableOxygen = Math.min(avaliableHydrogen / 2, Math.min(needsOxygen, oxygenStack.getAmount()));
 			if (avaliableOxygen == 0) {
