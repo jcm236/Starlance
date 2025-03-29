@@ -1,21 +1,20 @@
 package net.jcm.vsch.ship;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
-
 import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
+import net.jcm.vsch.ship.magnet.MagnetData;
+import net.jcm.vsch.ship.magnet.MagnetForceApplier;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
+import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
@@ -27,16 +26,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
+
 @SuppressWarnings("deprecation")
 public class VSCHForceInducedShips implements ShipForcesInducer {
 
 	/**
 	 * Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.
 	 * Instead, look at {@link #addApplier(BlockPos, IVSCHForceApplier)} or {@link #removeApplier(BlockPos)} or {@link #getApplierAtPos(BlockPos)} or their respective thruster/dragger counterparts.
-	 * @see IVSCHForceApplier
+	 *
+	 *  @see IVSCHForceApplier
 	 */
 	public Map<BlockPos, IVSCHForceApplier> appliers = new ConcurrentHashMap<>();
-
 
 	private String dimensionId = null;
 
@@ -49,22 +52,7 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	@Override
 	public void applyForces(@NotNull PhysShip physicShip) {
 		PhysShipImpl physShip = (PhysShipImpl) physicShip;
-		appliers.forEach((pos,applier) -> {
-			applier.applyForces(pos,physShip);
-		});
-	}
-
-	private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
-		assert ValkyrienSkiesMod.getCurrentServer() != null;
-		double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
-		double mass = physShip.getInertia().getShipMass();
-
-		//Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly
-		// equal to length of linearVelocity, but still in the direction the ship would have been going without the speed limit
-		Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
-
-		// Apply the force at no specific position
-		physShip.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
+		appliers.forEach((pos, applier) -> applier.applyForces(pos, physShip));
 	}
 
 	// ----- Force Appliers ----- //
@@ -85,9 +73,8 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	// ----- Thrusters ----- //
 
 	public void addThruster(BlockPos pos, ThrusterData data) {
-		 addApplier(pos,new ThrusterForceApplier(data));
+		 addApplier(pos, new ThrusterForceApplier(data));
 	}
-
 
 	public void removeThruster(BlockPos pos) {
 		if (getThrusterAtPos(pos) != null){
@@ -100,6 +87,28 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof ThrusterForceApplier thruster) {
 			return thruster.getData();
+		} else {
+			return null;
+		}
+	}
+
+	// ----- Magnets ----- //
+
+	public void addMagnet(BlockPos pos, MagnetData data) {
+		addApplier(pos, new MagnetForceApplier(data));
+	}
+
+	public void removeMagnet(BlockPos pos) {
+		if (getMagnetAtPos(pos) != null){
+			removeApplier(pos);
+		}
+	}
+
+	@Nullable
+	public MagnetData getMagnetAtPos(BlockPos pos) {
+		IVSCHForceApplier applier = getApplierAtPos(pos);
+		if (applier instanceof MagnetForceApplier magnet) {
+			return magnet.getData();
 		} else {
 			return null;
 		}
@@ -144,11 +153,7 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 
 	public static VSCHForceInducedShips get(Level level, BlockPos pos) {
 		ServerLevel serverLevel = (ServerLevel) level;
-		// Don't ask, I don't know
 		ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, pos);
-		if (ship == null) {
-			ship = VSGameUtilsKt.getShipManagingPos(serverLevel, pos);
-		}
 		// Seems counter-intutive at first. But basically, it returns null if it wasn't a ship. Otherwise, it gets the attachment OR creates and then gets it
 		return ship != null ? getOrCreate(ship) : null;
 	}
