@@ -11,13 +11,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StainedGlassBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import net.jcm.vsch.util.RayCastUtil;
 import net.jcm.vsch.util.SerializeUtil;
 
 import java.util.function.Consumer;
@@ -180,6 +183,48 @@ public class LaserContext {
 	}
 
 	/**
+	 * Check if the block can block the laser
+	 * 
+	 * @return {@code true} if the laser should be processed on the block, {@code false} otherwise
+	 */
+	public boolean canHitBlock(final BlockState state, final BlockGetter level, final BlockPos pos) {
+		for (final ILaserAttachment attachment : this.props.getAttachments()) {
+			final Boolean res = attachment.canPassThroughBlock(this, state, level, pos);
+			if (this.canceled) {
+				return true;
+			}
+			if (res != null) {
+				return !res;
+			}
+		}
+		final Block block = state.getBlock();
+		if (block == Blocks.GLASS_PANE) {
+			return false;
+		}
+		if (block instanceof AbstractGlassBlock && !(block instanceof StainedGlassBlock)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if the entity can block the laser
+	 * 
+	 * @return {@code true} if the laser should be processed on the entity, {@code false} otherwise
+	 */
+	public boolean canHitEntity(final Level level, final Entity entity) {
+		if (entity.isInvisible() && this.props.g < 128 * 3) {
+			return false;
+		}
+		final AABB box = entity.getBoundingBox();
+		final double size = box.getXSize() * box.getYSize() * box.getZSize();
+		if (size < this.props.r / 256.0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * fires the laser.
 	 * If the laser hit any target, this method should invoke {@code onHit} with the {@link HitResult}.
 	 */
@@ -193,43 +238,68 @@ public class LaserContext {
 		this.maxLength = airDensity < 0.125 ? -1 : length;
 		final Vec3 dest = origin.add(dir.scale((length)));
 
-		final BlockHitResult result = level.clip(new LaserClipContext(this, origin, dest, null, blockPos));
+		final BlockHitResult blockHit = level.clip(new LaserClipContext(this, origin, dest, null, blockPos));
+		final EntityHitResult entityHit = RayCastUtil.rayCastEntity(level, origin, dest, (entity) -> this.canHitEntity(level, entity));
+
+		final HitResult result = entityHit != null && entityHit.getLocation().distanceToSqr(origin) < blockHit.getLocation().distanceToSqr(origin) ? entityHit : blockHit;
+
 		this.onHit(result);
 		if (this.canceled) {
 			return;
 		}
-		final BlockPos targetPos = result.getBlockPos();
-		final BlockState block = level.getBlockState(targetPos);
-		if (result.getType() != HitResult.Type.BLOCK) {
-			return;
-		}
-		final LaserProperties props = this.getLaserOnHitProperties();
-		ILaserProcessor processor;
-		if (block.getBlock() instanceof ILaserProcessor proc) {
-			processor = proc;
-		} else if (level.getBlockEntity(targetPos) instanceof ILaserProcessor proc) {
-			processor = proc;
-		} else {
-			processor = LaserUtil.getDefaultBlockProcessor(this);
-		}
-		if (processor != null) {
-			this.isEndPointProcessor = processor.isEndPoint();
-		}
-		if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
-			processor = LaserUtil.getDefaultBlockProcessor(this);
-			if (processor == null) {
+
+		if (result == blockHit && blockHit.getType() == HitResult.Type.BLOCK) {
+			final BlockPos targetPos = blockHit.getBlockPos();
+			final BlockState block = level.getBlockState(targetPos);
+			final LaserProperties props = this.getLaserOnHitProperties();
+			ILaserProcessor processor;
+			if (block.getBlock() instanceof ILaserProcessor proc) {
+				processor = proc;
+			} else if (level.getBlockEntity(targetPos) instanceof ILaserProcessor proc) {
+				processor = proc;
+			} else {
+				processor = LaserUtil.getDefaultBlockProcessor(this);
+			}
+			if (processor != null) {
+				this.isEndPointProcessor = processor.isEndPoint();
+			}
+			if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
+				processor = LaserUtil.getDefaultBlockProcessor(this);
+				if (processor == null) {
+					return;
+				}
+			}
+			for (ILaserAttachment attachment : this.props.getAttachments()) {
+				attachment.beforeProcessLaserOnBlock(this, block, targetPos, processor);
+			}
+			if (this.canceled) {
 				return;
 			}
-		}
-		for (ILaserAttachment attachment : this.props.getAttachments()) {
-			attachment.beforeProcessLaser(this, block, targetPos, processor);
-		}
-		if (this.canceled) {
-			return;
-		}
-		processor.onLaserHit(this);
-		for (ILaserAttachment attachment : props.getAttachments()) {
-			attachment.afterProcessLaser(this, block, targetPos);
+			processor.onLaserHit(this);
+			for (ILaserAttachment attachment : props.getAttachments()) {
+				attachment.afterProcessLaserOnBlock(this, block, targetPos);
+			}
+		} else if (result == entityHit) {
+			final Entity entity = entityHit.getEntity();
+			ILaserProcessor processor;
+			if (entity instanceof ILaserProcessor proc) {
+				processor = proc;
+			} else {
+				processor = LaserUtil.getDefaultEntityProcessor(this);
+			}
+			if (processor != null) {
+				this.isEndPointProcessor = processor.isEndPoint();
+			}
+			for (ILaserAttachment attachment : this.props.getAttachments()) {
+				attachment.beforeProcessLaserOnEntity(this, entity);
+			}
+			if (this.canceled) {
+				return;
+			}
+			processor.onLaserHit(this);
+			for (ILaserAttachment attachment : props.getAttachments()) {
+				attachment.afterProcessLaserOnEntity(this, entity);
+			}
 		}
 	}
 
@@ -264,30 +334,10 @@ public class LaserContext {
 		return this;
 	}
 
-	private boolean isBlockLaserPassable(BlockState state, BlockGetter level, BlockPos pos) {
-		for (ILaserAttachment attachment : this.props.getAttachments()) {
-			final Boolean res = attachment.canPassThroughBlock(this, state, level, pos);
-			if (this.canceled) {
-				return false;
-			}
-			if (res != null) {
-				return res;
-			}
-		}
-		final Block block = state.getBlock();
-		if (block instanceof AbstractGlassBlock && !(block instanceof StainedGlassBlock)) {
-			return true;
-		}
-		if (block == Blocks.GLASS_PANE) {
-			return true;
-		}
-		return false;
-	}
-
 	private VoxelShape getBlockCollisionShape(BlockState state, BlockGetter level, BlockPos pos) {
 		final Block block = state.getBlock();
 
-		if (this.isBlockLaserPassable(state, level, pos)) {
+		if (!this.canHitBlock(state, level, pos)) {
 			return Shapes.empty();
 		}
 		if (this.canceled) {

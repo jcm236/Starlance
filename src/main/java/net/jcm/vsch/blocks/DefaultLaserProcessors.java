@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.Tags;
 
 import net.jcm.vsch.accessor.LevelChunkAccessor;
@@ -31,10 +32,19 @@ public final class DefaultLaserProcessors {
 	private DefaultLaserProcessors() {}
 
 	public static void register() {
+		registerBlocks();
+		registerEntities();
+	}
+
+	private static void registerBlocks() {
 		LaserUtil.registerDefaultBlockProcessor(Block.class, DefaultLaserProcessors::blockDestroyProcessor);
 		final ILaserProcessor stainedGlassProcessor = new StainedGlassProcessor();
 		LaserUtil.registerDefaultBlockProcessor(StainedGlassBlock.class, stainedGlassProcessor);
 		LaserUtil.registerDefaultBlockProcessor(StainedGlassPaneBlock.class, stainedGlassProcessor);
+	}
+
+	private static void registerEntities() {
+		LaserUtil.registerDefaultEntityProcessor(LivingEntity.class, DefaultLaserProcessors::entityDamageProcessor);
 	}
 
 	private static void blockDestroyProcessor(LaserContext laser) {
@@ -101,6 +111,21 @@ public final class DefaultLaserProcessors {
 					LaserEmitter.fromBlock(level, hitResult.getLocation(), laser.getInputDirection(), pos, null)
 				)
 			);
+		}
+	}
+
+	private static void entityDamageProcessor(LaserContext laser) {
+		final EntityHitResult hitResult = (EntityHitResult) (laser.getHitResult());
+		final LivingEntity entity = (LivingEntity) (hitResult.getEntity());
+		final int heat = props.r / 128;
+		final float lucky = props.g / 128.0f;
+		final int strength = props.b / 256;
+
+		if (heat > 0) {
+			entity.setSecondsOnFire(heat);
+		}
+		if (strength > 0) {
+			entity.hurt(entity.damageSources().lightningBolt()); // TODO: make our own laser damage source with loot modifier.
 		}
 	}
 

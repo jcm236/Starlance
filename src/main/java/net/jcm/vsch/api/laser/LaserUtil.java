@@ -25,7 +25,8 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber
 public final class LaserUtil {
 	private static final int MAX_REDIRECT_PER_TICK = 4;
-	private static final Map<Class<? extends Block>, ILaserProcessor> DEFAULT_PROCESSOR_MAP = new HashMap<>();
+	private static final Map<Class<? extends Block>, ILaserProcessor> DEFAULT_BLOCK_PROCESSOR_MAP = new HashMap<>();
+	private static final Map<Class<? extends Entity>, ILaserProcessor> DEFAULT_ENTITY_PROCESSOR_MAP = new HashMap<>();
 	private static final Queue<LaserContext> LASER_QUEUE = new ConcurrentLinkedQueue<>();
 
 	private LaserUtil() {}
@@ -93,9 +94,20 @@ public final class LaserUtil {
 
 	public static ILaserProcessor registerDefaultBlockProcessor(Class<? extends Block> clazz, ILaserProcessor processor) {
 		if (processor == null) {
-			return DEFAULT_PROCESSOR_MAP.remove(clazz);
+			return DEFAULT_BLOCK_PROCESSOR_MAP.remove(clazz);
 		}
-		return DEFAULT_PROCESSOR_MAP.put(clazz, processor);
+		return DEFAULT_BLOCK_PROCESSOR_MAP.put(clazz, processor);
+	}
+
+	public static ILaserProcessor registerDefaultEntityProcessor(Class<? extends Entity> clazz, Consumer<LaserContext> processor) {
+		return registerDefaultEntityProcessor(clazz, ILaserProcessor.fromEndPoint(processor));
+	}
+
+	public static ILaserProcessor registerDefaultEntityProcessor(Class<? extends Entity> clazz, ILaserProcessor processor) {
+		if (processor == null) {
+			return DEFAULT_ENTITY_PROCESSOR_MAP.remove(clazz);
+		}
+		return DEFAULT_ENTITY_PROCESSOR_MAP.put(clazz, processor);
 	}
 
 	public static ILaserProcessor getDefaultBlockProcessor(LaserContext laser) {
@@ -110,7 +122,25 @@ public final class LaserUtil {
 		final BlockState state = level.getBlockState(pos);
 		final Block block = state.getBlock();
 		for (Class<?> blockClass = block.getClass(); Block.class.isAssignableFrom(blockClass); blockClass = blockClass.getSuperclass()) {
-			final ILaserProcessor processor = DEFAULT_PROCESSOR_MAP.get(blockClass);
+			final ILaserProcessor processor = DEFAULT_BLOCK_PROCESSOR_MAP.get(blockClass);
+			if (processor != null) {
+				return processor;
+			}
+		}
+		return null;
+	}
+
+	public static ILaserProcessor getDefaultEntityProcessor(LaserContext laser) {
+		if (!(laser.getHitResult() instanceof EntityHitResult hitResult)) {
+			return null;
+		}
+		if (hitResult.getType() != HitResult.Type.ENTITY) {
+			return null;
+		}
+		final Level level = laser.getLevel();
+		final Entity entity = laser.getEntity();
+		for (Class<?> entityClass = entity.getClass(); Entity.class.isAssignableFrom(entityClass); entityClass = entityClass.getSuperclass()) {
+			final ILaserProcessor processor = DEFAULT_ENTITY_PROCESSOR_MAP.get(blockClass);
 			if (processor != null) {
 				return processor;
 			}
