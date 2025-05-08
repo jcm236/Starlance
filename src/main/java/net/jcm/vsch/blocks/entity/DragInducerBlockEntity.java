@@ -47,7 +47,7 @@ public class DragInducerBlockEntity extends BlockEntity implements ParticleBlock
 		this.enabled = enabled;
 		if (update) {
 			this.setChanged();
-			this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+			this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL_IMMEDIATE);
 		}
 	}
 
