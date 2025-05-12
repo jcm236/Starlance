@@ -1,6 +1,6 @@
 package net.jcm.vsch;
 
-import net.jcm.vsch.event.AstroidGenerator;
+import net.jcm.vsch.event.AsteroidGenerator;
 import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
@@ -26,7 +26,7 @@ public class VSCHEvents {
 			}
 			AtmosphericCollision.atmosphericCollisionTick(level);
 			PlanetCollision.planetCollisionTick(level);
-			AstroidGenerator.tickLevel(level);
+			AsteroidGenerator.tickLevel(level);
 		}
 	}
 

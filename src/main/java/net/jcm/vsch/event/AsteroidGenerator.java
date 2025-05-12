@@ -40,15 +40,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-public final class AstroidGenerator {
+public final class AsteroidGenerator {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
-	public static final String ASTROID_SHIP_PREFIX = "+astroid+";
+	public static final String ASTEROID_SHIP_PREFIX = "+asteroid+";
 	public static final String IDLE_SHIP_PREFIX = "+idle+";
-	private static final int MAX_ASTROID_COUNT = 128;
+	private static final int MAX_ASTEROID_COUNT = 128;
 	private static final int MIN_REGENERATE_DIST = 4;
 	private static final int MAX_CLUSTERS_PER_ROUND = 8;
-	private static final int MAX_ASTROIDS_PER_CLUSTER = 8;
+	private static final int MAX_ASTEROIDS_PER_CLUSTER = 8;
 	private static final int MIN_SPAWN_DIST = 16 * 8;
 	private static final int SPAWN_RANGE = 16 * 16;
 	private static final int MAX_SPAWN_DIST = MIN_SPAWN_DIST + SPAWN_RANGE;
@@ -59,10 +59,10 @@ public final class AstroidGenerator {
 	private static final Random RNG = new Random();
 	private static final Map<ServerPlayer, LevelChunkPos> PLAYER_LAST_POS = new HashMap<>();
 
-	private AstroidGenerator() {}
+	private AsteroidGenerator() {}
 
 	public static void tickLevel(ServerLevel level) {
-		// TODO: add astroid belt radius instead
+		// TODO: add asteroid belt radius instead
 		final boolean isSpace = CosmosModVariables.WorldVariables.get(level).dimension_type.getString(level.dimension().location().toString()).equals("space");
 		if (!isSpace) {
 			return;
@@ -70,8 +70,8 @@ public final class AstroidGenerator {
 		final ShipAllocator allocator = ShipAllocator.get(level);
 		final List<ServerPlayer> players = level.getPlayers(player -> true);
 		for (final ServerShip ship : VSCHUtils.getShipsInLevel(level)) {
-			if (canDespawnAstroid(level, players, ship)) {
-				LOGGER.info("[starlance]: removing astroid {}", ship.getSlug());
+			if (canDespawnAsteroid(level, players, ship)) {
+				LOGGER.info("[starlance]: removing asteroid {}", ship.getSlug());
 				allocator.putShip(ship);
 			}
 		}
@@ -88,12 +88,12 @@ public final class AstroidGenerator {
 		final ChunkPos chunkPos = new ChunkPos(blockPos);
 
 		// TODO: get the radius from datamap
-		final int ASTROID_MIN_SPAWN_RADIUS = 2750;
-		final int ASTROID_MAX_SPAWN_RADIUS = 3500;
+		final int ASTEROID_MIN_SPAWN_RADIUS = 2750;
+		final int ASTEROID_MAX_SPAWN_RADIUS = 3500;
 
-		final int ASTROID_MIN_SPAWN_RADIUS2 = ASTROID_MIN_SPAWN_RADIUS - MIN_SPAWN_DIST / 16;
-		final int ASTROID_MAX_SPAWN_RADIUS2 = ASTROID_MAX_SPAWN_RADIUS + MIN_SPAWN_DIST / 16;
-		if (ASTROID_MAX_SPAWN_RADIUS2 < Math.abs(chunkPos.x) || ASTROID_MAX_SPAWN_RADIUS2 < Math.abs(chunkPos.z) || (Math.abs(chunkPos.x) < ASTROID_MIN_SPAWN_RADIUS2 && Math.abs(chunkPos.z) < ASTROID_MIN_SPAWN_RADIUS2)) {
+		final int ASTEROID_MIN_SPAWN_RADIUS2 = ASTEROID_MIN_SPAWN_RADIUS - MIN_SPAWN_DIST / 16;
+		final int ASTEROID_MAX_SPAWN_RADIUS2 = ASTEROID_MAX_SPAWN_RADIUS + MIN_SPAWN_DIST / 16;
+		if (ASTEROID_MAX_SPAWN_RADIUS2 < Math.abs(chunkPos.x) || ASTEROID_MAX_SPAWN_RADIUS2 < Math.abs(chunkPos.z) || (Math.abs(chunkPos.x) < ASTEROID_MIN_SPAWN_RADIUS2 && Math.abs(chunkPos.z) < ASTEROID_MIN_SPAWN_RADIUS2)) {
 			return;
 		}
 		final LevelChunkPos lastPos = PLAYER_LAST_POS.get(player);
@@ -109,14 +109,14 @@ public final class AstroidGenerator {
 
 	private static void generateFrom(ServerLevel level, List<ServerPlayer> players, BlockPos origin) {
 		BlockPos newPos = origin.offset(randPosInRange(MIN_SPAWN_DIST, MAX_SPAWN_DIST, 0, 64, MIN_SPAWN_DIST, MAX_SPAWN_DIST));
-		if (!canSpawnAstroid(level, players, newPos)) {
+		if (!canSpawnAsteroid(level, players, newPos)) {
 			return;
 		}
 
-		for (int i = 0; i < MAX_ASTROIDS_PER_CLUSTER; i++) {
-			ServerShip astroid = spawnAstroid(level, newPos);
-			if (astroid != null) {
-				System.out.println("astroid generated at " + newPos);
+		for (int i = 0; i < MAX_ASTEROIDS_PER_CLUSTER; i++) {
+			ServerShip asteroid = spawnAsteroid(level, newPos);
+			if (asteroid != null) {
+				System.out.println("asteroid generated at " + newPos);
 			}
 			BlockPos nextPos;
 			int t = 0;
@@ -126,25 +126,25 @@ public final class AstroidGenerator {
 					return;
 				}
 				nextPos = newPos.offset(randPosInRange(4, 32));
-			} while (!canSpawnAstroid(level, players, newPos));
+			} while (!canSpawnAsteroid(level, players, newPos));
 			newPos = nextPos;
 		}
 	}
 
-	public static boolean isAstroidShip(Ship ship) {
+	public static boolean isAsteroidShip(Ship ship) {
 		final String slug = ship.getSlug();
-		return slug != null && slug.startsWith(ASTROID_SHIP_PREFIX);
+		return slug != null && slug.startsWith(ASTEROID_SHIP_PREFIX);
 	}
 
-	private static boolean canSpawnAstroid(ServerLevel level, List<ServerPlayer> players, BlockPos pos) {
+	private static boolean canSpawnAsteroid(ServerLevel level, List<ServerPlayer> players, BlockPos pos) {
 		if (pos.getY() < MIN_SPAWN_Y || MAX_SPAWN_Y < pos.getY()) {
 			return false;
 		}
 		final ChunkPos chunkPos = new ChunkPos(pos);
 		// TODO: get the radius from datamap
-		final int ASTROID_MIN_SPAWN_RADIUS = 2750;
-		final int ASTROID_MAX_SPAWN_RADIUS = 3500;
-		if (ASTROID_MAX_SPAWN_RADIUS < Math.abs(chunkPos.x) || ASTROID_MAX_SPAWN_RADIUS < Math.abs(chunkPos.z) || (Math.abs(chunkPos.x) < ASTROID_MIN_SPAWN_RADIUS && Math.abs(chunkPos.z) < ASTROID_MIN_SPAWN_RADIUS)) {
+		final int ASTEROID_MIN_SPAWN_RADIUS = 2750;
+		final int ASTEROID_MAX_SPAWN_RADIUS = 3500;
+		if (ASTEROID_MAX_SPAWN_RADIUS < Math.abs(chunkPos.x) || ASTEROID_MAX_SPAWN_RADIUS < Math.abs(chunkPos.z) || (Math.abs(chunkPos.x) < ASTEROID_MIN_SPAWN_RADIUS && Math.abs(chunkPos.z) < ASTEROID_MIN_SPAWN_RADIUS)) {
 			return false;
 		}
 		for (final ServerPlayer player : players) {
@@ -152,12 +152,12 @@ public final class AstroidGenerator {
 				return false;
 			}
 		}
-		int astroidCount = 0;
+		int asteroidCount = 0;
 		for (Ship ship : VSCHUtils.getShipsInLevel(level)) {
 			AABB box = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB());
-			if (isAstroidShip(ship)) {
-				astroidCount++;
-				if (astroidCount >= MAX_ASTROID_COUNT) {
+			if (isAsteroidShip(ship)) {
+				asteroidCount++;
+				if (asteroidCount >= MAX_ASTEROID_COUNT) {
 					return false;
 				}
 			} else {
@@ -170,8 +170,8 @@ public final class AstroidGenerator {
 		return true;
 	}
 
-	public static boolean canDespawnAstroid(ServerLevel level, List<ServerPlayer> players, Ship ship) {
-		if (!isAstroidShip(ship)) {
+	public static boolean canDespawnAsteroid(ServerLevel level, List<ServerPlayer> players, Ship ship) {
+		if (!isAsteroidShip(ship)) {
 			return false;
 		}
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
@@ -186,13 +186,13 @@ public final class AstroidGenerator {
 		return true;
 	}
 
-	private static ServerShip spawnAstroid(ServerLevel level, BlockPos pos) {
-		final Map<Vec3i, BlockState> blocks = generateAstroid(level);
+	private static ServerShip spawnAsteroid(ServerLevel level, BlockPos pos) {
+		final Map<Vec3i, BlockState> blocks = generateAsteroid(level);
 		if (blocks == null || blocks.isEmpty()) {
 			return null;
 		}
 		final ServerShip ship = ShipAllocator.get(level).allocShip(new Vector3i(pos.getX(), pos.getY(), pos.getZ()));
-		ship.setSlug(ASTROID_SHIP_PREFIX + ship.getId());
+		ship.setSlug(ASTEROID_SHIP_PREFIX + ship.getId());
 		final Vector3i center = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());
 		final BlockPos centerPos = new BlockPos(center.x, center.y, center.z);
 		long begin = System.nanoTime();
@@ -202,13 +202,13 @@ public final class AstroidGenerator {
 		return ship;
 	}
 
-	private static Map<Vec3i, BlockState> generateAstroid(final ServerLevel level) {
+	private static Map<Vec3i, BlockState> generateAsteroid(final ServerLevel level) {
 		final List<BlockState> ores = new ArrayList<>();
 		BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE).forEach(holder -> ores.add(holder.value().defaultBlockState()));
-		return generateEllipsoidAstroid(level, ores.get(RNG.nextInt(ores.size())));
+		return generateEllipsoidAsteroid(level, stone, ores.get(RNG.nextInt(ores.size())));
 	}
 
-	private static Map<Vec3i, BlockState> generateEllipsoidAstroid(final ServerLevel level, final BlockState ore) {
+	private static Map<Vec3i, BlockState> generateEllipsoidAsteroid(final ServerLevel level, final BlockState stone, final BlockState ore) {
 		final int MAX_RADIUS = 10;
 		final int MIN_RADIUS = 2;
 		final int MAX_PITS = 10;
@@ -228,11 +228,10 @@ public final class AstroidGenerator {
 						allDirVec3iStream(pos).forEach(outsidePos::add);
 						continue;
 					}
-					final boolean isSurface = r == 1;
-					if (isSurface) {
+					if (r == 1) {
 						allDirVec3iStream(pos).forEach(outsidePos::add);
 					}
-					allDirVec3iStream(pos).forEach(p -> blocks.put(p, generateAstroidBlock(p, dim, isSurface, ore)));
+					allDirVec3iStream(pos).forEach(p -> blocks.put(p, generateAsteroidBlock(p, dim, r, stone, ore)));
 				}
 			}
 		}
@@ -259,10 +258,9 @@ public final class AstroidGenerator {
 		return blocks;
 	}
 
-	private static BlockState generateAstroidBlock(final Vec3i pos, final Vec3i dim, final boolean isSurface, final BlockState ore) {
-		float f = RNG.nextFloat() + 0.05f;
-		float t = (float) (pos.getX() * pos.getX()) / (dim.getX() * dim.getX()) + (float) (pos.getY() * pos.getY()) / (dim.getY() * dim.getY()) + (float) (pos.getZ() * pos.getZ()) / (dim.getZ() * dim.getZ());
-		return f >= t ? ore : Blocks.DEEPSLATE.defaultBlockState();
+	private static BlockState generateAsteroidBlock(final Vec3i pos, final Vec3i dim, final double r, final BlockState stone, final BlockState ore) {
+		double f = RNG.nextDouble() + 0.01;
+		return f >= r ? ore : stone;
 	}
 
 	private static int randPNInt(int min, int max) {
