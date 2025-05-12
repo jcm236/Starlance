@@ -24,8 +24,8 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
-import org.apache.logging.log4j.LogManager;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
@@ -36,12 +36,16 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import java.util.List;
 
 public class PlanetCollision {
-	public static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	public static void planetCollisionTick(ServerLevel level) {
 		final String dimension = level.dimension().location().toString();
-		for (Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 
+		if (!CosmosModVariables.WorldVariables.get(level).collision_data_map.contains(dimension)) {
+			return;
+		}
+
+		for (Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			AABB currentAABB = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB());
 			Vec3 shipCenter = currentAABB.getCenter();
 
@@ -95,7 +99,7 @@ public class PlanetCollision {
 		}
 		CosmosModVariables.PlayerVariables vars = VSCHUtils.getOrSetPlayerCap(player);
 
-		System.out.println(vars.landing_coords);
+		// System.out.println(vars.landing_coords);
 		if (vars.landing_coords.equals("^") || vars.landing_coords.equals("=")) {
 			return;
 		}

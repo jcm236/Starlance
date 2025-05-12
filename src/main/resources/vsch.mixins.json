@@ -10,6 +10,7 @@
     "MixinLivingEntityProcedure",
     "MixinMob",
     "MixinShipAssemblyKt",
+    "MixinShipSelector",
     "MixinSpacesuitwornLogicProcedure",
     "MixinVSGameUtilsKt",
     "accessor.ServerShipObjectWorldAccessor"

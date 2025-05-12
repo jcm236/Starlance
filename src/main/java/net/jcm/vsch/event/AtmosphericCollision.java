@@ -16,7 +16,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 public class AtmosphericCollision {
-	public static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their

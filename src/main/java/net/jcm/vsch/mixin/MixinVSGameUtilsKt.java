@@ -25,7 +25,7 @@ public class MixinVSGameUtilsKt {
 	private static void getYRange(@NotNull Level level, CallbackInfoReturnable<LevelYRange> cir) {
 		ResourceLocation dimension = level.dimension().location();
 		if (dimension.getNamespace().equals("cosmos")) {
-			logger.info("[VSCH]: Found cosmos dimension: " + dimension.toString() + ". Changing its world height!");
+			// logger.info("[VSCH]: Found cosmos dimension: {}. Changing its world height!", dimension.toString());
 			cir.setReturnValue(new LevelYRange(-64, 319));
 			cir.cancel();
 		}

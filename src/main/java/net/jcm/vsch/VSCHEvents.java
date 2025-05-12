@@ -1,9 +1,11 @@
 package net.jcm.vsch;
 
-import net.lointain.cosmos.network.CosmosModVariables;
+import net.jcm.vsch.event.AstroidGenerator;
+import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
-import net.jcm.vsch.event.AtmosphericCollision;
+import net.lointain.cosmos.network.CosmosModVariables;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -24,6 +26,7 @@ public class VSCHEvents {
 			}
 			AtmosphericCollision.atmosphericCollisionTick(level);
 			PlanetCollision.planetCollisionTick(level);
+			AstroidGenerator.tickLevel(level);
 		}
 	}
 
@@ -38,6 +41,3 @@ public class VSCHEvents {
 	////		Gravity.setAll(event.getServer().overworld());
 	//	}
 }
-
-
-
