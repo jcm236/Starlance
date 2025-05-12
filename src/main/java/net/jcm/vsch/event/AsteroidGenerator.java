@@ -203,8 +203,28 @@ public final class AsteroidGenerator {
 	}
 
 	private static Map<Vec3i, BlockState> generateAsteroid(final ServerLevel level) {
+		final BlockState stone;
 		final List<BlockState> ores = new ArrayList<>();
-		BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE).forEach(holder -> ores.add(holder.value().defaultBlockState()));
+		final int typeRand = RNG.nextInt(100);
+		if (typeRand < 10) {
+			// stone asteroid
+			stone = Blocks.DEEPSLATE.defaultBlockState();
+			ores.add(Blocks.STONE.defaultBlockState());
+		} else if (typeRand < 15) {
+			// ice asteroid
+			stone = Blocks.DEEPSLATE.defaultBlockState();
+			ores.add(Blocks.ICE.defaultBlockState());
+			ores.add(Blocks.BLUE_ICE.defaultBlockState());
+		} else if (typeRand < 45) {
+			// nether ore asteroid
+			stone = Blocks.NETHERRACK.defaultBlockState();
+			ores.add(Blocks.MAGMA_BLOCK.defaultBlockState());
+			BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_NETHERRACK).forEach(holder -> ores.add(holder.value().defaultBlockState()));
+		} else {
+			// earth ore asteroid
+			stone = Blocks.DEEPSLATE.defaultBlockState();
+			BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE).forEach(holder -> ores.add(holder.value().defaultBlockState()));
+		}
 		return generateEllipsoidAsteroid(level, stone, ores.get(RNG.nextInt(ores.size())));
 	}
 
