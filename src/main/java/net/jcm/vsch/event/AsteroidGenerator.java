@@ -264,9 +264,9 @@ public final class AsteroidGenerator {
 				continue;
 			}
 			final Vec3i c = outsidePos.get(index);
-			final int r = RNG.nextInt(pitMaxR) + 1;
+			final int r = RNG.nextInt(pitMaxR);
 			final int r2 = r * r;
-			for (int x = 0; x < r; x++) {
+			for (int x = 0; x <= r; x++) {
 				int xy;
 				for (int y = 0; (xy = x * x + y * y) <= r2; y++) {
 					for (int z = 0; xy + z * z <= r2; z++) {
@@ -279,8 +279,8 @@ public final class AsteroidGenerator {
 	}
 
 	private static BlockState generateAsteroidBlock(final Vec3i pos, final Vec3i dim, final double r, final BlockState stone, final BlockState ore) {
-		double f = RNG.nextDouble() + 0.01;
-		return f >= r ? ore : stone;
+		double f = RNG.nextDouble() + (RNG.nextInt(10) == 0 ? 0.01 : 0);
+		return f * f >= r ? ore : stone;
 	}
 
 	private static int randPNInt(int min, int max) {

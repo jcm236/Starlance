@@ -75,7 +75,8 @@ public final class ShipAllocator extends SavedData {
 		ship.setSlug(IDLE_SHIP_PREFIX + ship.getId());
 		ship.setStatic(true);
 		clearShip(this.level, ship);
-		level.setBlock(new BlockPos(box.minX(), box.minY(), box.minZ()), Blocks.BEDROCK.defaultBlockState(), Block.UPDATE_NONE);
+		final Vector3i center = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(this.level), new Vector3i());
+		level.setBlock(new BlockPos(center.x, center.y, center.z), Blocks.BEDROCK.defaultBlockState(), Block.UPDATE_NONE);
 
 		final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(0, -1e8, 0), new Quaterniond(), new Vector3d(), new Vector3d(), this.dimId, 1e-6);
 		this.shipWorld.teleportShip(ship, teleportData);
