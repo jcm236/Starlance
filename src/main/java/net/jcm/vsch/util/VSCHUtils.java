@@ -363,33 +363,28 @@ public class VSCHUtils {
 	}
 
 	/**
-  * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
-  * If no entities are found, returns null.  
-  * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
-  */
+   * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
+   * If no entities are found, returns null.  
+   * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
+   */
 	public static Entity getNearestEntityOfType(ServerLevel level, EntityType<?> entityType, Entity sourceEntity, double maxDistance) {
 		// Define the search bounding box
 		AABB searchBox = sourceEntity.getBoundingBox().inflate(maxDistance);
 
-		List<Entity> entities = level.getEntities(null, searchBox);
+		List<Entity> entities = level.getEntities((Entity) null, searchBox, entity -> entity.getType() == entityType);
 
 		Entity nearestEntity = null;
-
-		// Uhhh this doesn't seem good, but it works I guess?
-		double nearestDistance = 100000000000000.0d;
+		double nearestDistance = Double.MAX_VALUE;
 
 		for (Entity entity : entities) {
-			if (entity.getType() == entityType) {
-				double distance = entity.distanceToSqr(sourceEntity);
-				if (distance < nearestDistance) {
-					nearestEntity = entity;
-					nearestDistance = distance;
-				}
+			double distance = entity.distanceToSqr(sourceEntity);
+			if (distance < nearestDistance) {
+				nearestEntity = entity;
+				nearestDistance = distance;
 			}
 		}
 
 		return nearestEntity;
-
 	}
 
 	public static List<ServerShip> getShipsInLevel(ServerLevel level) {
