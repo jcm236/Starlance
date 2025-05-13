@@ -30,15 +30,20 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Spliterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public final class AsteroidGenerator {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
@@ -58,6 +63,7 @@ public final class AsteroidGenerator {
 
 	private static final Random RNG = new Random();
 	private static final Map<ServerPlayer, LevelChunkPos> PLAYER_LAST_POS = new HashMap<>();
+	private static final Map<ServerPlayer, Spliterator<Supplier<ServerShip>>> PLAYER_GENERATORS = new HashMap<>();
 
 	private AsteroidGenerator() {}
 
@@ -69,18 +75,36 @@ public final class AsteroidGenerator {
 		}
 		final ShipAllocator allocator = ShipAllocator.get(level);
 		final List<ServerPlayer> players = level.getPlayers(player -> true);
+		int removing = 0;
 		for (final ServerShip ship : VSCHUtils.getShipsInLevel(level)) {
 			if (canDespawnAsteroid(level, players, ship)) {
 				LOGGER.info("[starlance]: removing asteroid {}", ship.getSlug());
 				allocator.putShip(ship);
+				removing++;
+				if (removing > 2) {
+					break;
+				}
 			}
 		}
 		for (final ServerPlayer player : players) {
 			tickPlayer(level, players, player);
+			final Spliterator<Supplier<ServerShip>> generator = PLAYER_GENERATORS.get(player);
+			if (generator != null) {
+				final ServerShip ship = StreamSupport.stream(generator, false)
+					.map(Supplier::get)
+					.filter(Objects::nonNull)
+					.findFirst()
+					.orElse(null);
+				if (ship == null) {
+					PLAYER_GENERATORS.remove(player);
+					continue;
+				}
+				LOGGER.info("[starlance]: generated asteroid {}", ship.getSlug());
+			}
 		}
 	}
 
-	private static void tickPlayer(ServerLevel level, List<ServerPlayer> players, ServerPlayer player) {
+	private static void tickPlayer(final ServerLevel level, final List<ServerPlayer> players, final ServerPlayer player) {
 		final BlockPos blockPos = player.blockPosition();
 		if (blockPos.getY() < MIN_SPAWN_Y || MAX_SPAWN_Y < blockPos.getY()) {
 			return;
@@ -102,33 +126,31 @@ public final class AsteroidGenerator {
 		}
 		PLAYER_LAST_POS.put(player, new LevelChunkPos(level, chunkPos));
 
-		for (int i = 0; i < MAX_CLUSTERS_PER_ROUND; i++) {
-			generateFrom(level, players, blockPos);
-		}
+		final Stream<Supplier<ServerShip>> generator = IntStream.range(0, MAX_CLUSTERS_PER_ROUND)
+			.mapToObj(i -> null)
+			.flatMap(i -> generateFrom(level, players, blockPos));
+		PLAYER_GENERATORS.put(player, generator.spliterator());
 	}
 
-	private static void generateFrom(ServerLevel level, List<ServerPlayer> players, BlockPos origin) {
-		BlockPos newPos = origin.offset(randPosInRange(MIN_SPAWN_DIST, MAX_SPAWN_DIST, 0, 64, MIN_SPAWN_DIST, MAX_SPAWN_DIST));
+	private static Stream<Supplier<ServerShip>> generateFrom(final ServerLevel level, final List<ServerPlayer> players, final BlockPos origin) {
+		final BlockPos.MutableBlockPos newPos = origin.mutable().move(randPosInRange(MIN_SPAWN_DIST, MAX_SPAWN_DIST, 0, 64, MIN_SPAWN_DIST, MAX_SPAWN_DIST));
 		if (!canSpawnAsteroid(level, players, newPos)) {
-			return;
+			return Stream.empty();
 		}
-
-		for (int i = 0; i < MAX_ASTEROIDS_PER_CLUSTER; i++) {
-			ServerShip asteroid = spawnAsteroid(level, newPos);
-			if (asteroid != null) {
-				System.out.println("asteroid generated at " + newPos);
-			}
-			BlockPos nextPos;
-			int t = 0;
-			do {
-				t++;
-				if (t > 10) {
-					return;
-				}
-				nextPos = newPos.offset(randPosInRange(4, 32));
-			} while (!canSpawnAsteroid(level, players, newPos));
-			newPos = nextPos;
-		}
+		return IntStream.range(0, MAX_ASTEROIDS_PER_CLUSTER)
+			.mapToObj(i -> () -> {
+				final BlockPos.MutableBlockPos nextPos = new BlockPos.MutableBlockPos();
+				int t = 0;
+				do {
+					t++;
+					if (t > 10) {
+						return null;
+					}
+					nextPos.setWithOffset(newPos, randPosInRange(32, 64));
+				} while (!canSpawnAsteroid(level, players, newPos));
+				newPos.set(nextPos);
+				return spawnAsteroid(level, newPos);
+			});
 	}
 
 	public static boolean isAsteroidShip(Ship ship) {
@@ -160,6 +182,7 @@ public final class AsteroidGenerator {
 				if (asteroidCount >= MAX_ASTEROID_COUNT) {
 					return false;
 				}
+				box = box.inflate(32);
 			} else {
 				box = box.inflate(MIN_SPAWN_DIST);
 			}
