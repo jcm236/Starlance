@@ -9,9 +9,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.saveddata.SavedData;
 
+import org.joml.Quaterniond;
+import org.joml.RoundingMode;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
-import org.joml.Quaterniond;
 import org.joml.primitives.AABBic;
 import org.valkyrienskies.core.api.ships.QueryableShipData;
 import org.valkyrienskies.core.api.ships.Ship;
@@ -86,7 +87,11 @@ public final class ShipAllocator extends SavedData {
 		return true;
 	}
 
-	public ServerShip allocShip(final Vector3i pos) {
+	public ServerShip allocShip(final Vector3d pos) {
+		return allocShip(pos, 1.0);
+	}
+
+	public ServerShip allocShip(final Vector3d pos, final double scale) {
 		final Iterator<ServerShip> iterator = this.avaliableShips.iterator();
 		if (iterator.hasNext()) {
 			final ServerShip ship = iterator.next();
@@ -95,7 +100,7 @@ public final class ShipAllocator extends SavedData {
 			this.setDirty(true);
 			clearShip(this.level, ship);
 
-			final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(pos).add(0.5, 0.5, 0.5), new Quaterniond(), new Vector3d(), new Vector3d(), this.dimId, 1.0);
+			final ShipTeleportData teleportData = new ShipTeleportDataImpl(pos, new Quaterniond(), new Vector3d(), new Vector3d(), this.dimId, scale);
 			this.shipWorld.teleportShip(ship, teleportData);
 
 			ship.setStatic(false);
@@ -103,7 +108,7 @@ public final class ShipAllocator extends SavedData {
 
 			return ship;
 		}
-		final ServerShip ship = this.shipWorld.createNewShipAtBlock(pos, false, 1.0, this.dimId);
+		final ServerShip ship = this.shipWorld.createNewShipAtBlock(new Vector3i(pos, RoundingMode.TRUNCATE), false, scale, this.dimId);
 		return ship;
 	}
 

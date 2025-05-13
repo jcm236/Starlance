@@ -7,23 +7,31 @@ import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
-import net.minecraft.core.registries.BuiltInRegistries;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Quaterniond;
+import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.joml.Vector3i;
+import org.joml.primitives.AABBic;
+import org.valkyrienskies.core.api.ships.QueryableShipData;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.apigame.ShipTeleportData;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
+import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
@@ -36,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -45,11 +54,13 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public final class AsteroidGenerator {
+public final class AsteroidGenerator extends SavedData {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
+	private static final String DATA_NAME = VSCHMod.MODID + "_Asteroids";
 	public static final String ASTEROID_SHIP_PREFIX = "+asteroid+";
-	public static final String IDLE_SHIP_PREFIX = "+idle+";
+	public static final String PENDING_ASTEROID_SHIP_PREFIX = "+idle+pending_asteroid+";
+
 	private static final int MAX_ASTEROID_COUNT = 128;
 	private static final int MIN_REGENERATE_DIST = 4;
 	private static final int MAX_CLUSTERS_PER_ROUND = 8;
@@ -61,50 +72,85 @@ public final class AsteroidGenerator {
 	private static final int MAX_SPAWN_Y = 5000;
 	private static final int DISCARD_DIST = MAX_SPAWN_DIST + 16 * MIN_REGENERATE_DIST;
 
+	private static final Vector3d MAGIC_POS = new Vector3d(0, -1e8, 0);
+
 	private static final Random RNG = new Random();
 	private static final Map<ServerPlayer, LevelChunkPos> PLAYER_LAST_POS = new HashMap<>();
-	private static final Map<ServerPlayer, Spliterator<Supplier<ServerShip>>> PLAYER_GENERATORS = new HashMap<>();
 
-	private AsteroidGenerator() {}
+	private final ServerLevel level;
+	private final ServerShipWorldCore shipWorld;
+	private final String dimId;
+	private final Set<ServerShip> avaliableAsteroids = new HashSet<>();
 
-	public static void tickLevel(ServerLevel level) {
+	private AsteroidGenerator(final ServerLevel level) {
+		this.level = level;
+		this.shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
+		this.dimId = VSGameUtilsKt.getDimensionId(level);
+	}
+
+	public static AsteroidGenerator get(final ServerLevel level) {
+		return level.getDataStorage().computeIfAbsent(data -> AsteroidGenerator.load(level, data), () -> new AsteroidGenerator(level), DATA_NAME);
+	}
+
+	public static AsteroidGenerator load(final ServerLevel level, final CompoundTag data) {
+		System.out.println("loading AsteroidGenerator " + data);
+		final AsteroidGenerator generator = new AsteroidGenerator(level);
+		final QueryableShipData<ServerShip> shipStorage = generator.shipWorld.getAllShips();
+		final long[] ids = data.getLongArray("Avaliable");
+		for (long id : ids) {
+			final ServerShip ship = shipStorage.getById(id);
+			if (ship != null && generator.dimId.equals(ship.getChunkClaimDimension())) {
+				generator.avaliableAsteroids.add(ship);
+			}
+		}
+		return generator;
+	}
+
+	@Override
+	public CompoundTag save(final CompoundTag data) {
+		data.putLongArray("Avaliable", this.avaliableAsteroids.stream().mapToLong(ServerShip::getId).toArray());
+		return data;
+	}
+
+	public static void tickLevel(final ServerLevel level) {
 		// TODO: add asteroid belt radius instead
 		final boolean isSpace = CosmosModVariables.WorldVariables.get(level).dimension_type.getString(level.dimension().location().toString()).equals("space");
 		if (!isSpace) {
 			return;
 		}
 		final ShipAllocator allocator = ShipAllocator.get(level);
+		final AsteroidGenerator generator = get(level);
 		final List<ServerPlayer> players = level.getPlayers(player -> true);
-		int removing = 0;
+		int asteroidCount = generator.avaliableAsteroids.size();
+		int removed = 0;
 		for (final ServerShip ship : VSCHUtils.getShipsInLevel(level)) {
-			if (canDespawnAsteroid(level, players, ship)) {
+			if (!isAsteroidShip(ship)) {
+				continue;
+			}
+			if (removed < 3 && canDespawnAsteroid(level, players, ship)) {
 				LOGGER.info("[starlance]: removing asteroid {}", ship.getSlug());
 				allocator.putShip(ship);
-				removing++;
-				if (removing > 2) {
+				removed++;
+			} else {
+				asteroidCount++;
+			}
+		}
+		if (asteroidCount < MAX_ASTEROID_COUNT) {
+			System.out.println("asteroidCount: " + asteroidCount + " / " + MAX_ASTEROID_COUNT);
+			for (int i = 0; i < 10; i++) {
+				final ServerShip ship = createAsteroid(level);
+				if (ship != null) {
+					generator.avaliableAsteroids.add(ship);
 					break;
 				}
 			}
 		}
 		for (final ServerPlayer player : players) {
-			tickPlayer(level, players, player);
-			final Spliterator<Supplier<ServerShip>> generator = PLAYER_GENERATORS.get(player);
-			if (generator != null) {
-				final ServerShip ship = StreamSupport.stream(generator, false)
-					.map(Supplier::get)
-					.filter(Objects::nonNull)
-					.findFirst()
-					.orElse(null);
-				if (ship == null) {
-					PLAYER_GENERATORS.remove(player);
-					continue;
-				}
-				LOGGER.info("[starlance]: generated asteroid {}", ship.getSlug());
-			}
+			generator.tickPlayer(players, player);
 		}
 	}
 
-	private static void tickPlayer(final ServerLevel level, final List<ServerPlayer> players, final ServerPlayer player) {
+	private void tickPlayer(final List<ServerPlayer> players, final ServerPlayer player) {
 		final BlockPos blockPos = player.blockPosition();
 		if (blockPos.getY() < MIN_SPAWN_Y || MAX_SPAWN_Y < blockPos.getY()) {
 			return;
@@ -121,36 +167,40 @@ public final class AsteroidGenerator {
 			return;
 		}
 		final LevelChunkPos lastPos = PLAYER_LAST_POS.get(player);
-		if (lastPos != null && lastPos.level() == level && lastPos.chunk().getChessboardDistance(chunkPos) < MIN_REGENERATE_DIST) {
+		if (lastPos != null && lastPos.level() == this.level && lastPos.chunk().getChessboardDistance(chunkPos) < MIN_REGENERATE_DIST) {
 			return;
 		}
-		PLAYER_LAST_POS.put(player, new LevelChunkPos(level, chunkPos));
+		PLAYER_LAST_POS.put(player, new LevelChunkPos(this.level, chunkPos));
 
-		final Stream<Supplier<ServerShip>> generator = IntStream.range(0, MAX_CLUSTERS_PER_ROUND)
-			.mapToObj(i -> null)
-			.flatMap(i -> generateFrom(level, players, blockPos));
-		PLAYER_GENERATORS.put(player, generator.spliterator());
+		for (int i = 0; i < MAX_CLUSTERS_PER_ROUND; i++) {
+			this.generateFrom(players, blockPos);
+		}
 	}
 
-	private static Stream<Supplier<ServerShip>> generateFrom(final ServerLevel level, final List<ServerPlayer> players, final BlockPos origin) {
+	private void generateFrom(final List<ServerPlayer> players, final BlockPos origin) {
 		final BlockPos.MutableBlockPos newPos = origin.mutable().move(randPosInRange(MIN_SPAWN_DIST, MAX_SPAWN_DIST, 0, 64, MIN_SPAWN_DIST, MAX_SPAWN_DIST));
-		if (!canSpawnAsteroid(level, players, newPos)) {
-			return Stream.empty();
+		if (!canSpawnAsteroid(this.level, players, newPos)) {
+			return;
 		}
-		return IntStream.range(0, MAX_ASTEROIDS_PER_CLUSTER)
-			.mapToObj(i -> () -> {
-				final BlockPos.MutableBlockPos nextPos = new BlockPos.MutableBlockPos();
-				int t = 0;
-				do {
-					t++;
-					if (t > 10) {
-						return null;
-					}
-					nextPos.setWithOffset(newPos, randPosInRange(32, 64));
-				} while (!canSpawnAsteroid(level, players, newPos));
-				newPos.set(nextPos);
-				return spawnAsteroid(level, newPos);
-			});
+		for (int i = 0; i < MAX_ASTEROIDS_PER_CLUSTER; i++) {
+			final ServerShip ship = this.spawnAsteroid(newPos);
+			if (ship == null) {
+				return;
+			}
+
+			LOGGER.info("asteroid {} spawned at {}", ship.getSlug(), newPos);
+
+			final BlockPos.MutableBlockPos nextPos = new BlockPos.MutableBlockPos();
+			int t = 0;
+			do {
+				t++;
+				if (t > 10) {
+					return;
+				}
+				nextPos.setWithOffset(newPos, randPosInRange(32, 64));
+			} while (!canSpawnAsteroid(this.level, players, newPos));
+			newPos.set(nextPos);
+		}
 	}
 
 	public static boolean isAsteroidShip(Ship ship) {
@@ -212,13 +262,31 @@ public final class AsteroidGenerator {
 		return true;
 	}
 
-	private static ServerShip spawnAsteroid(ServerLevel level, BlockPos pos) {
+	private ServerShip spawnAsteroid(final BlockPos pos) {
+		final Iterator<ServerShip> iterator = this.avaliableAsteroids.iterator();
+		if (!iterator.hasNext()) {
+			return null;
+		}
+		final ServerShip ship = iterator.next();
+		iterator.remove();
+
+		final Vector3d vel = new Vector3d(0, 0, 0); // TODO: give random velocity
+		final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5), new Quaterniond(), vel, new Vector3d(), this.dimId, 1.0);
+		this.shipWorld.teleportShip(ship, teleportData);
+
+		ship.setSlug(ASTEROID_SHIP_PREFIX + ship.getId());
+		ship.setStatic(false);
+		return ship;
+	}
+
+	private static ServerShip createAsteroid(final ServerLevel level) {
 		final Map<Vec3i, BlockState> blocks = generateAsteroid(level);
 		if (blocks == null || blocks.isEmpty()) {
 			return null;
 		}
-		final ServerShip ship = ShipAllocator.get(level).allocShip(new Vector3i(pos.getX(), pos.getY(), pos.getZ()));
-		ship.setSlug(ASTEROID_SHIP_PREFIX + ship.getId());
+		final ServerShip ship = ShipAllocator.get(level).allocShip(MAGIC_POS, 1e-6);
+		ship.setSlug(PENDING_ASTEROID_SHIP_PREFIX + ship.getId());
+		ship.setStatic(true);
 		final Vector3i center = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());
 		final BlockPos centerPos = new BlockPos(center.x, center.y, center.z);
 		long begin = System.nanoTime();
@@ -391,6 +459,24 @@ public final class AsteroidGenerator {
 			}
 		}
 		return builder.build();
+	}
+
+	private static void clearShip(final ServerLevel level, final ServerShip ship) {
+		clearShipWith(level, ship, Blocks.AIR.defaultBlockState());
+	}
+
+	private static void clearShipWith(final ServerLevel level, final ServerShip ship, final BlockState block) {
+		final AABBic box = ship.getShipAABB();
+		if (box == null) {
+			return;
+		}
+		for (int x = box.minX(); x < box.maxX(); x++) {
+			for (int z = box.minZ(); z < box.maxZ(); z++) {
+				for (int y = box.minY(); y < box.maxY(); y++) {
+					level.setBlock(new BlockPos(x, y, z), block, Block.UPDATE_NONE);
+				}
+			}
+		}
 	}
 
 	private record LevelChunkPos(ServerLevel level, ChunkPos chunk) {}
