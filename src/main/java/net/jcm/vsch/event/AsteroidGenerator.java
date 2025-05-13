@@ -221,7 +221,7 @@ public final class AsteroidGenerator {
 		long begin = System.nanoTime();
 		blocks.forEach((offset, state) -> level.setBlock(centerPos.offset(offset), state, 0));
 		long after = System.nanoTime();
-		System.out.println("set block used " + (after - begin) + " avg " + ((after - begin) / blocks.size()) + " ns/block");
+		System.out.println("set block used " + ((after - begin) / 1.0e6) + "ms avg " + ((after - begin) / blocks.size()) + " ns/block");
 		return ship;
 	}
 
@@ -229,25 +229,40 @@ public final class AsteroidGenerator {
 		final BlockState stone;
 		final List<BlockState> ores = new ArrayList<>();
 		final int typeRand = RNG.nextInt(100);
-		if (typeRand < 10) {
+		if (typeRand < 15) {
 			// stone asteroid
 			stone = Blocks.DEEPSLATE.defaultBlockState();
 			ores.add(Blocks.STONE.defaultBlockState());
-		} else if (typeRand < 15) {
-			// ice asteroid
+		} else if (typeRand < 25) {
+			// stone-ice asteroid
 			stone = Blocks.DEEPSLATE.defaultBlockState();
 			ores.add(Blocks.ICE.defaultBlockState());
 			ores.add(Blocks.BLUE_ICE.defaultBlockState());
-		} else if (typeRand < 45) {
+		} else if (typeRand < 28) {
+			// pure ice asteroid
+			stone = Blocks.ICE.defaultBlockState();
+			ores.add(Blocks.PACKED_ICE.defaultBlockState());
+			ores.add(Blocks.BLUE_ICE.defaultBlockState());
+		} else if (typeRand < 29) {
+			// debris asteroid
+			stone = Blocks.MAGMA_BLOCK.defaultBlockState();
+			ores.add(Blocks.ANCIENT_DEBRIS.defaultBlockState());
+		} else if (typeRand < 32) {
+			// obsidian asteroid
+			stone = Blocks.OBSIDIAN.defaultBlockState();
+			ores.add(Blocks.CRYING_OBSIDIAN.defaultBlockState());
+		} else if (typeRand < 60) {
 			// nether ore asteroid
 			stone = Blocks.NETHERRACK.defaultBlockState();
 			ores.add(Blocks.MAGMA_BLOCK.defaultBlockState());
+			ores.add(Blocks.GLOWSTONE.defaultBlockState());
 			BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_NETHERRACK).forEach(holder -> ores.add(holder.value().defaultBlockState()));
 		} else {
 			// earth ore asteroid
 			stone = Blocks.DEEPSLATE.defaultBlockState();
 			BuiltInRegistries.BLOCK.getTagOrEmpty(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE).forEach(holder -> ores.add(holder.value().defaultBlockState()));
 		}
+		// TODO: special structure & loot chests etc.
 		return generateEllipsoidAsteroid(level, stone, ores.get(RNG.nextInt(ores.size())));
 	}
 
