@@ -6,8 +6,18 @@ import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
 import net.lointain.cosmos.network.CosmosModVariables;
 
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,4 +50,21 @@ public class VSCHEvents {
 	//	public static void shipLoad(VSEvents.ShipLoadEvent event) {
 	////		Gravity.setAll(event.getServer().overworld());
 	//	}
+
+	@SubscribeEvent
+	public static void onBlockPlace(PlayerInteractEvent.RightClickBlock event) {
+		final Item item = event.getItemStack().getItem();
+		if (!(item instanceof BlockItem)) {
+			return;
+		}
+		final Level level = event.getLevel();
+		final Ship ship = VSGameUtilsKt.getShipObjectManagingPos(level, event.getPos());
+		if (AsteroidGenerator.isAsteroidShip(ship)) {
+			final Player player = event.getEntity();
+			if (level.isClientSide) {
+				player.displayClientMessage(Component.translatable("vsch.message.asteroid.place").withStyle(ChatFormatting.RED), true);
+			}
+			event.setCanceled(true);
+		}
+	}
 }

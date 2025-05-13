@@ -154,6 +154,9 @@ public final class AsteroidGenerator {
 	}
 
 	public static boolean isAsteroidShip(Ship ship) {
+		if (ship == null) {
+			return false;
+		}
 		final String slug = ship.getSlug();
 		return slug != null && slug.startsWith(ASTEROID_SHIP_PREFIX);
 	}
@@ -238,16 +241,16 @@ public final class AsteroidGenerator {
 			stone = Blocks.DEEPSLATE.defaultBlockState();
 			ores.add(Blocks.ICE.defaultBlockState());
 			ores.add(Blocks.BLUE_ICE.defaultBlockState());
-		} else if (typeRand < 28) {
+		} else if (typeRand < 30) {
 			// pure ice asteroid
 			stone = Blocks.ICE.defaultBlockState();
 			ores.add(Blocks.PACKED_ICE.defaultBlockState());
 			ores.add(Blocks.BLUE_ICE.defaultBlockState());
-		} else if (typeRand < 29) {
+		} else if (typeRand < 31) {
 			// debris asteroid
 			stone = Blocks.MAGMA_BLOCK.defaultBlockState();
 			ores.add(Blocks.ANCIENT_DEBRIS.defaultBlockState());
-		} else if (typeRand < 32) {
+		} else if (typeRand < 35) {
 			// obsidian asteroid
 			stone = Blocks.OBSIDIAN.defaultBlockState();
 			ores.add(Blocks.CRYING_OBSIDIAN.defaultBlockState());
@@ -391,4 +394,5 @@ public final class AsteroidGenerator {
 	}
 
 	private record LevelChunkPos(ServerLevel level, ChunkPos chunk) {}
+	private record WeightedItem<T>(int weight, T item) {}
 }
