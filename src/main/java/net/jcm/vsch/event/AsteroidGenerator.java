@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.world.ForgeChunkManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,22 +30,25 @@ import org.joml.primitives.AABBic;
 import org.valkyrienskies.core.api.ships.QueryableShipData;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.properties.ChunkClaim;
 import org.valkyrienskies.core.apigame.ShipTeleportData;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Spliterator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
-import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -72,7 +76,7 @@ public final class AsteroidGenerator extends SavedData {
 	private static final int MAX_SPAWN_Y = 5000;
 	private static final int DISCARD_DIST = MAX_SPAWN_DIST + 16 * MIN_REGENERATE_DIST;
 
-	private static final Vector3d MAGIC_POS = new Vector3d(0, -1e8, 0);
+	private static final Vector3d MAGIC_POS = new Vector3d(1e8, -1e8, 1e8);
 
 	private static final Random RNG = new Random();
 	private static final Map<ServerPlayer, LevelChunkPos> PLAYER_LAST_POS = new HashMap<>();
@@ -93,7 +97,6 @@ public final class AsteroidGenerator extends SavedData {
 	}
 
 	public static AsteroidGenerator load(final ServerLevel level, final CompoundTag data) {
-		System.out.println("loading AsteroidGenerator " + data);
 		final AsteroidGenerator generator = new AsteroidGenerator(level);
 		final QueryableShipData<ServerShip> shipStorage = generator.shipWorld.getAllShips();
 		final long[] ids = data.getLongArray("Avaliable");
@@ -141,6 +144,7 @@ public final class AsteroidGenerator extends SavedData {
 				final ServerShip ship = createAsteroid(level);
 				if (ship != null) {
 					generator.avaliableAsteroids.add(ship);
+					generator.setDirty(true);
 					break;
 				}
 			}
@@ -269,12 +273,14 @@ public final class AsteroidGenerator extends SavedData {
 		}
 		final ServerShip ship = iterator.next();
 		iterator.remove();
+		this.setDirty(true);
+
+		ship.setSlug(ASTEROID_SHIP_PREFIX + ship.getId());
 
 		final Vector3d vel = new Vector3d(0, 0, 0); // TODO: give random velocity
 		final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5), new Quaterniond(), vel, new Vector3d(), this.dimId, 1.0);
 		this.shipWorld.teleportShip(ship, teleportData);
 
-		ship.setSlug(ASTEROID_SHIP_PREFIX + ship.getId());
 		ship.setStatic(false);
 		return ship;
 	}
@@ -287,12 +293,10 @@ public final class AsteroidGenerator extends SavedData {
 		final ServerShip ship = ShipAllocator.get(level).allocShip(MAGIC_POS, 1e-6);
 		ship.setSlug(PENDING_ASTEROID_SHIP_PREFIX + ship.getId());
 		ship.setStatic(true);
-		final Vector3i center = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());
+		final ChunkClaim claim = ship.getChunkClaim();
+		final Vector3i center = claim.getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());
 		final BlockPos centerPos = new BlockPos(center.x, center.y, center.z);
-		long begin = System.nanoTime();
 		blocks.forEach((offset, state) -> level.setBlock(centerPos.offset(offset), state, 0));
-		long after = System.nanoTime();
-		System.out.println("set block used " + ((after - begin) / 1.0e6) + "ms avg " + ((after - begin) / blocks.size()) + " ns/block");
 		return ship;
 	}
 

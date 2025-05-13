@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.vsch.refmap.json",
   "mixins": [
+    "MixinChunkMap",
     "MixinEntity",
     "MixinLightRenderer",
     "MixinLivingEntityProcedure",

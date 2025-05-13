@@ -48,14 +48,12 @@ public final class ShipAllocator extends SavedData {
 	}
 
 	public static ShipAllocator load(final ServerLevel level, final CompoundTag data) {
-		System.out.println("loading ShipAllocator " + data);
 		final ShipAllocator allocator = new ShipAllocator(level);
 		final QueryableShipData<ServerShip> shipStorage = allocator.shipWorld.getAllShips();
 		final long[] ids = data.getLongArray(CACHED_SHIPS_TAG);
 		for (long id : ids) {
 			final ServerShip ship = shipStorage.getById(id);
 			if (ship != null && allocator.dimId.equals(ship.getChunkClaimDimension())) {
-				System.out.println("found idle ship " + ship.getId());
 				allocator.avaliableShips.add(ship);
 			}
 		}
@@ -79,7 +77,7 @@ public final class ShipAllocator extends SavedData {
 		final Vector3i center = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(this.level), new Vector3i());
 		level.setBlock(new BlockPos(center.x, center.y, center.z), Blocks.BEDROCK.defaultBlockState(), Block.UPDATE_NONE);
 
-		final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(0, -1e8, 0), new Quaterniond(), new Vector3d(), new Vector3d(), this.dimId, 1e-6);
+		final ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(1e8, -1e8, 1e8), new Quaterniond(), new Vector3d(), new Vector3d(), this.dimId, 1e-6);
 		this.shipWorld.teleportShip(ship, teleportData);
 
 		this.avaliableShips.add(ship);
@@ -95,7 +93,6 @@ public final class ShipAllocator extends SavedData {
 		final Iterator<ServerShip> iterator = this.avaliableShips.iterator();
 		if (iterator.hasNext()) {
 			final ServerShip ship = iterator.next();
-			System.out.println("reusing ship " + ship.getId());
 			iterator.remove();
 			this.setDirty(true);
 			clearShip(this.level, ship);

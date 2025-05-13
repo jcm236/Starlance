@@ -58,7 +58,7 @@ public class VSCHEvents {
 			return;
 		}
 		final Level level = event.getLevel();
-		final Ship ship = VSGameUtilsKt.getShipObjectManagingPos(level, event.getPos());
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, event.getPos());
 		if (AsteroidGenerator.isAsteroidShip(ship)) {
 			final Player player = event.getEntity();
 			if (level.isClientSide) {
