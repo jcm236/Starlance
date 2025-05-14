@@ -1,6 +1,7 @@
 package net.jcm.vsch.event;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.util.ShipAllocator;
 import net.jcm.vsch.util.VSCHUtils;
 import net.lointain.cosmos.network.CosmosModVariables;
@@ -65,16 +66,9 @@ public final class AsteroidGenerator extends SavedData {
 	public static final String ASTEROID_SHIP_PREFIX = "+asteroid+";
 	public static final String PENDING_ASTEROID_SHIP_PREFIX = "+idle+pending_asteroid+";
 
-	private static final int MAX_ASTEROID_COUNT = 128;
 	private static final int MIN_REGENERATE_DIST = 4;
-	private static final int MAX_CLUSTERS_PER_ROUND = 8;
-	private static final int MAX_ASTEROIDS_PER_CLUSTER = 8;
-	private static final int MIN_SPAWN_DIST = 16 * 8;
-	private static final int SPAWN_RANGE = 16 * 16;
-	private static final int MAX_SPAWN_DIST = MIN_SPAWN_DIST + SPAWN_RANGE;
 	private static final int MIN_SPAWN_Y = -5000;
 	private static final int MAX_SPAWN_Y = 5000;
-	private static final int DISCARD_DIST = MAX_SPAWN_DIST + 16 * MIN_REGENERATE_DIST;
 
 	private static final Vector3d MAGIC_POS = new Vector3d(1e8, -1e8, 1e8);
 
@@ -138,9 +132,8 @@ public final class AsteroidGenerator extends SavedData {
 				asteroidCount++;
 			}
 		}
-		if (asteroidCount < MAX_ASTEROID_COUNT) {
-			System.out.println("asteroidCount: " + asteroidCount + " / " + MAX_ASTEROID_COUNT);
-			for (int i = 0; i < 10; i++) {
+		if (asteroidCount < VSCHConfig.MAX_ASTEROID_COUNT.get()) {
+			for (int i = 0; i < 5; i++) {
 				final ServerShip ship = createAsteroid(level);
 				if (ship != null) {
 					generator.avaliableAsteroids.add(ship);
@@ -161,6 +154,7 @@ public final class AsteroidGenerator extends SavedData {
 		}
 		final ChunkPos chunkPos = new ChunkPos(blockPos);
 
+		final int MIN_SPAWN_DIST = VSCHConfig.MIN_SPAWN_DIST.get();
 		// TODO: get the radius from datamap
 		final int ASTEROID_MIN_SPAWN_RADIUS = 2750;
 		final int ASTEROID_MAX_SPAWN_RADIUS = 3500;
@@ -176,17 +170,19 @@ public final class AsteroidGenerator extends SavedData {
 		}
 		PLAYER_LAST_POS.put(player, new LevelChunkPos(this.level, chunkPos));
 
-		for (int i = 0; i < MAX_CLUSTERS_PER_ROUND; i++) {
+		for (int i = VSCHConfig.MAX_CLUSTERS_PER_ROUND.get(); i > 0; i--) {
 			this.generateFrom(players, blockPos);
 		}
 	}
 
 	private void generateFrom(final List<ServerPlayer> players, final BlockPos origin) {
+		final int MIN_SPAWN_DIST = VSCHConfig.MIN_SPAWN_DIST.get();
+		final int MAX_SPAWN_DIST = MIN_SPAWN_DIST + VSCHConfig.SPAWN_RANGE.get();
 		final BlockPos.MutableBlockPos newPos = origin.mutable().move(randPosInRange(MIN_SPAWN_DIST, MAX_SPAWN_DIST, 0, 64, MIN_SPAWN_DIST, MAX_SPAWN_DIST));
 		if (!canSpawnAsteroid(this.level, players, newPos)) {
 			return;
 		}
-		for (int i = 0; i < MAX_ASTEROIDS_PER_CLUSTER; i++) {
+		for (int i = VSCHConfig.MAX_ASTEROIDS_PER_CLUSTER.get(); i > 0; i--) {
 			final ServerShip ship = this.spawnAsteroid(newPos);
 			if (ship == null) {
 				return;
@@ -220,6 +216,8 @@ public final class AsteroidGenerator extends SavedData {
 			return false;
 		}
 		final ChunkPos chunkPos = new ChunkPos(pos);
+
+		final int MIN_SPAWN_DIST = VSCHConfig.MIN_SPAWN_DIST.get();
 		// TODO: get the radius from datamap
 		final int ASTEROID_MIN_SPAWN_RADIUS = 2750;
 		final int ASTEROID_MAX_SPAWN_RADIUS = 3500;
@@ -231,14 +229,10 @@ public final class AsteroidGenerator extends SavedData {
 				return false;
 			}
 		}
-		int asteroidCount = 0;
+
 		for (Ship ship : VSCHUtils.getShipsInLevel(level)) {
 			AABB box = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB());
 			if (isAsteroidShip(ship)) {
-				asteroidCount++;
-				if (asteroidCount >= MAX_ASTEROID_COUNT) {
-					return false;
-				}
 				box = box.inflate(32);
 			} else {
 				box = box.inflate(MIN_SPAWN_DIST);
@@ -254,12 +248,14 @@ public final class AsteroidGenerator extends SavedData {
 		if (!isAsteroidShip(ship)) {
 			return false;
 		}
+		final int DISCARD_DIST = VSCHConfig.MIN_SPAWN_DIST.get() + VSCHConfig.SPAWN_RANGE.get() + 16 * MIN_REGENERATE_DIST;
+		final int discardDist2 = DISCARD_DIST * DISCARD_DIST;
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
 		final BlockPos blockPos = BlockPos.containing(pos.x(), pos.y(), pos.z());
 		boolean shouldRand = false;
 		for (final ServerPlayer player : players) {
 			final double dist = player.blockPosition().distSqr(blockPos);
-			if (dist < DISCARD_DIST * DISCARD_DIST) {
+			if (dist < discardDist2) {
 				return false;
 			}
 		}

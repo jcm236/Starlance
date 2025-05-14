@@ -38,6 +38,13 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
 	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
 
+	public static final ForgeConfigSpec.BooleanValue GENERATE_ASTEROID;
+	public static final ForgeConfigSpec.IntValue MAX_ASTEROID_COUNT;
+	public static final ForgeConfigSpec.IntValue MAX_CLUSTERS_PER_ROUND;
+	public static final ForgeConfigSpec.IntValue MAX_ASTEROIDS_PER_CLUSTER;
+	public static final ForgeConfigSpec.IntValue MIN_SPAWN_DIST;
+	public static final ForgeConfigSpec.IntValue SPAWN_RANGE;
+
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
@@ -74,6 +81,17 @@ public class VSCHConfig {
 
 		GYRO_STRENGTH = BUILDER.comment("Max force gyro can apply to the ship on any axis. (N)").define("gyro_strength", 350000);
 		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 10000);
+
+		BUILDER.pop();
+
+		BUILDER.push("Asteroid");
+
+		GENERATE_ASTEROID = BUILDER.comment("Allow spawn asteroid").define("generate_asteroid", true);
+		MAX_ASTEROID_COUNT = BUILDER.comment("Max asteroid count per dimension").defineInRange("max_asteroid_count", 64, 1, 512);
+		MAX_CLUSTERS_PER_ROUND = BUILDER.comment("Max asteroid clusters can generate per round").defineInRange("max_clusters_per_round", 8, 1, 32);
+		MAX_ASTEROIDS_PER_CLUSTER = BUILDER.comment("Max asteroids can be generated in a cluster").defineInRange("max_asteroids_per_cluster", 8, 1, 64);
+		MIN_SPAWN_DIST = BUILDER.comment("Minimum spawn distance of asteroids from players and ships (blocks)").defineInRange("min_spawn_distance", 16 * 8, 16 * 2, 16 * 128);
+		SPAWN_RANGE = BUILDER.comment("The area asteroids can spawn after minium spawn distance (blocks)").defineInRange("spawn_range", 16 * 16, 16 * 2, 16 * 128);
 
 		BUILDER.pop();
 

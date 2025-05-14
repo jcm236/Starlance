@@ -1,5 +1,6 @@
 package net.jcm.vsch;
 
+import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.event.AsteroidGenerator;
 import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.GravityInducer;
@@ -28,6 +29,7 @@ public class VSCHEvents {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onServerTick(TickEvent.ServerTickEvent event) {
+		final boolean generateAsteroid = VSCHConfig.GENERATE_ASTEROID.get();
 		for (ServerLevel level : event.getServer().getAllLevels()) {
 			if (level.getPlayers(player -> true, 1).isEmpty()) {
 				// skip if the no player is in the world
@@ -36,7 +38,9 @@ public class VSCHEvents {
 			}
 			AtmosphericCollision.atmosphericCollisionTick(level);
 			PlanetCollision.planetCollisionTick(level);
-			AsteroidGenerator.tickLevel(level);
+			if (generateAsteroid) {
+				AsteroidGenerator.tickLevel(level);
+			}
 		}
 	}
 
