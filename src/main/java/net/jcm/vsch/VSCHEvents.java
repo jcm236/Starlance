@@ -7,7 +7,7 @@ import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
 import net.lointain.cosmos.network.CosmosModVariables;
 
-import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.minecraft.ChatFormatting;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,20 +56,31 @@ public class VSCHEvents {
 	////		Gravity.setAll(event.getServer().overworld());
 	//	}
 
+	// @SubscribeEvent
+	// public static void onPlayerRightClick(PlayerInteractEvent.RightClickBlock event) {
+	// 	final Item item = event.getItemStack().getItem();
+	// 	if (!(item instanceof BlockItem)) {
+	// 		return;
+	// 	}
+	// 	final Level level = event.getLevel();
+	// 	final Ship ship = VSGameUtilsKt.getShipManagingPos(level, event.getPos());
+	// 	if (AsteroidGenerator.isAsteroidShip(ship)) {
+	// 		final Player player = event.getEntity();
+	// 		if (level.isClientSide) {
+	// 			player.displayClientMessage(Component.translatable("vsch.message.asteroid.place").withStyle(ChatFormatting.RED), true);
+	// 		}
+	// 		event.setCanceled(true);
+	// 	}
+	// }
+
 	@SubscribeEvent
-	public static void onBlockPlace(PlayerInteractEvent.RightClickBlock event) {
-		final Item item = event.getItemStack().getItem();
-		if (!(item instanceof BlockItem)) {
+	public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
+		if (!(event.getLevel() instanceof ServerLevel level)) {
 			return;
 		}
-		final Level level = event.getLevel();
-		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, event.getPos());
+		final ServerShip ship = VSGameUtilsKt.getShipManagingPos(level, event.getPos());
 		if (AsteroidGenerator.isAsteroidShip(ship)) {
-			final Player player = event.getEntity();
-			if (level.isClientSide) {
-				player.displayClientMessage(Component.translatable("vsch.message.asteroid.place").withStyle(ChatFormatting.RED), true);
-			}
-			event.setCanceled(true);
+			AsteroidGenerator.claimAsteroid(ship, event.getEntity());
 		}
 	}
 }

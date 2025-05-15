@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -200,6 +201,13 @@ public final class AsteroidGenerator extends SavedData {
 				nextPos.setWithOffset(newPos, randPosInRange(32, 64));
 			} while (!canSpawnAsteroid(this.level, players, newPos));
 			newPos.set(nextPos);
+		}
+	}
+
+	public static void claimAsteroid(ServerShip ship, Entity entity) {
+		final String slug = ship.getSlug();
+		if (slug != null && slug.startsWith(ASTEROID_SHIP_PREFIX)) {
+			ship.setSlug("+claimed" + slug);
 		}
 	}
 
