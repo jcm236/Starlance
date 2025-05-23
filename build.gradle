@@ -199,6 +199,7 @@ dependencies {
     implementation "thedarkcolour:kotlinforforge:4.10.0"
     implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
+    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all")
 
     //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")

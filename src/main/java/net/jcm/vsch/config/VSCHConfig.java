@@ -11,6 +11,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VSCHConfig {
@@ -35,6 +36,9 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
+	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
+	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
+
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
@@ -46,6 +50,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
+
+	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+		"minecraft:barrier",
+		"minecraft:bedrock",
+		"minecraft:command_block"
+	);
 
 	static {
 		BUILDER.push("Thrusters");
@@ -64,6 +74,13 @@ public class VSCHConfig {
 		POWERFUL_THRUSTER_STRENGTH = BUILDER.comment("Powerful thruster max force. (Newtons)").define("powerful_thruster_strength", 450000);
 		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").define("powerful_thruster_energy_consume_rate", 0);
 		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").define("powerful_thruster_fuel_consume_rate", 0);
+
+		BUILDER.pop();
+
+		BUILDER.push("RocketSupporter");
+
+		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max assemble blocks for rocket supporter").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
+		ASSEMBLE_BLACKLIST = BUILDER.comment("Prevent assemble if contatins any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
 
 		BUILDER.pop();
 
