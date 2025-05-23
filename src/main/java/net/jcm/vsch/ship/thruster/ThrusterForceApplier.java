@@ -11,9 +11,9 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 public class ThrusterForceApplier implements IVSCHForceApplier {
-    private ThrusterData data;
+    private final ThrusterData data;
 
-    public ThrusterData getData(){
+    public ThrusterData getData() {
         return this.data;
     }
 
