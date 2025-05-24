@@ -169,6 +169,12 @@ repositories {
             includeModule("org.squiddev", "Cobalt")
         }
     }
+
+    maven {
+        name = "alex's repo"
+        url = uri("http://198.7.115.119:8080/libs")
+        allowInsecureProtocol = true
+    }
 }
 
 dependencies {
@@ -201,15 +207,15 @@ dependencies {
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
     implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all")
 
-    //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")
-
+    implementation fg.deobf("maven.modrinth:vs-tournament:1.1.0_beta-5.3+af35b3821f")
+    implementation("me.alex_s168:blitz:0.23")
     //RUNTIME
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 //    runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
 //    runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
     runtimeOnly fg.deobf("maven.modrinth:jade-addons-forge:5.3.1+forge")
-    //runtimeOnly fg.deobf("curse.maven:rubidium-574856:4494903")
-    //runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")
+
+
     // Le mod de V for testing
     //implementation fg.deobf("maven.modrinth:vmod:mGgUMpre")
 

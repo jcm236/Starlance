@@ -47,6 +47,8 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
 
+	public static final ForgeConfigSpec.ConfigValue<Number> BALLAST_WEIGHT;
+
 	static {
 		BUILDER.push("Thrusters");
 
@@ -79,6 +81,7 @@ public class VSCHConfig {
 		GRAVITY_DISTANCE = BUILDER.comment("Distance (in blocks) at which gravity generator will pull you in").define("gravity_gen_distance", 6);
 		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.09);
 
+		BALLAST_WEIGHT = BUILDER.comment("Default weight of ballast block (in kg)").define("ballast_weight",1000);
 		BUILDER.pop();
 
 		SPEC = BUILDER.build();
