@@ -72,7 +72,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.connectedBlocks = connectedBlocks;
 		this.peripheralType = peripheralType;
 		this.facing = facing;
-		this.thrusterData = new ThrusterData(VectorConversionsMCKt.toJOMLD(facing.getNormal()), 0, VSCHConfig.THRUSTER_MODE.get());
+		this.thrusterData = new ThrusterData(VSCHConfig.THRUSTER_MODE.get());
 		this.engine = engine;
 		int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
@@ -188,7 +188,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 				}
 			}
 		}
-		this.thrusterData.throttle = this.getCurrentThrottle();
+		this.thrusterData.setForce((force) -> force.set(this.facing.step()).mul(this.getCurrentThrottle()));
 	}
 
 	public void writeToNBT(CompoundTag data) {
@@ -239,7 +239,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 		if (this.powerChanged) {
 			this.powerChanged = false;
-			this.thrusterData.throttle = this.getCurrentThrottle();
+			this.thrusterData.setForce((force) -> force.set(this.facing.step()).mul(this.getCurrentThrottle()));
 		}
 	}
 
