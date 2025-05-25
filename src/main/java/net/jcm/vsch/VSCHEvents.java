@@ -21,7 +21,6 @@ public class VSCHEvents {
 			if (level.getRandomPlayer() != null) { // HACKY HACK HACK. TODO: Test multiplayer more
 				AtmosphericCollision.atmosphericCollisionTick(level, level);
 				PlanetCollision.planetCollisionTick(level, level);
-
 			}
 		}
 	}

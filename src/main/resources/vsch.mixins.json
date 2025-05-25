@@ -12,7 +12,13 @@
     "MixinShipAssemblyKt",
     "MixinSpacesuitwornLogicProcedure",
     "MixinVSGameUtilsKt",
-    "accessor.ServerShipObjectWorldAccessor"
+    "accessor.ServerShipObjectWorldAccessor",
+    "create.MixinBeltBlockEntity",
+    "create.MixinClockworkBearingBlockEntity",
+    "create.MixinControlledContraptionEntity",
+    "create.MixinKineticBlockEntity",
+    "create.MixinLinearActuatorBlockEntity",
+    "create.MixinMechanicalBearingBlockEntity"
   ],
   "client": [
   ],
