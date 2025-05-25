@@ -1,0 +1,4 @@
+{
+	"vertex": "vsch:blur/blur_vertical",
+	"fragment": "vsch:blur/blur"
+}
