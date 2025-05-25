@@ -42,17 +42,17 @@ public class AirThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
 	@Override
 	protected void spawnParticles(Vector3d pos, Vector3d direction) {
-		Vector3d speed = new Vector3d(direction).mul(-this.getCurrentPower());
+		final Vector3d speed = new Vector3d(direction).mul(this.getCurrentPower());
+
 		speed.mul(0.118);
 
-		int max = 100;
-
-		for (int i = 0; i < max; i++) {
+		int amount = 100;
+		for (int i = 0; i < amount; i++) {
 			level.addParticle(
-					this.getThrusterParticleType(),
-					pos.x, pos.y, pos.z,
-					speed.x, speed.y, speed.z
-					);
+				this.getThrusterParticleType(),
+				pos.x, pos.y, pos.z,
+				speed.x, speed.y, speed.z
+			);
 		}
 	}
 

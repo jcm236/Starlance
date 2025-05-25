@@ -10,6 +10,8 @@ import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
+import net.jcm.vsch.ship.gyro.GyroData;
+import net.jcm.vsch.ship.gyro.GyroForceApplier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -54,23 +56,10 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 		});
 	}
 
-	private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
-		assert ValkyrienSkiesMod.getCurrentServer() != null;
-		double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
-		double mass = physShip.getInertia().getShipMass();
-
-		//Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly
-		// equal to length of linearVelocity, but still in the direction the ship would have been going without the speed limit
-		Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
-
-		// Apply the force at no specific position
-		physShip.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
-	}
-
 	// ----- Force Appliers ----- //
 
 	public void addApplier(BlockPos pos, IVSCHForceApplier applier){
-		appliers.put(pos,applier);
+		appliers.put(pos, applier);
 	}
 
 	public void removeApplier(BlockPos pos){
@@ -80,29 +69,6 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	@Nullable
 	public IVSCHForceApplier getApplierAtPos(BlockPos pos){
 		return appliers.get(pos);
-	}
-
-	// ----- Thrusters ----- //
-
-	public void addThruster(BlockPos pos, ThrusterData data) {
-		 addApplier(pos,new ThrusterForceApplier(data));
-	}
-
-
-	public void removeThruster(BlockPos pos) {
-		if (getThrusterAtPos(pos) != null){
-			removeApplier(pos);
-		}
-	}
-
-	@Nullable
-	public ThrusterData getThrusterAtPos(BlockPos pos) {
-		IVSCHForceApplier applier = getApplierAtPos(pos);
-		if (applier instanceof ThrusterForceApplier thruster) {
-			return thruster.getData();
-		} else {
-			return null;
-		}
 	}
 
 	// ----- Draggers ----- //
@@ -122,6 +88,52 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof DraggerForceApplier dragger) {
 			return dragger.getData();
+		} else {
+			return null;
+		}
+	}
+
+	// ----- Thrusters ----- //
+
+	public void addThruster(BlockPos pos, ThrusterData data) {
+		 addApplier(pos, new ThrusterForceApplier(data));
+	}
+
+
+	public void removeThruster(BlockPos pos) {
+		if (getThrusterAtPos(pos) != null){
+			removeApplier(pos);
+		}
+	}
+
+	@Nullable
+	public ThrusterData getThrusterAtPos(BlockPos pos) {
+		IVSCHForceApplier applier = getApplierAtPos(pos);
+		if (applier instanceof ThrusterForceApplier thruster) {
+			return thruster.getData();
+		} else {
+			return null;
+		}
+	}
+
+	// ----- Gyros ----- //
+
+	public void addGyro(BlockPos pos, GyroData data) {
+		 addApplier(pos, new GyroForceApplier(data));
+	}
+
+
+	public void removeGyro(BlockPos pos) {
+		if (getGyroAtPos(pos) != null){
+			removeApplier(pos);
+		}
+	}
+
+	@Nullable
+	public GyroData getGyroAtPos(BlockPos pos) {
+		IVSCHForceApplier applier = getApplierAtPos(pos);
+		if (applier instanceof GyroForceApplier gyro) {
+			return gyro.getData();
 		} else {
 			return null;
 		}

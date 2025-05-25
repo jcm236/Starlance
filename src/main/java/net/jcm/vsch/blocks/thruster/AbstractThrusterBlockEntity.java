@@ -1,18 +1,27 @@
 package net.jcm.vsch.blocks.thruster;
 
 import net.jcm.vsch.blocks.custom.template.AbstractThrusterBlock;
+import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.ship.thruster.ThrusterData;
+import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
+import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -32,7 +41,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 
-public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity {
+public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity, WrenchableBlock {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
 	private static final String BRAIN_POS_TAG_NAME = "BrainPos";
@@ -118,7 +127,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	void sendUpdate() {
 		this.setChanged();
-		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 11);
+		this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
 	}
 
 	@Override
@@ -169,9 +178,41 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			return;
 		}
 
-		if (ships.getThrusterAtPos(pos) == null) {
-			ships.addThruster(pos, this.brain.getThrusterData());
+		ThrusterData thrusterData = this.brain.getThrusterData();
+		if (ships.getThrusterAtPos(pos) != thrusterData) {
+			ships.addThruster(pos, thrusterData);
 		}
+	}
+
+	@Override
+	public InteractionResult onUseWrench(UseOnContext ctx) {
+		if (ctx.getHand() != InteractionHand.MAIN_HAND) {
+			return InteractionResult.PASS;
+		}
+
+		final Player player = ctx.getPlayer();
+
+		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
+			if (player != null) {
+				player.displayClientMessage(Component.translatable("vsch.error.thruster_modes_disabled")
+					.withStyle(ChatFormatting.RED),
+					true
+				);
+			}
+			return InteractionResult.PASS;
+		}
+
+		ThrusterData.ThrusterMode blockMode = this.getThrusterMode();
+		blockMode = blockMode.toggle();
+		this.setThrusterMode(blockMode);
+
+		if (player != null) {
+			// Send a chat message to them. The wrench class will handle the actionbar
+			player.sendSystemMessage(Component.translatable("vsch.message.toggle")
+				.append(Component.translatable("vsch." + blockMode.toString().toLowerCase())));
+		}
+
+		return InteractionResult.SUCCESS;
 	}
 
 	protected ParticleOptions getThrusterParticleType() {
@@ -188,8 +229,6 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			this.resolveBrain();
 		}
 
-		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
-
 		// If we are unpowered, do no particles
 		if (this.getCurrentPower() == 0.0) {
 			return;
@@ -197,47 +236,49 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 		// BlockPos is always at the corner, getCenter gives us a Vec3 thats centered YAY
 		final Vec3 center = pos.getCenter();
-		// Transform that shipyard pos into a world pos
 		final Vector3d worldPos = new Vector3d(center.x, center.y, center.z);
-		if (ship != null) {
-			ship.getTransform().getShipToWorld().transformPosition(worldPos);
-		}
 
 		// Get blockstate direction, NORTH, SOUTH, UP, DOWN, etc
-		final Direction dir = state.getValue(DirectionalBlock.FACING);
+		final Direction dir = state.getValue(DirectionalBlock.FACING).getOpposite();
 		final Vector3d direction = new Vector3d(dir.getStepX(), dir.getStepY(), dir.getStepZ());
-		if (ship != null) {
-			ship.getTransform().getShipToWorldRotation().transform(direction);
-		}
 
 		spawnParticles(worldPos, direction);
 	}
 
 	protected void spawnParticles(Vector3d pos, Vector3d direction) {
 		// Offset the XYZ by a little bit so its at the end of the thruster block
-		double x = pos.x - direction.x;
-		double y = pos.y - direction.y;
-		double z = pos.z - direction.z;
+		double x = pos.x + direction.x;
+		double y = pos.y + direction.y;
+		double z = pos.z + direction.z;
 
-		Vector3d speed = new Vector3d(direction).mul(-this.getCurrentPower());
+		final Vector3d speed = new Vector3d(direction).mul(this.getCurrentPower());
 
 		speed.mul(0.6);
 
 		// All that for one particle per tick...
 		level.addParticle(
-				this.getThrusterParticleType(),
-				x, y, z,
-				speed.x, speed.y, speed.z
-				);
+			this.getThrusterParticleType(),
+			x, y, z,
+			speed.x, speed.y, speed.z
+		);
 
 		speed.mul(1.06);
 
 		// Ok ok, two particles per tick
 		level.addParticle(
-				this.getThrusterSmokeParticleType(),
-				x, y, z,
-				speed.x, speed.y, speed.z
-				);
+			this.getThrusterSmokeParticleType(),
+			x, y, z,
+			speed.x, speed.y, speed.z
+		);
+	}
+
+	@Override
+	public void onFocusWithWrench(ItemStack stack, Level level, Player player) {
+		player.displayClientMessage(
+			Component.translatable("vsch.message.mode")
+				.append(Component.translatable("vsch." + this.getThrusterMode().toString().toLowerCase())),
+			true
+		);
 	}
 
 	private static float getPowerByRedstone(Level level, BlockPos pos) {

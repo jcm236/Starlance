@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.joml.Vector3ic;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -44,9 +45,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(ShipAssemblyKt.class)
 public class MixinShipAssemblyKt {
+	@Unique
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	// Goofy ahhh temporary fix but it'll atleast help out the kids who don't know not to do this
-	private static final Logger logger = LogManager.getLogger(VSCHMod.MODID);
 	@Inject(method = "createNewShipWithBlocks", at = @At("HEAD"), remap = false, cancellable = true)
 	private static void createNewShipWithBlocks(BlockPos centerBlock, DenseBlockPosSet blocks, ServerLevel level, CallbackInfoReturnable<ServerShip> cir) {
 		// If block is higher than overworld height
@@ -54,13 +56,12 @@ public class MixinShipAssemblyKt {
 			if (VSCHConfig.CANCEL_ASSEMBLY.get()) {
 				level.getServer().getPlayerList().broadcastSystemMessage(
 					Component.literal("Starlance: Multi-block assembly above world height, cancelling. Instead, use ship creator stick, or assemble in another dimension. You can override this behavior in config, but its not recommended.").withStyle(ChatFormatting.RED), false);
-				logger.warn("Starlance cancelled multi-block assembly above overworld build height. You can override this behavior in config, but its not recommended.");
+				LOGGER.warn("Starlance cancelled multi-block assembly above overworld build height. You can override this behavior in config, but its not recommended.");
 				cir.cancel();
 			} else {
-				logger.warn("Multi-block assembly above build height NOT cancelled by starlance: be warned");
+				LOGGER.warn("Multi-block assembly above build height NOT cancelled by starlance: be warned");
 			}
-		};
-
+		}
 	}
 }
 

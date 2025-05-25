@@ -42,6 +42,11 @@ public class VSCHBlockEntities {
 					() -> BlockEntityType.Builder.of(DockerBlockEntity::new, VSCHBlocks.DOCKER_BLOCK.get())
 							.build(null));
 
+	public static final RegistryObject<BlockEntityType<GyroBlockEntity>> GYRO_BLOCK_ENTITY =
+			BLOCK_ENTITIES.register("gyro",
+					() -> BlockEntityType.Builder.of(GyroBlockEntity::new, VSCHBlocks.GYRO_BLOCK.get())
+							.build(null));
+
 	public static void register(IEventBus eventBus) {
 		BLOCK_ENTITIES.register(eventBus);
 	}

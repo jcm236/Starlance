@@ -35,6 +35,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
+	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
+	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> GYRO_LIMIT_SPEED;
+
+
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
@@ -64,6 +70,15 @@ public class VSCHConfig {
 		POWERFUL_THRUSTER_STRENGTH = BUILDER.comment("Powerful thruster max force. (Newtons)").define("powerful_thruster_strength", 450000);
 		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").define("powerful_thruster_energy_consume_rate", 0);
 		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").define("powerful_thruster_fuel_consume_rate", 0);
+
+		BUILDER.pop();
+
+		BUILDER.push("Gyro");
+
+		GYRO_STRENGTH = BUILDER.comment("Max force gyro will apply to the ship on any axis. (N)").define("gyro_strength", 350000);
+		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 10000);
+		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
+		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
 
 		BUILDER.pop();
 
