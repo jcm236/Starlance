@@ -5,13 +5,35 @@ permissions:
   
 on:
   workflow_dispatch:
+  push:
+    branches-ignore:
+      - "gh-pages"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy javadoc to Github Pages
-        uses: dev-vince/actions-publish-javadoc@v1.0.1
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          project: gradle
+            fetch-depth: 0
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "adopt"
+          
+
+      - name: Generate Javadoc with Gradle
+        run: gradle javadoc
+        shell: bash
+    
+      - name: Publish javadoc to GitHub Pages 🚀 via Gradle
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: "gh-pages"
+          publish_dir: build/docs/javadoc
+          destination_dir: ./javadoc/${{ github.ref_name }}
+          force_orphan: true

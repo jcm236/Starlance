@@ -188,11 +188,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			this.resolveBrain();
 		}
 
-		Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
-		// If we aren't on a ship, then we skip
-		if (ship == null) {
-			return;
-		}
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
 
 		// If we are unpowered, do no particles
 		if (this.getCurrentPower() == 0.0) {
@@ -200,13 +196,19 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		}
 
 		// BlockPos is always at the corner, getCenter gives us a Vec3 thats centered YAY
-		Vec3 center = pos.getCenter();
+		final Vec3 center = pos.getCenter();
 		// Transform that shipyard pos into a world pos
-		Vector3d worldPos = ship.getTransform().getShipToWorld().transformPosition(new Vector3d(center.x, center.y, center.z));
+		final Vector3d worldPos = new Vector3d(center.x, center.y, center.z);
+		if (ship != null) {
+			ship.getTransform().getShipToWorld().transformPosition(worldPos);
+		}
 
 		// Get blockstate direction, NORTH, SOUTH, UP, DOWN, etc
-		Direction dir = state.getValue(DirectionalBlock.FACING);
-		Vector3d direction = ship.getTransform().getShipToWorldRotation().transform(new Vector3d(dir.getStepX(), dir.getStepY(), dir.getStepZ()));
+		final Direction dir = state.getValue(DirectionalBlock.FACING);
+		final Vector3d direction = new Vector3d(dir.getStepX(), dir.getStepY(), dir.getStepZ());
+		if (ship != null) {
+			ship.getTransform().getShipToWorldRotation().transform(direction);
+		}
 
 		spawnParticles(worldPos, direction);
 	}

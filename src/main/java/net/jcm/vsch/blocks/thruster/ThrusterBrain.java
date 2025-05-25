@@ -545,10 +545,9 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	private FluidTank getDrainable(FluidStack resource) {
 		Fluid fluid = resource.getFluid();
 		for (FluidTank tank : this.tanks) {
-			if (tank.getFluid().getFluid() != fluid) {
-				return null;
+			if (tank.getFluid().getFluid() == fluid) {
+				return tank;
 			}
-			return tank;
 		}
 		return null;
 	}

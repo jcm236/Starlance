@@ -5,7 +5,6 @@
 	"vsch.global": " §6GLOBAL",
 	"vsch.position": " §ePOSITION",
 	"vsch.error.thruster_modes_disabled": "Thruster mode toggling is disabled!",
-	"vsch.error.thruster_not_on_ship": "Thruster not on a ship",
 	"block.vsch.thruster_block": "Thruster",
 	"block.vsch.drag_inducer_block": "Drag inducer",
 	"block.vsch.air_thruster_block": "Air thruster",

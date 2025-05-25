@@ -122,18 +122,6 @@ public abstract class AbstractThrusterBlock<T extends AbstractThrusterBlockEntit
 			return InteractionResult.PASS;
 		}
 
-		// Get the force handler
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
-
-		// If a force handler exists (might not if we aren't on a VS ship)
-		if (ships == null) {
-			// Not on a ship
-			player.displayClientMessage(Component.translatable("vsch.error.thruster_not_on_ship").withStyle(
-				ChatFormatting.RED
-			), true);
-			return InteractionResult.FAIL;
-		}
-
 		// Get thruster
 		AbstractThrusterBlockEntity thruster = (AbstractThrusterBlockEntity) level.getBlockEntity(pos);
 		if (thruster == null) {
