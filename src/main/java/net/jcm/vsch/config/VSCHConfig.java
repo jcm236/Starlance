@@ -11,6 +11,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VSCHConfig {
@@ -40,6 +41,8 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> GYRO_LIMIT_SPEED;
 
+	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
+	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
@@ -52,6 +55,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
+
+	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+		"minecraft:barrier",
+		"minecraft:bedrock",
+		"minecraft:command_block"
+	);
 
 	static {
 		BUILDER.push("Thrusters");
@@ -79,6 +88,13 @@ public class VSCHConfig {
 		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 10000);
 		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
 		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
+
+		BUILDER.pop();
+
+		BUILDER.push("RocketSupporter");
+
+		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max assemble blocks for rocket supporter").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
+		ASSEMBLE_BLACKLIST = BUILDER.comment("Prevent assemble if contatins any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
 
 		BUILDER.pop();
 

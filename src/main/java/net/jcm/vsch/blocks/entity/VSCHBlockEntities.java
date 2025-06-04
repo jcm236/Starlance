@@ -47,6 +47,11 @@ public class VSCHBlockEntities {
 					() -> BlockEntityType.Builder.of(GyroBlockEntity::new, VSCHBlocks.GYRO_BLOCK.get())
 							.build(null));
 
+	public static final RegistryObject<BlockEntityType<RocketSupporterBlockEntity>> ROCKET_SUPPORTER_BLOCK_ENTITY =
+			BLOCK_ENTITIES.register("rocket_supporter",
+					() -> BlockEntityType.Builder.of(RocketSupporterBlockEntity::new, VSCHBlocks.ROCKET_SUPPORTER_BLOCK.get())
+							.build(null));
+
 	public static void register(IEventBus eventBus) {
 		BLOCK_ENTITIES.register(eventBus);
 	}
