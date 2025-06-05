@@ -97,8 +97,11 @@ public class ThrusterScenes {
 
 		scene.addKeyframe();
 
-		scene.world().modifyBlockEntityNBT(util.select().position(leftThrusterLever), AnalogLeverBlockEntity.class,
-			nbt -> nbt.putInt("State", 1));
+		scene.world().modifyBlockEntityNBT(
+			util.select().position(leftThrusterLever),
+			AnalogLeverBlockEntity.class,
+			nbt -> nbt.putInt("State", 1)
+		);
 
 		scene.idle(10);
 
@@ -216,13 +219,13 @@ public class ThrusterScenes {
 
 		scene.addKeyframe();
 
-		scene.overlay().showControls(
+		scene.overlay()
+			.showControls(
 				util.vector().topOf(thruster),
 				Pointing.DOWN, 30
 			)
 			.rightClick()
-			.withItem(new ItemStack(VSCHItems.WRENCH.get())
-		);
+			.withItem(new ItemStack(VSCHItems.WRENCH.get()));
 
 		scene.idle(30 + 10);
 
