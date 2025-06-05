@@ -141,6 +141,11 @@ repositories {
     }
 
     maven {
+        name = 'createmod maven'
+        url = "https://maven.createmod.net"
+    }
+
+    maven {
         name = "ParchmentMC"
         url = "https://maven.parchmentmc.org"
     }
@@ -199,7 +204,17 @@ dependencies {
     implementation "thedarkcolour:kotlinforforge:4.10.0"
     implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all")
+    // Create
+    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+
+    implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+
+    // Flywheel
+    //implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+
+    // Registrate
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
     //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")
 
@@ -212,9 +227,6 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")
     // Le mod de V for testing
     //implementation fg.deobf("maven.modrinth:vmod:mGgUMpre")
-
-    //Create for ponders
-    compileOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
     //using lodestone for now until vsfx comes out
     //implementation fg.deobf("team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}")
