@@ -16,14 +16,14 @@ public class VSCHPonderTags {
 		PonderTagRegistrationHelper<RegistryEntry<?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
 		helper.registerTag(STARLANCE_PONDERS)
-				.addToIndex()
-				.item(VSCHPonderRegistrateBlocks.THRUSTER_BLOCK.get(), true, false)
-				.title("Starlance")
-				.description("Starlance blocks")
-				.register();
+			.addToIndex()
+			.item(VSCHPonderRegistrateBlocks.THRUSTER_BLOCK.get(), true, false)
+			.title("Starlance")
+			.description("Starlance blocks")
+			.register();
 
 		HELPER.addToTag(STARLANCE_PONDERS)
-				.add(VSCHPonderRegistrateBlocks.THRUSTER_BLOCK)
-				.add(VSCHPonderRegistrateBlocks.DRAG_INDUCER_BLOCK);
+			.add(VSCHPonderRegistrateBlocks.THRUSTER_BLOCK)
+			.add(VSCHPonderRegistrateBlocks.DRAG_INDUCER_BLOCK);
 	}
 }

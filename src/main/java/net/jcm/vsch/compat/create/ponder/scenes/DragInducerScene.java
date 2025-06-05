@@ -40,8 +40,9 @@ public class DragInducerScene {
 
 		scene.idle(70);
 
-		scene.overlay().showControls(util.vector().topOf(button), Pointing.DOWN, 30)
-						.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(button), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(20);
 
@@ -76,15 +77,17 @@ public class DragInducerScene {
 
 		scene.idle(10);
 
-		scene.overlay().showControls(util.vector().topOf(lever), Pointing.DOWN, 30)
-				.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(lever), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(20);
 
 		scene.world().toggleRedstonePower(util.select().fromTo(lever, lever));
 
-		scene.overlay().showControls(util.vector().topOf(button), Pointing.DOWN, 30)
-				.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(button), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(20);
 

@@ -55,8 +55,9 @@ public class ThrusterScenes {
 
 		scene.addKeyframe();
 
-		scene.overlay().showControls(util.vector().topOf(middleThrusterLever), Pointing.DOWN, 30)
-				.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(middleThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(30);
 
@@ -84,11 +85,13 @@ public class ThrusterScenes {
 
 		scene.idle(20);
 
-		scene.overlay().showControls(util.vector().topOf(leftThrusterLever), Pointing.DOWN, 30)
-				.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(leftThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
-		scene.overlay().showControls(util.vector().topOf(rightThrusterLever), Pointing.DOWN, 30)
-				.rightClick();
+		scene.overlay()
+			.showControls(util.vector().topOf(rightThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(20);
 
