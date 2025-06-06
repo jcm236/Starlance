@@ -14,6 +14,7 @@
 	"item.vsch.wrench": "Wrench",
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
+	"config.jade.plugin_vsch.gyro_component_config": "Gyro Mode Details",
 	"vsch.ponder.thrusters.header": "Thrusters",
 	"vsch.ponder.thrusters.text_1": "Thrusters need to be powered with redstone to thrust",
 	"vsch.ponder.thrusters.text_2": "Redstone level can control strength",
