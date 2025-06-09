@@ -131,7 +131,9 @@ loadScripts(document, 'script');</script>
  double&nbsp;maxDistance,
  int&nbsp;maxBurnDamage,
  double&nbsp;maxPushVel)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">simpleTickBurningObjects do some basic operations on the entities / blocks the thruster facing.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(net.jcm.vsch.blocks.thruster.ThrusterEngineContext)" class="member-name-link">tick</a><wbr>(<a href="ThrusterEngineContext.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngineContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -254,6 +256,44 @@ loadScripts(document, 'script');</script>
  double&nbsp;maxDistance,
  int&nbsp;maxBurnDamage,
  double&nbsp;maxPushVel)</span></div>
+<div class="block">simpleTickBurningObjects do some basic operations on the entities / blocks the thruster facing.
+ <br/>
+
+ <b>Implement details:</b><br/>
+ <ol>
+        <li>
+                It does a ray detection from middle of a thruster, find the maximum distance flame can go before it hits a block.
+        </li>
+        <li>
+                If the ray hits a block:
+                <ol>
+                        <li>If the block (or its super class) is a TNT, ignite it.</li>
+                        <li>Otherwise, set the block on fire on each side.</li>
+                </ol>
+        </li>
+        <li>
+                It collects all entity in the flame collision box.
+        </li>
+        <li>
+                If an entity is pushable, push it based on its distance from the thruster
+        </li>
+        <li>
+                If an entity is not <code>fireImmune</code> ignite the entity up to 15s based on the its distance from thruster
+        </li>
+        <li>
+                Hurt the entity due fire with at least 1 damage, which increase linearly
+ if the entity is closer than 10% of the thruster's max distance.
+        </li>
+ </ol></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>context</code> - A <a href="ThrusterEngineContext.html" title="class in net.jcm.vsch.blocks.thruster"><code>ThrusterEngineContext</code></a></dd>
+<dd><code>thrusters</code> - Thrusters' positions</dd>
+<dd><code>direction</code> - Thrusters' facing direction</dd>
+<dd><code>maxDistance</code> - Thrusters' max flame length</dd>
+<dd><code>maxBurnDamage</code> - Thrusters' flame's max burn damage</dd>
+<dd><code>maxPushVel</code> - Thrusters' flame's max push accleration</dd>
+</dl>
 </section>
 </li>
 </ul>
