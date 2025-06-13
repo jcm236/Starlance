@@ -21,9 +21,11 @@ net.jcm.vsch.entity
 net.jcm.vsch.event
 net.jcm.vsch.items
 net.jcm.vsch.items.custom
-net.jcm.vsch.mixin
-net.jcm.vsch.mixin.accessor
 net.jcm.vsch.mixin.client
+net.jcm.vsch.mixin.cosmos
+net.jcm.vsch.mixin.minecraft
+net.jcm.vsch.mixin.valkyrienskies
+net.jcm.vsch.mixin.valkyrienskies.accessor
 net.jcm.vsch.ship
 net.jcm.vsch.ship.dragger
 net.jcm.vsch.ship.gyro
