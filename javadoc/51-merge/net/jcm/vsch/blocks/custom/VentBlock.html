@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -49,7 +53,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search-input">SEARCH:</label>
@@ -77,11 +81,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>net.minecraft.world.flag.FeatureElement</code>, <code>net.minecraft.world.level.ItemLike</code>, <code>net.minecraftforge.common.extensions.IForgeBlock</code></dd>
+<dd><code><a href="../../api/block/IVentBlock.html" title="interface in net.jcm.vsch.api.block">IVentBlock</a></code>, <code>net.minecraft.world.flag.FeatureElement</code>, <code>net.minecraft.world.level.ItemLike</code>, <code>net.minecraftforge.common.extensions.IForgeBlock</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VentBlock</span>
-<span class="extends-implements">extends net.minecraft.world.level.block.Block</span></div>
+<span class="extends-implements">extends net.minecraft.world.level.block.Block
+implements <a href="../../api/block/IVentBlock.html" title="interface in net.jcm.vsch.api.block">IVentBlock</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -129,6 +134,19 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel">
+<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canThrustPass(net.minecraft.world.phys.BlockHitResult)" class="member-name-link">canThrustPass</a><wbr>(net.minecraft.world.phys.BlockHitResult&nbsp;hitResult)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.Block">Methods inherited from class&nbsp;net.minecraft.world.level.block.Block</h3>
 <code>animateTick, appendHoverText, asBlock, asItem, box, builtInRegistryHolder, byItem, canSupportCenter, canSupportRigidBlock, canSustainPlant, createBlockStateDefinition, defaultBlockState, destroy, dropFromExplosion, dropResources, dropResources, dropResources, dropResources, fallOn, getCloneItemStack, getDescriptionId, getDrops, getDrops, getExplosionResistance, getFriction, getId, getJumpFactor, getName, getRenderPropertiesInternal, getShapeForEachState, getSoundType, getSpeedFactor, getStateDefinition, getStateForPlacement, handlePrecipitation, hasDynamicShape, initializeClient, isExceptionForConnection, isFaceFull, isPossibleToRespawnInThis, isRandomlyTicking, isShapeFullBlock, playerDestroy, playerWillDestroy, popExperience, popResource, popResourceFromFace, propagatesSkylightDown, pushEntitiesUp, registerDefaultState, setPlacedBy, shouldRenderFace, spawnDestroyParticles, stateById, stepOn, toString, tryDropExperience, updateEntityAfterFallOn, updateFromNeighbourShapes, updateOrDestroy, updateOrDestroy, wasExploded, withPropertiesOf</code></div>
@@ -159,6 +177,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(net.minecraft.world.level.block.state.BlockBehaviour.Properties)">
 <h3>VentBlock</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VentBlock</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockBehaviour.Properties&nbsp;properties)</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="canThrustPass(net.minecraft.world.phys.BlockHitResult)">
+<h3>canThrustPass</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canThrustPass</span><wbr><span class="parameters">(net.minecraft.world.phys.BlockHitResult&nbsp;hitResult)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../api/block/IVentBlock.html#canThrustPass(net.minecraft.world.phys.BlockHitResult)">canThrustPass</a></code>&nbsp;in interface&nbsp;<code><a href="../../api/block/IVentBlock.html" title="interface in net.jcm.vsch.api.block">IVentBlock</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>
