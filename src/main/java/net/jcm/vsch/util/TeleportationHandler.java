@@ -1,8 +1,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.ducks.IEntityDuck;
-import net.jcm.vsch.mixin.accessor.ServerShipObjectWorldAccessor;
+import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

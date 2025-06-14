@@ -53,6 +53,7 @@ public class PlanetCollision {
 
 			final Player nearestPlayer = getShipPlayer(ship, level);
 			if (nearestPlayer == null) {
+				// TODO: let ships go through on their own
 				continue;
 			}
 

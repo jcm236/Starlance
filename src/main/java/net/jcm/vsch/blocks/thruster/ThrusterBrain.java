@@ -30,9 +30,11 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // TODO: make sure it also works when only half thrusters is chunk loaded
@@ -99,7 +101,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	public List<AbstractThrusterBlockEntity> getThrusters() {
-		return this.connectedBlocks;
+		return Collections.unmodifiableList(this.connectedBlocks);
 	}
 
 	void addThruster(AbstractThrusterBlockEntity be) {
@@ -193,7 +195,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 
 	public void writeToNBT(CompoundTag data) {
 		data.putInt(THRUSTERS_COUNT_TAG_NAME, this.connectedBlocks.size());
-		data.putByte(MODE_TAG_NAME, (byte)(this.thrusterData.mode.ordinal()));
+		data.putByte(MODE_TAG_NAME, (byte) (this.thrusterData.mode.ordinal()));
 		data.putFloat(POWER_TAG_NAME, this.getPower());
 		data.putFloat(CURRENT_POWER_TAG_NAME, this.getCurrentPower());
 		data.putBoolean(PERIPHERAL_MOD_TAG_NAME, this.getPeripheralMode());
@@ -234,7 +236,9 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		if (context.isRejected()) {
 			this.setCurrentPower(0);
 		} else {
-			this.setCurrentPower((float)(context.getPower()));
+			final List<BlockPos> positions = this.connectedBlocks.stream().map(BlockEntity::getBlockPos).collect(Collectors.toList());
+			this.engine.tickBurningObjects(context, positions, this.facing.getOpposite());
+			this.setCurrentPower((float) (context.getPower()));
 			context.consume();
 		}
 		if (this.powerChanged) {
@@ -265,11 +269,11 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.updatePowerByRedstone();
 	}
 
-	private void tryMergeBrain(BlockPos atPos, ThrusterBrain newBrain, BlockPos newPos) {
-		if (this.facing != newBrain.facing || !this.peripheralType.equals(newBrain.peripheralType)) {
+	private void tryMergeBrain(BlockPos atPos, ThrusterBrain other, BlockPos otherPos) {
+		if (this.facing != other.facing || !this.peripheralType.equals(other.peripheralType)) {
 			return;
 		}
-		if (this.facing.getAxis().choose(newPos.getX() - atPos.getX(), newPos.getY() - atPos.getY(), newPos.getZ() - atPos.getZ()) != 0) {
+		if (this.facing.getAxis().choose(otherPos.getX() - atPos.getX(), otherPos.getY() - atPos.getY(), otherPos.getZ() - atPos.getZ()) != 0) {
 			return;
 		}
 		int minX, minY, minZ, maxX, maxY, maxZ;
@@ -300,17 +304,17 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			return;
 		}
 
-		this.connectedBlocks.addAll(newBrain.connectedBlocks);
-		for (AbstractThrusterBlockEntity be : newBrain.connectedBlocks) {
+		this.connectedBlocks.addAll(other.connectedBlocks);
+		for (AbstractThrusterBlockEntity be : other.connectedBlocks) {
 			be.setBrain(this);
 		}
 		int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
-		this.storedEnergy += newBrain.storedEnergy;
+		this.storedEnergy += other.storedEnergy;
 		for (int i = 0; i < this.tanks.length; i++) {
 			FluidTank tank = this.tanks[i];
 			tank.setCapacity(FLUID_TANK_CAPACITY * count);
-			tank.fill(newBrain.tanks[i].getFluid(), IFluidHandler.FluidAction.EXECUTE);
+			tank.fill(other.tanks[i].getFluid(), IFluidHandler.FluidAction.EXECUTE);
 		}
 		this.getDataBlock().sendUpdate();
 	}
@@ -411,7 +415,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	private static float getPowerByRedstone(Level level, BlockPos pos) {
-		return (float)(level.getBestNeighborSignal(pos)) / 15;
+		return (float) (level.getBestNeighborSignal(pos)) / 15;
 	}
 
 	/// IEnergyStorage
@@ -566,10 +570,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		@Override
 		public int getTanks() {
 			return ThrusterBrain.this.getTanks();
-		}
-
-		public IFluidHandler getDrainOnly() {
-			return ThrusterBrain.this.getDrainOnly();
 		}
 
 		@Override

@@ -1,4 +1,4 @@
-package net.jcm.vsch.mixin.accessor;
+package net.jcm.vsch.mixin.valkyrienskies.accessor;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;

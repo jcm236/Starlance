@@ -1,4 +1,4 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.valkyrienskies;
 
 import net.minecraft.resources.ResourceLocation;
 

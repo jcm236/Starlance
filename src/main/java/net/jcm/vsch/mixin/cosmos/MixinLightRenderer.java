@@ -1,13 +1,13 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.cosmos;
 
-import net.lointain.cosmos.procedures.AerialLightRenderer;
+import net.lointain.cosmos.procedures.LightRendererer;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(AerialLightRenderer.class)
-public abstract class MixinAerialLightRenderer {
+@Mixin(LightRendererer.class)
+public abstract class MixinLightRenderer {
 
     // getPrivateField fails when Cosmos is de-obfuscated in a dev enviroment, so this is here to stop that
     @ModifyVariable(method = "getPrivateField", remap = false, at = @At("HEAD"), argsOnly = true)
@@ -27,3 +27,4 @@ public abstract class MixinAerialLightRenderer {
     }
 
 }
+

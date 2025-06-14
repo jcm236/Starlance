@@ -1,47 +1,23 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.valkyrienskies;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.LevelChunk;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Vector3d;
-import org.joml.Vector3ic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.impl.game.ships.ShipData;
-import org.valkyrienskies.core.impl.game.ships.ShipTransformImpl;
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
-import org.valkyrienskies.mod.common.networking.PacketRestartChunkUpdates;
-import org.valkyrienskies.mod.common.networking.PacketStopChunkUpdates;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-import kotlin.Unit;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.config.VSCHConfig;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(ShipAssemblyKt.class)
 public class MixinShipAssemblyKt {
