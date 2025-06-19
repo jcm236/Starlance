@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2FloatOpenHashMap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
@@ -18,9 +19,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.Tags;
 
+import net.jcm.vsch.VSCHDamageTypes;
 import net.jcm.vsch.accessor.LevelChunkAccessor;
 import net.jcm.vsch.api.laser.ILaserProcessor;
 import net.jcm.vsch.api.laser.LaserContext;
+import net.jcm.vsch.api.laser.LaserDamageSource;
 import net.jcm.vsch.api.laser.LaserEmitter;
 import net.jcm.vsch.api.laser.LaserProperties;
 import net.jcm.vsch.api.laser.LaserUtil;
@@ -116,19 +119,27 @@ public final class DefaultLaserProcessors {
 	}
 
 	private static void entityDamageProcessor(LaserContext laser) {
+		final Level level = laser.getLevel();
 		final EntityHitResult hitResult = (EntityHitResult) (laser.getHitResult());
 		final LivingEntity entity = (LivingEntity) (hitResult.getEntity());
 		final LaserProperties props = laser.getLaserOnHitProperties();
 		final int heat = props.r / 128;
-		final float lucky = props.g / 128.0f;
 		final int strength = props.b / 256;
+
+		final LaserDamageSource damageSource = new LaserDamageSource(
+			level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(VSCHDamageTypes.LASER_BURN),
+			laser
+		);
 
 		if (heat > 0) {
 			entity.setSecondsOnFire(heat);
 		}
 		if (strength > 0) {
-			// TODO: make our own laser damage source with loot modifier.
-			entity.hurt(entity.damageSources().lightningBolt(), heat + strength);
+			final int executeHealth = strength - entity.getArmorValue() / 2;
+			entity.hurt(
+				damageSource,
+				entity.getHealth() <= executeHealth ? Float.MAX_VALUE : (heat / 2 + strength)
+			);;
 		}
 	}
 

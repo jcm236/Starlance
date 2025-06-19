@@ -208,17 +208,42 @@ public class LaserContext {
 	}
 
 	/**
-	 * Check if the entity can block the laser
-	 * 
+	 * Check if the entity can block the laser.
+	 *
+	 * By default, entity will not block if:
+	 * <ul>
+	 * <li>
+	 *   the entity does not have a processor, or
+	 * </li>
+	 * <li>
+	 *   the entity is smaller than the length of laser's red component
+	 * </li>
+	 * </ul>
+	 *
 	 * @return {@code true} if the laser should be processed on the entity, {@code false} otherwise
+	 * @see LaserUtil#hasEntityProcessor
 	 */
 	public boolean canHitEntity(final Level level, final Entity entity) {
-		if (entity.isInvisible() && this.props.g < 128 * 3) {
+		if (entity.isSpectator()) {
+			return false;
+		}
+		for (final ILaserAttachment attachment : this.props.getAttachments()) {
+			final Boolean res = attachment.canPassThroughEntity(this, entity);
+			if (this.canceled) {
+				return true;
+			}
+			if (res != null) {
+				return !res;
+			}
+		}
+		if (!LaserUtil.hasEntityProcessor(entity)) {
 			return false;
 		}
 		final AABB box = entity.getBoundingBox();
-		final double size = box.getXsize() * box.getYsize() * box.getZsize();
-		if (size < this.props.r / 256.0) {
+		final double xSize = box.getXsize(), ySize = box.getYsize(), zSize = box.getZsize();
+		final double size = xSize * xSize + ySize * ySize + zSize * zSize;
+		final double leng = this.props.r / (256.0 * 2);
+		if (size < leng * leng) {
 			return false;
 		}
 		return true;
@@ -248,10 +273,38 @@ public class LaserContext {
 			return;
 		}
 
-		if (result == blockHit && blockHit.getType() == HitResult.Type.BLOCK) {
+		final LaserProperties hitProps = this.getLaserOnHitProperties();
+
+		if (result == entityHit) {
+			final Entity entity = entityHit.getEntity();
+			ILaserProcessor processor;
+			if (entity instanceof ILaserProcessor proc) {
+				processor = proc;
+			} else {
+				processor = LaserUtil.getDefaultEntityProcessor(this);
+			}
+			if (processor != null) {
+				this.isEndPointProcessor = processor.isEndPoint();
+			}
+			if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(hitProps.r, hitProps.g), hitProps.b)) {
+				processor = LaserUtil.getDefaultEntityProcessor(this);
+				if (processor == null) {
+					return;
+				}
+			}
+			for (ILaserAttachment attachment : this.props.getAttachments()) {
+				attachment.beforeProcessLaserOnEntity(this, entity, processor);
+			}
+			if (this.canceled) {
+				return;
+			}
+			processor.onLaserHit(this);
+			for (ILaserAttachment attachment : hitProps.getAttachments()) {
+				attachment.afterProcessLaserOnEntity(this, entity);
+			}
+		} else if (blockHit.getType() == HitResult.Type.BLOCK) {
 			final BlockPos targetPos = blockHit.getBlockPos();
 			final BlockState block = level.getBlockState(targetPos);
-			final LaserProperties props = this.getLaserOnHitProperties();
 			ILaserProcessor processor;
 			if (block.getBlock() instanceof ILaserProcessor proc) {
 				processor = proc;
@@ -263,7 +316,7 @@ public class LaserContext {
 			if (processor != null) {
 				this.isEndPointProcessor = processor.isEndPoint();
 			}
-			if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(props.r, props.g), props.b)) {
+			if (processor == null || !processor.isEndPoint() && processor.getMaxLaserStrength() < Math.max(Math.max(hitProps.r, hitProps.g), hitProps.b)) {
 				processor = LaserUtil.getDefaultBlockProcessor(this);
 				if (processor == null) {
 					return;
@@ -276,29 +329,8 @@ public class LaserContext {
 				return;
 			}
 			processor.onLaserHit(this);
-			for (ILaserAttachment attachment : props.getAttachments()) {
+			for (ILaserAttachment attachment : hitProps.getAttachments()) {
 				attachment.afterProcessLaserOnBlock(this, block, targetPos);
-			}
-		} else if (result == entityHit) {
-			final Entity entity = entityHit.getEntity();
-			ILaserProcessor processor;
-			if (entity instanceof ILaserProcessor proc) {
-				processor = proc;
-			} else {
-				processor = LaserUtil.getDefaultEntityProcessor(this);
-			}
-			if (processor != null) {
-				this.isEndPointProcessor = processor.isEndPoint();
-			}
-			for (ILaserAttachment attachment : this.props.getAttachments()) {
-				attachment.beforeProcessLaserOnEntity(this, entity, processor);
-			}
-			if (this.canceled) {
-				return;
-			}
-			processor.onLaserHit(this);
-			for (ILaserAttachment attachment : props.getAttachments()) {
-				attachment.afterProcessLaserOnEntity(this, entity);
 			}
 		}
 	}

@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface ILaserAttachment {
 	/**
-	 * canPassThroughBlock will be invoked when a laser passing a block.
+	 * canPassThroughBlock will be invoked when a laser trying to pass a block.
 	 * You can invoke {@link LaserContext#cancel} to immediately cancel further processing.
 	 *
 	 * @param ctx   The {@link LaserContext}
@@ -16,7 +16,7 @@ public interface ILaserAttachment {
 	 * @param pos   The position of the hitting block
 	 * @return {@link Boolean#TRUE} if the block is passable,
 	 *     {@link Boolean#FALSE} if the block is not passable,
-	 *     or {@code null} if unknown, which will invoke next checker.
+	 *     or {@code null} if unknown, which will invoke next tester.
 	 *
 	 * @see LaserContext#cancel
 	 */
@@ -51,6 +51,22 @@ public interface ILaserAttachment {
 	 * @see beforeProcessLaserOnBlock
 	 */
 	default void afterProcessLaserOnBlock(LaserContext ctx, BlockState oldState, BlockPos pos) {}
+
+	/**
+	 * canPassThroughEntity will be invoked when a laser trying to pass an entity.
+	 * You can invoke {@link LaserContext#cancel} to immediately cancel further processing.
+	 *
+	 * @param ctx    The {@link LaserContext}
+	 * @param entity The hitting {@link Entity}
+	 * @return {@link Boolean#TRUE} if the block is passable,
+	 *     {@link Boolean#FALSE} if the block is not passable,
+	 *     or {@code null} if unknown, which will invoke next tester.
+	 *
+	 * @see LaserContext#cancel
+	 */
+	default Boolean canPassThroughEntity(LaserContext ctx, Entity entity) {
+		return null;
+	}
 
 	/**
 	 * beforeProcessLaserOnEntity will be invoked before the laser is going to process an entity.

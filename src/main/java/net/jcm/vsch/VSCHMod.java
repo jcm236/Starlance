@@ -37,9 +37,9 @@ public class VSCHMod {
 	public VSCHMod() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+		VSCHConfig.register(ModLoadingContext.get());
 		VSCHBlockEntities.register(modBus);
 		VSCHBlocks.register(modBus);
-		VSCHConfig.register(ModLoadingContext.get());
 		VSCHEntities.register(modBus);
 		VSCHItems.register(modBus);
 		VSCHParticles.register(modBus);

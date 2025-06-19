@@ -1,0 +1,6 @@
+{
+	"message_id": "laserBurn",
+	"scaling": "never",
+	"exhaustion": 0.1,
+	"effects": "burning"
+}

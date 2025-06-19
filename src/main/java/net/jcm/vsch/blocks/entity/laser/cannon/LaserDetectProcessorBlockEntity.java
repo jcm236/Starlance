@@ -147,7 +147,7 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 			}
 			ctx.cancel();
 
-			if (this.initProps.r - props.r > props.r) {
+			if (this.initProps.r > props.r * 2) {
 				// Laser is too weak, cannot return
 				return;
 			}

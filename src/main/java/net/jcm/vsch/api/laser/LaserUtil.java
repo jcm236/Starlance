@@ -139,7 +139,6 @@ public final class LaserUtil {
 		if (hitResult.getType() != HitResult.Type.ENTITY) {
 			return null;
 		}
-		final Level level = laser.getLevel();
 		final Entity entity = hitResult.getEntity();
 		for (Class<?> entityClass = entity.getClass(); Entity.class.isAssignableFrom(entityClass); entityClass = entityClass.getSuperclass()) {
 			final ILaserProcessor processor = DEFAULT_ENTITY_PROCESSOR_MAP.get(entityClass);
@@ -148,5 +147,18 @@ public final class LaserUtil {
 			}
 		}
 		return null;
+	}
+
+	public static boolean hasEntityProcessor(final Entity entity) {
+		if (entity instanceof ILaserProcessor) {
+			return true;
+		}
+		for (Class<?> entityClass = entity.getClass(); Entity.class.isAssignableFrom(entityClass); entityClass = entityClass.getSuperclass()) {
+			final ILaserProcessor processor = DEFAULT_ENTITY_PROCESSOR_MAP.get(entityClass);
+			if (processor != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
