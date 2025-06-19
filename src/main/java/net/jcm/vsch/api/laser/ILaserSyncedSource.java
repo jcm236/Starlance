@@ -18,9 +18,9 @@ public interface ILaserSyncedSource {
 	 *
 	 * @param laser The laser which just processed.
 	 *
-	 * @see LaserUtil.queueLaser
-	 * @see LaserUtil.fireLaser
-	 * @see LaserUtil.fireRedirectedLaser
+	 * @see LaserUtil#queueLaser
+	 * @see LaserUtil#fireLaser
+	 * @see LaserUtil#fireRedirectedLaser
 	 */
 	void onLaserFired(LaserContext laser);
 }

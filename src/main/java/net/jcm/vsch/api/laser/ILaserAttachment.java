@@ -18,7 +18,7 @@ public interface ILaserAttachment {
 	 *     {@link Boolean#FALSE} if the block is not passable,
 	 *     or {@code null} if unknown, which will invoke next checker.
 	 *
-	 * @see LaserContext.cancel
+	 * @see LaserContext#cancel
 	 */
 	default Boolean canPassThroughBlock(LaserContext ctx, BlockState state, BlockGetter level, BlockPos pos) {
 		return null;
@@ -35,9 +35,9 @@ public interface ILaserAttachment {
 	 * @param processor The processor, will never be {@code null}
 	 *
 	 * @see afterProcessLaserOnBlock
-	 * @see LaserContext.cancel
-	 * @see LaserContext.getHitResult
-	 * @see ILaserProcessor.isEndPoint
+	 * @see LaserContext#cancel
+	 * @see LaserContext#getHitResult
+	 * @see ILaserProcessor#isEndPoint
 	 */
 	default void beforeProcessLaserOnBlock(LaserContext ctx, BlockState state, BlockPos pos, ILaserProcessor processor) {}
 
@@ -62,9 +62,9 @@ public interface ILaserAttachment {
 	 * @param processor The processor, will never be {@code null}
 	 *
 	 * @see afterProcessLaserOnEntity
-	 * @see LaserContext.cancel
-	 * @see LaserContext.getHitResult
-	 * @see ILaserProcessor.isEndPoint
+	 * @see LaserContext#cancel
+	 * @see LaserContext#getHitResult
+	 * @see ILaserProcessor#isEndPoint
 	 */
 	default void beforeProcessLaserOnEntity(LaserContext ctx, Entity entity, ILaserProcessor processor) {}
 
@@ -87,7 +87,7 @@ public interface ILaserAttachment {
 	 * @param target The {@link LaserContext} which going to be merge to
 	 *
 	 * @see afterMergeLaser
-	 * @see LaserContext.cancel
+	 * @see LaserContext#cancel
 	 */
 	default void beforeMergeLaser(LaserContext ctx, LaserContext target) {}
 
