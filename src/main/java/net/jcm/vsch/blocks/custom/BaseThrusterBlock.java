@@ -111,6 +111,6 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 
 	@Override
 	public <U extends BlockEntity> BlockEntityTicker<U> getTicker(Level level, BlockState state, BlockEntityType<U> type) {
-		return level.isClientSide() ? (ParticleBlockEntity::clientTick) : ParticleBlockEntity::serverTick;
+		return level.isClientSide() ? (ParticleBlockEntity::clientTicker) : ParticleBlockEntity::serverTicker;
 	}
 }

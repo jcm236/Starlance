@@ -2,6 +2,15 @@ package net.jcm.vsch.blocks.entity;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.entity.laser.ScreenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserDetectProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserEmitterBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserExplosiveProcessorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.cannon.LaserReceiverBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserCondensingLenBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserFlatMirrorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserSemiTransparentFlatMirrorBlockEntity;
+import net.jcm.vsch.blocks.entity.laser.len.LaserStrengthDetectorLenBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -57,6 +66,60 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<GyroBlockEntity>> GYRO_BLOCK_ENTITY = BLOCK_ENTITIES.register(
 		"gyro",
 		() -> BlockEntityType.Builder.of(GyroBlockEntity::new, VSCHBlocks.GYRO_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserDetectProcessorBlockEntity>> LASER_DETECT_PROCESSOR_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_detect_processor_block",
+		() -> BlockEntityType.Builder.of(LaserDetectProcessorBlockEntity::new, VSCHBlocks.LASER_DETECT_PROCESSOR_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserEmitterBlockEntity>> LASER_EMITTER_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_emitter_block",
+		() -> BlockEntityType.Builder.of(LaserEmitterBlockEntity::new, VSCHBlocks.LASER_EMITTER_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserExplosiveProcessorBlockEntity>> LASER_EXPLOSIVE_PROCESSOR_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_explosive_processor_block",
+		() -> BlockEntityType.Builder.of(LaserExplosiveProcessorBlockEntity::new, VSCHBlocks.LASER_EXPLOSIVE_PROCESSOR_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserReceiverBlockEntity>> LASER_RECEIVER_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_receiver_block",
+		() -> BlockEntityType.Builder.of(LaserReceiverBlockEntity::new, VSCHBlocks.LASER_RECEIVER_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserCondensingLenBlockEntity>> LASER_CONDENSING_LEN_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_condensing_len_block",
+		() -> BlockEntityType.Builder.of(LaserCondensingLenBlockEntity::new, VSCHBlocks.LASER_CONDENSING_LEN_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserFlatMirrorBlockEntity>> LASER_FLAT_MIRROR_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_flat_mirror_block",
+		() -> BlockEntityType.Builder.of(LaserFlatMirrorBlockEntity::new, VSCHBlocks.LASER_FLAT_MIRROR_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserSemiTransparentFlatMirrorBlockEntity>> LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_semi_transparent_flat_mirror_block",
+		() -> BlockEntityType.Builder.of(LaserSemiTransparentFlatMirrorBlockEntity::new, VSCHBlocks.LASER_SEMI_TRANSPARENT_FLAT_MIRROR_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<LaserStrengthDetectorLenBlockEntity>> LASER_STRENGTH_DETECTOR_LEN_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"laser_strength_detector_len_block",
+		() -> BlockEntityType.Builder.of(LaserStrengthDetectorLenBlockEntity::new, VSCHBlocks.LASER_STRENGTH_DETECTOR_LEN_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<ScreenBlockEntity>> SCREEN_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"screen_block",
+		() -> BlockEntityType.Builder.of(ScreenBlockEntity::new, VSCHBlocks.SCREEN_BLOCK.get())
 			.build(null)
 	);
 

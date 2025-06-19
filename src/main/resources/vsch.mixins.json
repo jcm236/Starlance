@@ -7,7 +7,8 @@
   "mixins": [
     "cosmos.MixinLightRenderer",
     "cosmos.MixinSpacesuitwornLogicProcedure",
-    "minecraft.MixinEntity",
+    "minecraft.MixinLevelChunk",
+    "minecraft.MixinLivingEntity",
     "minecraft.MixinMob",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
