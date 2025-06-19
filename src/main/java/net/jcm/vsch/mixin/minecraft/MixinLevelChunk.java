@@ -1,4 +1,4 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.minecraft;
 
 import it.unimi.dsi.fastutil.ints.Int2FloatOpenHashMap;
 

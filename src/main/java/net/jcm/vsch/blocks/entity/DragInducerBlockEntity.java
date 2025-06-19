@@ -124,7 +124,7 @@ public class DragInducerBlockEntity extends BlockEntity implements ParticleBlock
 		if (ships == null) {
 			return;
 		}
-		if (ships.getDraggerAtPos(pos) == null) {
+		if (ships.getDraggerAtPos(pos) != this.draggerData) {
 			ships.addDragger(pos, this.draggerData);
 		}
 	}

@@ -1,25 +1,21 @@
 package net.jcm.vsch.event;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.util.TeleportationHandler;
+import net.jcm.vsch.util.VSCHUtils;
+import net.lointain.cosmos.network.CosmosModVariables;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.lointain.cosmos.network.CosmosModVariables;
-import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.util.VSCHUtils;
-
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
-
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
-
-	public static final Logger logger = LogManager.getLogger(VSCHMod.MODID);
-
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
@@ -27,46 +23,47 @@ public class AtmosphericCollision {
 	 * specified origin in the travel to dimension.
 	 *
 	 * @param level
-	 * @param world
 	 */
-	public static void atmosphericCollisionTick(ServerLevel level, LevelAccessor world) {
+	public static void atmosphericCollisionTick(final ServerLevel level) {
+		// Atmo collision JSON for overworld:
+		// "minecraft:overworld":'{"atmosphere_y":560,"travel_to":"cosmos:solar_sys_d","origin_x":-24100,"origin_y":1000,"origin_z":5100,"overlay_texture_id":"earth_bar","shipbit_y":24,"ship_min_y":120}'
 
-		for (Ship ship : VSCHUtils.getAllLoadedShips(level)) {
+		final CosmosModVariables.WorldVariables worldVariables = CosmosModVariables.WorldVariables.get(level);
+		final CompoundTag atmoDatas = worldVariables.atmospheric_collision_data_map;
+		final CompoundTag atmoData = atmoDatas.getCompound(level.dimension().location().toString());
 
-			// ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
+		// Skip current dimension has atmo data (i.e. no space dimension attached)
+		if (atmoData.isEmpty()) {
+			return;
+		}
 
-			// shipWorld.updateDimension(VSGameUtilsKt.getDimensionId(level),null);
+		final double atmoHeight = atmoData.getDouble("atmosphere_y");
+		final double targetX = atmoData.getDouble("origin_x");
+		final double targetY = atmoData.getDouble("origin_y");
+		final double targetZ = atmoData.getDouble("origin_z");
+		final String targetDim = atmoData.getString("travel_to");
+		final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
+		if (targetLevel == null) {
+			// TODO: enable warn and avoid log spam when dimension does not exist.
+			// LOGGER.warn("[starlance]: dimension {} is not exists", targetDim);
+			return;
+		}
 
-			// Atmo collision JSON for overworld:
-			// "minecraft:overworld":'{"atmosphere_y":560,"travel_to":"cosmos:solar_sys_d","origin_x":-24100,"origin_y":1000,"origin_z":5100,"overlay_texture_id":"earth_bar","shipbit_y":24,"ship_min_y":120}'
+		final TeleportationHandler teleportHandler = new TeleportationHandler(targetLevel, level, false);
 
-			CosmosModVariables.WorldVariables worldVariables = CosmosModVariables.WorldVariables.get(world);
-			CompoundTag atmoDatas = worldVariables.atmospheric_collision_data_map;
-
-			String shipDim = VSCHUtils.VSDimToDim(ship.getChunkClaimDimension());
-
-			// If our current dimension has atmo data (e.g. a space dimension attached)
-			if (atmoDatas.contains(shipDim)) {
-
-				CompoundTag atmoData = atmoDatas.getCompound(shipDim);
-
-				// If the ship is above the planets atmo height:
-				if (ship.getTransform().getPositionInWorld().y() > atmoData.getDouble("atmosphere_y")) {
-
-					// ----- Get destination x, y, z and dimension ----- //
-					//TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
-					double posX = atmoData.getDouble("origin_x"); // + Mth.nextInt(RandomSource.create(), -10, 10)
-					double posY = atmoData.getDouble("origin_y"); // + Mth.nextInt(RandomSource.create(), -5, 5)
-					double posZ = atmoData.getDouble("origin_z"); // + Mth.nextInt(RandomSource.create(), -10, 10)
-
-					String gotoDimension = atmoData.getString("travel_to");
-
-					new TeleportationHandler(VSCHUtils.dimToLevel(ValkyrienSkiesMod.getCurrentServer(), gotoDimension), level, false).handleTeleport(ship, new Vector3d(posX, posY, posZ));
-
-				}
+		for (final Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+			if (ship.getTransform().getPositionInWorld().y() <= atmoHeight) {
+				continue;
 			}
+
+			// ----- Get destination x, y, z and dimension ----- //
+			// TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
+			double posX = targetX; // + Mth.nextInt(RandomSource.create(), -10, 10)
+			double posY = targetY; // + Mth.nextInt(RandomSource.create(), -5, 5)
+			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
+
+			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
+			teleportHandler.handleTeleport(ship, new Vector3d(posX, posY, posZ));
 		}
 	}
-
-
 }

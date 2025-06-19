@@ -5,17 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.vsch.refmap.json",
   "mixins": [
-    "MixinEntity",
-    "MixinLevelChunk",
-    "MixinLightRenderer",
-    "MixinLivingEntityProcedure",
-    "MixinMob",
-    "MixinShipAssemblyKt",
-    "MixinSpacesuitwornLogicProcedure",
-    "MixinVSGameUtilsKt",
-    "accessor.ServerShipObjectWorldAccessor"
+    "cosmos.MixinLightRenderer",
+    "cosmos.MixinSpacesuitwornLogicProcedure",
+    "minecraft.MixinEntity",
+    "minecraft.MixinLevelChunk",
+    "minecraft.MixinMob",
+    "valkyrienskies.MixinShipAssemblyKt",
+    "valkyrienskies.MixinVSGameUtilsKt",
+    "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
   ],
   "client": [
+    "client.MixinGui"
   ],
   "injectors": {
     "defaultRequire": 1

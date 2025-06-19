@@ -1,22 +1,14 @@
-package net.jcm.vsch.blocks.custom.template;
+package net.jcm.vsch.blocks.custom;
 
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
-import net.jcm.vsch.config.VSCHConfig;
-import net.jcm.vsch.items.VSCHItems;
-import net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.util.rot.DirectionalShape;
-import net.jcm.vsch.util.rot.RotShape;
-import net.jcm.vsch.util.rot.RotShapes;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -37,24 +29,25 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public abstract class AbstractThrusterBlock<T extends AbstractThrusterBlockEntity> extends DirectionalBlock implements EntityBlock {
+public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends DirectionalBlock implements EntityBlock {
 
 	public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
-	// TODO: fix this bounding box
-	private static final RotShape SHAPE = RotShapes.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-	private final DirectionalShape shape;
 
-	protected AbstractThrusterBlock(Properties properties, DirectionalShape shape) {
+	private final DirectionalShape shape;
+	private final BlockEntityType.BlockEntitySupplier<? extends T> blockEntitySupplier;
+
+	public BaseThrusterBlock(
+		final Properties properties,
+		final DirectionalShape shape,
+		final BlockEntityType.BlockEntitySupplier<? extends T> blockEntitySupplier
+	) {
 		super(properties);
 		this.shape = shape;
+		this.blockEntitySupplier = blockEntitySupplier;
 		registerDefaultState(defaultBlockState()
-				.setValue(FACING, Direction.NORTH)
-				.setValue(LIT, Boolean.valueOf(false))
-				);
-	}
-
-	public AbstractThrusterBlock(Properties properties) {
-		this(properties, DirectionalShape.south(SHAPE));
+			.setValue(FACING, Direction.NORTH)
+			.setValue(LIT, Boolean.valueOf(false))
+		);
 	}
 
 	@Override
@@ -80,7 +73,11 @@ public abstract class AbstractThrusterBlock<T extends AbstractThrusterBlockEntit
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(level instanceof ServerLevel)) return;
+		super.onRemove(state, level, pos, newState, isMoving);
+
+		if (!(level instanceof ServerLevel)) {
+			return;
+		}
 
 		// ----- Remove the thruster from the force appliers for the current level ----- //
 		// I guess VS does this automatically when switching a shipyards dimension?
@@ -88,8 +85,6 @@ public abstract class AbstractThrusterBlock<T extends AbstractThrusterBlockEntit
 		if (ships != null) {
 			ships.removeThruster(pos);
 		}
-
-		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
 	@Override
@@ -103,69 +98,16 @@ public abstract class AbstractThrusterBlock<T extends AbstractThrusterBlockEntit
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		// If client side, ignore
-		if (!(level instanceof ServerLevel)) {
-			return InteractionResult.PASS;
-		}
-
-		// If its the right item and mainhand
-		if (player.getMainHandItem().getItem() != VSCHItems.WRENCH.get() || hand != InteractionHand.MAIN_HAND) {
-			return InteractionResult.PASS;
-		}
-
-		// If thrusters can be toggled
-		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
-			player.displayClientMessage(Component.translatable("vsch.error.thruster_modes_disabled").withStyle(
-				ChatFormatting.RED
-			), true);
-			return InteractionResult.PASS;
-		}
-
-		// Get the force handler
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
-
-		// If a force handler exists (might not if we aren't on a VS ship)
-		if (ships == null) {
-			// Not on a ship
-			player.displayClientMessage(Component.translatable("vsch.error.thruster_not_on_ship").withStyle(
-				ChatFormatting.RED
-			), true);
-			return InteractionResult.FAIL;
-		}
-
-		// Get thruster
-		AbstractThrusterBlockEntity thruster = (AbstractThrusterBlockEntity) level.getBlockEntity(pos);
-		if (thruster == null) {
-			return InteractionResult.PASS;
-		}
-
-		// Get current state (block property)
-		ThrusterMode blockMode = thruster.getThrusterMode();
-
-		// Toggle between POSITION and GLOBAL
-		blockMode = blockMode.toggle();
-
-		// Save the block property into the block
-		// And set the thruster data to the new toggled property
-		thruster.setThrusterMode(blockMode);
-
-		//Send a chat message to them. The wrench class will handle the actionbar
-		player.sendSystemMessage(Component.translatable("vsch.message.toggle").append(Component.translatable("vsch." + blockMode.toString().toLowerCase())));
-
-		return InteractionResult.CONSUME;
-	}
-
-	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean moving) {
 		super.neighborChanged(state, world, pos, neighbor, neighborPos, moving);
 		AbstractThrusterBlockEntity be = (AbstractThrusterBlockEntity) world.getBlockEntity(pos);
 		be.neighborChanged(neighbor, neighborPos, moving);
 	}
 
-	// Attach block entity
 	@Override
-	public abstract T newBlockEntity(BlockPos pos, BlockState state);
+	public T newBlockEntity(BlockPos pos, BlockState state) {
+		return blockEntitySupplier.create(pos, state);
+	}
 
 	@Override
 	public <U extends BlockEntity> BlockEntityTicker<U> getTicker(Level level, BlockState state, BlockEntityType<U> type) {

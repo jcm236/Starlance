@@ -1,22 +1,18 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.cosmos;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.items.custom.MagnetBootItem;
 import net.lointain.cosmos.entity.RocketSeatEntity;
-import net.lointain.cosmos.init.CosmosModItems;
 import net.lointain.cosmos.item.NickelSuitItem;
 import net.lointain.cosmos.item.SteelSuitItem;
 import net.lointain.cosmos.item.TitaniumSuitItem;
@@ -27,7 +23,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
 @Mixin(SpacesuitwornLogicProcedure.class)

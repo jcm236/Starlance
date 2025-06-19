@@ -6,6 +6,7 @@ import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
 import net.jcm.vsch.config.VSCHConfig;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -13,21 +14,35 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.util.List;
 import java.util.Map;
 
 public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
 	public ThrusterBlockEntity(BlockPos pos, BlockState state) {
-		super("thruster", VSCHBlockEntities.THRUSTER_BLOCK_ENTITY.get(), pos, state,
-			new NormalThrusterEngine(
-				VSCHConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-				VSCHConfig.THRUSTER_STRENGTH.get().intValue(),
-				VSCHConfig.getThrusterFuelConsumeRates()
-			)
+		super(VSCHBlockEntities.THRUSTER_BLOCK_ENTITY.get(), pos, state);
+	}
+
+	@Override
+	protected String getPeripheralType() {
+		return "thruster";
+	}
+
+	@Override
+	protected ThrusterEngine createThrusterEngine() {
+		return new NormalThrusterEngine(
+			VSCHConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHConfig.THRUSTER_STRENGTH.get().intValue(),
+			VSCHConfig.getThrusterFuelConsumeRates()
 		);
 	}
 
-	private static class NormalThrusterEngine extends ThrusterEngine {
+	@Override
+	protected double getEvaporateDistance() {
+		return 8 * this.getCurrentPower();
+	}
+
+	private final static class NormalThrusterEngine extends ThrusterEngine {
 		private final Map<String, Integer> fuelConsumeRates;
 
 		public NormalThrusterEngine(int energyConsumeRate, float maxThrottle, Map<String, Integer> fuelConsumeRates) {
@@ -68,6 +83,11 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			context.addConsumer((ctx) -> {
 				ctx.getFluidHandler().drain(new FluidStack(fluid, (int)(Math.ceil(consumeRate * ctx.getPower()))), IFluidHandler.FluidAction.EXECUTE);
 			});
+		}
+
+		@Override
+		public void tickBurningObjects(final ThrusterEngineContext context, final List<BlockPos> thrusters, final Direction direction) {
+			simpleTickBurningObjects(context, thrusters, direction, 8, 3, 0.1);
 		}
 	}
 }

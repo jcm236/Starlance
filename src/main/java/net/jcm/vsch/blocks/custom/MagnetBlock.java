@@ -42,6 +42,7 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
+
 		if (!(level instanceof ServerLevel)) {
 			return;
 		}

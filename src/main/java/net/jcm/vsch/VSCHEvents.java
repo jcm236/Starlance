@@ -16,24 +16,28 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-
 @Mod.EventBusSubscriber
 public class VSCHEvents {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onServerTick(TickEvent.ServerTickEvent event) {
-		for (ServerLevel level: event.getServer().getAllLevels()) {
-			if (level.getRandomPlayer() != null) { // HACKY HACK HACK. TODO: Test multiplayer more
-				AtmosphericCollision.atmosphericCollisionTick(level, level);
-				PlanetCollision.planetCollisionTick(level, level);
-
+		if (event.phase != TickEvent.Phase.END) {
+			return;
+		}
+		for (ServerLevel level : event.getServer().getAllLevels()) {
+			if (level.getPlayers(player -> true, 1).isEmpty()) {
+				// skip if the no player is in the world
+				// TODO: maybe we'll have automated ships in the future and this need to be removed?
+				continue;
 			}
+			AtmosphericCollision.atmosphericCollisionTick(level);
+			PlanetCollision.planetCollisionTick(level);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerStart(ServerStartedEvent event) {
-		GravityInducer.all_gravity_data = CosmosModVariables.WorldVariables.get(event.getServer().overworld()).gravity_data;
+		GravityInducer.gravityDataTag = CosmosModVariables.WorldVariables.get(event.getServer().overworld()).gravity_data;
 	}
 
 	// For next vs update
@@ -43,6 +47,3 @@ public class VSCHEvents {
 	//	}
 
 }
-
-
-

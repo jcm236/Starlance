@@ -1,4 +1,4 @@
-package net.jcm.vsch.mixin;
+package net.jcm.vsch.mixin.minecraft;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -10,9 +10,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import javax.annotation.Nullable;
-import java.util.Set;
 
 @Mixin(Mob.class)
 public abstract class MixinMob extends Entity {

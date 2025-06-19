@@ -1,40 +1,11 @@
 package net.jcm.vsch.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joml.Vector3d;
-import org.joml.primitives.AABBd;
-import org.joml.primitives.AABBic;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.QueryableShipData;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.apigame.ShipTeleportData;
-import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
-import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
-import org.valkyrienskies.core.util.AABBdUtilKt;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.entity.handling.VSEntityHandler;
-import org.valkyrienskies.mod.common.entity.handling.VSEntityManager;
-import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
-import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
-
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.jcm.vsch.VSCHMod;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.network.CosmosModVariables.WorldVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
+
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -56,28 +27,60 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Vector3d;
+import org.joml.primitives.AABBd;
+import org.joml.primitives.AABBic;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.core.api.ships.QueryableShipData;
+import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.properties.ShipTransform;
+import org.valkyrienskies.core.apigame.ShipTeleportData;
+import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
+import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
+import org.valkyrienskies.core.util.AABBdUtilKt;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
+import org.valkyrienskies.mod.common.entity.handling.VSEntityHandler;
+import org.valkyrienskies.mod.common.entity.handling.VSEntityManager;
+import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
+import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * The main class where all handy utility functions used by VSCH are stored.
  */
 public class VSCHUtils {
 
-	public static final Logger logger = LogManager.getLogger(VSCHMod.MODID);
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	/**
 	 * Converts a VS dimension id string of
 	 * <code>'minecraft:dimension:namespace:dimension_name'</code> to a normal
 	 * dimension id string of <code>'namespace:dimension_name'</code>
 	 * 
-	 * @param VSdimensionString The VS format dimension id string
+	 * @param dimension The VS format dimension id string
 	 * @return The converted dimension id string
 	 * @author Brickyboy
 	 * @see #dimToVSDim(String)
 	 */
-	public static String VSDimToDim(String VSdimensionString) {
+	public static String vsDimToDim(String dimension) {
 		// Transform VS's 'minecraft:dimension:namespace:dimension_name' into
 		// 'namespace:dimension_name'
-		String[] dimSplit = VSdimensionString.split(":");
-		return dimSplit[2] + ":" + dimSplit[3];
+		final String[] parts = dimension.split(":");
+		if (parts.length != 4) {
+			throw new IllegalArgumentException("Unexpected dimension ID: " + dimension);
+		}
+		return parts[2] + ":" + parts[3];
 	}
 
 	/**
@@ -85,15 +88,14 @@ public class VSCHUtils {
 	 * <code>'namespace:dimension_name'</code> to a VS dimension id string
 	 * <code>'minecraft:dimension:namespace:dimension_name'</code>
 	 * 
-	 * @param dimensionString The normal format dimension id string
+	 * @param dimension The normal format dimension id string
 	 * @return The converted VS dimension id string
 	 * @author Brickyboy
-	 * @see #VSDimToDim(String)
+	 * @see #vsDimToDim(String)
 	 */
-	public static String dimToVSDim(String dimensionString) {
-		return "minecraft:dimension:" + dimensionString;
+	public static String dimToVSDim(String dimension) {
+		return "minecraft:dimension:" + dimension;
 	}
-
 
 	/**
 	 * Takes in a
@@ -111,254 +113,31 @@ public class VSCHUtils {
 	 * @author Brickyboy
 	 * @return The world based AABBd
 	 */
-	public static AABBd transformToAABBd(ShipTransform transform, AABBic shipAABB) {
-		if (shipAABB == null) {
-			logger.warn("[Starlance] Ship AABB was null, returning empty AABBd, this may break things");
-			return new AABBd();
-		}
+	public static AABBd transformToAABBd(final ShipTransform transform, final AABBic shipAABB) {
 		// From AABBic (Int, constant) to AABBd (Double)
 		AABBd shipAABBd = AABBdUtilKt.toAABBd(shipAABB, new AABBd());
 		// Turn the shipyard AABBd to the world AABBd using the transform
-
 		return shipAABBd.transform(transform.getShipToWorld());
 	}
 
 	/**
-	 * Converts a VS dimension id string and returns a
-	 * {@link net.minecraft.server.level.ServerLevel ServerLevel} in that dimension.
+	 * Get {@link net.minecraft.server.level.ServerLevel ServerLevel} from a VS dimension ID.
 	 * 
-	 * @param server            The {@link net.minecraft.server.MinecraftServer
-	 *                          MinecraftServer} object used to get the level
-	 * @param VSdimensionString The VS dimension id string for the dimension level
-	 *                          you want
-	 * @return A {@link net.minecraft.server.level.ServerLevel ServerLevel} object
-	 *         in the VS dimension given
-	 * @see #dimToVSDim(String)
-	 * TODO Add error handling for if string isn't an existing dimension
+	 * @param dimension The dimension ID string in format registry_namespace:registry_name:dimension_namespace:dimension_name
+	 * @return A {@link net.minecraft.server.level.ServerLevel ServerLevel} instance with the dimension ID given
 	 */
-	public static ServerLevel VSDimToLevel(MinecraftServer server, String VSdimensionString) {
-		// Split 'minecraft:dimension:namespace:dimension_name' into [minecraft,
-		// dimension, namespace, dimension_name]
-		String[] splitText = VSdimensionString.split(":");
-
-		// Make a resource location from 'namespace' and 'dimension_name'
-		ResourceLocation rl = new ResourceLocation(splitText[splitText.length - 2], splitText[splitText.length - 1]);
-
-		// Turn that RL into a Registry Key and use that to get a Level
-		return server.getLevel(ResourceKey.create(Registries.DIMENSION, rl));
-	}
-
-	public static ServerLevel dimToLevel(MinecraftServer server, String dimensionString) {
-		return server.getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
-	}
-
-	/**
-	 * NOT USED ANYMORE, ALWAYS RETURNS TRUE. To be removed at a later date
-  *
-	 * Performs multiple checks on an entity to see if it can/should be moved
-	 * through dimensions with a VS ship. Checks if the entity:
-	 * <ul>
-	 * <li>Has a
-	 * {@link org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider
-	 * IEntityDraggingInformationProvider}</li>
-	 * <li>Is not riding another entity</li>
-	 * <li>Is being dragged by a ship (that still exists)</li>
-	 * <li>Can change dimension. Not sure what this does but its a vanilla function:
-	 * Entity.canChangeDimensions()</li>
-	 * </ul>
-	 * 
-	 * @param entity The entity to check
-	 * @return True if the entity passed all checks, otherwise False
-	 */
-	@Deprecated
-	public static boolean CanEntityBeTaken(Entity entity) {
-		return true;
-	}
-
-	/**
-	 * See
-	 * {@link #DimensionTeleportShip(Ship, ServerLevel, String, double, double, double)
-	 * DimensionTeleportShip} for documentation. This overload simply takes in a
-	 * Vec3 instead of 3 doubles.
-	 */
-	@Deprecated
-	public static void DimensionTeleportShip(Ship ship, ServerLevel level, String newDim, Vec3 newPos) {
-		DimensionTeleportShip(ship, level, newDim, newPos.x, newPos.y, newPos.z);
-	}
-
-	/**
-	 * This function took us like 3 days to make. You better appreciate it. <br>
-	 * <br>
-	 * It will teleport the given ship, using the level, to the
-	 * dimension with id of newDim at x, y, z. <br>
-	 * <br>
-	 * But most importantly, it will also teleport any players or entities that are
-	 * currently being dragged by the ship to the new dimension, and their correct
-	 * position relative to the ship that was moved.
-	 * 
-	 * @param ship   The ship to move
-	 * @param level  The ships current level
-	 * @param newDim Normal dimension id string format (not VS format)
-	 * @param x x position in world to tp to
-	 * @param y y position in world to tp to
-	 * @param z z position in world to tp to
-	 * @deprecated Use {@link net.jcm.vsch.util.TeleportUtils#dimensionTeleportShip(Ship, ServerLevel, String, double, double, double)} instead
-	 */
-	@Deprecated
-	public static void DimensionTeleportShip(Ship ship, ServerLevel level, String newDim, double x, double y, double z) {
-		logger.fatal("Deprecated function VSCHUtils.DimensionTeleportShip used. Please use TeleportUtils.DimensionTeleportShip instead.");
-		// ----- Prepare dimension destination ----- //
-
-		// Convert back into a stupid stupid VS dimension string
-		String VSnewDimension = VSCHUtils.dimToVSDim(newDim);
-
-		// Prepare ship teleport info for later
-		ShipTeleportData teleportData = new ShipTeleportDataImpl(new Vector3d(x, y, z), ship.getTransform().getShipToWorldRotation(), new Vector3d(), new Vector3d(), VSnewDimension, null);
-
-		// ----- AABB magic ----- //
-
-		// Get the AABB of the last tick and the AABB of the current tick
-		AABB prevWorldAABB = VectorConversionsMCKt.toMinecraft(VSCHUtils.transformToAABBd(ship.getPrevTickTransform(), ship.getShipAABB())).inflate(10);
-		AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB()).inflate(10);
-
-		// Combine the AABB's into one big one
-		//		AABB totalAABB = currentWorldAABB.minmax(prevWorldAABB);
-
-		Vec3 prevShipsWorldCenter = prevWorldAABB.deflate(10).getCenter();
-		Vec3 shipsWorldCenter = currentWorldAABB.deflate(10).getCenter();
-
-		Vec3 shipyardCenter = VectorConversionsMCKt.toMinecraft(ship.getShipAABB().center(new Vector3d(0, 0, 0)));
-
-		// ---------- //
-
-		// ----- Get all entities BEFORE teleporting ship ----- //
-
-		// Save the distances from entities to the ship for afterwards
-		Map<String, Vec3> entityOffsets = new HashMap<String, Vec3>();
-
-		// Save entities that actually need to be teleported
-		List<Entity> teleportEntities = new ArrayList<>();
-		//Shipyard entities will be in teleportEntities, but will also be here, unlike world entities
-		List<Entity> shipyardEntities = new ArrayList<>(); 
-		List<Entity> playerEntities = new ArrayList<>();
-
-		// Find all entities nearby the ship
-		for (Entity entity : level.getEntities(null, currentWorldAABB)) {
-
-			//System.out.println("Entity: " + entity);
-
-			// A couple checks to make sure they are able to be teleported with the ship
-			if (VSCHUtils.CanEntityBeTaken(entity)) {
-
-				// If the entity is riding another
-				if (entity.getVehicle() != null) {
-					// Dismount them
-					entity.dismountTo(entity.getX(), entity.getY(), entity.getZ());
-				}
-
-				VSEntityHandler handler = VSEntityManager.INSTANCE.getHandler(entity);
-				Vec3 entityShipOffset = null;
-				if (handler.getClass() == WorldEntityHandler.class) {
-					// Get the offset from the entities position to the ship
-					entityShipOffset = entity.getPosition(0).subtract(shipsWorldCenter);
-				} else {
-					entityShipOffset = entity.getPosition(0).subtract(shipyardCenter);
-					shipyardEntities.add(entity);
-				}
-
-
-
-
-
-				/*System.out.println("Entity BEFORE info");
-				System.out.println("Entity: "+entity);
-				System.out.println("Position: "+entity.getPosition(0));
-				System.out.println("Offset: "+entityShipOffset);*/
-
-				// Save the offset and the entity. Prob don't need two lists here but oh well
-				entityOffsets.put(entity.getStringUUID(), entityShipOffset);
-				if (entity instanceof ServerPlayer) {
-					playerEntities.add(entity);
-				} else {
-					teleportEntities.add(entity);
-				}
-
-			}
-
+	public static ServerLevel registeryDimToLevel(final String dimension) {
+		// Split 'minecraft:dimension:namespace:dimension_name' into [minecraft, dimension, namespace, dimension_name]
+		final String[] parts = dimension.split(":");
+		if (parts.length != 4) {
+			throw new IllegalArgumentException("Unexpected dimension ID: " + dimension);
 		}
+		final ResourceKey levelId = ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation(parts[0], parts[1])), new ResourceLocation(parts[2], parts[3]));
+		return ValkyrienSkiesMod.getCurrentServer().getLevel(levelId);
+	}
 
-		// ---------- //
-
-		// ----- Teleport ship ----- //
-
-		// Do we actually use this? Eh can't be bothered to check
-		// Yes we do. Don't remove this
-		ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
-
-		// Teleport ship to new dimension at origin
-		ServerShip serverShip = (ServerShip) ship;
-		shipWorld.teleportShip(serverShip, teleportData);
-
-		// ---------- //
-
-		// ----- Teleport entities AFTER ship ----- //
-
-		// Get a level object from the VS dimension string of the dim we're going to
-		ServerLevel newLevel = VSCHUtils.VSDimToLevel(level.getServer(), VSnewDimension);
-		Vec3 newShipCenter = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB()).getCenter();
-		Vec3 newShipyardCenter = VectorConversionsMCKt.toMinecraft(ship.getShipAABB().center(new Vector3d(0, 0, 0)));
-
-		// Teleport ALL players before teleporting ALL entities to prevent players getting entity pushed
-		for (Entity entity : playerEntities) {
-
-			Vec3 shipOffset = entityOffsets.get(entity.getStringUUID());
-			Vec3 newPosition = newShipCenter.add(shipOffset);
-
-			/*System.out.println("New (player) info -----");
-			System.out.println(entityOffsets);
-			System.out.println(newShipCenter);
-			System.out.println(newPosition);
-			System.out.println("-----");*/
-
-			/*System.out.println("player AFTER info");
-			System.out.println("Entity: "+entity);
-			System.out.println("New Position: "+newPosition);
-			System.out.println("Offset: "+shipOffset);*/
-
-			// Players need a different teleport command to entities
-			((ServerPlayer) entity).teleportTo(newLevel, newPosition.x, newPosition.y, newPosition.z, entity.getYRot(), entity.getXRot());
-		}
-
-		// Now teleport all non-player entities
-		for (Entity entity : teleportEntities) {
-
-			Vec3 shipOffset = entityOffsets.get(entity.getStringUUID());
-			Vec3 newPosition = null;
-
-			// If we need to use the shipyard center
-			if (shipyardEntities.contains(entity)) {
-				newPosition = newShipyardCenter.add(shipOffset);
-			} else {
-				newPosition = newShipCenter.add(shipOffset);
-			}
-
-
-			/*System.out.println("entity AFTER info");
-			System.out.println("Entity: "+entity);
-			System.out.println("New Position: "+newPosition);
-			System.out.println("Offset: "+shipOffset);*/
-
-			/*System.out.println("New info -----");
-			System.out.println(entityOffsets);
-			System.out.println(newShipCenter);
-			System.out.println(newPosition);
-			System.out.println("-----");*/
-
-			// Teleport entity (players are handled separately)
-			entity.teleportTo(newLevel, newPosition.x, newPosition.y, newPosition.z, null, entity.getYRot(), entity.getXRot());
-
-		}
-
+	public static ServerLevel dimToLevel(final String dimensionString) {
+		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
 	}
 
 	/**
@@ -370,45 +149,17 @@ public class VSCHUtils {
 	 * @return A CompoundTag of the nearest planets data, or null if it couldn't be found
 	 */
 	@Nullable
-	public static CompoundTag getNearestPlanet(LevelAccessor world, Vec3 position, String dimensionId) {
-		WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-
-		// No data at all, skip it
-		if (!worldVars.collision_data_map.contains(dimensionId)) {
-			return null;
-		}
-
-		Tag collision_data_map = worldVars.collision_data_map.get(dimensionId);
-
-		ListTag listtag = new ListTag();
-		if (collision_data_map instanceof ListTag _listTag) {
-			listtag = _listTag.copy();
-		}
-
+	public static CompoundTag getNearestPlanet(final LevelAccessor world, final Vec3 position, final String dimensionId) {
+		final WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
+		final ListTag collisionDatas = worldVars.collision_data_map.getList(dimensionId, Tag.TAG_COMPOUND);
 		// No collidable planets, skip it
-		if (listtag.isEmpty()) {
+		if (collisionDatas.isEmpty()) {
 			return null;
 		}
 
-		List<Object> Target_List = DistanceOrderProviderProcedure.execute(worldVars.global_collision_position_map, 1, dimensionId, position);
-
-		Object firstTargetIndex = Target_List.get(0);
-
-		// Not sure why all this double stuff, but I'll leave it for now
-		double firstTargetIndexD = 0.0;
-		if (firstTargetIndex instanceof Number _doubleValue) {
-			firstTargetIndexD = _doubleValue.doubleValue();
-		}
-
-		Tag targetObject = listtag.get((int) (firstTargetIndexD));
-
-		try {
-			CompoundTag compTag = TagParser.parseTag(targetObject.getAsString());
-			return compTag;
-		} catch (CommandSyntaxException e) {
-			logger.error("[VSCH]: Failed to parse nearest planet tag");
-			return null;
-		}
+		final List<Object> targetList = DistanceOrderProviderProcedure.execute(worldVars.global_collision_position_map, 1, dimensionId, position);
+		final int firstTargetIndex = ((Number) (targetList.get(0))).intValue();
+		return collisionDatas.getCompound(firstTargetIndex);
 	}
 
 	/**
@@ -421,66 +172,38 @@ public class VSCHUtils {
 	 * @author DEA__TH, Brickyboy
 	 * @see #getNearestPlanet(LevelAccessor, Vec3, String)
 	 */
-	public static boolean isCollidingWithPlanet(@Nonnull CompoundTag planetData, Vec3 position) {
+	public static boolean isCollidingWithPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
 		// getDouble returns 0.0D if not found, which is fine
-		double yaw = planetData.getDouble("yaw");
-		double pitch = planetData.getDouble("pitch");
-		double roll = planetData.getDouble("roll");
-		double scale = planetData.getDouble("scale");
+		final float
+			yaw = planetData.getFloat("yaw"),
+			pitch = planetData.getFloat("pitch"),
+			roll = planetData.getFloat("roll");
+		final double scale = planetData.getFloat("scale");
 
-		Vec3 cubepos = new Vec3(planetData.getDouble("x"), planetData.getDouble("y"), planetData.getDouble("z"));
-		Vec3 distanceToPos = (position.subtract(cubepos));
+		final Vec3 cubepos = new Vec3(planetData.getDouble("x"), planetData.getDouble("y"), planetData.getDouble("z"));
+		final Vec3 distanceToPos = position.subtract(cubepos);
 
 		// I do NOT understand this, so I'm not gonna bother trying to change it...
 		// looks fine enough
-		Vec3 rotatedXAxis = ((new Vec3(1, 0, 0)).zRot(-Mth.DEG_TO_RAD * (float) (-roll))).yRot(Mth.DEG_TO_RAD * (float) (-yaw));
-		Vec3 rotatedYAxis = ((new Vec3(0, 1, 0)).zRot(-Mth.DEG_TO_RAD * (float) (-roll))).xRot(-Mth.DEG_TO_RAD * (float) pitch);
-		Vec3 rotatedZAxis = ((new Vec3(0, 0, 1)).xRot(-Mth.DEG_TO_RAD * (float) pitch)).yRot(Mth.DEG_TO_RAD * (float) (-yaw));
+		final Vec3 rotatedXAxis = new Vec3(1, 0, 0).zRot(Mth.DEG_TO_RAD * roll).yRot(-Mth.DEG_TO_RAD * yaw);
+		final Vec3 rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch);
+		final Vec3 rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
 
-		double distanceSqrX = (rotatedXAxis.scale((distanceToPos.dot(rotatedXAxis)))).lengthSqr();
-		double distanceSqrY = (rotatedYAxis.scale((distanceToPos.dot(rotatedYAxis)))).lengthSqr();
-		double distanceSqrZ = (rotatedZAxis.scale((distanceToPos.dot(rotatedZAxis)))).lengthSqr();
-		double range = (scale * scale) / 4;
-		return (distanceSqrX <= range && distanceSqrY <= range && distanceSqrZ <= range);
+		final double range = (scale * scale) / 4;
+		return
+			rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).lengthSqr() <= range &&
+			rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).lengthSqr() <= range &&
+			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).lengthSqr() <= range;
 	}
 
 	/**
-	 * DEPRECATED, will crash on cosmic horizons 0.7.2+
-	 *
-	 * Gets all landing locations available from a planet and gives them to the entry_world global variable.
-	 * @param world The LevelAccessor to get the cosmos world variables from
-	 * @param target_planet The CompoundTag of the planet you are entering
+	 * Gets a players Cosmos variables capability.
+	 * @param player The player to get the capability of.
+	 * @return The player's capability, or null if it does not exists.
 	 */
-//	@Deprecated(forRemoval = true)
-//	public static void setEntryLocations(LevelAccessor world, CompoundTag target_planet) {
-//		WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-//
-//		Tag travel_to = target_planet.get("travel_to");
-//
-//		String travel_to_str = "";
-//		if (travel_to instanceof StringTag _stringTag) {
-//			travel_to_str = _stringTag.getAsString();
-//		}
-//
-//		Tag locations = (worldVars.antena_locations.get(travel_to_str));
-//		if (locations instanceof ListTag _listTag) {
-//			worldVars.entry_world =  _listTag;
-//			worldVars.syncData(world);
-//		} else {
-//			logger.error("[VSCH:VSCHUtils:396] Locations were not ListTags, travel_to was possibly empty");
-//			return;
-//		}
-//	}
-
-	/**
-	 * Gets a players Cosmos variables capability, or if it doesn't exist, creates a new one.
-	 * @param player The player to get the capability of
-	 * TODO Investigate: Is it giving the newly made variables cap to the player, or just returning a blank one to us
-	 */
-	public static CosmosModVariables.PlayerVariables getOrSetPlayerCap(Player player) {
-		return player.getCapability(CosmosModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new CosmosModVariables.PlayerVariables());
+	public static CosmosModVariables.PlayerVariables getPlayerCap(Player player) {
+		return player.getCapability(CosmosModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(null);
 	}
-
 
 	/**
 	 * Clamps all axis of a Vector3d between -limit and +limit (not abs).
@@ -490,9 +213,9 @@ public class VSCHUtils {
 	 */
 	public static Vector3d clampVector(Vector3d force, double limit) {
 		// Clamp each component of the force vector within the range -limit, +limit
-		double clampedX = Math.max(-limit, Math.min(limit, force.x));
-		double clampedY = Math.max(-limit, Math.min(limit, force.y));
-		double clampedZ = Math.max(-limit, Math.min(limit, force.z));
+		final double clampedX = Math.max(-limit, Math.min(limit, force.x));
+		final double clampedY = Math.max(-limit, Math.min(limit, force.y));
+		final double clampedZ = Math.max(-limit, Math.min(limit, force.z));
 
 		// Return a new Vector3d with the clamped values
 		return new Vector3d(clampedX, clampedY, clampedZ);
@@ -504,54 +227,41 @@ public class VSCHUtils {
 	 * @return the value of the highest axis
 	 */
 	public static double getMax(Vector3d vec) {
-		int maxIndex = vec.maxComponent();
-		if (maxIndex == 0) {
-			return vec.x;
-		} else if (maxIndex == 1) {
-			return vec.y;
-		} else {
-			return vec.z;
-		}
+		return vec.get(vec.maxComponent());
 	}
 
 	/**
-  * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
-  * If no entities are found, returns null.  
-  * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
-  */
+	 * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
+	 * If no entities are found, returns null.  
+	 * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
+	 */
 	public static Entity getNearestEntityOfType(ServerLevel level, EntityType<?> entityType, Entity sourceEntity, double maxDistance) {
 		// Define the search bounding box
-		AABB searchBox = sourceEntity.getBoundingBox().inflate(maxDistance);
-
-		List<Entity> entities = level.getEntities(null, searchBox);
+		final AABB searchBox = sourceEntity.getBoundingBox().inflate(maxDistance);
+		final List<Entity> entities = level.getEntities((Entity) null, searchBox, entity -> entity.getType() == entityType);
 
 		Entity nearestEntity = null;
-
-		// Uhhh this doesn't seem good, but it works I guess?
-		double nearestDistance = 100000000000000.0d;
+		double nearestDistance = Double.MAX_VALUE;
 
 		for (Entity entity : entities) {
-			if (entity.getType() == entityType) {
-				double distance = entity.distanceToSqr(sourceEntity);
-				if (distance < nearestDistance) {
-					nearestEntity = entity;
-					nearestDistance = distance;
-				}
+			double distance = entity.distanceToSqr(sourceEntity);
+			if (distance < nearestDistance) {
+				nearestEntity = entity;
+				nearestDistance = distance;
 			}
 		}
 
 		return nearestEntity;
-
 	}
 
-	public static List<LoadedServerShip> getAllLoadedShips(ServerLevel level){
-		List<LoadedServerShip> loadedships = new ArrayList<>();
-		for (Ship ship : VSGameUtilsKt.getAllShips(level)) {
-			if(ship instanceof LoadedServerShip loaded){
-				loadedships.add(loaded);
+	public static List<LoadedServerShip> getLoadedShipsInLevel(ServerLevel level) {
+		final String dimId = VSGameUtilsKt.getDimensionId(level);
+		final List<LoadedServerShip> loadedships = new ArrayList<>();
+		for (final LoadedServerShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
+			if (dimId.equals(ship.getChunkClaimDimension())) {
+				loadedships.add(ship);
 			}
 		}
 		return loadedships;
 	}
-
 }
