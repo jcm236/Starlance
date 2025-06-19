@@ -224,7 +224,7 @@ public class LaserContext {
 	 * @see LaserUtil#hasEntityProcessor
 	 */
 	public boolean canHitEntity(final Level level, final Entity entity) {
-		if (entity.isSpectator()) {
+		if (entity.isSpectator() || !entity.isAttackable()) {
 			return false;
 		}
 		for (final ILaserAttachment attachment : this.props.getAttachments()) {

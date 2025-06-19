@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
@@ -133,6 +135,19 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 			final BlockState oldState, final BlockPos pos,
 			final ILaserProcessor processor
 		) {
+			this.beforeProcessLaser(ctx, processor);
+		}
+
+		@Override
+		public void beforeProcessLaserOnEntity(
+			final LaserContext ctx,
+			final Entity entity,
+			final ILaserProcessor processor
+		) {
+			this.beforeProcessLaser(ctx, processor);
+		}
+
+		public void beforeProcessLaser(final LaserContext ctx, final ILaserProcessor processor) {
 			if (ctx.canceled()) {
 				return;
 			}
@@ -195,6 +210,27 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 					);
 				case 1:
 					map.put("id", BuiltInRegistries.BLOCK.getKey(block).toString());
+				}
+			} else if (hitResult instanceof EntityHitResult entityHitResult) {
+				final Entity entity = entityHitResult.getEntity();
+				final EntityType entityType = entity.getType();
+				switch (infoLevel) {
+				case 4:
+					if (entity instanceof LivingEntity) {
+						map.put("health", entity.getHealth());
+						map.put("maxHealth", entity.getMaxHealth());
+					}
+				case 3:
+					map.put("uuid", entity.getStringUUID());
+				case 2:
+					map.put("tags", entityType.builtInRegistryHolder().tags()
+						.map(TagKey::location)
+						.map(ResourceLocation::toString)
+						.collect(STRING_TO_MAP_COLLECTOR)
+					);
+				case 1:
+					map.put("id", EntityType.getKey(entityType).toString());
+					map.put("name", entity.getName().getString());
 				}
 			}
 			this.blocks.forEach((b) -> {
