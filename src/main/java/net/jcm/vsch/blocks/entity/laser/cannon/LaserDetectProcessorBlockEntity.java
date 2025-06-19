@@ -128,12 +128,7 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 		}
 
 		@Override
-		public void afterMergeLaser(final LaserContext ctx, final LaserContext target, final LaserProperties targetProps) {
-			targetProps.withAttachment(this);
-		}
-
-		@Override
-		public void beforeProcessLaser(
+		public void beforeProcessLaserOnBlock(
 			final LaserContext ctx,
 			final BlockState oldState, final BlockPos pos,
 			final ILaserProcessor processor
@@ -207,6 +202,11 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 					m.putAll(map);
 				});
 			});
+		}
+
+		@Override
+		public void afterMergeLaser(final LaserContext ctx, final LaserContext target, final LaserProperties targetProps) {
+			targetProps.withAttachment(this);
 		}
 	}
 }

@@ -217,7 +217,7 @@ public class LaserContext {
 			return false;
 		}
 		final AABB box = entity.getBoundingBox();
-		final double size = box.getXSize() * box.getYSize() * box.getZSize();
+		final double size = box.getXsize() * box.getYsize() * box.getZsize();
 		if (size < this.props.r / 256.0) {
 			return false;
 		}
@@ -291,7 +291,7 @@ public class LaserContext {
 				this.isEndPointProcessor = processor.isEndPoint();
 			}
 			for (ILaserAttachment attachment : this.props.getAttachments()) {
-				attachment.beforeProcessLaserOnEntity(this, entity);
+				attachment.beforeProcessLaserOnEntity(this, entity, processor);
 			}
 			if (this.canceled) {
 				return;

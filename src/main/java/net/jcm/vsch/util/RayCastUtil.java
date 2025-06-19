@@ -22,7 +22,7 @@ public final class RayCastUtil {
 			begin = end;
 			end = begin.add(unit);
 			AABB box = new AABB(begin, end);
-			List<Entity> entities = level.getEntities(null, box, filter);
+			List<Entity> entities = level.getEntities((Entity) null, box, filter);
 			EntityHitResult hit = clipNearestEntity(entities, from, to);
 			if (hit != null) {
 				return hit;
@@ -30,7 +30,7 @@ public final class RayCastUtil {
 		}
 		if (!end.equals(to)) {
 			AABB box = new AABB(end, to);
-			List<Entity> entities = level.getEntities(null, box, filter);
+			List<Entity> entities = level.getEntities((Entity) null, box, filter);
 			EntityHitResult hit = clipNearestEntity(entities, from, to);
 			if (hit != null) {
 				return hit;

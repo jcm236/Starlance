@@ -2,10 +2,12 @@ package net.jcm.vsch.api.laser;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -138,9 +140,9 @@ public final class LaserUtil {
 			return null;
 		}
 		final Level level = laser.getLevel();
-		final Entity entity = laser.getEntity();
+		final Entity entity = hitResult.getEntity();
 		for (Class<?> entityClass = entity.getClass(); Entity.class.isAssignableFrom(entityClass); entityClass = entityClass.getSuperclass()) {
-			final ILaserProcessor processor = DEFAULT_ENTITY_PROCESSOR_MAP.get(blockClass);
+			final ILaserProcessor processor = DEFAULT_ENTITY_PROCESSOR_MAP.get(entityClass);
 			if (processor != null) {
 				return processor;
 			}

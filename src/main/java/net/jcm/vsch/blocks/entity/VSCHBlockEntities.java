@@ -122,4 +122,8 @@ public class VSCHBlockEntities {
 		() -> BlockEntityType.Builder.of(ScreenBlockEntity::new, VSCHBlocks.SCREEN_BLOCK.get())
 			.build(null)
 	);
+
+	public static void register(IEventBus eventBus) {
+		BLOCK_ENTITIES.register(eventBus);
+	}
 }

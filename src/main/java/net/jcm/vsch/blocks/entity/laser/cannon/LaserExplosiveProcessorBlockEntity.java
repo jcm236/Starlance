@@ -51,7 +51,7 @@ public class LaserExplosiveProcessorBlockEntity extends AbstractLaserCannonBlock
 		public static final ExplosiveAttachment INSTANCE = new ExplosiveAttachment();
 
 		@Override
-		public void beforeProcessLaser(
+		public void beforeProcessLaserOnBlock(
 			final LaserContext ctx,
 			final BlockState oldState, final BlockPos pos,
 			final ILaserProcessor processor

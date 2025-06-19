@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.Int2FloatOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BeaconBeamBlock;
@@ -117,6 +118,7 @@ public final class DefaultLaserProcessors {
 	private static void entityDamageProcessor(LaserContext laser) {
 		final EntityHitResult hitResult = (EntityHitResult) (laser.getHitResult());
 		final LivingEntity entity = (LivingEntity) (hitResult.getEntity());
+		final LaserProperties props = laser.getLaserOnHitProperties();
 		final int heat = props.r / 128;
 		final float lucky = props.g / 128.0f;
 		final int strength = props.b / 256;
@@ -125,7 +127,8 @@ public final class DefaultLaserProcessors {
 			entity.setSecondsOnFire(heat);
 		}
 		if (strength > 0) {
-			entity.hurt(entity.damageSources().lightningBolt()); // TODO: make our own laser damage source with loot modifier.
+			// TODO: make our own laser damage source with loot modifier.
+			entity.hurt(entity.damageSources().lightningBolt(), heat + strength);
 		}
 	}
 
