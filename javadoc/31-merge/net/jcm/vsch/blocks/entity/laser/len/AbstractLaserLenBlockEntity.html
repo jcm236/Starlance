@@ -148,7 +148,9 @@ implements <a href="../../../../api/laser/ILaserProcessor.html" title="interface
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxLaserStrength()" class="member-name-link">getMaxLaserStrength</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the maximum laser strength the processor can handle.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getMaxLaserStrengthPerTick()" class="member-name-link">getMaxLaserStrengthPerTick</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
@@ -171,7 +173,9 @@ implements <a href="../../../../api/laser/ILaserProcessor.html" title="interface
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit</a><wbr>(<a href="../../../../api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">invoked when a laser hits this processor</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
@@ -240,9 +244,14 @@ implements <a href="../../../../api/laser/ILaserProcessor.html" title="interface
 <section class="detail" id="getMaxLaserStrength()">
 <h3>getMaxLaserStrength</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxLaserStrength</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html#getMaxLaserStrength()">ILaserProcessor</a></code></span></div>
+<div class="block">Get the maximum laser strength the processor can handle.
+ Only has effect when <a href="../../../../api/laser/ILaserProcessor.html#isEndPoint()"><code>ILaserProcessor.isEndPoint()</code></a> returns <code>false</code></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../../api/laser/ILaserProcessor.html#getMaxLaserStrength()">getMaxLaserStrength</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></code></dd>
+<dt>Returns:</dt>
+<dd>the maximum laser strength the processor can handle</dd>
 </dl>
 </section>
 </li>
@@ -256,9 +265,19 @@ implements <a href="../../../../api/laser/ILaserProcessor.html" title="interface
 <section class="detail" id="onLaserHit(net.jcm.vsch.api.laser.LaserContext)">
 <h3>onLaserHit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLaserHit</span><wbr><span class="parameters">(<a href="../../../../api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)">ILaserProcessor</a></code></span></div>
+<div class="block">invoked when a laser hits this processor</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../../api/laser/ILaserProcessor.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)">onLaserHit</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>ctx</code> - The laser that hits the processor</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../api/laser/LaserContext.html#fire()"><code>LaserContext.fire()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>

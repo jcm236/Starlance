@@ -139,7 +139,13 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.BlockGetter&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">canPassThroughBlock will be invoked when a laser passing a block.</div>
+<div class="block">canPassThroughBlock will be invoked when a laser trying to pass a block.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#canPassThroughEntity(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.entity.Entity)" class="member-name-link">canPassThroughEntity</a><wbr>(<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx,
+ net.minecraft.world.entity.Entity&nbsp;entity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">canPassThroughEntity will be invoked when a laser trying to pass an entity.</div>
 </div>
 </div>
 </div>
@@ -162,7 +168,7 @@ loadScripts(document, 'script');</script>
  net.minecraft.world.level.block.state.BlockState&nbsp;state,
  net.minecraft.world.level.BlockGetter&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</span></div>
-<div class="block">canPassThroughBlock will be invoked when a laser passing a block.
+<div class="block">canPassThroughBlock will be invoked when a laser trying to pass a block.
  You can invoke <a href="LaserContext.html#cancel()"><code>LaserContext.cancel()</code></a> to immediately cancel further processing.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -173,7 +179,7 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> if the block is passable,
      <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a> if the block is not passable,
-     or <code>null</code> if unknown, which will invoke next checker.</dd>
+     or <code>null</code> if unknown, which will invoke next tester.</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
@@ -227,6 +233,30 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list-long">
 <li><a href="#beforeProcessLaserOnBlock(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.BlockPos,net.jcm.vsch.api.laser.ILaserProcessor)"><code>beforeProcessLaserOnBlock(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.level.block.state.BlockState,net.minecraft.core.BlockPos,net.jcm.vsch.api.laser.ILaserProcessor)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="canPassThroughEntity(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.entity.Entity)">
+<h3>canPassThroughEntity</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></span>&nbsp;<span class="element-name">canPassThroughEntity</span><wbr><span class="parameters">(<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx,
+ net.minecraft.world.entity.Entity&nbsp;entity)</span></div>
+<div class="block">canPassThroughEntity will be invoked when a laser trying to pass an entity.
+ You can invoke <a href="LaserContext.html#cancel()"><code>LaserContext.cancel()</code></a> to immediately cancel further processing.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>ctx</code> - The <a href="LaserContext.html" title="class in net.jcm.vsch.api.laser"><code>LaserContext</code></a></dd>
+<dd><code>entity</code> - The hitting <code>Entity</code></dd>
+<dt>Returns:</dt>
+<dd><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> if the block is passable,
+     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a> if the block is not passable,
+     or <code>null</code> if unknown, which will invoke next tester.</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="LaserContext.html#cancel()"><code>LaserContext.cancel()</code></a></li>
 </ul>
 </dd>
 </dl>

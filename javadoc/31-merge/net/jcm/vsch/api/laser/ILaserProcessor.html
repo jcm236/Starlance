@@ -94,16 +94,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#fromEndPoint(java.util.function.Consumer)" class="member-name-link">fromEndPoint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&gt;&nbsp;processor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">
+<div class="block">Wrap a <a href="LaserContext.html" title="class in net.jcm.vsch.api.laser"><code>LaserContext</code></a> consumer as an endpoint laser processor.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getMaxLaserStrength()" class="member-name-link">getMaxLaserStrength</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Get the maximum laser strength the processor can handle.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#isEndPoint()" class="member-name-link">isEndPoint</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit</a><wbr>(<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">invoked when a laser hits this processor</div>
+</div>
 </div>
 </div>
 </div>
@@ -122,24 +128,46 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isEndPoint()">
 <h3>isEndPoint</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEndPoint</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>false</code> if the laser will not be transmit further. <code>true</code> otherwise.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getMaxLaserStrength()">
 <h3>getMaxLaserStrength</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getMaxLaserStrength</span>()</div>
+<div class="block">Get the maximum laser strength the processor can handle.
+ Only has effect when <a href="#isEndPoint()"><code>isEndPoint()</code></a> returns <code>false</code></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the maximum laser strength the processor can handle</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="onLaserHit(net.jcm.vsch.api.laser.LaserContext)">
 <h3>onLaserHit</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onLaserHit</span><wbr><span class="parameters">(<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</span></div>
+<div class="block">invoked when a laser hits this processor</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>ctx</code> - The laser that hits the processor</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="LaserContext.html#fire()"><code>LaserContext.fire()</code></a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="fromEndPoint(java.util.function.Consumer)">
 <h3>fromEndPoint</h3>
 <div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></span>&nbsp;<span class="element-name">fromEndPoint</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&gt;&nbsp;processor)</span></div>
+<div class="block">Wrap a <a href="LaserContext.html" title="class in net.jcm.vsch.api.laser"><code>LaserContext</code></a> consumer as an endpoint laser processor.</div>
 </section>
 </li>
 </ul>

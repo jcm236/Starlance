@@ -144,7 +144,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit</a><wbr>(<a href="../../../../api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">invoked when a laser hits this processor</div>
+</div>
 </div>
 </div>
 </div>
@@ -215,11 +217,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onLaserHit(net.jcm.vsch.api.laser.LaserContext)">
 <h3>onLaserHit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLaserHit</span><wbr><span class="parameters">(<a href="../../../../api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a>&nbsp;ctx)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)">ILaserProcessor</a></code></span></div>
+<div class="block">invoked when a laser hits this processor</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../../../api/laser/ILaserProcessor.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)">onLaserHit</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></code></dd>
 <dt>Overrides:</dt>
 <dd><code><a href="AbstractLaserLenBlockEntity.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)">onLaserHit</a></code>&nbsp;in class&nbsp;<code><a href="AbstractLaserLenBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.len">AbstractLaserLenBlockEntity</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>ctx</code> - The laser that hits the processor</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../api/laser/LaserContext.html#fire()"><code>LaserContext.fire()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>

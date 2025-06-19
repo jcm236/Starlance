@@ -248,11 +248,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserContext.html#canHitEntity(net.minecraft.world.level.Level,net.minecraft.world.entity.Entity)" class="member-name-link">canHitEntity(Level, Entity)</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a></dt>
 <dd>
-<div class="block">Check if the entity can block the laser</div>
+<div class="block">Check if the entity can block the laser.</div>
 </dd>
 <dt><a href="net/jcm/vsch/api/laser/ILaserAttachment.html#canPassThroughBlock(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.BlockGetter,net.minecraft.core.BlockPos)" class="member-name-link">canPassThroughBlock(LaserContext, BlockState, BlockGetter, BlockPos)</a> - Method in interface net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/ILaserAttachment.html" title="interface in net.jcm.vsch.api.laser">ILaserAttachment</a></dt>
 <dd>
-<div class="block">canPassThroughBlock will be invoked when a laser passing a block.</div>
+<div class="block">canPassThroughBlock will be invoked when a laser trying to pass a block.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/laser/ILaserAttachment.html#canPassThroughEntity(net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.entity.Entity)" class="member-name-link">canPassThroughEntity(LaserContext, Entity)</a> - Method in interface net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/ILaserAttachment.html" title="interface in net.jcm.vsch.api.laser">ILaserAttachment</a></dt>
+<dd>
+<div class="block">canPassThroughEntity will be invoked when a laser trying to pass an entity.</div>
 </dd>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/cannon/AbstractLaserCannonBlockEntity.html#canProcessLaser(net.minecraft.core.Direction)" class="member-name-link">canProcessLaser(Direction)</a> - Method in class net.jcm.vsch.blocks.entity.laser.cannon.<a href="net/jcm/vsch/blocks/entity/laser/cannon/AbstractLaserCannonBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.cannon">AbstractLaserCannonBlockEntity</a></dt>
 <dd>&nbsp;</dd>
@@ -415,6 +419,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#drain(net.minecraftforge.fluids.FluidStack,net.minecraftforge.fluids.capability.IFluidHandler.FluidAction)" class="member-name-link">drain(FluidStack, IFluidHandler.FluidAction)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html#dropFromLootTable(net.minecraft.world.damagesource.DamageSource,boolean,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.level.storage.loot.LootParams.Builder)" class="member-name-link">dropFromLootTable(DamageSource, boolean, CallbackInfo, LootParams.Builder)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
@@ -484,7 +490,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/api/laser/LaserEmitter.html#fromBlockEntityCenter(net.minecraft.world.level.block.entity.BlockEntity,net.minecraft.world.phys.Vec3)" class="member-name-link">fromBlockEntityCenter(BlockEntity, Vec3)</a> - Static method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserEmitter.html" title="class in net.jcm.vsch.api.laser">LaserEmitter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/ILaserProcessor.html#fromEndPoint(java.util.function.Consumer)" class="member-name-link">fromEndPoint(Consumer&lt;LaserContext&gt;)</a> - Static method in interface net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Wrap a <a href="net/jcm/vsch/api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser"><code>LaserContext</code></a> consumer as an endpoint laser processor.</div>
+</dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserEmitter.html#fromEntity(net.minecraft.world.level.Level,net.minecraft.world.phys.Vec3,net.minecraft.world.phys.Vec3,net.minecraft.world.entity.Entity)" class="member-name-link">fromEntity(Level, Vec3, Vec3, Entity)</a> - Static method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserEmitter.html" title="class in net.jcm.vsch.api.laser">LaserEmitter</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -519,8 +527,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/custom/laser/len/LaserStrengthDetectorLenBlock.html#getAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">getAnalogOutputSignal(BlockState, Level, BlockPos)</a> - Method in class net.jcm.vsch.blocks.custom.laser.len.<a href="net/jcm/vsch/blocks/custom/laser/len/LaserStrengthDetectorLenBlock.html" title="class in net.jcm.vsch.blocks.custom.laser.len">LaserStrengthDetectorLenBlock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#getApplierAtPos(net.minecraft.core.BlockPos)" class="member-name-link">getApplierAtPos(BlockPos)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinMob.html#getArmorSlots()" class="member-name-link">getArmorSlots()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinMob.html" title="class in net.jcm.vsch.mixin.minecraft">MixinMob</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserProperties.html#getAttachments()" class="member-name-link">getAttachments()</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserProperties.html" title="class in net.jcm.vsch.api.laser">LaserProperties</a></dt>
 <dd>&nbsp;</dd>
@@ -662,6 +668,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserContext.html#getInputDirection()" class="member-name-link">getInputDirection()</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/laser/LaserDamageSource.html#getLaser()" class="member-name-link">getLaser()</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserDamageSource.html" title="class in net.jcm.vsch.api.laser">LaserDamageSource</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/LaserEntity.html#getLaser()" class="member-name-link">getLaser()</a> - Method in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/LaserEntity.html" title="class in net.jcm.vsch.entity">LaserEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserContext.html#getLaserOnHitProperties()" class="member-name-link">getLaserOnHitProperties()</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a></dt>
@@ -697,7 +705,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/items/custom/MagnetBootItem.html#getMaxForce()" class="member-name-link">getMaxForce()</a> - Method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/ILaserProcessor.html#getMaxLaserStrength()" class="member-name-link">getMaxLaserStrength()</a> - Method in interface net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the maximum laser strength the processor can handle.</div>
+</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/cannon/LaserReceiverBlockEntity.html#getMaxLaserStrength()" class="member-name-link">getMaxLaserStrength()</a> - Method in class net.jcm.vsch.blocks.entity.laser.cannon.<a href="net/jcm/vsch/blocks/entity/laser/cannon/LaserReceiverBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.cannon">LaserReceiverBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html#getMaxLaserStrength()" class="member-name-link">getMaxLaserStrength()</a> - Method in class net.jcm.vsch.blocks.entity.laser.len.<a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.len">AbstractLaserLenBlockEntity</a></dt>
@@ -948,8 +958,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/ThrusterPeripheral.html#getType()" class="member-name-link">getType()</a> - Method in class net.jcm.vsch.compat.cc.<a href="net/jcm/vsch/compat/cc/ThrusterPeripheral.html" title="class in net.jcm.vsch.compat.cc">ThrusterPeripheral</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#getType()" class="member-name-link">getType()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/particle/custom/LaserHitParticleOption.html#getType()" class="member-name-link">getType()</a> - Method in class net.jcm.vsch.particle.custom.<a href="net/jcm/vsch/particle/custom/LaserHitParticleOption.html" title="class in net.jcm.vsch.particle.custom">LaserHitParticleOption</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/jade/componentproviders/GyroBlockComponentProvider.html#getUid()" class="member-name-link">getUid()</a> - Method in class net.jcm.vsch.compat.jade.componentproviders.<a href="net/jcm/vsch/compat/jade/componentproviders/GyroBlockComponentProvider.html" title="class in net.jcm.vsch.compat.jade.componentproviders">GyroBlockComponentProvider</a></dt>
@@ -1067,6 +1075,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/laser/len/LaserStrengthDetectorLenBlock.html#hasAnalogOutputSignal(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">hasAnalogOutputSignal(BlockState)</a> - Method in class net.jcm.vsch.blocks.custom.laser.len.<a href="net/jcm/vsch/blocks/custom/laser/len/LaserStrengthDetectorLenBlock.html" title="class in net.jcm.vsch.blocks.custom.laser.len">LaserStrengthDetectorLenBlock</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/laser/LaserUtil.html#hasEntityProcessor(net.minecraft.world.entity.Entity)" class="member-name-link">hasEntityProcessor(Entity)</a> - Static method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserUtil.html" title="class in net.jcm.vsch.api.laser">LaserUtil</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/LaserContext.html#hasRedirected()" class="member-name-link">hasRedirected()</a> - Method in class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserContext.html" title="class in net.jcm.vsch.api.laser">LaserContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/SerializeUtil.html#hitResultFromNBT(net.minecraft.world.level.Level,net.minecraft.nbt.CompoundTag)" class="member-name-link">hitResultFromNBT(Level, CompoundTag)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/SerializeUtil.html" title="class in net.jcm.vsch.util">SerializeUtil</a></dt>
@@ -1081,8 +1091,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/entity/template/IAnalogOutputBlockEntity.html" class="type-name-link" title="interface in net.jcm.vsch.blocks.entity.template">IAnalogOutputBlockEntity</a> - Interface in <a href="net/jcm/vsch/blocks/entity/template/package-summary.html">net.jcm.vsch.blocks.entity.template</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/template/IColoredBlockEntity.html" class="type-name-link" title="interface in net.jcm.vsch.blocks.entity.template">IColoredBlockEntity</a> - Interface in <a href="net/jcm/vsch/blocks/entity/template/package-summary.html">net.jcm.vsch.blocks.entity.template</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ducks/IEntityDuck.html" class="type-name-link" title="interface in net.jcm.vsch.ducks">IEntityDuck</a> - Interface in <a href="net/jcm/vsch/ducks/package-summary.html">net.jcm.vsch.ducks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/IGuiAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
 <dd>&nbsp;</dd>
@@ -1156,6 +1164,8 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="net/jcm/vsch/network/s2c/LaserContextPacketS2C.html#laser" class="member-name-link">laser</a> - Variable in class net.jcm.vsch.network.s2c.<a href="net/jcm/vsch/network/s2c/LaserContextPacketS2C.html" title="class in net.jcm.vsch.network.s2c">LaserContextPacketS2C</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/VSCHDamageTypes.html#LASER_BURN" class="member-name-link">LASER_BURN</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHDamageTypes.html" title="class in net.jcm.vsch">VSCHDamageTypes</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#LASER_CONDENSING_LEN_BLOCK" class="member-name-link">LASER_CONDENSING_LEN_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/VSCHBlockEntities.html#LASER_CONDENSING_LEN_BLOCK_ENTITY" class="member-name-link">LASER_CONDENSING_LEN_BLOCK_ENTITY</a> - Static variable in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/VSCHBlockEntities.html" title="class in net.jcm.vsch.blocks.entity">VSCHBlockEntities</a></dt>
@@ -1211,6 +1221,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/network/s2c/LaserContextPacketS2C.html" class="type-name-link" title="class in net.jcm.vsch.network.s2c">LaserContextPacketS2C</a> - Class in <a href="net/jcm/vsch/network/s2c/package-summary.html">net.jcm.vsch.network.s2c</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/s2c/LaserContextPacketS2C.html#%3Cinit%3E(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">LaserContextPacketS2C(LaserContext)</a> - Constructor for class net.jcm.vsch.network.s2c.<a href="net/jcm/vsch/network/s2c/LaserContextPacketS2C.html" title="class in net.jcm.vsch.network.s2c">LaserContextPacketS2C</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/laser/LaserDamageSource.html" class="type-name-link" title="class in net.jcm.vsch.api.laser">LaserDamageSource</a> - Class in <a href="net/jcm/vsch/api/laser/package-summary.html">net.jcm.vsch.api.laser</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/laser/LaserDamageSource.html#%3Cinit%3E(net.minecraft.core.Holder,net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">LaserDamageSource(Holder&lt;DamageType&gt;, LaserContext)</a> - Constructor for class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserDamageSource.html" title="class in net.jcm.vsch.api.laser">LaserDamageSource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/laser/LaserDamageSource.html#%3Cinit%3E(net.minecraft.core.Holder,net.jcm.vsch.api.laser.LaserContext,net.minecraft.world.phys.Vec3)" class="member-name-link">LaserDamageSource(Holder&lt;DamageType&gt;, LaserContext, Vec3)</a> - Constructor for class net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/LaserDamageSource.html" title="class in net.jcm.vsch.api.laser">LaserDamageSource</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/laser/cannon/LaserDetectProcessorBlock.html" class="type-name-link" title="class in net.jcm.vsch.blocks.custom.laser.cannon">LaserDetectProcessorBlock</a> - Class in <a href="net/jcm/vsch/blocks/custom/laser/cannon/package-summary.html">net.jcm.vsch.blocks.custom.laser.cannon</a></dt>
 <dd>&nbsp;</dd>
@@ -1395,10 +1411,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/cosmos/MixinAerialLightRenderer.html#%3Cinit%3E()" class="member-name-link">MixinAerialLightRenderer()</a> - Constructor for class net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinAerialLightRenderer.html" title="class in net.jcm.vsch.mixin.cosmos">MixinAerialLightRenderer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#%3Cinit%3E()" class="member-name-link">MixinEntity()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinGui.html" class="type-name-link" title="class in net.jcm.vsch.mixin.client">MixinGui</a> - Class in <a href="net/jcm/vsch/mixin/client/package-summary.html">net.jcm.vsch.mixin.client</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinGui.html#%3Cinit%3E()" class="member-name-link">MixinGui()</a> - Constructor for class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinGui.html" title="class in net.jcm.vsch.mixin.client">MixinGui</a></dt>
@@ -1411,7 +1423,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/cosmos/MixinLightRenderer.html#%3Cinit%3E()" class="member-name-link">MixinLightRenderer()</a> - Constructor for class net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinLightRenderer.html" title="class in net.jcm.vsch.mixin.cosmos">MixinLightRenderer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html#%3Cinit%3E()" class="member-name-link">MixinLivingEntity()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinMob.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinMob</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinMob.html#%3Cinit%3E()" class="member-name-link">MixinMob()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinMob.html" title="class in net.jcm.vsch.mixin.minecraft">MixinMob</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/valkyrienskies/MixinShipAssemblyKt.html" class="type-name-link" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinShipAssemblyKt</a> - Class in <a href="net/jcm/vsch/mixin/valkyrienskies/package-summary.html">net.jcm.vsch.mixin.valkyrienskies</a></dt>
 <dd>&nbsp;</dd>
@@ -1434,8 +1452,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/compat/create/ponder/scenes/ThrusterScenes.html#modes(com.simibubi.create.foundation.ponder.SceneBuilder,com.simibubi.create.foundation.ponder.SceneBuildingUtil)" class="member-name-link">modes(SceneBuilder, SceneBuildingUtil)</a> - Static method in class net.jcm.vsch.compat.create.ponder.scenes.<a href="net/jcm/vsch/compat/create/ponder/scenes/ThrusterScenes.html" title="class in net.jcm.vsch.compat.create.ponder.scenes">ThrusterScenes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHMod.html#MODID" class="member-name-link">MODID</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHMod.html" title="class in net.jcm.vsch">VSCHMod</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#moveTo(double,double,double,float,float)" class="member-name-link">moveTo(double, double, double, float, float)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
@@ -1519,8 +1535,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/compat/jade/componentproviders/package-summary.html">net.jcm.vsch.compat.jade.componentproviders</a> - package net.jcm.vsch.compat.jade.componentproviders</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/package-summary.html">net.jcm.vsch.config</a> - package net.jcm.vsch.config</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ducks/package-summary.html">net.jcm.vsch.ducks</a> - package net.jcm.vsch.ducks</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/package-summary.html">net.jcm.vsch.entity</a> - package net.jcm.vsch.entity</dt>
 <dd>&nbsp;</dd>
@@ -1614,7 +1628,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html#onLaserFired(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserFired(LaserContext)</a> - Method in class net.jcm.vsch.blocks.entity.laser.len.<a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.len">AbstractLaserLenBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/laser/ILaserProcessor.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit(LaserContext)</a> - Method in interface net.jcm.vsch.api.laser.<a href="net/jcm/vsch/api/laser/ILaserProcessor.html" title="interface in net.jcm.vsch.api.laser">ILaserProcessor</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">invoked when a laser hits this processor</div>
+</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/cannon/LaserReceiverBlockEntity.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit(LaserContext)</a> - Method in class net.jcm.vsch.blocks.entity.laser.cannon.<a href="net/jcm/vsch/blocks/entity/laser/cannon/LaserReceiverBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.cannon">LaserReceiverBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html#onLaserHit(net.jcm.vsch.api.laser.LaserContext)" class="member-name-link">onLaserHit(LaserContext)</a> - Method in class net.jcm.vsch.blocks.entity.laser.len.<a href="net/jcm/vsch/blocks/entity/laser/len/AbstractLaserLenBlockEntity.html" title="class in net.jcm.vsch.blocks.entity.laser.len">AbstractLaserLenBlockEntity</a></dt>
@@ -1963,8 +1979,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#setPower(float)" class="member-name-link">setPower(float)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#setRemoved(net.minecraft.world.entity.Entity.RemovalReason)" class="member-name-link">setRemoved(Entity.RemovalReason)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#setThrusterMode(net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode)" class="member-name-link">setThrusterMode(ThrusterData.ThrusterMode)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#setThrusterMode(net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode)" class="member-name-link">setThrusterMode(ThrusterData.ThrusterMode)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
@@ -1978,8 +1992,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html#setTorqueY(double)" class="member-name-link">setTorqueY(double)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GyroBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html#setTorqueZ(double)" class="member-name-link">setTorqueZ(double)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GyroBlockEntity</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#setYHeadRot(float)" class="member-name-link">setYHeadRot(float)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/GravityInducer.html#ship" class="member-name-link">ship</a> - Variable in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
 <dd>&nbsp;</dd>
@@ -2047,8 +2059,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html" class="type-name-link" title="class in net.jcm.vsch.util">TeleportationHandler</a> - Class in <a href="net/jcm/vsch/util/package-summary.html">net.jcm.vsch.util</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler(ServerLevel, ServerLevel, boolean)</a> - Constructor for class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#teleportPassengers()" class="member-name-link">teleportPassengers()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/thruster/ThrusterData.html#throttle" class="member-name-link">throttle</a> - Variable in class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.html" title="class in net.jcm.vsch.ship.thruster">ThrusterData</a></dt>
 <dd>&nbsp;</dd>
@@ -2212,8 +2222,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#unRide()" class="member-name-link">unRide()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#up(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">up(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/laser/cannon/LaserEmitterBlock.html#use(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.entity.player.Player,net.minecraft.world.InteractionHand,net.minecraft.world.phys.BlockHitResult)" class="member-name-link">use(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)</a> - Method in class net.jcm.vsch.blocks.custom.laser.cannon.<a href="net/jcm/vsch/blocks/custom/laser/cannon/LaserEmitterBlock.html" title="class in net.jcm.vsch.blocks.custom.laser.cannon">LaserEmitterBlock</a></dt>
@@ -2264,10 +2272,6 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHMod.html#VERSION" class="member-name-link">VERSION</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHMod.html" title="class in net.jcm.vsch">VSCHMod</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ducks/IEntityDuck.html#vsch$getNewEntity()" class="member-name-link">vsch$getNewEntity()</a> - Method in interface net.jcm.vsch.ducks.<a href="net/jcm/vsch/ducks/IEntityDuck.html" title="interface in net.jcm.vsch.ducks">IEntityDuck</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#vsch$getNewEntity()" class="member-name-link">vsch$getNewEntity()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/IGuiAccessor.html#vsch$setOverlayMessageIfNotExist(net.minecraft.network.chat.Component,int)" class="member-name-link">vsch$setOverlayMessageIfNotExist(Component, int)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IGuiAccessor.html" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinGui.html#vsch$setOverlayMessageIfNotExist(net.minecraft.network.chat.Component,int)" class="member-name-link">vsch$setOverlayMessageIfNotExist(Component, int)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinGui.html" title="class in net.jcm.vsch.mixin.client">MixinGui</a></dt>
@@ -2283,6 +2287,10 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/config/VSCHConfig.html" class="type-name-link" title="class in net.jcm.vsch.config">VSCHConfig</a> - Class in <a href="net/jcm/vsch/config/package-summary.html">net.jcm.vsch.config</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/VSCHConfig.html#%3Cinit%3E()" class="member-name-link">VSCHConfig()</a> - Constructor for class net.jcm.vsch.config.<a href="net/jcm/vsch/config/VSCHConfig.html" title="class in net.jcm.vsch.config">VSCHConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/VSCHDamageTypes.html" class="type-name-link" title="class in net.jcm.vsch">VSCHDamageTypes</a> - Class in <a href="net/jcm/vsch/package-summary.html">net.jcm.vsch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/VSCHDamageTypes.html#%3Cinit%3E()" class="member-name-link">VSCHDamageTypes()</a> - Constructor for class net.jcm.vsch.<a href="net/jcm/vsch/VSCHDamageTypes.html" title="class in net.jcm.vsch">VSCHDamageTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/VSCHEntities.html" class="type-name-link" title="class in net.jcm.vsch.entity">VSCHEntities</a> - Class in <a href="net/jcm/vsch/entity/package-summary.html">net.jcm.vsch.entity</a></dt>
 <dd>&nbsp;</dd>
