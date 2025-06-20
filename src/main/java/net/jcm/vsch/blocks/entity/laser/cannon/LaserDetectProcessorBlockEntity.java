@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
@@ -216,9 +217,9 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 				final EntityType entityType = entity.getType();
 				switch (infoLevel) {
 				case 4:
-					if (entity instanceof LivingEntity) {
-						map.put("health", entity.getHealth());
-						map.put("maxHealth", entity.getMaxHealth());
+					if (entity instanceof LivingEntity livingEntity) {
+						map.put("health", livingEntity.getHealth());
+						map.put("maxHealth", livingEntity.getMaxHealth());
 					}
 				case 3:
 					map.put("uuid", entity.getStringUUID());
