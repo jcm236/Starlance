@@ -17,7 +17,6 @@ net.jcm.vsch.compat.create.ponder.scenes
 net.jcm.vsch.compat.jade
 net.jcm.vsch.compat.jade.componentproviders
 net.jcm.vsch.config
-net.jcm.vsch.ducks
 net.jcm.vsch.entity
 net.jcm.vsch.event
 net.jcm.vsch.items
