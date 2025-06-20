@@ -214,7 +214,7 @@ public class LaserDetectProcessorBlockEntity extends AbstractLaserCannonBlockEnt
 				}
 			} else if (hitResult instanceof EntityHitResult entityHitResult) {
 				final Entity entity = entityHitResult.getEntity();
-				final EntityType entityType = entity.getType();
+				final EntityType<?> entityType = entity.getType();
 				switch (infoLevel) {
 				case 4:
 					if (entity instanceof LivingEntity livingEntity) {
