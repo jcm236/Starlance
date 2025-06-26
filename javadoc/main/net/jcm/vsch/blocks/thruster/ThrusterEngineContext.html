@@ -104,11 +104,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraftforge.energy.IEnergyStorage,net.minecraftforge.fluids.capability.IFluidHandler,double,int)" class="member-name-link">ThrusterEngineContext</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraftforge.energy.IEnergyStorage,net.minecraftforge.fluids.capability.IFluidHandler,double,int,double)" class="member-name-link">ThrusterEngineContext</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraftforge.energy.IEnergyStorage&nbsp;energy,
  net.minecraftforge.fluids.capability.IFluidHandler&nbsp;tanks,
  double&nbsp;power,
- int&nbsp;amount)</code></div>
+ int&nbsp;amount,
+ double&nbsp;scale)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -142,15 +143,18 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPower()" class="member-name-link">getPower</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRejected()" class="member-name-link">isRejected</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScale()" class="member-name-link">getScale</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reject()" class="member-name-link">reject</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRejected()" class="member-name-link">isRejected</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(double)" class="member-name-link">setPower</a><wbr>(double&nbsp;power)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reject()" class="member-name-link">reject</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(double)" class="member-name-link">setPower</a><wbr>(double&nbsp;power)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -169,13 +173,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,net.minecraftforge.energy.IEnergyStorage,net.minecraftforge.fluids.capability.IFluidHandler,double,int)">
+<section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,net.minecraftforge.energy.IEnergyStorage,net.minecraftforge.fluids.capability.IFluidHandler,double,int,double)">
 <h3>ThrusterEngineContext</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ThrusterEngineContext</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraftforge.energy.IEnergyStorage&nbsp;energy,
  net.minecraftforge.fluids.capability.IFluidHandler&nbsp;tanks,
  double&nbsp;power,
- int&nbsp;amount)</span></div>
+ int&nbsp;amount,
+ double&nbsp;scale)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>level</code> - The level the thruster is in</dd>
@@ -183,6 +188,7 @@ loadScripts(document, 'script');</script>
 <dd><code>tanks</code> - The engine's fluid tanks, drain only</dd>
 <dd><code>power</code> - The maximum power (in range of [0.0, 1.0]) the engine should maximum run with</dd>
 <dd><code>amount</code> - The amount of thrusters</dd>
+<dd><code>scale</code> - The ship's scale</dd>
 </dl>
 </section>
 </li>
@@ -246,6 +252,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getAmount()">
 <h3>getAmount</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getAmount</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getScale()">
+<h3>getScale</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getScale</span>()</div>
 </section>
 </li>
 </ul>
