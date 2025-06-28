@@ -9,8 +9,7 @@
     "cosmos.MixinSpacesuitwornLogicProcedure",
     "minecraft.MixinMob",
     "valkyrienskies.MixinShipAssemblyKt",
-    "valkyrienskies.MixinVSGameUtilsKt",
-    "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
+    "valkyrienskies.MixinVSGameUtilsKt"
   ],
   "client": [
     "client.MixinGui"

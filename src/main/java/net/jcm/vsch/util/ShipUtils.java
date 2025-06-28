@@ -13,7 +13,6 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.apigame.physics.PhysicsEntityServer;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
-import org.valkyrienskies.core.impl.game.ships.ShipObjectServerWorld;
 import org.valkyrienskies.core.impl.game.ships.ShipTransformImpl;
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -33,8 +32,10 @@ public class ShipUtils {
     public static ShipTransform transformFromId(Long id, ServerShipWorldCore shipWorld) {
         Ship ship = shipWorld.getAllShips().getById(id);
         if (ship == null) {
-            PhysicsEntityServer physicsEntity = ((ShipObjectServerWorld)shipWorld).getLoadedPhysicsEntities().get(id);
-            if (physicsEntity == null) return new ShipTransformImpl(new Vector3d(), new Vector3d(), new Quaterniond(), new Vector3d());
+            PhysicsEntityServer physicsEntity = shipWorld.retrieveLoadedPhysicsEntities().get(id);
+
+            // TODO: find new way to make empty transform
+            //if (physicsEntity == null) return new ShipTransformImpl.Companion().create();
             return physicsEntity.getShipTransform();
         }
         return ship.getTransform();

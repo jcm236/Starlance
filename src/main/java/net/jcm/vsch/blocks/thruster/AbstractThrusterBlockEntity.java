@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 public abstract class AbstractThrusterBlockEntity extends BlockEntity implements ParticleBlockEntity, WrenchableBlock {
 	private static final Logger LOGGER = LogUtils.getLogger();

@@ -1,7 +1,6 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,11 +24,10 @@ import org.valkyrienskies.core.api.ships.ServerShipTransformProvider;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.apigame.ShipTeleportData;
-import org.valkyrienskies.core.apigame.constraints.VSConstraint;
+import org.valkyrienskies.core.apigame.joints.VSJoint;
 import org.valkyrienskies.core.apigame.physics.PhysicsEntityServer;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
-import org.valkyrienskies.core.impl.game.ships.ShipObjectServerWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.DimensionIdProvider;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
@@ -46,8 +44,9 @@ public class TeleportationHandler {
 
 	private static final double INTERSECT_SIZE = 10;
 
-	private static Map<Long, Set<Integer>> SHIP2CONSTRAINTS;
-	private static Map<Integer, VSConstraint> ID2CONSTRAINT;
+	private static Map<Integer, VSJoint> ID2CONSTRAINT;
+	private static Map<Long, PhysicsEntityServer> LOADEDPHYSICSENTITIES;
+
 
 	private final Map<Long, Vector3d> shipToPos = new HashMap<>();
 	private final Map<Entity, Vec3> entityToPos = new HashMap<>();
@@ -68,9 +67,9 @@ public class TeleportationHandler {
 
 	@SubscribeEvent
 	public static void onServerStart(ServerStartedEvent event) {
-		final ServerShipObjectWorldAccessor server = (ServerShipObjectWorldAccessor) VSGameUtilsKt.getShipObjectWorld(event.getServer());
-		SHIP2CONSTRAINTS = server.getShipIdToConstraints();
-		ID2CONSTRAINT = server.getConstraints();
+		final ServerShipWorldCore server = VSGameUtilsKt.getShipObjectWorld(event.getServer());
+		ID2CONSTRAINT = server.getAllConstraints();
+		LOADEDPHYSICSENTITIES = server.retrieveLoadedPhysicsEntities();
 	}
 
 	public void handleTeleport(Ship ship, Vector3d newPos) {
@@ -93,10 +92,10 @@ public class TeleportationHandler {
 
 		shipToPos.put(currentPhysObject, pos.sub(origin, new Vector3d()).add(newPos));
 
-		final Set<Integer> constraints = SHIP2CONSTRAINTS.get(currentPhysObject);
+		final Set<Integer> constraints = shipWorld.getConstraintsOfShip(currentPhysObject);
 		if (constraints != null) {
 			constraints.forEach(id -> {
-				VSConstraint constraint = ID2CONSTRAINT.get(id);
+				VSJoint constraint = ID2CONSTRAINT.get(id);
 				collectConnected(constraint.getShipId0(), origin, newPos);
 				collectConnected(constraint.getShipId1(), origin, newPos);
 			});
@@ -198,20 +197,21 @@ public class TeleportationHandler {
 
 		final LoadedServerShip ship = shipWorld.getLoadedShips().getById(id);
 		if (ship == null) {
-			final PhysicsEntityServer physEntity = ((ShipObjectServerWorld) shipWorld).getLoadedPhysicsEntities().get(id);
+			final PhysicsEntityServer physEntity = LOADEDPHYSICSENTITIES.get(id);
 			if (physEntity == null) {
 				LOGGER.warn("[starlance]: Failed to teleport physics object with id " + id + "! It's neither a Ship nor a Physics Entity!");
 				return;
 			}
 			LOGGER.info("[starlance]: Teleporting physics entity {} to {} {}", id, vsDimName, newPos);
-			final ShipTeleportData teleportData = new ShipTeleportDataImpl(targetPos, physEntity.getShipTransform().getShipToWorldRotation(), physEntity.getLinearVelocity(), physEntity.getAngularVelocity(), vsDimName, null);
+			// TODO: always sets scale to 1 find way to get scale from physEntity
+			final ShipTeleportData teleportData = new ShipTeleportDataImpl(targetPos, physEntity.getShipTransform().getShipToWorldRotation(), physEntity.getLinearVelocity(), physEntity.getAngularVelocity(), vsDimName, 1.0, null);
 			shipWorld.teleportPhysicsEntity(physEntity, teleportData);
 			return;
 		}
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
 		final Vector3dc veloctiy = new Vector3d(ship.getVelocity());
 		final Vector3dc omega = new Vector3d(ship.getOmega());
-		final ShipTeleportData teleportData = new ShipTeleportDataImpl(targetPos, ship.getTransform().getShipToWorldRotation(), veloctiy, omega, vsDimName, null);
+		final ShipTeleportData teleportData = new ShipTeleportDataImpl(targetPos, ship.getTransform().getShipToWorldRotation(), veloctiy, omega, vsDimName, 1.0, null);
 		shipWorld.teleportShip(ship, teleportData);
 		if (veloctiy.lengthSquared() != 0 || omega.lengthSquared() != 0) {
 			ship.setTransformProvider(new ServerShipTransformProvider() {
