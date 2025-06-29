@@ -118,7 +118,7 @@ public class VSCHConfig {
 
 	private static String getDefaultThrusterFuelConsumeRates() {
 		Map<String, Integer> rates = new HashMap<>();
-		// rates.put("minecraft:lava", 32);
+		rates.put("vsch:hydrogen", 32);
 		return GSON.toJson(rates);
 	}
 
