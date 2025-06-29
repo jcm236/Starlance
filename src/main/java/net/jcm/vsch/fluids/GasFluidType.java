@@ -11,22 +11,16 @@ import net.minecraftforge.fluids.FluidType;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.Nullable;
 
-public class BasicGasFluidType extends FluidType {
+public class GasFluidType extends FluidType {
 	private final ResourceLocation stillTexture;
+	private final ResourceLocation flowTexture;
 	private final int tintColor;
 
-	public BasicGasFluidType(final ResourceLocation stillTexture, final int tintColor, final Properties properties) {
+	public GasFluidType(final ResourceLocation stillTexture, final ResourceLocation flowTexture, final int tintColor, final Properties properties) {
 		super(properties);
 		this.stillTexture = stillTexture;
+		this.flowTexture = flowTexture;
 		this.tintColor = tintColor;
-	}
-
-	public ResourceLocation getStillTexture() {
-		return this.stillTexture;
-	}
-
-	public int getTintColor() {
-		return this.tintColor;
 	}
 
 	@Override
@@ -34,12 +28,17 @@ public class BasicGasFluidType extends FluidType {
 		consumer.accept(new IClientFluidTypeExtensions() {
 			@Override
 			public ResourceLocation getStillTexture() {
-				return BasicGasFluidType.this.getStillTexture();
+				return GasFluidType.this.stillTexture;
+			}
+
+			@Override
+			public ResourceLocation getFlowingTexture() {
+				return GasFluidType.this.flowTexture;
 			}
 
 			@Override
 			public int getTintColor() {
-				return BasicGasFluidType.this.getTintColor();
+				return GasFluidType.this.tintColor;
 			}
 		});
 	}

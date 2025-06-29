@@ -6,6 +6,7 @@ import net.jcm.vsch.blocks.entity.AirThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.CreativeThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.PowerfulThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.ThrusterBlockEntity;
+import net.jcm.vsch.fluids.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,13 +30,13 @@ public class VSCHBlocks {
 		DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
 
 	public static final RegistryObject<Block> VENT_BLOCK = registerBlock(
-			"vent_block",
-			() -> new VentBlock(
-					BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-							.sound(SoundType.COPPER)
-							.strength(5f)
-							.noOcclusion()
-            )
+		"vent_block",
+		() -> new VentBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
 	);
 
 	public static final RegistryObject<Block> THRUSTER_BLOCK = registerBlock(
@@ -135,6 +137,21 @@ public class VSCHBlocks {
 		)
 	);*/
 
+	public static final RegistryObject<LiquidBlock> HYDROGEN_BLOCK = BLOCKS.register(
+		"hydrogen",
+		() -> new LiquidBlock(
+			VSCHFluids.HYDROGEN.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
+
+	public static final RegistryObject<LiquidBlock> OXYGEN_BLOCK = BLOCKS.register(
+		"oxygen",
+		() -> new LiquidBlock(
+			VSCHFluids.OXYGEN.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);
