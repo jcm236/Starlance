@@ -27,6 +27,16 @@ public class VSCHFluids {
 		() -> new ForgeFlowingFluid.Flowing(VSCHFluids.HYDROGEN_PROPERTIES)
 	);
 
+	public static final RegistryObject<FlowingFluid> HYDROGEN_PEROXIDE = FLUIDS.register(
+		"hydrogen_peroxide",
+		() -> new ForgeFlowingFluid.Source(VSCHFluids.HYDROGEN_PEROXIDE_PROPERTIES)
+	);
+
+	public static final RegistryObject<FlowingFluid> HYDROGEN_PEROXIDE_FLOWING = FLUIDS.register(
+		"hydrogen_peroxide_flowing",
+		() -> new ForgeFlowingFluid.Flowing(VSCHFluids.HYDROGEN_PEROXIDE_PROPERTIES)
+	);
+
 	public static final RegistryObject<FlowingFluid> OXYGEN = FLUIDS.register(
 		"oxygen",
 		() -> new ForgeFlowingFluid.Source(VSCHFluids.OXYGEN_PROPERTIES)
@@ -41,6 +51,11 @@ public class VSCHFluids {
 		new ForgeFlowingFluid.Properties(VSCHFluidTypes.HYDROGEN_FLUID_TYPE, HYDROGEN, HYDROGEN_FLOWING)
 			.bucket(VSCHItems.HYDROGEN_BUCKET)
 			.block(VSCHBlocks.HYDROGEN_BLOCK);
+
+	public static final ForgeFlowingFluid.Properties HYDROGEN_PEROXIDE_PROPERTIES =
+		new ForgeFlowingFluid.Properties(VSCHFluidTypes.HYDROGEN_PEROXIDE_FLUID_TYPE, HYDROGEN_PEROXIDE, HYDROGEN_PEROXIDE_FLOWING)
+			.bucket(VSCHItems.HYDROGEN_PEROXIDE_BUCKET)
+			.block(VSCHBlocks.HYDROGEN_PEROXIDE_BLOCK);
 
 	public static final ForgeFlowingFluid.Properties OXYGEN_PROPERTIES =
 		new ForgeFlowingFluid.Properties(VSCHFluidTypes.OXYGEN_FLUID_TYPE, OXYGEN, OXYGEN_FLOWING)

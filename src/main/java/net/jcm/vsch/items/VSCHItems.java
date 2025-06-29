@@ -32,6 +32,11 @@ public class VSCHItems {
 		() -> new BucketItem(VSCHFluids.HYDROGEN.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
 	);
 
+	public static final RegistryObject<Item> HYDROGEN_PEROXIDE_BUCKET = ITEMS.register(
+		"hydrogen_peroxide_bucket",
+		() -> new BucketItem(VSCHFluids.HYDROGEN_PEROXIDE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
+	);
+
 	public static final RegistryObject<Item> OXYGEN_BUCKET = ITEMS.register(
 		"oxygen_bucket",
 		() -> new BucketItem(VSCHFluids.OXYGEN.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))

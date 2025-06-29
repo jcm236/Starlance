@@ -45,7 +45,8 @@ public class GasFluidType extends FluidType {
 
 	@Override
 	public boolean isVaporizedOnPlacement(final Level level, final BlockPos pos, final FluidStack stack) {
-		return true;
+		final int temperature = level.dimensionType().ultraWarm() ? 1000 : 273;
+		return temperature > this.getTemperature();
 	}
 
 	@Override

@@ -145,6 +145,14 @@ public class VSCHBlocks {
 		)
 	);
 
+	public static final RegistryObject<LiquidBlock> HYDROGEN_PEROXIDE_BLOCK = BLOCKS.register(
+		"hydrogen_peroxide",
+		() -> new LiquidBlock(
+			VSCHFluids.HYDROGEN_PEROXIDE.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
+
 	public static final RegistryObject<LiquidBlock> OXYGEN_BLOCK = BLOCKS.register(
 		"oxygen",
 		() -> new LiquidBlock(

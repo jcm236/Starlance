@@ -27,6 +27,19 @@ public class VSCHFluidTypes {
 		)
 	);
 
+	public static final RegistryObject<FluidType> HYDROGEN_PEROXIDE_FLUID_TYPE = REGISTERY.register(
+		"hydrogen_peroxide",
+		() -> new GasFluidType(
+			WATER_STILL_RL,
+			WATER_FLOW_RL,
+			0xd8b4f0ff,
+			FluidType.Properties.create()
+				.density(1450)
+				.temperature(300)
+				.viscosity(1249)
+		)
+	);
+
 	public static final RegistryObject<FluidType> OXYGEN_FLUID_TYPE = REGISTERY.register(
 		"oxygen",
 		() -> new GasFluidType(
