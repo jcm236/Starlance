@@ -28,17 +28,14 @@ public class VSCHItems {
 	);
 
 	public static final RegistryObject<Item> HYDROGEN_BUCKET = ITEMS.register(
-			"hydrogen_bucket",
-			() -> new BucketItem(VSCHFluids.HYDROGEN,
-					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
+		"hydrogen_bucket",
+		() -> new BucketItem(VSCHFluids.HYDROGEN, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
 	);
 
 	public static final RegistryObject<Item> OXYGEN_BUCKET = ITEMS.register(
-			"oxygen_bucket",
-			() -> new BucketItem(VSCHFluids.OXYGEN,
-					new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
+		"oxygen_bucket",
+		() -> new BucketItem(VSCHFluids.OXYGEN, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1))
 	);
-
 
 	public static void register(IEventBus eventBus) {
 		ITEMS.register(eventBus);
