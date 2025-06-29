@@ -1,5 +1,6 @@
 {
 	"values": [
-		"mekanism:hydrogen"
+		"mekanism:hydrogen",
+		"vsch:hydrogen"
 	]
 }
