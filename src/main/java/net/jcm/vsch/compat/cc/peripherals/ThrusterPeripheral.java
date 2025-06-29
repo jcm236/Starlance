@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.cc;
+package net.jcm.vsch.compat.cc.peripherals;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;

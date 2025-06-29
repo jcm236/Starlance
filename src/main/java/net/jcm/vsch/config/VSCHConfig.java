@@ -6,12 +6,15 @@ import com.google.gson.reflect.TypeToken;
 
 import net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class VSCHConfig {
 	private static final Gson GSON = new GsonBuilder().create();
@@ -40,6 +43,11 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> GYRO_LIMIT_SPEED;
 
+	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
+	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
+	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
+	private static Set<ResourceLocation> ASSEMBLE_BLACKLIST_SET = null;
+
 	// Optimize
 	public static final ForgeConfigSpec.BooleanValue ENABLE_EMPTY_SPACE_CHUNK;
 
@@ -57,6 +65,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
+
+	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+		"minecraft:barrier",
+		"minecraft:bedrock",
+		"minecraft:command_block"
+	);
 
 	static {
 		BUILDER.push("Thrusters");
@@ -84,6 +98,14 @@ public class VSCHConfig {
 		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 10000);
 		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
 		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
+
+		BUILDER.pop();
+
+		BUILDER.push("RocketAssembler");
+
+		ASSEMBLER_ENERGY_CONSUMPTION = BUILDER.comment("Assemble Energy Consumption").defineInRange("energy_consumption", 100, 0, Integer.MAX_VALUE);
+		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max assemble blocks for rocket assembler").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
+		ASSEMBLE_BLACKLIST = BUILDER.comment("Prevent assemble if contatins any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
 
 		BUILDER.pop();
 
@@ -128,5 +150,12 @@ public class VSCHConfig {
 			return new HashMap<>();
 		}
 		return GSON.fromJson(fuels, STRING_INT_MAP_TYPE);
+	}
+
+	public static Set<ResourceLocation> getAssembleBlacklistSet() {
+		if (ASSEMBLE_BLACKLIST_SET == null) {
+			ASSEMBLE_BLACKLIST_SET = Set.copyOf(ASSEMBLE_BLACKLIST.get().stream().map(ResourceLocation::new).toList());
+		}
+		return ASSEMBLE_BLACKLIST_SET;
 	}
 }

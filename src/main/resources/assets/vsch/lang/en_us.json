@@ -12,6 +12,7 @@
 	"block.vsch.drag_inducer_block": "Drag inducer",
 	"block.vsch.gyro": "Gyroscope",
 	"block.vsch.powerful_thruster_block": "Powerful thruster",
+	"block.vsch.rocket_assembler": "Rocket Assembler",
 	"block.vsch.thruster_block": "Thruster",
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"item.vsch.wrench": "Wrench",

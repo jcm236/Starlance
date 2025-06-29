@@ -12,6 +12,7 @@
 	"block.vsch.drag_inducer_block": "阻力发生器",
 	"block.vsch.gyro": "陀螺仪",
 	"block.vsch.powerful_thruster_block": "强力推进器",
+	"block.vsch.rocket_assembler": "火箭组装器",
 	"block.vsch.thruster_block": "推进器",
 	"item.vsch.magnet_boot": "磁力靴",
 	"item.vsch.wrench": "扳手",

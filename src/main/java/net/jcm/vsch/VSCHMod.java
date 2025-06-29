@@ -13,6 +13,8 @@ import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.fluids.VSCHFluidTypes;
 import net.jcm.vsch.fluids.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.util.assemble.MoveUtil;
+
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,9 +39,10 @@ public class VSCHMod {
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
 		VSCHTags.register();
-
 		VSCHFluidTypes.register(modBus);
 		VSCHFluids.register(modBus);
+
+		MoveUtil.registerDefaultMovers();
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);

@@ -6,6 +6,7 @@ import net.jcm.vsch.blocks.entity.AirThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.CreativeThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.PowerfulThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.ThrusterBlockEntity;
+import net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlock;
 import net.jcm.vsch.fluids.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.util.rot.DirectionalShape;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -26,8 +28,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class VSCHBlocks {
-	public static final DeferredRegister<Block> BLOCKS =
-		DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
+	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
 
 	public static final RegistryObject<Block> VENT_BLOCK = registerBlock(
 		"vent_block",
@@ -107,16 +108,6 @@ public class VSCHBlocks {
 		)
 	);
 
-	/*public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
-		"dock",
-		() -> new DockerBlock(
-			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-				.sound(SoundType.COPPER)
-				.strength(5f)
-				.noOcclusion()
-		)
-	);*/
-
 	public static final RegistryObject<Block> GYRO_BLOCK = registerBlock(
 		"gyro",
 		() -> new GyroBlock(
@@ -126,6 +117,27 @@ public class VSCHBlocks {
 				.noOcclusion()
 		)
 	);
+
+	public static final RegistryObject<Block> ROCKET_ASSEMBLER_BLOCK = registerBlock(
+		"rocket_assembler",
+		() -> new RocketAssemblerBlock(
+			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+				.mapColor(MapColor.STONE)
+				.sound(SoundType.ANVIL)
+				.strength(5f)
+				.isRedstoneConductor((state, level, pos) -> false)
+		)
+	);
+
+	/*public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
+		"dock",
+		() -> new DockerBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);*/
 
 	/*public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock(
 		"magnet_block",

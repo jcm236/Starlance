@@ -2,6 +2,7 @@ package net.jcm.vsch.blocks.entity;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;
+import net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlockEntity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -57,6 +58,12 @@ public class VSCHBlockEntities {
 	public static final RegistryObject<BlockEntityType<GyroBlockEntity>> GYRO_BLOCK_ENTITY = BLOCK_ENTITIES.register(
 		"gyro",
 		() -> BlockEntityType.Builder.of(GyroBlockEntity::new, VSCHBlocks.GYRO_BLOCK.get())
+			.build(null)
+	);
+
+	public static final RegistryObject<BlockEntityType<RocketAssemblerBlockEntity>> ROCKET_ASSEMBLER_BLOCK_ENTITY = BLOCK_ENTITIES.register(
+		"rocket_assembler",
+		() -> BlockEntityType.Builder.of(RocketAssemblerBlockEntity::new, VSCHBlocks.ROCKET_ASSEMBLER_BLOCK.get())
 			.build(null)
 	);
 

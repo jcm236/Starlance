@@ -3,7 +3,7 @@ package net.jcm.vsch.blocks.thruster;
 import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.compat.cc.ThrusterPeripheral;
+import net.jcm.vsch.compat.cc.peripherals.ThrusterPeripheral;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 
