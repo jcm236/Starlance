@@ -14,6 +14,9 @@
 	"block.vsch.powerful_thruster_block": "强力推进器",
 	"block.vsch.rocket_assembler": "火箭组装器",
 	"block.vsch.thruster_block": "推进器",
+	"fluid_type.vsch.hydrogen": "液氢",
+	"fluid_type.vsch.hydrogen_peroxide": "过氧化氢",
+	"fluid_type.vsch.oxygen": "液氧",
 	"item.vsch.magnet_boot": "磁力靴",
 	"item.vsch.wrench": "扳手",
 

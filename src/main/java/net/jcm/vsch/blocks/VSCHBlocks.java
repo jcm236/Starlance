@@ -7,6 +7,7 @@ import net.jcm.vsch.blocks.entity.CreativeThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.PowerfulThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.ThrusterBlockEntity;
 import net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlock;
+import net.jcm.vsch.fluids.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -146,6 +148,30 @@ public class VSCHBlocks {
 				.noOcclusion()
 		)
 	);*/
+
+	public static final RegistryObject<LiquidBlock> HYDROGEN_BLOCK = BLOCKS.register(
+		"hydrogen",
+		() -> new LiquidBlock(
+			VSCHFluids.HYDROGEN.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
+
+	public static final RegistryObject<LiquidBlock> HYDROGEN_PEROXIDE_BLOCK = BLOCKS.register(
+		"hydrogen_peroxide",
+		() -> new LiquidBlock(
+			VSCHFluids.HYDROGEN_PEROXIDE.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
+
+	public static final RegistryObject<LiquidBlock> OXYGEN_BLOCK = BLOCKS.register(
+		"oxygen",
+		() -> new LiquidBlock(
+			VSCHFluids.OXYGEN.get(),
+			BlockBehaviour.Properties.copy(Blocks.WATER)
+		)
+	);
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);

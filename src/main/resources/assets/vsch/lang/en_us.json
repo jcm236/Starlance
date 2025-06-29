@@ -14,6 +14,9 @@
 	"block.vsch.powerful_thruster_block": "Powerful thruster",
 	"block.vsch.rocket_assembler": "Rocket Assembler",
 	"block.vsch.thruster_block": "Thruster",
+	"fluid_type.vsch.hydrogen": "Liquid Hydrogen",
+	"fluid_type.vsch.hydrogen_peroxide": "Hydrogen Peroxide",
+	"fluid_type.vsch.oxygen": "Liquid Oxygen",
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"item.vsch.wrench": "Wrench",
 
