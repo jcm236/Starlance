@@ -154,11 +154,13 @@ jobs:
       - name: Generate Javadoc with Gradle
         run: ./gradlew javadoc
 
+      - name: Copy Javadoc to temp
+        run: cp -a ./build/docs/javadoc "${RUNNER_TEMP}/javadoc"
+
       - name: Checkout Gh Pages Branch
         uses: actions/checkout@v4
         with:
           ref: gh-pages
-          clean: false
 
       - name: Copy Javadoc
         env:
@@ -171,7 +173,7 @@ jobs:
           output JAVADOC_FOLDER "$FOLDER_NAME"
           rm -rf ./javadoc/${FOLDER_NAME}
           mkdir -p ./javadoc
-          cp -a ./build/docs/javadoc ./javadoc/${FOLDER_NAME}
+          cp -a "${RUNNER_TEMP}/javadoc" ./javadoc/${FOLDER_NAME}
           git add ./javadoc/${FOLDER_NAME}
 
       - name: Generate Index
