@@ -11,10 +11,15 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHTab {
-	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, VSCHMod.MODID);
+	private static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, VSCHMod.MODID);
 
-	public static final RegistryObject<CreativeModeTab> TAB = REGISTRY.register("starlance",
-			() -> CreativeModeTab.builder().title(Component.translatable("vsch.itemtab")).icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get())).displayItems((parameters, tabData) -> {
+	public static final RegistryObject<CreativeModeTab> TAB = REGISTRY.register(
+		VSCHMod.MODID,
+		() -> CreativeModeTab.builder()
+			.title(Component.translatable("vsch.itemtab"))
+			.icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get()))
+			.displayItems((parameters, tabData) -> {
+				tabData.accept(VSCHItems.WRENCH.get());
 
 				tabData.accept(VSCHBlocks.THRUSTER_BLOCK.get());
 				tabData.accept(VSCHBlocks.AIR_THRUSTER_BLOCK.get());
@@ -24,9 +29,12 @@ public class VSCHTab {
 
 				tabData.accept(VSCHItems.MAGNET_BOOT.get());
 
-				tabData.accept(VSCHItems.WRENCH.get());
-
-			}).build());
+				tabData.accept(VSCHItems.HYDROGEN_BUCKET.get());
+				tabData.accept(VSCHItems.HYDROGEN_PEROXIDE_BUCKET.get());
+				tabData.accept(VSCHItems.OXYGEN_BUCKET.get());
+			})
+			.build()
+	);
 
 	public static void register(IEventBus eventBus) {
 		REGISTRY.register(eventBus);
