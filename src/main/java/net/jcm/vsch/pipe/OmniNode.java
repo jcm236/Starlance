@@ -28,12 +28,12 @@ public final class OmniNode extends PipeNode<OmniNode> {
 	}
 
 	@Override
-	public boolean canConnect(final NodeLevel level, final NodePosition pos, final Direction dir) {
+	public boolean canConnect(final NodeLevel level, final NodePos pos, final Direction dir) {
 		return true;
 	}
 
 	@Override
-	public boolean canFluidFlow(final NodeLevel level, final NodePosition pos, final Direction dir, final Fluid fluid) {
+	public boolean canFluidFlow(final NodeLevel level, final NodePos pos, final Direction dir, final Fluid fluid) {
 		return true;
 	}
 

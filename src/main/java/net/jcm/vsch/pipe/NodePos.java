@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public record NodePosition(
+public record NodePos(
 	// The block position the node relative to
 	BlockPos blockPos,
 	// Which axis of the block the node is on (origin is on the lower corner)
@@ -18,6 +18,22 @@ public record NodePosition(
 ) {
 	public static final int INDEX_BOUND = 8;
 
+	public int getUniqueIndex() {
+		if (this.index == 0) {
+			return 0;
+		}
+		return this.axis.ordinal() * 7 + this.index;
+	}
+
+	public static NodePos fromUniqueIndex(final BlockPos blockPos, final int uniqueIndex) {
+		if (uniqueIndex == 0) {
+			return new NodePos(blockPos, Direction.Axis.X, 0);
+		}
+		final int axisInd = (uniqueIndex - 1) / 7;
+		final Direction.Axis axis = Direction.Axis.VALUES[axisInd];
+		return new NodePos(blockPos, axis, uniqueIndex - axisInd * 7);
+	}
+
 	public boolean isOrigin() {
 		return this.index == 0;
 	}
@@ -26,8 +42,9 @@ public record NodePosition(
 		return this.index == 0 || this.axis == axis;
 	}
 
+	@Override
 	public boolean equals(final Object otherObj) {
-		return this == otherObj || otherObj instanceof NodePosition other &&
+		return this == otherObj || otherObj instanceof NodePos other &&
 			this.blockPos.equals(other.blockPos) &&
 			(
 				this.isOrigin() && other.isOrigin() ||
@@ -35,18 +52,23 @@ public record NodePosition(
 			);
 	}
 
+	@Override
+	public int hashCode() {
+		return this.blockPos.hashCode() + this.getUniqueIndex() * 31;
+	}
+
 	public Vec3 getCenter() {
 		if (this.isOrigin()) {
 			return Vec3.atLowerCornerOf(this.blockPos);
 		}
 		return new Vec3(
-			this.blockPos.getX() + this.axis.choose(this.index, 0, 0) / 8.0,
-			this.blockPos.getY() + this.axis.choose(0, this.index, 0) / 8.0,
-			this.blockPos.getZ() + this.axis.choose(0, 0, this.index) / 8.0
+			this.blockPos.getX() + this.axis.choose(this.index, 0, 0) / (double)(INDEX_BOUND),
+			this.blockPos.getY() + this.axis.choose(0, this.index, 0) / (double)(INDEX_BOUND),
+			this.blockPos.getZ() + this.axis.choose(0, 0, this.index) / (double)(INDEX_BOUND)
 		);
 	}
 
-	public Stream<NodePosition> streamPossibleToConnect() {
+	public Stream<NodePos> streamPossibleToConnect() {
 		if (this.isOrigin()) {
 			return Direction.stream()
 				.flatMap((dir) -> {
@@ -56,7 +78,7 @@ public record NodePosition(
 						.flatMap((axis) -> {
 							final BlockPos relNeg = relative.relative(axis, -1);
 							return IntStream.range(1, INDEX_BOUND)
-								.mapToObj((i) -> Stream.of(new NodePosition(relative, axis, i), new NodePosition(relNeg, axis, i)))
+								.mapToObj((i) -> Stream.of(new NodePos(relative, axis, i), new NodePos(relNeg, axis, i)))
 								.flatMap(Function.identity());
 						});
 				});
@@ -73,14 +95,14 @@ public record NodePosition(
 						.flatMap((axis) -> {
 							final BlockPos rel2 = relative.relative(axis, -1);
 							return IntStream.range(1, INDEX_BOUND)
-								.mapToObj((i) -> Stream.of(new NodePosition(relative, axis, i), new NodePosition(rel2, axis, i)))
+								.mapToObj((i) -> Stream.of(new NodePos(relative, axis, i), new NodePos(rel2, axis, i)))
 								.flatMap(Function.identity());
 						});
 				}
 				final BlockPos relative2 = relative.relative(thisAxis, 1);
 				return Stream.concat(
-					Stream.of(new NodePosition(relative, thisAxis, 0)),
-					IntStream.range(0, INDEX_BOUND).mapToObj((i) -> new NodePosition(relative, thisAxis, i))
+					Stream.of(new NodePos(relative, thisAxis, 0)),
+					IntStream.range(0, INDEX_BOUND).mapToObj((i) -> new NodePos(relative, thisAxis, i))
 				);
 			});
 	}

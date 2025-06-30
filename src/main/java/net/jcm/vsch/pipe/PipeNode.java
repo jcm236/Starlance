@@ -25,9 +25,9 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 
 	public abstract T withColor(DyeColor color);
 
-	public abstract boolean canConnect(NodeLevel level, NodePosition pos, Direction dir);
+	public abstract boolean canConnect(NodeLevel level, NodePos pos, Direction dir);
 
-	public abstract boolean canFluidFlow(NodeLevel level, NodePosition pos, Direction dir, Fluid fluid);
+	public abstract boolean canFluidFlow(NodeLevel level, NodePos pos, Direction dir, Fluid fluid);
 
 	public final void writeTo(final FriendlyByteBuf buf) {
 		buf.writeByte((this.type.getCode() << 4) & this.color.getId());
