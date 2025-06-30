@@ -1,5 +1,7 @@
 package net.jcm.vsch.pipe;
 
+import net.jcm.vsch.pipe.level.NodeLevel;
+
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

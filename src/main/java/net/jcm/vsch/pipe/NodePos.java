@@ -17,8 +17,9 @@ public record NodePos(
 	int index
 ) {
 	public static final int INDEX_BOUND = 8;
+	public static final int UNIQUE_INDEX_BOUND = 1 + 3 * (INDEX_BOUND - 1);
 
-	public int getUniqueIndex() {
+	public int uniqueIndex() {
 		if (this.index == 0) {
 			return 0;
 		}
@@ -54,7 +55,7 @@ public record NodePos(
 
 	@Override
 	public int hashCode() {
-		return this.blockPos.hashCode() + this.getUniqueIndex() * 31;
+		return this.blockPos.hashCode() + this.uniqueIndex() * 31;
 	}
 
 	public Vec3 getCenter() {
