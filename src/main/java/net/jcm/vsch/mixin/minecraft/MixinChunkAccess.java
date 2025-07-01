@@ -66,6 +66,7 @@ public abstract class MixinChunkAccess implements BlockGetter, NodeGetter {
 			return;
 		}
 		nodeSection.vsch$setNode(x, SectionPos.sectionRelative(y), z, index, node);
+		this.setNodesUnsaved();
 	}
 
 	@Override
