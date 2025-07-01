@@ -1,5 +1,7 @@
 package net.jcm.vsch.pipe;
 
+import net.jcm.vsch.api.pipe.NodePos;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,8 +1,8 @@
 package net.jcm.vsch.mixin.minecraft;
 
 import net.jcm.vsch.accessor.INodeLevelChunkSection;
-import net.jcm.vsch.pipe.NodePos;
-import net.jcm.vsch.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.NodePos;
+import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.util.EncodeHelper;
 
 import net.minecraft.world.level.chunk.LevelChunkSection;

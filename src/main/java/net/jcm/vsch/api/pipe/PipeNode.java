@@ -1,5 +1,6 @@
-package net.jcm.vsch.pipe;
+package net.jcm.vsch.api.pipe;
 
+import net.jcm.vsch.pipe.OmniNode;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Direction;
@@ -34,8 +35,7 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	public final void writeTo(final FriendlyByteBuf buf) {
 		buf.writeByte((this.type.getCode() << 4) & this.color.getId());
 		if (this.type == Type.CUSTOM) {
-			// buf.writeResourceLocation();
-			throw new RuntimeException("TODO custom encoding");
+			buf.writeResourceLocation(((AbstractCustomNode) (this)).getId());
 		}
 		this.writeAdditional(buf);
 	}
@@ -51,9 +51,11 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 			case OMNI -> OmniNode.getByColor(color);
 			case CUSTOM -> {
 				final ResourceLocation id = buf.readResourceLocation();
-				throw new RuntimeException("TODO custom decoding");
+				final AbstractCustomNode node = CustomNodeRegistry.getNode(id, color);
+				node.readAdditional(buf);
+				yield node;
 			}
-			default -> throw new IllegalStateException("Unknown pipe type: " + typeCode);
+			default -> throw new IllegalArgumentException("Unknown node type: " + typeCode);
 		};
 	}
 

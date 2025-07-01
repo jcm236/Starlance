@@ -1,6 +1,6 @@
 package net.jcm.vsch.pipe.level;
 
-import net.jcm.vsch.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.PipeNode;
 
 import net.minecraft.network.FriendlyByteBuf;
 

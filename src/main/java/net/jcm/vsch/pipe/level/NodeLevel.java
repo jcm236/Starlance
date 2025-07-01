@@ -1,7 +1,7 @@
 package net.jcm.vsch.pipe.level;
 
-import net.jcm.vsch.pipe.NodePos;
-import net.jcm.vsch.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.NodePos;
+import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.util.Pair;
 
 import net.minecraft.core.BlockPos;

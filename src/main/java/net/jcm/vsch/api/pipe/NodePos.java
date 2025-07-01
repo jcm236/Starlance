@@ -1,4 +1,4 @@
-package net.jcm.vsch.pipe;
+package net.jcm.vsch.api.pipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
