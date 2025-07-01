@@ -14,6 +14,7 @@
     "create.MixinKineticBlockEntity",
     "create.MixinLinearActuatorBlockEntity",
     "create.MixinMechanicalBearingBlockEntity",
+    "minecraft.MixinChunkAccess",
     "minecraft.MixinChunkMap",
     "minecraft.MixinLevelChunkSection",
     "minecraft.MixinMob",

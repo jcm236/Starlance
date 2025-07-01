@@ -16,4 +16,8 @@ public interface NodeGetter {
 	void writeNodes(FriendlyByteBuf buf);
 
 	void readNodes(FriendlyByteBuf buf);
+
+	boolean isNodesUnsaved();
+
+	void setNodesUnsaved();
 }
