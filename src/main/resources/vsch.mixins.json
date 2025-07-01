@@ -16,6 +16,7 @@
     "create.MixinMechanicalBearingBlockEntity",
     "minecraft.MixinChunkAccess",
     "minecraft.MixinChunkMap",
+    "minecraft.MixinChunkSerializer",
     "minecraft.MixinLevelChunkSection",
     "minecraft.MixinMob",
     "valkyrienskies.MixinShipAssemblyKt",
