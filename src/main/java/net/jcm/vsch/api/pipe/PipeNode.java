@@ -52,6 +52,10 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 			case CUSTOM -> {
 				final ResourceLocation id = buf.readResourceLocation();
 				final AbstractCustomNode node = CustomNodeRegistry.getNode(id, color);
+				if (node == null) {
+					// TODO: find a safe way to remove the node instead
+					throw new RuntimeException("Starlance: pipe node with ID " + id + " is not found");
+				}
 				node.readAdditional(buf);
 				yield node;
 			}
