@@ -1,5 +1,6 @@
 package net.jcm.vsch.api.pipe;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.pipe.OmniNode;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
@@ -7,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
 public abstract class PipeNode<T extends PipeNode<T>> {
@@ -27,6 +29,8 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	}
 
 	public abstract T withColor(DyeColor color);
+
+	public abstract ItemStack asItemStack();
 
 	public abstract boolean canConnect(NodeLevel level, NodePos pos, Direction dir);
 

@@ -29,6 +29,6 @@ public class MixinServerPlayer {
 			return;
 		}
 		final PipeNodeSyncChunkS2C pipePacket = chunkPacket.vsch$getPipeNodeSyncChunkS2C();
-		VSCHNetwork.sendToPlayer(pipePacket, (ServerPlayer) ((Object) (this)));
+		VSCHNetwork.sendToPlayer(pipePacket, (ServerPlayer)((Object)(this)));
 	}
 }

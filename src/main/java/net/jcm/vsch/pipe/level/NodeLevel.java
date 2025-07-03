@@ -1,11 +1,15 @@
 package net.jcm.vsch.pipe.level;
 
+import net.jcm.vsch.accessor.ILevelAccessor;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.network.VSCHNetwork;
+import net.jcm.vsch.network.s2c.PipeNodeUpdateS2C;
 import net.jcm.vsch.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -15,10 +19,19 @@ import java.util.List;
 public class NodeLevel {
 	private final Level level;
 
+	/**
+	 * DO NOT initialize, use {@link get} instead.
+	 *
+	 * @see get
+	 */
 	public NodeLevel(final Level level) {
 		this.level = level;
 	}
- 
+
+	public static NodeLevel get(final Level level) {
+		return ((ILevelAccessor)(level)).vsch$getNodeLevel();
+	}
+
 	public final Level getLevel() {
 		return this.level;
 	}
@@ -43,12 +56,12 @@ public class NodeLevel {
 		);
 	}
 
-	public List<Pair<NodePos, PipeNode>> getNodes(final BlockPos pos) {
-		final ArrayList<Pair<NodePos, PipeNode>> nodes = new ArrayList<>();
-		// TODO
-		nodes.trimToSize();
-		return nodes;
-	}
+	// public List<Pair<NodePos, PipeNode>> getNodes(final BlockPos pos) {
+	// 	final ArrayList<Pair<NodePos, PipeNode>> nodes = new ArrayList<>();
+	// 	// TODO
+	// 	nodes.trimToSize();
+	// 	return nodes;
+	// }
 
 	public void setNode(final NodePos pos, final PipeNode node) {
 		final BlockPos blockPos = pos.blockPos();
@@ -64,5 +77,8 @@ public class NodeLevel {
 			pos.uniqueIndex(),
 			node
 		);
+		if (this.level instanceof ServerLevel serverLevel) {
+			VSCHNetwork.sendToTracking(PipeNodeUpdateS2C.fromNode(pos, node), serverLevel, blockPos);
+		}
 	}
 }

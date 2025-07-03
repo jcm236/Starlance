@@ -54,7 +54,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		final PipeNode oldNode = nodes[index];
 		nodes[index] = node;
 		final boolean hasOld = oldNode != null;
-		final boolean hasNew = oldNode != null;
+		final boolean hasNew = node != null;
 		if (hasOld) {
 			if (!hasNew) {
 				this.nodeCount--;
@@ -122,6 +122,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 			this.nodes[blockIndex] = nodes;
 			for (int i = 0; bitset != 0; i++) {
 				if ((bitset & 1) != 0) {
+					read++;
 					nodes[i] = PipeNode.readFrom(buf);
 				}
 				bitset >>>= 1;

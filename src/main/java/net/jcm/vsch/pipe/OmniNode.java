@@ -2,19 +2,23 @@ package net.jcm.vsch.pipe;
 
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.items.pipe.OmniNodeItem;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
+import java.util.EnumMap;
+
 public final class OmniNode extends PipeNode<OmniNode> {
-	private static OmniNode[] NODES = new OmniNode[16];
+	private static final EnumMap<DyeColor, OmniNode> COLOR_MAP = new EnumMap<>(DyeColor.class);
 
 	static {
 		for (final DyeColor color : DyeColor.values()) {
-			NODES[color.getId()] = new OmniNode(color);
+			COLOR_MAP.put(color, new OmniNode(color));
 		}
 	}
 
@@ -23,12 +27,17 @@ public final class OmniNode extends PipeNode<OmniNode> {
 	}
 
 	public static OmniNode getByColor(final DyeColor color) {
-		return NODES[color.getId()];
+		return COLOR_MAP.get(color);
 	}
 
 	@Override
 	public OmniNode withColor(final DyeColor color) {
 		return getByColor(color);
+	}
+
+	@Override
+	public ItemStack asItemStack() {
+		return new ItemStack(OmniNodeItem.getByColor(this.getColor()), 1);
 	}
 
 	@Override

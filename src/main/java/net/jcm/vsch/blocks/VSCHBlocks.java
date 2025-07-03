@@ -180,7 +180,7 @@ public class VSCHBlocks {
 	}
 
 	private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
-		return VSCHItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+		return VSCHItems.registerTabItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
 	}
 
 	public static void register(IEventBus eventBus) {

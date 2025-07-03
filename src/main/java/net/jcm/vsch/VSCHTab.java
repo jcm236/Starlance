@@ -19,19 +19,7 @@ public class VSCHTab {
 			.title(Component.translatable("vsch.itemtab"))
 			.icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get()))
 			.displayItems((parameters, tabData) -> {
-				tabData.accept(VSCHItems.WRENCH.get());
-
-				tabData.accept(VSCHBlocks.THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.AIR_THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.POWERFUL_THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.DRAG_INDUCER_BLOCK.get());
-				tabData.accept(VSCHBlocks.ROCKET_ASSEMBLER_BLOCK.get());
-
-				tabData.accept(VSCHItems.MAGNET_BOOT.get());
-
-				tabData.accept(VSCHItems.HYDROGEN_BUCKET.get());
-				tabData.accept(VSCHItems.HYDROGEN_PEROXIDE_BUCKET.get());
-				tabData.accept(VSCHItems.OXYGEN_BUCKET.get());
+				VSCHItems.registerTab(tabData::accept);
 			})
 			.build()
 	);

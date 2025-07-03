@@ -18,6 +18,7 @@
     "minecraft.MixinChunkMap",
     "minecraft.MixinChunkSerializer",
     "minecraft.MixinClientboundLevelChunkWithLightPacket",
+    "minecraft.MixinLevel",
     "minecraft.MixinLevelChunkSection",
     "minecraft.MixinMob",
     "minecraft.MixinServerPlayer",

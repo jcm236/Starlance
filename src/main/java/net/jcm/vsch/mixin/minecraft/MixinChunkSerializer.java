@@ -1,5 +1,6 @@
 package net.jcm.vsch.mixin.minecraft;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.accessor.INodeLevelChunkSection;
 
 import io.netty.buffer.Unpooled;
@@ -15,6 +16,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -26,6 +30,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChunkSerializer.class)
 public abstract class MixinChunkSerializer {
+	@Unique
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+
 	@Unique
 	private static final String SECTION_NODES_KEY = "vsch:nodes";
 
@@ -52,7 +59,12 @@ public abstract class MixinChunkSerializer {
 		}
 		final byte[] sectionNodesData = sectionData.getByteArray(SECTION_NODES_KEY);
 		final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(sectionNodesData));
-		nodeSection.vsch$readNodes(buf);
+		try {
+			nodeSection.vsch$readNodes(buf);
+		} catch (RuntimeException	e) {
+			LOGGER.error("[starlance]: Error when parsing pipe nodes", e);
+			throw e;
+		}
 		return section;
 	}
 

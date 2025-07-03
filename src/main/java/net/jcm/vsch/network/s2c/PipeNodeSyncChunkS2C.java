@@ -1,6 +1,5 @@
 package net.jcm.vsch.network.s2c;
 
-import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.network.INetworkPacket;
 import net.jcm.vsch.pipe.level.NodeGetter;
 
