@@ -17,9 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LevelChunkSection.class)
 public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	@Unique
-	private static final PipeNode[] EMPTY_NODES = new PipeNode[NodePos.UNIQUE_INDEX_BOUND];
-
-	@Unique
 	private PipeNode[][] nodes = null;
 
 	@Unique
@@ -37,10 +34,10 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	@Override
 	public PipeNode[] vsch$getNodes(final int x, final int y, final int z) {
 		if (this.nodes == null) {
-			return EMPTY_NODES;
+			return null;
 		}
 		final PipeNode[] nodes = this.nodes[x << 8 | z << 4 | y];
-		return nodes == null ? EMPTY_NODES : nodes;
+		return nodes == null ? null : nodes;
 	}
 
 	@Override

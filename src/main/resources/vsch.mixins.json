@@ -17,8 +17,10 @@
     "minecraft.MixinChunkAccess",
     "minecraft.MixinChunkMap",
     "minecraft.MixinChunkSerializer",
+    "minecraft.MixinClientboundLevelChunkWithLightPacket",
     "minecraft.MixinLevelChunkSection",
     "minecraft.MixinMob",
+    "minecraft.MixinServerPlayer",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"

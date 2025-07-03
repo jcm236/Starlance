@@ -12,6 +12,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.network.s2c.PipeNodeSyncChunkS2C;
 import net.jcm.vsch.network.s2c.PipeNodeSyncChunkSectionS2C;
 
 import java.util.Optional;
@@ -29,6 +30,7 @@ public final class VSCHNetwork {
 	private static int id = 0;
 
 	public static void register() {
+		registerS2C(PipeNodeSyncChunkS2C.class, PipeNodeSyncChunkS2C::decode);
 		registerS2C(PipeNodeSyncChunkSectionS2C.class, PipeNodeSyncChunkSectionS2C::decode);
 	}
 

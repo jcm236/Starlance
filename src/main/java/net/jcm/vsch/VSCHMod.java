@@ -13,6 +13,7 @@ import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.fluids.VSCHFluidTypes;
 import net.jcm.vsch.fluids.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -42,6 +43,7 @@ public class VSCHMod {
 		VSCHTags.register();
 		VSCHFluidTypes.register(modBus);
 		VSCHFluids.register(modBus);
+		VSCHNetwork.register();
 
 		MoveUtil.registerDefaultMovers();
 

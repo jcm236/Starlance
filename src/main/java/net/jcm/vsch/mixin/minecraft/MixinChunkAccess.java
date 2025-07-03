@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChunkAccess.class)
 public abstract class MixinChunkAccess implements BlockGetter, NodeGetter {
+	@Unique
+	private static final PipeNode[] EMPTY_NODES = new PipeNode[NodePos.UNIQUE_INDEX_BOUND];
+
 	@Shadow
 	public abstract LevelChunkSection[] getSections();
 
@@ -55,7 +58,8 @@ public abstract class MixinChunkAccess implements BlockGetter, NodeGetter {
 		if (nodeSection == null) {
 			return null;
 		}
-		return nodeSection.vsch$getNodes(x, SectionPos.sectionRelative(y), z);
+		final PipeNode[] nodes = nodeSection.vsch$getNodes(x, SectionPos.sectionRelative(y), z);
+		return nodes == null ? EMPTY_NODES : nodes;
 	}
 
 	@Override
