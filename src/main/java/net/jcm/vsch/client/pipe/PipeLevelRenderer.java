@@ -6,24 +6,30 @@ import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.client.RenderUtil;
 import net.jcm.vsch.pipe.level.NodeGetter;
+import net.jcm.vsch.pipe.level.NodeLevel;
 
 import org.joml.Quaternionf;
-import org.joml.Vector3i;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4f;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
@@ -44,30 +50,40 @@ public class PipeLevelRenderer {
 	private static final Vector3i ZERO_VEC3I = new Vector3i();
 	private static final int PIPE_VIEW_RANGE = 8;
 
+	private static final Vector4f HINT_COLOR = new Vector4f(0.25f, 0.92f, 0.25f, 0.6f);
+	private static final float HINT_SCALE = 0.75f;
+
 	@SubscribeEvent
 	public static void renderLevelState(final RenderLevelStageEvent event) {
-		if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+		if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
 			return;
 		}
-		final ClientLevel level = Minecraft.getInstance().level;
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientLevel level = minecraft.level;
 		if (level == null) {
 			return;
 		}
 
 		final PoseStack poseStack = event.getPoseStack();
-		final Tesselator tesselator = Tesselator.getInstance();
-		final BufferBuilder bufferBuilder = tesselator.getBuilder();
+		final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
 		final Vec3 view = event.getCamera().getPosition();
 		// final Frustum frustum = event.getFrustum(); // TODO: see if frustum filter can improve performance
 
-		// RenderSystem.setShader(GameRenderer::getRendertypeSolidShader);
-		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		// TODO: make our own atlas
+		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+		RenderSystem.setShader(GameRenderer::getRendertypeTranslucentShader);
+
+		final VertexConsumer vertexBuilder = bufferSource.getBuffer(RenderType.translucent());
+
 		poseStack.pushPose();
 
-		renderNodes(level, poseStack, bufferBuilder, view);
+		renderNodes(level, poseStack, vertexBuilder, view);
 
-		tesselator.end();
+		bufferSource.endBatch();
 		poseStack.popPose();
+		RenderSystem.disableBlend();
 	}
 
 	private static Stream<LevelChunk> streamRenderingChunks(final ClientLevel level, final Vec3 view) {
@@ -78,11 +94,14 @@ public class PipeLevelRenderer {
 		return chunkPosStream.map((chunkPos) -> chunkSource.getChunkNow(chunkPos.x, chunkPos.z)).filter(Objects::nonNull);
 	}
 
-	private static void renderNodes(final ClientLevel level, final PoseStack poseStack, final BufferBuilder bufferBuilder, final Vec3 view) {
-		streamRenderingChunks(level, view).forEach((chunk) -> renderNodesInChunk(level, chunk, poseStack, bufferBuilder, view));
+	private static void renderNodes(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
+		streamRenderingChunks(level, view).forEach((chunk) -> renderNodesInChunk(level, chunk, poseStack, vertexBuilder, view));
+		NodePos.streamPlaceHint(NodeLevel.get(level), new BlockPos(0, 100, 0)).forEach((pos) -> {
+			renderNodePlaceHint(level, poseStack, vertexBuilder, view, pos, HINT_COLOR, HINT_SCALE);
+		});
 	}
 
-	private static void renderNodesInChunk(final ClientLevel level, final ChunkAccess chunk, final PoseStack poseStack, final BufferBuilder bufferBuilder, final Vec3 view) {
+	private static void renderNodesInChunk(final ClientLevel level, final ChunkAccess chunk, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
 		if (!(chunk instanceof NodeGetter nodeGetter)) {
 			return;
 		}
@@ -111,14 +130,14 @@ public class PipeLevelRenderer {
 				for (int i = 0; i < NodePos.UNIQUE_INDEX_BOUND; i++) {
 					final PipeNode node = nodes[i];
 					if (node != null) {
-						renderNode(level, poseStack, bufferBuilder, view, NodePos.fromUniqueIndex(sectionOrigin.offset(x, y, z), i), node);
+						renderNode(level, poseStack, vertexBuilder, view, NodePos.fromUniqueIndex(sectionOrigin.offset(x, y, z), i), node);
 					}
 				}
 			}
 		}
 	}
 
-	private static void renderNode(final BlockAndTintGetter level, final PoseStack poseStack, final BufferBuilder bufferBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
+	private static void renderNode(final BlockAndTintGetter level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
 		final int size = 4;
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
@@ -155,11 +174,33 @@ public class PipeLevelRenderer {
 		poseStack.translate(nodeCenter.x - 0.5 - view.x, nodeCenter.y - 0.5 - view.y, nodeCenter.z - 0.5 - view.z);
 		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
 		RenderUtil.drawBoxWithTexture(
-			poseStack, bufferBuilder,
+			poseStack, vertexBuilder,
 			lightMap,
 			nodeTexture, new Vector3f(node.getColor().getTextureDiffuseColors()),
 			ZERO_VEC3I, new Quaternionf(), new Vector3i(size, size, size),
-			0, 0
+			0, 0,
+			1f
+		);
+
+		poseStack.popPose();
+	}
+
+	private static void renderNodePlaceHint(final BlockAndTintGetter level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final Vector4f color, final float scale) {
+		final int size = 4;
+		final Vec3 nodeCenter = pos.getCenter();
+		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap().setAll(0xf000f0);
+
+		poseStack.pushPose();
+
+		poseStack.translate(nodeCenter.x - 0.5 - view.x, nodeCenter.y - 0.5 - view.y, nodeCenter.z - 0.5 - view.z);
+		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
+		RenderUtil.drawBoxWithTexture(
+			poseStack, vertexBuilder,
+			lightMap,
+			nodeTexture, color,
+			ZERO_VEC3I, new Quaternionf(), new Vector3i(size, size, size),
+			0, 0,
+			scale
 		);
 
 		poseStack.popPose();

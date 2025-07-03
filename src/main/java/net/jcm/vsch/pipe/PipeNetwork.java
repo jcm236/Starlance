@@ -9,80 +9,80 @@ import java.util.Map;
 import java.util.Set;
 
 public class PipeNetwork {
-	private final Map<NodePos, Set<NodePos>> nodeConnects = new HashMap<>();
-	private final Map<NodePos, Set<NodePos>> nodeFlows = new HashMap<>();
+	private final Map<NodePos, RelationHolder> nodes = new HashMap<>();
 
 	public Set<NodePos> getNodes() {
-		return this.nodeConnects.keySet();
+		return this.nodes.keySet();
 	}
 
 	public boolean hasNode(final NodePos node) {
-		return this.nodeConnects.containsKey(node);
+		return this.nodes.containsKey(node);
 	}
 
 	public boolean addNode(final NodePos node) {
-		if (this.nodeConnects.containsKey(node)) {
+		if (this.nodes.containsKey(node)) {
 			return false;
 		}
-		this.nodeConnects.put(node, new HashSet<>());
-		this.nodeFlows.put(node, new HashSet<>());
+		this.nodes.put(node, new RelationHolder());
 		return true;
 	}
 
 	public boolean removeNode(final NodePos node) {
-		final Set<NodePos> connected = this.nodeConnects.remove(node);
-		if (connected == null) {
+		final RelationHolder holder = this.nodes.remove(node);
+		if (holder == null) {
 			return false;
 		}
-		this.nodeFlows.remove(node);
-		for (final NodePos other : connected) {
-			this.nodeConnects.get(other).remove(node);
-			this.nodeFlows.get(other).remove(node);
+		for (final NodePos other : holder.connections) {
+			final RelationHolder otherHolder = this.nodes.get(other);
+			otherHolder.connections.remove(node);
+			otherHolder.flows.remove(node);
 		}
 		return true;
 	}
 
 	public Set<NodePos> getConnections(final NodePos node) {
-		return Collections.unmodifiableSet(this.nodeConnects.get(node));
+		return Collections.unmodifiableSet(this.nodes.get(node).connections);
 	}
 
 	public boolean connectNodes(final NodePos node1, final NodePos node2) {
-		return this.nodeConnects.get(node1).add(node2) && this.nodeConnects.get(node2).add(node1);
+		return this.nodes.get(node1).connections.add(node2) && this.nodes.get(node2).connections.add(node1);
 	}
 
 	public boolean disconnectNodes(final NodePos node1, final NodePos node2) {
-		if (!this.nodeConnects.get(node1).remove(node2)) {
+		if (!this.nodes.get(node1).connections.remove(node2)) {
 			return false;
 		}
-		this.nodeConnects.get(node2).remove(node1);
-		this.nodeFlows.get(node1).remove(node2);
-		this.nodeFlows.get(node2).remove(node1);
+		this.nodes.get(node2).connections.remove(node1);
 		return true;
 	}
 
 	public Set<NodePos> getFlows(final NodePos node) {
-		return Collections.unmodifiableSet(this.nodeFlows.get(node));
+		return Collections.unmodifiableSet(this.nodes.get(node).flows);
 	}
 
 	public boolean canFlow(final NodePos from, final NodePos to) {
-		return this.nodeFlows.get(from).contains(to);
+		return this.nodes.get(from).flows.contains(to);
 	}
 
 	public boolean addFlow(final NodePos from, final NodePos to) {
-		return this.nodeFlows.get(from).add(to);
+		return this.nodes.get(from).flows.add(to);
 	}
 
 	public boolean removeFlows(final NodePos node) {
-		final Set<NodePos> connected = this.nodeConnects.get(node);
-		if (connected == null) {
+		final RelationHolder holder = this.nodes.get(node);
+		if (holder == null) {
 			return false;
 		}
-		final Set<NodePos> flowing = this.nodeFlows.get(node);
-		boolean ok = !flowing.isEmpty();
-		flowing.clear();
-		for (final NodePos other : connected) {
-			ok |= this.nodeFlows.get(other).remove(node);
+		boolean ok = !holder.flows.isEmpty();
+		holder.flows.clear();
+		for (final NodePos other : holder.connections) {
+			ok |= this.nodes.get(other).flows.remove(node);
 		}
 		return ok;
+	}
+
+	private static final class RelationHolder {
+		final Set<NodePos> connections = new HashSet<>();
+		final Set<NodePos> flows = new HashSet<>();
 	}
 }

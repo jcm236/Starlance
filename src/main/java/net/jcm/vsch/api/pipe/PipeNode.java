@@ -11,7 +11,12 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public abstract class PipeNode<T extends PipeNode<T>> {
+	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+
 	private final DyeColor color;
 	private final Type type;
 
@@ -57,13 +62,16 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 				final ResourceLocation id = buf.readResourceLocation();
 				final AbstractCustomNode node = CustomNodeRegistry.getNode(id, color);
 				if (node == null) {
-					// TODO: find a safe way to remove the node instead
-					throw new RuntimeException("Starlance: pipe node with ID " + id + " is not found");
+					LOGGER.error("[starlance]: custom node with ID " + id + " is not found");
+					yield null;
 				}
 				node.readAdditional(buf);
 				yield node;
 			}
-			default -> throw new IllegalArgumentException("Unknown node type: " + typeCode);
+			default -> {
+				LOGGER.error("[starlance]: unexpected node type: " + Integer.toString(typeCode, 16));
+				yield null;
+			}
 		};
 	}
 

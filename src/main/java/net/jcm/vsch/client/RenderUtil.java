@@ -97,7 +97,11 @@ public final class RenderUtil {
 		posestack.popPose();
 	}
 
-	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Vector3i offseti, Quaternionf rot, Vector3i sizei, float pUOffset, float pVOffset) {
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Vector3i offseti, Quaternionf rot, Vector3i sizei, float pUOffset, float pVOffset, float scale) {
+		drawBoxWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), offseti, rot, sizei, pUOffset, pVOffset, scale);
+	}
+
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector4f rgba, Vector3i offseti, Quaternionf rot, Vector3i sizei, float pUOffset, float pVOffset, float scale) {
 		poseStack.pushPose();
 		// Sizes are in pixels
 		Vector3f offset = new Vector3f(offseti).div(16);
@@ -105,16 +109,20 @@ public final class RenderUtil {
 
 		poseStack.mulPose(rot);
 
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.UP, offset, size, pUOffset, pVOffset);
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.DOWN, offset, size, pUOffset, pVOffset);
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.EAST, offset, size, pUOffset, pVOffset);
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.WEST, offset, size, pUOffset, pVOffset);
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.NORTH, offset, size, pUOffset, pVOffset);
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgb, Direction.SOUTH, offset, size, pUOffset, pVOffset);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.UP, offset, size, pUOffset, pVOffset, scale);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.DOWN, offset, size, pUOffset, pVOffset, scale);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.EAST, offset, size, pUOffset, pVOffset, scale);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.WEST, offset, size, pUOffset, pVOffset, scale);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.NORTH, offset, size, pUOffset, pVOffset, scale);
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, Direction.SOUTH, offset, size, pUOffset, pVOffset, scale);
 		poseStack.popPose();
 	}
 
-	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3f size, float pUOffset, float pVOffset) {
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3f size, float pUOffset, float pVOffset, float scale) {
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), perspective, offset, size, pUOffset, pVOffset, scale);
+	}
+
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector4f rgba, Direction perspective, Vector3f offset, Vector3f size, float pUOffset, float pVOffset, float scale) {
 		poseStack.pushPose();
 
 		float pX = offset.x, pY = offset.y, pZ = offset.z;
@@ -127,13 +135,13 @@ public final class RenderUtil {
 		Matrix4f matrix4f = poseStack.last().pose();
 
 		float sX = size.x, sY = size.y, sZ = size.z;
-		sX /= 2;
-		sY /= 2;
-		sZ /= 2;
+		sX *= scale / 2;
+		sY *= scale / 2;
+		sZ *= scale / 2;
 
-		final float r = rgb.x, g = rgb.y, b = rgb.z, a = 1f;
+		final float r = rgba.x, g = rgba.y, b = rgba.z, a = rgba.w;
 
-		TextureAtlasSprite stillTexture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
+		final TextureAtlasSprite stillTexture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
 
 		final float u1 = stillTexture.getU(pUOffset);
 		final float v1 = stillTexture.getV(pVOffset);

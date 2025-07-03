@@ -126,7 +126,12 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 			for (int i = 0; bitset != 0; i++) {
 				if ((bitset & 1) != 0) {
 					read++;
-					nodes[i] = PipeNode.readFrom(buf);
+					final PipeNode node = PipeNode.readFrom(buf);
+					if (node == null) {
+						this.nodeCount--;
+					} else {
+						nodes[i] = node;
+					}
 				}
 				bitset >>>= 1;
 			}

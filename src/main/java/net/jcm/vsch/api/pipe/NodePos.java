@@ -1,5 +1,7 @@
 package net.jcm.vsch.api.pipe;
 
+import net.jcm.vsch.pipe.level.NodeLevel;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -28,9 +30,13 @@ public record NodePos(
 		return this.axis.ordinal() * 7 + this.index;
 	}
 
+	public static NodePos originOf(final BlockPos blockPos) {
+		return new NodePos(blockPos, Direction.Axis.X, 0);
+	}
+
 	public static NodePos fromUniqueIndex(final BlockPos blockPos, final int uniqueIndex) {
 		if (uniqueIndex == 0) {
-			return new NodePos(blockPos, Direction.Axis.X, 0);
+			return NodePos.originOf(blockPos);
 		}
 		final int axisInd = (uniqueIndex - 1) / 7;
 		final Direction.Axis axis = Direction.Axis.VALUES[axisInd];
@@ -47,7 +53,7 @@ public record NodePos(
 		if (xIn) {
 			if (yIn) {
 				if (zIn) {
-					return new NodePos(blockPos, Direction.Axis.X, 0);
+					return NodePos.originOf(blockPos);
 				}
 				axis = Direction.Axis.Z;
 			} else if (zIn) {
@@ -105,6 +111,32 @@ public record NodePos(
 		final BlockPos blockPos = buf.readBlockPos();
 		final int index = buf.readByte();
 		return NodePos.fromUniqueIndex(blockPos, index);
+	}
+
+	public static Stream<NodePos> streamPlaceHint(final NodeLevel level, final BlockPos pos) {
+		return Stream.concat(
+			Stream.of(
+				NodePos.originOf(pos),
+				NodePos.originOf(pos.offset(0, 0, 1)),
+				NodePos.originOf(pos.offset(0, 1, 0)),
+				NodePos.originOf(pos.offset(0, 1, 1)),
+				NodePos.originOf(pos.offset(1, 0, 0)),
+				NodePos.originOf(pos.offset(1, 0, 1)),
+				NodePos.originOf(pos.offset(1, 1, 0)),
+				NodePos.originOf(pos.offset(1, 1, 1))
+			),
+			Stream.of(Direction.Axis.values()).flatMap((axis) -> IntStream.range(1, INDEX_BOUND)
+				.filter((i) -> i % 2 == 0)
+				.mapToObj((i) -> Stream.of(
+					new NodePos(pos, axis, i),
+					new NodePos(pos.offset(axis.choose(0, 0, 0), axis.choose(0, 0, 1), axis.choose(1, 1, 0)), axis, i),
+					new NodePos(pos.offset(axis.choose(0, 1, 1), axis.choose(1, 0, 0), axis.choose(0, 0, 0)), axis, i),
+					new NodePos(pos.offset(axis.choose(0, 1, 1), axis.choose(1, 0, 1), axis.choose(1, 1, 0)), axis, i)
+				))
+				.flatMap(Function.identity())
+			)
+		)
+			.filter((p) -> level.getNode(p) == null);
 	}
 
 	public Stream<NodePos> streamPossibleToConnect() {
