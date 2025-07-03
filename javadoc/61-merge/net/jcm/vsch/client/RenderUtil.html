@@ -117,7 +117,7 @@ loadScripts(document, 'script');</script>
  org.joml.Vector3i&nbsp;sizei)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float)" class="member-name-link">drawBoxWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)" class="member-name-link">drawBoxWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
  com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
  <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
  net.minecraft.resources.ResourceLocation&nbsp;texture,
@@ -126,19 +126,33 @@ loadScripts(document, 'script');</script>
  org.joml.Quaternionf&nbsp;rot,
  org.joml.Vector3i&nbsp;sizei,
  float&nbsp;pUOffset,
- float&nbsp;pVOffset)</code></div>
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawPlane(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f)" class="member-name-link">drawPlane</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;posestack,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)" class="member-name-link">drawBoxWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+ com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
+ <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
+ net.minecraft.resources.ResourceLocation&nbsp;texture,
+ org.joml.Vector4f&nbsp;rgba,
+ org.joml.Vector3i&nbsp;offseti,
+ org.joml.Quaternionf&nbsp;rot,
+ org.joml.Vector3i&nbsp;sizei,
+ float&nbsp;pUOffset,
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawPlane(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f)" class="member-name-link">drawPlane</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;posestack,
  com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
  <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
  org.joml.Vector4f&nbsp;rgba,
  net.minecraft.core.Direction&nbsp;perspective,
  org.joml.Vector3f&nbsp;offset,
  org.joml.Vector3f&nbsp;size)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float)" class="member-name-link">drawPlaneWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)" class="member-name-link">drawPlaneWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
  com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
  <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
  net.minecraft.resources.ResourceLocation&nbsp;texture,
@@ -147,7 +161,21 @@ loadScripts(document, 'script');</script>
  org.joml.Vector3f&nbsp;offset,
  org.joml.Vector3f&nbsp;size,
  float&nbsp;pUOffset,
- float&nbsp;pVOffset)</code></div>
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)" class="member-name-link">drawPlaneWithTexture</a><wbr>(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+ com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
+ <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
+ net.minecraft.resources.ResourceLocation&nbsp;texture,
+ org.joml.Vector4f&nbsp;rgba,
+ net.minecraft.core.Direction&nbsp;perspective,
+ org.joml.Vector3f&nbsp;offset,
+ org.joml.Vector3f&nbsp;size,
+ float&nbsp;pUOffset,
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -191,7 +219,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float)">
+<section class="detail" id="drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)">
 <h3>drawBoxWithTexture</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawBoxWithTexture</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
  com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
@@ -202,11 +230,28 @@ loadScripts(document, 'script');</script>
  org.joml.Quaternionf&nbsp;rot,
  org.joml.Vector3i&nbsp;sizei,
  float&nbsp;pUOffset,
- float&nbsp;pVOffset)</span></div>
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float)">
+<section class="detail" id="drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)">
+<h3>drawBoxWithTexture</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawBoxWithTexture</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+ com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
+ <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
+ net.minecraft.resources.ResourceLocation&nbsp;texture,
+ org.joml.Vector4f&nbsp;rgba,
+ org.joml.Vector3i&nbsp;offseti,
+ org.joml.Quaternionf&nbsp;rot,
+ org.joml.Vector3i&nbsp;sizei,
+ float&nbsp;pUOffset,
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)">
 <h3>drawPlaneWithTexture</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawPlaneWithTexture</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
  com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
@@ -217,7 +262,24 @@ loadScripts(document, 'script');</script>
  org.joml.Vector3f&nbsp;offset,
  org.joml.Vector3f&nbsp;size,
  float&nbsp;pUOffset,
- float&nbsp;pVOffset)</span></div>
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)">
+<h3>drawPlaneWithTexture</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawPlaneWithTexture</span><wbr><span class="parameters">(com.mojang.blaze3d.vertex.PoseStack&nbsp;poseStack,
+ com.mojang.blaze3d.vertex.VertexConsumer&nbsp;buffer,
+ <a href="RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a>&nbsp;lightMap,
+ net.minecraft.resources.ResourceLocation&nbsp;texture,
+ org.joml.Vector4f&nbsp;rgba,
+ net.minecraft.core.Direction&nbsp;perspective,
+ org.joml.Vector3f&nbsp;offset,
+ org.joml.Vector3f&nbsp;size,
+ float&nbsp;pUOffset,
+ float&nbsp;pVOffset,
+ float&nbsp;scale)</span></div>
 </section>
 </li>
 </ul>
