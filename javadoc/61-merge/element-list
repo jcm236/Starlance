@@ -25,6 +25,7 @@ net.jcm.vsch.event
 net.jcm.vsch.fluids
 net.jcm.vsch.items
 net.jcm.vsch.items.custom
+net.jcm.vsch.items.pipe
 net.jcm.vsch.mixin.client
 net.jcm.vsch.mixin.cosmos
 net.jcm.vsch.mixin.create

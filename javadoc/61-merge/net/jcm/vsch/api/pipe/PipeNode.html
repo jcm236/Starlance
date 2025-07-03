@@ -127,35 +127,38 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#canConnect(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction)" class="member-name-link">canConnect</a><wbr>(<a href="../../pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a>&nbsp;level,
- <a href="NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos,
- net.minecraft.core.Direction&nbsp;dir)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract net.minecraft.world.item.ItemStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#asItemStack()" class="member-name-link">asItemStack</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#canFluidFlow(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction,net.minecraft.world.level.material.Fluid)" class="member-name-link">canFluidFlow</a><wbr>(<a href="../../pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a>&nbsp;level,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#canConnect(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction)" class="member-name-link">canConnect</a><wbr>(<a href="../../pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a>&nbsp;level,
+ <a href="NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos,
+ net.minecraft.core.Direction&nbsp;dir)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#canFluidFlow(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction,net.minecraft.world.level.material.Fluid)" class="member-name-link">canFluidFlow</a><wbr>(<a href="../../pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a>&nbsp;level,
  <a href="NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos,
  net.minecraft.core.Direction&nbsp;dir,
  net.minecraft.world.level.material.Fluid&nbsp;fluid)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.item.DyeColor</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getColor()" class="member-name-link">getColor</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="PipeNode.Type.html" title="enum class in net.jcm.vsch.api.pipe">PipeNode.Type</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readFrom(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="PipeNode.html" title="type parameter in PipeNode">T</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withColor(net.minecraft.world.item.DyeColor)" class="member-name-link">withColor</a><wbr>(net.minecraft.world.item.DyeColor&nbsp;color)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#writeAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeAdditional</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeTo(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeTo</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.item.DyeColor</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getColor()" class="member-name-link">getColor</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="PipeNode.Type.html" title="enum class in net.jcm.vsch.api.pipe">PipeNode.Type</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readFrom(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="PipeNode.html" title="type parameter in PipeNode">T</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withColor(net.minecraft.world.item.DyeColor)" class="member-name-link">withColor</a><wbr>(net.minecraft.world.item.DyeColor&nbsp;color)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#writeAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeAdditional</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeTo(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeTo</a><wbr>(net.minecraft.network.FriendlyByteBuf&nbsp;buf)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -204,6 +207,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="withColor(net.minecraft.world.item.DyeColor)">
 <h3>withColor</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="PipeNode.html" title="type parameter in PipeNode">T</a></span>&nbsp;<span class="element-name">withColor</span><wbr><span class="parameters">(net.minecraft.world.item.DyeColor&nbsp;color)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="asItemStack()">
+<h3>asItemStack</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">net.minecraft.world.item.ItemStack</span>&nbsp;<span class="element-name">asItemStack</span>()</div>
 </section>
 </li>
 <li>

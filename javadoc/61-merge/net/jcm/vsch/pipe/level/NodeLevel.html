@@ -90,7 +90,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.world.level.Level)" class="member-name-link">NodeLevel</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">DO NOT initialize, use <a href="#get(net.minecraft.world.level.Level)"><code>get(net.minecraft.world.level.Level)</code></a> instead.</div>
+</div>
 </div>
 </section>
 </li>
@@ -99,24 +101,24 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.level.Level</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevel()" class="member-name-link">getLevel</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode(net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">getNode</a><wbr>(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(net.minecraft.world.level.Level)" class="member-name-link">get</a><wbr>(net.minecraft.world.level.Level&nbsp;level)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.level.Level</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevel()" class="member-name-link">getLevel</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodeChunk(int,int)" class="member-name-link">getNodeChunk</a><wbr>(int&nbsp;x,
- int&nbsp;z)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode(net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">getNode</a><wbr>(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../util/Pair.html" title="class in net.jcm.vsch.util">Pair</a>&lt;<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>,<wbr><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodes(net.minecraft.core.BlockPos)" class="member-name-link">getNodes</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodeChunk(int,int)" class="member-name-link">getNodeChunk</a><wbr>(int&nbsp;x,
+ int&nbsp;z)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNode(net.jcm.vsch.api.pipe.NodePos,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">setNode</a><wbr>(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos,
@@ -143,6 +145,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(net.minecraft.world.level.Level)">
 <h3>NodeLevel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NodeLevel</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level)</span></div>
+<div class="block">DO NOT initialize, use <a href="#get(net.minecraft.world.level.Level)"><code>get(net.minecraft.world.level.Level)</code></a> instead.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#get(net.minecraft.world.level.Level)"><code>get(net.minecraft.world.level.Level)</code></a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -153,6 +164,12 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="get(net.minecraft.world.level.Level)">
+<h3>get</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="getLevel()">
 <h3>getLevel</h3>
@@ -170,12 +187,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getNode(net.jcm.vsch.api.pipe.NodePos)">
 <h3>getNode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></span>&nbsp;<span class="element-name">getNode</span><wbr><span class="parameters">(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getNodes(net.minecraft.core.BlockPos)">
-<h3>getNodes</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../util/Pair.html" title="class in net.jcm.vsch.util">Pair</a>&lt;<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>,<wbr><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&gt;&gt;</span>&nbsp;<span class="element-name">getNodes</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 </section>
 </li>
 <li>
