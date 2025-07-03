@@ -63,6 +63,8 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/blocks/entity/template/package-tree.html">net.jcm.vsch.blocks.entity.template</a>, </li>
 <li><a href="net/jcm/vsch/blocks/rocketassembler/package-tree.html">net.jcm.vsch.blocks.rocketassembler</a>, </li>
 <li><a href="net/jcm/vsch/blocks/thruster/package-tree.html">net.jcm.vsch.blocks.thruster</a>, </li>
+<li><a href="net/jcm/vsch/client/package-tree.html">net.jcm.vsch.client</a>, </li>
+<li><a href="net/jcm/vsch/client/pipe/package-tree.html">net.jcm.vsch.client.pipe</a>, </li>
 <li><a href="net/jcm/vsch/commands/package-tree.html">net.jcm.vsch.commands</a>, </li>
 <li><a href="net/jcm/vsch/compat/package-tree.html">net.jcm.vsch.compat</a>, </li>
 <li><a href="net/jcm/vsch/compat/cc/peripherals/package-tree.html">net.jcm.vsch.compat.cc.peripherals</a>, </li>
@@ -82,6 +84,8 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/mixin/minecraft/package-tree.html">net.jcm.vsch.mixin.minecraft</a>, </li>
 <li><a href="net/jcm/vsch/mixin/valkyrienskies/package-tree.html">net.jcm.vsch.mixin.valkyrienskies</a>, </li>
 <li><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/package-tree.html">net.jcm.vsch.mixin.valkyrienskies.accessor</a>, </li>
+<li><a href="net/jcm/vsch/network/package-tree.html">net.jcm.vsch.network</a>, </li>
+<li><a href="net/jcm/vsch/network/s2c/package-tree.html">net.jcm.vsch.network.s2c</a>, </li>
 <li><a href="net/jcm/vsch/pipe/package-tree.html">net.jcm.vsch.pipe</a>, </li>
 <li><a href="net/jcm/vsch/pipe/level/package-tree.html">net.jcm.vsch.pipe.level</a>, </li>
 <li><a href="net/jcm/vsch/ship/package-tree.html">net.jcm.vsch.ship</a>, </li>
@@ -203,6 +207,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a> (implements net.minecraft.world.level.BlockGetter, net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a></li>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkSerializer.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkSerializer</a></li>
+<li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundLevelChunkWithLightPacket.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundLevelChunkWithLightPacket</a> (implements net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IClientboundLevelChunkWithLightPacketAccessor.html" title="interface in net.jcm.vsch.accessor">IClientboundLevelChunkWithLightPacketAccessor</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinControlledContraptionEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.create">MixinControlledContraptionEntity</a> (implements net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ControlledContraptionEntityAccessor.html" title="interface in net.jcm.vsch.accessor">ControlledContraptionEntityAccessor</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinGui.html" class="type-name-link" title="class in net.jcm.vsch.mixin.client">MixinGui</a> (implements net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IGuiAccessor.html" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinKineticBlockEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.create">MixinKineticBlockEntity</a> (implements net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/IMoveable.html" title="interface in net.jcm.vsch.util.assemble">IMoveable</a>&lt;T&gt;)
@@ -216,6 +221,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunkSection</a> (implements net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinLightRenderer.html" class="type-name-link" title="class in net.jcm.vsch.mixin.cosmos">MixinLightRenderer</a></li>
 <li class="circle">net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinPlaceplatformOnKeyPressedProcedure.html" class="type-name-link" title="class in net.jcm.vsch.mixin.cosmos">MixinPlaceplatformOnKeyPressedProcedure</a></li>
+<li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerPlayer.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerPlayer</a></li>
 <li class="circle">net.jcm.vsch.mixin.valkyrienskies.<a href="net/jcm/vsch/mixin/valkyrienskies/MixinShipAssemblyKt.html" class="type-name-link" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinShipAssemblyKt</a></li>
 <li class="circle">net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinSpacesuitwornLogicProcedure.html" class="type-name-link" title="class in net.jcm.vsch.mixin.cosmos">MixinSpacesuitwornLogicProcedure</a></li>
 <li class="circle">net.jcm.vsch.mixin.valkyrienskies.<a href="net/jcm/vsch/mixin/valkyrienskies/MixinVSGameUtilsKt.html" class="type-name-link" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinVSGameUtilsKt</a></li>
@@ -223,6 +229,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/MoveableIControlContraption.html" class="type-name-link" title="class in net.jcm.vsch.util.assemble">MoveableIControlContraption</a> (implements net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/IMoveable.html" title="interface in net.jcm.vsch.util.assemble">IMoveable</a>&lt;T&gt;)</li>
 <li class="circle">net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/MoveUtil.html" class="type-name-link" title="class in net.jcm.vsch.util.assemble">MoveUtil</a></li>
 <li class="circle">net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeLevel.html" class="type-name-link" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></li>
+<li class="circle">net.jcm.vsch.client.pipe.<a href="net/jcm/vsch/client/pipe/PipeLevelRenderer.html" class="type-name-link" title="class in net.jcm.vsch.client.pipe">PipeLevelRenderer</a></li>
 <li class="circle">net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/PipeNetwork.html" class="type-name-link" title="class in net.jcm.vsch.pipe">PipeNetwork</a></li>
 <li class="circle">net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" class="type-name-link" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;T&gt;
 <ul>
@@ -230,6 +237,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" class="type-name-link" title="class in net.jcm.vsch.pipe">OmniNode</a></li>
 </ul>
 </li>
+<li class="circle">net.jcm.vsch.network.s2c.<a href="net/jcm/vsch/network/s2c/PipeNodeSyncChunkS2C.html" class="type-name-link" title="class in net.jcm.vsch.network.s2c">PipeNodeSyncChunkS2C</a> (implements net.jcm.vsch.network.<a href="net/jcm/vsch/network/INetworkPacket.html" title="interface in net.jcm.vsch.network">INetworkPacket</a>)</li>
+<li class="circle">net.jcm.vsch.network.s2c.<a href="net/jcm/vsch/network/s2c/PipeNodeSyncChunkSectionS2C.html" class="type-name-link" title="class in net.jcm.vsch.network.s2c">PipeNodeSyncChunkSectionS2C</a> (implements net.jcm.vsch.network.<a href="net/jcm/vsch/network/INetworkPacket.html" title="interface in net.jcm.vsch.network">INetworkPacket</a>)</li>
 <li class="circle">net.jcm.vsch.event.<a href="net/jcm/vsch/event/PlanetCollision.html" class="type-name-link" title="class in net.jcm.vsch.event">PlanetCollision</a></li>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html" class="type-name-link external-link" title="class or interface in java.lang">Record</a>
 <ul>
@@ -237,6 +246,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.util.<a href="net/jcm/vsch/util/Pair.html" class="type-name-link" title="class in net.jcm.vsch.util">Pair</a>&lt;T,<wbr>U&gt;</li>
 </ul>
 </li>
+<li class="circle">net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" class="type-name-link" title="class in net.jcm.vsch.client">RenderUtil</a></li>
+<li class="circle">net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" class="type-name-link" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></li>
 <li class="circle">net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" class="type-name-link" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a> (implements dan200.computercraft.api.peripheral.IPeripheral)</li>
 <li class="circle">net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShapes.html" class="type-name-link" title="class in net.jcm.vsch.util.rot">RotShapes</a></li>
 <li class="circle">net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" class="type-name-link" title="class in net.jcm.vsch.util">ShipUtils</a></li>
@@ -261,6 +272,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" class="type-name-link" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a> (implements org.valkyrienskies.core.api.ships.ShipForcesInducer)</li>
 <li class="circle">net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" class="type-name-link" title="class in net.jcm.vsch.items">VSCHItems</a></li>
 <li class="circle">net.jcm.vsch.<a href="net/jcm/vsch/VSCHMod.html" class="type-name-link" title="class in net.jcm.vsch">VSCHMod</a></li>
+<li class="circle">net.jcm.vsch.network.<a href="net/jcm/vsch/network/VSCHNetwork.html" class="type-name-link" title="class in net.jcm.vsch.network">VSCHNetwork</a></li>
 <li class="circle">net.jcm.vsch.compat.create.ponder.<a href="net/jcm/vsch/compat/create/ponder/VSCHPonderRegistrateBlocks.html" class="type-name-link" title="class in net.jcm.vsch.compat.create.ponder">VSCHPonderRegistrateBlocks</a></li>
 <li class="circle">net.jcm.vsch.compat.create.ponder.<a href="net/jcm/vsch/compat/create/ponder/VSCHPonderRegistry.html" class="type-name-link" title="class in net.jcm.vsch.compat.create.ponder">VSCHPonderRegistry</a></li>
 <li class="circle">net.jcm.vsch.compat.create.ponder.<a href="net/jcm/vsch/compat/create/ponder/VSCHPonderTags.html" class="type-name-link" title="class in net.jcm.vsch.compat.create.ponder">VSCHPonderTags</a></li>
@@ -278,8 +290,10 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ContraptionHolder.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">ContraptionHolder</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ControlledContraptionEntityAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">ControlledContraptionEntityAccessor</a></li>
 <li class="circle">net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/CustomNodeProvider.html" class="type-name-link" title="interface in net.jcm.vsch.api.pipe">CustomNodeProvider</a></li>
+<li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IClientboundLevelChunkWithLightPacketAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">IClientboundLevelChunkWithLightPacketAccessor</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IGuiAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></li>
 <li class="circle">net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/IMoveable.html" class="type-name-link" title="interface in net.jcm.vsch.util.assemble">IMoveable</a>&lt;T&gt;</li>
+<li class="circle">net.jcm.vsch.network.<a href="net/jcm/vsch/network/INetworkPacket.html" class="type-name-link" title="interface in net.jcm.vsch.network">INetworkPacket</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a></li>
 <li class="circle">net.jcm.vsch.api.block.<a href="net/jcm/vsch/api/block/IVentBlock.html" class="type-name-link" title="interface in net.jcm.vsch.api.block">IVentBlock</a></li>
 <li class="circle">net.jcm.vsch.api.force.<a href="net/jcm/vsch/api/force/IVSCHForceApplier.html" class="type-name-link" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a></li>
