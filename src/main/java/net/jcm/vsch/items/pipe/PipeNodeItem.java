@@ -15,10 +15,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.LoadedShip;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-
 public abstract class PipeNodeItem extends Item {
 	private final DyeColor color;
 
@@ -36,7 +32,7 @@ public abstract class PipeNodeItem extends Item {
 	@Override
 	public InteractionResult useOn(final UseOnContext context) {
 		final Player player = context.getPlayer();
-		if (player == null || context.getHand() != InteractionHand.MAIN_HAND) {
+		if (player == null || context.getHand() != InteractionHand.MAIN_HAND || context.isSecondaryUseActive()) {
 			return super.useOn(context);
 		}
 		if (!(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof WrenchItem)) {
@@ -46,13 +42,7 @@ public abstract class PipeNodeItem extends Item {
 		final Level level = context.getLevel();
 		final NodeLevel nodeLevel = NodeLevel.get(level);
 
-		final LoadedShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, context.getClickedPos());
-		Vec3 pos = context.getClickLocation();
-		if (ship != null) {
-			final Vector3d worldPos = ship.getTransform().getWorldToShip().transformPosition(new Vector3d(pos.x, pos.y, pos.z));
-			pos = new Vec3(worldPos.x, worldPos.y, worldPos.z);
-		}
-		final NodePos nodePos = NodePos.fromVec3(pos, 4.0 / 16);
+		final NodePos nodePos = NodePos.fromHitResult(level, context.getClickedPos(), context.getClickLocation(), 4.0 / 16);
 		if (nodePos == null) {
 			return super.useOn(context);
 		}

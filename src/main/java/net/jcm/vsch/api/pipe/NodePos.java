@@ -5,7 +5,12 @@ import net.jcm.vsch.pipe.level.NodeLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import org.joml.Vector3d;
+import org.valkyrienskies.core.api.ships.LoadedShip;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -41,6 +46,15 @@ public record NodePos(
 		final int axisInd = (uniqueIndex - 1) / 7;
 		final Direction.Axis axis = Direction.Axis.VALUES[axisInd];
 		return new NodePos(blockPos, axis, uniqueIndex - axisInd * 7);
+	}
+
+	public static NodePos fromHitResult(final Level level, final BlockPos blockPos, Vec3 pos, final double size) {
+		final LoadedShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, blockPos);
+		if (ship != null) {
+			final Vector3d worldPos = ship.getTransform().getWorldToShip().transformPosition(new Vector3d(pos.x, pos.y, pos.z));
+			pos = new Vec3(worldPos.x, worldPos.y, worldPos.z);
+		}
+		return fromVec3(pos, size);
 	}
 
 	public static NodePos fromVec3(final Vec3 pos, final double size) {

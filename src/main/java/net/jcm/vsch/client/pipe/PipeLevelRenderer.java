@@ -5,6 +5,7 @@ import net.jcm.vsch.accessor.INodeLevelChunkSection;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.client.RenderUtil;
+import net.jcm.vsch.items.custom.WrenchItem;
 import net.jcm.vsch.pipe.level.NodeGetter;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
@@ -21,6 +22,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -36,6 +39,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -50,8 +55,10 @@ public class PipeLevelRenderer {
 	private static final Vector3i ZERO_VEC3I = new Vector3i();
 	private static final int PIPE_VIEW_RANGE = 8;
 
-	private static final Vector4f HINT_COLOR = new Vector4f(0.25f, 0.92f, 0.25f, 0.6f);
-	private static final float HINT_SCALE = 0.75f;
+	private static final Vector4f HINT_COLOR = new Vector4f(0.25f, 0.70f, 0.25f, 0.6f);
+	private static final float HINT_SCALE = 0.7f;
+	private static final Vector4f HINT_SELECTING_COLOR = new Vector4f(0.25f, 0.92f, 0.25f, 0.8f);
+	private static final float HINT_SELECTING_SCALE = 0.85f;
 
 	@SubscribeEvent
 	public static void renderLevelState(final RenderLevelStageEvent event) {
@@ -65,10 +72,11 @@ public class PipeLevelRenderer {
 		}
 
 		final PoseStack poseStack = event.getPoseStack();
-		final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
+		final float partialTick = event.getPartialTick();
 		final Vec3 view = event.getCamera().getPosition();
 		// final Frustum frustum = event.getFrustum(); // TODO: see if frustum filter can improve performance
 
+		final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		// TODO: make our own atlas
@@ -79,6 +87,7 @@ public class PipeLevelRenderer {
 
 		poseStack.pushPose();
 
+		renderPlaceHint(level, poseStack, vertexBuilder, view, partialTick);
 		renderNodes(level, poseStack, vertexBuilder, view);
 
 		bufferSource.endBatch();
@@ -94,11 +103,32 @@ public class PipeLevelRenderer {
 		return chunkPosStream.map((chunkPos) -> chunkSource.getChunkNow(chunkPos.x, chunkPos.z)).filter(Objects::nonNull);
 	}
 
+	private static void renderPlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final float partialTick) {
+		final Minecraft minecraft = Minecraft.getInstance();
+		final LocalPlayer player = minecraft.player;
+		if (player == null || player.isSpectator()) {
+			return;
+		}
+		if (!(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof WrenchItem)) {
+			return;
+		}
+		final HitResult hit = player.pick(4.5, partialTick, false);
+		if (hit.getType() != HitResult.Type.BLOCK) {
+			return;
+		}
+		final BlockHitResult blockHit = (BlockHitResult) (hit);
+		final NodePos lookingPos = NodePos.fromHitResult(level, blockHit.getBlockPos(), blockHit.getLocation(), 4.0 / 16);
+		NodePos.streamPlaceHint(NodeLevel.get(level), blockHit.getBlockPos()).forEach((pos) -> {
+			renderNodePlaceHint(
+				level, poseStack, vertexBuilder, view, pos,
+				pos.equals(lookingPos) ? HINT_SELECTING_COLOR : HINT_COLOR,
+				pos.equals(lookingPos) ? HINT_SELECTING_SCALE : HINT_SCALE
+			);
+		});
+	}
+
 	private static void renderNodes(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
 		streamRenderingChunks(level, view).forEach((chunk) -> renderNodesInChunk(level, chunk, poseStack, vertexBuilder, view));
-		NodePos.streamPlaceHint(NodeLevel.get(level), new BlockPos(0, 100, 0)).forEach((pos) -> {
-			renderNodePlaceHint(level, poseStack, vertexBuilder, view, pos, HINT_COLOR, HINT_SCALE);
-		});
 	}
 
 	private static void renderNodesInChunk(final ClientLevel level, final ChunkAccess chunk, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
