@@ -80,6 +80,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		for (int blockIndex = 0; blockIndex < LevelChunkSection.SECTION_SIZE && written < maxWritten; blockIndex++) {
 			final PipeNode[] nodes = this.nodes[blockIndex];
 			if (nodes == null) {
+				EncodeHelper.writeVarInt22(buf, 0);
 				continue;
 			}
 			int bitset = 0;
@@ -88,18 +89,20 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 					bitset |= 1 << i;
 				}
 			}
+			EncodeHelper.writeVarInt22(buf, bitset);
 			if (bitset == 0) {
-				buf.writeByte(0);
-			} else {
-				EncodeHelper.writeVarInt22(buf, bitset);
-				for (int i = 0; i < NodePos.UNIQUE_INDEX_BOUND; i++) {
-					final PipeNode node = nodes[i];
-					if (node != null) {
-						written++;
-						node.writeTo(buf);
-					}
+				continue;
+			}
+			for (int i = 0; i < NodePos.UNIQUE_INDEX_BOUND; i++) {
+				final PipeNode node = nodes[i];
+				if (node != null) {
+					written++;
+					node.writeTo(buf);
 				}
 			}
+		}
+		if (written != maxWritten) {
+			throw new RuntimeException("Incorrect node count, expect " + maxWritten + ", got" + written);
 		}
 	}
 
@@ -127,6 +130,9 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 				}
 				bitset >>>= 1;
 			}
+		}
+		if (read != maxRead) {
+			throw new RuntimeException("Incorrect node count, expect " + maxRead + ", got" + read);
 		}
 	}
 }

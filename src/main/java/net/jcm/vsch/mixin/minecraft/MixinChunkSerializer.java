@@ -99,7 +99,12 @@ public abstract class MixinChunkSerializer {
 		}
 		// TODO: investigate if Pooled buffer can give more performance
 		final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(128));
-		nodeSection.vsch$writeNodes(buf);
+		try {
+			nodeSection.vsch$writeNodes(buf);
+		} catch (RuntimeException	e) {
+			LOGGER.error("[starlance]: Error when encoding pipe nodes", e);
+			throw e;
+		}
 		final byte[] bytes = new byte[buf.readableBytes()];
 		buf.readBytes(bytes);
 		sectionData.putByteArray(SECTION_NODES_KEY, bytes);
