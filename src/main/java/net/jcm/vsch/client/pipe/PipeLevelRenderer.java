@@ -22,6 +22,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -61,10 +62,12 @@ public class PipeLevelRenderer {
 
 		// RenderSystem.setShader(GameRenderer::getRendertypeSolidShader);
 		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		poseStack.pushPose();
 
 		renderNodes(level, poseStack, bufferBuilder, view);
 
 		tesselator.end();
+		poseStack.popPose();
 	}
 
 	private static Stream<LevelChunk> streamRenderingChunks(final ClientLevel level, final Vec3 view) {
@@ -86,13 +89,19 @@ public class PipeLevelRenderer {
 		if (!nodeGetter.hasAnyNode()) {
 			return;
 		}
+		final ChunkPos chunkPos = chunk.getPos();
+		int sectionIndex = 0;
 		for (final LevelChunkSection section : chunk.getSections()) {
+			sectionIndex++;
 			if (!(section instanceof INodeLevelChunkSection nodeSection)) {
 				continue;
 			}
 			if (!nodeSection.vsch$hasAnyNode()) {
 				continue;
 			}
+			final int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex - 1);
+			final SectionPos sectionPos = SectionPos.of(chunkPos, sectionY);
+			final BlockPos sectionOrigin = sectionPos.origin();
 			for (int index = 0; index < 16 * 16 * 16; index++) {
 				final int x = index & 0xf, y = (index >> 8) & 0xf, z = (index >> 4) & 0xf;
 				PipeNode[] nodes = nodeSection.vsch$getNodes(x, y, z);
@@ -102,7 +111,7 @@ public class PipeLevelRenderer {
 				for (int i = 0; i < NodePos.UNIQUE_INDEX_BOUND; i++) {
 					final PipeNode node = nodes[i];
 					if (node != null) {
-						renderNode(level, poseStack, bufferBuilder, view, NodePos.fromUniqueIndex(new BlockPos(x, y, z), i), node);
+						renderNode(level, poseStack, bufferBuilder, view, NodePos.fromUniqueIndex(sectionOrigin.offset(x, y, z), i), node);
 					}
 				}
 			}

@@ -37,7 +37,7 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	public abstract boolean canFluidFlow(NodeLevel level, NodePos pos, Direction dir, Fluid fluid);
 
 	public final void writeTo(final FriendlyByteBuf buf) {
-		buf.writeByte((this.type.getCode() << 4) & this.color.getId());
+		buf.writeByte((this.type.getCode() << 4) | this.color.getId());
 		if (this.type == Type.CUSTOM) {
 			buf.writeResourceLocation(((AbstractCustomNode) (this)).getId());
 		}
