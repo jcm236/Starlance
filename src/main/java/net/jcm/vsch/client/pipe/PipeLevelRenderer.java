@@ -10,9 +10,11 @@ import net.jcm.vsch.pipe.level.NodeGetter;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector4f;
+import org.joml.primitives.AABBi;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -34,11 +36,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -47,8 +49,18 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = VSCHMod.MODID, value = Dist.CLIENT)
 public class PipeLevelRenderer {
@@ -96,11 +108,65 @@ public class PipeLevelRenderer {
 	}
 
 	private static Stream<LevelChunk> streamRenderingChunks(final ClientLevel level, final Vec3 view) {
+		final Vector3d viewBoxMin = new Vector3d(view.x - PIPE_VIEW_RANGE * 16, view.y - PIPE_VIEW_RANGE * 16, view.z - PIPE_VIEW_RANGE * 16);
+		final Vector3d viewBoxMax = new Vector3d(view.x + PIPE_VIEW_RANGE * 16, view.y + PIPE_VIEW_RANGE * 16, view.z + PIPE_VIEW_RANGE * 16);
+		final AABB viewBox = new AABB(viewBoxMin.x, viewBoxMin.y, viewBoxMin.z, viewBoxMax.x, viewBoxMax.y, viewBoxMax.z);
 		final ClientChunkCache chunkSource = level.getChunkSource();
 		final ChunkPos center = new ChunkPos(BlockPos.containing(view));
-		Stream<ChunkPos> chunkPosStream = ChunkPos.rangeClosed(center, PIPE_VIEW_RANGE);
-		// TODO: concat VS ship chunks
-		return chunkPosStream.map((chunkPos) -> chunkSource.getChunkNow(chunkPos.x, chunkPos.z)).filter(Objects::nonNull);
+
+		final List<Stream<ChunkPos>> chunkPosStreams = new ArrayList<>();
+		chunkPosStreams.add(ChunkPos.rangeClosed(center, PIPE_VIEW_RANGE));
+
+		final Vector3d viewBoxMinOut = new Vector3d(), viewBoxMaxOut = new Vector3d();
+		final AABBi viewBoxOut = new AABBi();
+		for (final Ship ship : VSGameUtilsKt.getShipsIntersecting(level, viewBox)) {
+			ship.getTransform().getWorldToShip().transformAab(viewBoxMin, viewBoxMax, viewBoxMinOut, viewBoxMaxOut);
+			viewBoxOut
+				.setMin((int)(viewBoxMinOut.x), (int)(viewBoxMinOut.y), (int)(viewBoxMinOut.z))
+				.setMax((int)(viewBoxMaxOut.x), (int)(viewBoxMaxOut.y), (int)(viewBoxMaxOut.z));
+			ship.getShipAABB().intersection(viewBoxOut, viewBoxOut);
+			if (!viewBoxOut.isValid()) {
+				continue;
+			}
+			final int minX = SectionPos.blockToSectionCoord(viewBoxOut.minX), minZ = SectionPos.blockToSectionCoord(viewBoxOut.minZ);
+			final int maxX = SectionPos.blockToSectionCoord(viewBoxOut.maxX), maxZ = SectionPos.blockToSectionCoord(viewBoxOut.maxZ);
+			chunkPosStreams.add(StreamSupport.stream(
+				new Spliterators.AbstractSpliterator<>(
+					(maxX - minX) * (maxZ - minZ),
+					Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.NONNULL
+				) {
+					private ChunkPos pos = null;
+
+					@Override
+					public boolean tryAdvance(final Consumer<? super ChunkPos> consumer) {
+						if (this.pos == null) {
+							this.pos = new ChunkPos(minX, minZ);
+						} else {
+							int x = this.pos.x, z = this.pos.z;
+							final boolean xIn = x < maxX, zIn = z < maxZ;
+							if (!xIn && !zIn) {
+								return false;
+							}
+							if (xIn) {
+								x++;
+							} else {
+								x = 0;
+								z++;
+							}
+							this.pos = new ChunkPos(x, z);
+						}
+						consumer.accept(this.pos);
+						return true;
+					}
+				},
+				false
+			));
+		}
+
+		return chunkPosStreams.stream()
+			.flatMap(Function.identity())
+			.map((chunkPos) -> chunkSource.getChunkNow(chunkPos.x, chunkPos.z))
+			.filter(Objects::nonNull);
 	}
 
 	private static void renderPlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final float partialTick) {
@@ -167,7 +233,7 @@ public class PipeLevelRenderer {
 		}
 	}
 
-	private static void renderNode(final BlockAndTintGetter level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
+	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
 		final int size = 4;
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
@@ -199,15 +265,24 @@ public class PipeLevelRenderer {
 
 		lightMap.packLightMaps(blockLightMap, skyLightMap);
 
+		Vec3 nodeCenterRender = nodeCenter.subtract(0.5, 0.5, 0.5);
+		final Quaternionf rotation = new Quaternionf();
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos.blockPos());
+		if (ship != null) {
+			final Vector3d worldNodeCenter = ship.getShipToWorld().transformPosition(new Vector3d(nodeCenterRender.x, nodeCenterRender.y, nodeCenterRender.z));
+			nodeCenterRender = new Vec3(worldNodeCenter.x, worldNodeCenter.y, worldNodeCenter.z);
+			rotation.setFromNormalized(ship.getShipToWorld());
+		}
+
 		poseStack.pushPose();
 
-		poseStack.translate(nodeCenter.x - 0.5 - view.x, nodeCenter.y - 0.5 - view.y, nodeCenter.z - 0.5 - view.z);
+		poseStack.translate(nodeCenterRender.x - view.x, nodeCenterRender.y - view.y, nodeCenterRender.z - view.z);
 		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
 			nodeTexture, new Vector3f(node.getColor().getTextureDiffuseColors()),
-			ZERO_VEC3I, new Quaternionf(), new Vector3i(size, size, size),
+			ZERO_VEC3I, rotation, new Vector3i(size, size, size),
 			0, 0,
 			1f
 		);
@@ -215,20 +290,28 @@ public class PipeLevelRenderer {
 		poseStack.popPose();
 	}
 
-	private static void renderNodePlaceHint(final BlockAndTintGetter level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final Vector4f color, final float scale) {
+	private static void renderNodePlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final Vector4f color, final float scale) {
 		final int size = 4;
-		final Vec3 nodeCenter = pos.getCenter();
+		Vec3 nodeCenter = pos.getCenter().subtract(0.5, 0.5, 0.5);
+		final Quaternionf rotation = new Quaternionf();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap().setAll(0xf000f0);
+
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos.blockPos());
+		if (ship != null) {
+			final Vector3d worldNodeCenter = ship.getShipToWorld().transformPosition(new Vector3d(nodeCenter.x, nodeCenter.y, nodeCenter.z));
+			nodeCenter = new Vec3(worldNodeCenter.x, worldNodeCenter.y, worldNodeCenter.z);
+			rotation.setFromNormalized(ship.getShipToWorld());
+		}
 
 		poseStack.pushPose();
 
-		poseStack.translate(nodeCenter.x - 0.5 - view.x, nodeCenter.y - 0.5 - view.y, nodeCenter.z - 0.5 - view.z);
+		poseStack.translate(nodeCenter.x - view.x, nodeCenter.y - view.y, nodeCenter.z - view.z);
 		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
 			nodeTexture, color,
-			ZERO_VEC3I, new Quaternionf(), new Vector3i(size, size, size),
+			ZERO_VEC3I, rotation, new Vector3i(size, size, size),
 			0, 0,
 			scale
 		);

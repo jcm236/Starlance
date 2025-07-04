@@ -65,6 +65,9 @@ public class VSCHEvents {
 		}
 	}
 
+	/**
+	 * Do not use BlockEvent.NeighborNotifyEvent here, since it won't trigger for shape update.
+	 */
 	public static void onBlockUpdate(final Level level, final BlockPos blockPos) {
 		if (level.isClientSide) {
 			return;

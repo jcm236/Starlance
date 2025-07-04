@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.LoadedShip;
+import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.function.Function;
@@ -51,10 +51,12 @@ public record NodePos(
 	}
 
 	public static NodePos fromHitResult(final Level level, final BlockPos blockPos, Vec3 pos, final double size) {
-		final LoadedShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, blockPos);
-		if (ship != null) {
-			final Vector3d worldPos = ship.getTransform().getWorldToShip().transformPosition(new Vector3d(pos.x, pos.y, pos.z));
-			pos = new Vec3(worldPos.x, worldPos.y, worldPos.z);
+		if (!VSGameUtilsKt.isBlockInShipyard(level, pos)) {
+			final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
+			if (ship != null) {
+				final Vector3d worldPos = ship.getWorldToShip().transformPosition(new Vector3d(pos.x, pos.y, pos.z));
+				pos = new Vec3(worldPos.x, worldPos.y, worldPos.z);
+			}
 		}
 		return fromVec3(pos, size);
 	}
