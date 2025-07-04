@@ -55,6 +55,9 @@ public abstract class PipeNodeItem extends Item {
 		if (nodeLevel.getNode(nodePos) != null) {
 			return InteractionResult.FAIL;
 		}
+		if (!nodePos.canAnchoredIn(level, 4.0 / 16)) {
+			return InteractionResult.FAIL;
+		}
 		nodeLevel.setNode(nodePos, node);
 		if (!player.getAbilities().instabuild) {
 			stack.shrink(1);

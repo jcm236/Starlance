@@ -6,7 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.LoadedShip;
@@ -116,6 +118,22 @@ public record NodePos(
 		);
 	}
 
+	public AABB getAABB(final double size) {
+		final double r = size / 2;
+		final Vec3 center = this.getCenter();
+		return new AABB(center.x - r, center.y - r, center.z - r, center.x + r, center.y + r, center.z + r);
+	}
+
+	public boolean canAnchoredIn(final Level level, final double size) {
+		final AABB box = this.getAABB(size);
+		for (final VoxelShape shape : level.getBlockCollisions(null, box)) {
+			if (!shape.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void writeTo(final FriendlyByteBuf buf) {
 		buf.writeBlockPos(this.blockPos);
 		buf.writeByte(this.uniqueIndex());
@@ -150,7 +168,8 @@ public record NodePos(
 				.flatMap(Function.identity())
 			)
 		)
-			.filter((p) -> level.getNode(p) == null);
+			.filter((p) -> level.getNode(p) == null)
+			.filter((p) -> p.canAnchoredIn(level.getLevel(), 4.0 / 16));
 	}
 
 	public Stream<NodePos> streamPossibleToConnect() {
