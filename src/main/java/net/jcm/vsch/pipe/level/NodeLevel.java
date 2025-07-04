@@ -13,8 +13,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NodeLevel {
 	private final Level level;
@@ -56,12 +56,14 @@ public class NodeLevel {
 		);
 	}
 
-	// public List<Pair<NodePos, PipeNode>> getNodes(final BlockPos pos) {
-	// 	final ArrayList<Pair<NodePos, PipeNode>> nodes = new ArrayList<>();
-	// 	// TODO
-	// 	nodes.trimToSize();
-	// 	return nodes;
-	// }
+	public List<Pair<NodePos, PipeNode>> getNodesOn(final BlockPos blockPos) {
+		return NodePos.streamNodePosOn(blockPos).map((pos) -> {
+			final PipeNode node = this.getNode(pos);
+			return node == null ? null : new Pair<>(pos, node);
+		})
+			.filter(Objects::nonNull)
+			.toList();
+	}
 
 	public void setNode(final NodePos pos, final PipeNode node) {
 		final BlockPos blockPos = pos.blockPos();

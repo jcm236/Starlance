@@ -54,31 +54,39 @@ public class WrenchItem extends Item {
 	}
 
 	@Override
-	public InteractionResult useOn(final UseOnContext ctx) {
+	public InteractionResult onItemUseFirst(final ItemStack stack, final UseOnContext ctx) {
 		final Level level = ctx.getLevel();
 		final Player player = ctx.getPlayer();
 		final BlockPos blockPos = ctx.getClickedPos();
 		final Vec3 pos = ctx.getClickLocation();
-		if (ctx.getHand() == InteractionHand.OFF_HAND) {
-			if (player == null || !ctx.isSecondaryUseActive()) {
-				return super.useOn(ctx);
-			}
-			final NodeLevel nodeLevel = NodeLevel.get(level);
-			final NodePos nodePos = NodePos.fromHitResult(level, blockPos, pos, 4.0 / 16);
-			if (nodePos == null) {
-				return super.useOn(ctx);
-			}
-			final PipeNode node = nodeLevel.getNode(nodePos);
-			if (node == null) {
-				return InteractionResult.FAIL;
-			}
-			nodeLevel.setNode(nodePos, null);
-			if (!level.isClientSide && !player.getAbilities().instabuild) {
-				final ItemStack nodeStack = node.asItemStack();
-				player.getInventory().placeItemBackInInventory(nodeStack);
-			}
-			return InteractionResult.sidedSuccess(level.isClientSide);
-		} else if (level instanceof ServerLevel serverLevel) {
+		if (ctx.getHand() != InteractionHand.OFF_HAND) {
+			return InteractionResult.PASS;
+		}
+		if (player == null || !ctx.isSecondaryUseActive()) {
+			return InteractionResult.PASS;
+		}
+		final NodeLevel nodeLevel = NodeLevel.get(level);
+		final NodePos nodePos = NodePos.fromHitResult(level, blockPos, pos, 4.0 / 16);
+		if (nodePos == null) {
+			return InteractionResult.PASS;
+		}
+		final PipeNode node = nodeLevel.getNode(nodePos);
+		if (node == null) {
+			return InteractionResult.FAIL;
+		}
+		nodeLevel.setNode(nodePos, null);
+		if (!level.isClientSide && !player.getAbilities().instabuild) {
+			final ItemStack nodeStack = node.asItemStack();
+			player.getInventory().placeItemBackInInventory(nodeStack);
+		}
+		return InteractionResult.sidedSuccess(level.isClientSide);
+	}
+
+	@Override
+	public InteractionResult useOn(final UseOnContext ctx) {
+		final Level level = ctx.getLevel();
+		final BlockPos blockPos = ctx.getClickedPos();
+		if (level instanceof ServerLevel serverLevel) {
 			final BlockState block = serverLevel.getBlockState(blockPos);
 			final BlockEntity blockEntity = serverLevel.getBlockEntity(blockPos);
 			if (blockEntity instanceof WrenchableBlock wrenchable) {

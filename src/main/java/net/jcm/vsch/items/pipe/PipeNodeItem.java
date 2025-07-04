@@ -30,13 +30,13 @@ public abstract class PipeNodeItem extends Item {
 	public abstract PipeNode getPipeNode(final ItemStack stack);
 
 	@Override
-	public InteractionResult useOn(final UseOnContext context) {
+	public InteractionResult onItemUseFirst(final ItemStack stack, final UseOnContext context) {
 		final Player player = context.getPlayer();
 		if (player == null || context.getHand() != InteractionHand.MAIN_HAND || context.isSecondaryUseActive()) {
-			return super.useOn(context);
+			return InteractionResult.PASS;
 		}
 		if (!(player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof WrenchItem)) {
-			return super.useOn(context);
+			return InteractionResult.PASS;
 		}
 
 		final Level level = context.getLevel();
@@ -44,10 +44,9 @@ public abstract class PipeNodeItem extends Item {
 
 		final NodePos nodePos = NodePos.fromHitResult(level, context.getClickedPos(), context.getClickLocation(), 4.0 / 16);
 		if (nodePos == null) {
-			return super.useOn(context);
+			return InteractionResult.PASS;
 		}
 
-		final ItemStack stack = context.getItemInHand();
 		final PipeNode node = this.getPipeNode(stack);
 		if (node == null) {
 			return InteractionResult.FAIL;

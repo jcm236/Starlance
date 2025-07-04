@@ -145,7 +145,7 @@ public record NodePos(
 		return NodePos.fromUniqueIndex(blockPos, index);
 	}
 
-	public static Stream<NodePos> streamPlaceHint(final NodeLevel level, final BlockPos pos) {
+	public static Stream<NodePos> streamNodePosOn(final BlockPos pos) {
 		return Stream.concat(
 			Stream.of(
 				NodePos.originOf(pos),
@@ -167,7 +167,11 @@ public record NodePos(
 				))
 				.flatMap(Function.identity())
 			)
-		)
+		);
+	}
+
+	public static Stream<NodePos> streamPlaceHint(final NodeLevel level, final BlockPos pos) {
+		return streamNodePosOn(pos)
 			.filter((p) -> level.getNode(p) == null)
 			.filter((p) -> p.canAnchoredIn(level.getLevel(), 4.0 / 16));
 	}
