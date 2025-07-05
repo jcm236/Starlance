@@ -69,11 +69,11 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">net.jcm.vsch.items.pipe</a></div>
-<h1 title="Class PipeNodeItem" class="title">Class PipeNodeItem</h1>
+<h1 title="Class PipeNodeItem" class="title">Class PipeNodeItem&lt;T extends <a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;T&gt;&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraft.world.item.Item
-<div class="inheritance">net.jcm.vsch.items.pipe.PipeNodeItem</div>
+<div class="inheritance">net.jcm.vsch.items.pipe.PipeNodeItem&lt;T&gt;</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="OmniNodeItem.html" title="class in net.jcm.vsch.items.pipe">OmniNodeItem</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">PipeNodeItem</span>
+<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">PipeNodeItem&lt;T extends <a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;T&gt;&gt;</span>
 <span class="extends-implements">extends net.minecraft.world.item.Item</span></div>
 </section>
 <section class="summary">
@@ -154,8 +154,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrCreateDescriptionId()" class="member-name-link">getOrCreateDescriptionId</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getPipeNode(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNode</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="../../api/pipe/PipeNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a>&lt;<a href="PipeNodeItem.html" title="type parameter in PipeNodeItem">T</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getPipeNodeProvider(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNodeProvider</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.InteractionResult</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onItemUseFirst(net.minecraft.world.item.ItemStack,net.minecraft.world.item.context.UseOnContext)" class="member-name-link">onItemUseFirst</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack,
@@ -245,9 +245,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getPipeNode(net.minecraft.world.item.ItemStack)">
-<h3>getPipeNode</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></span>&nbsp;<span class="element-name">getPipeNode</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<section class="detail" id="getPipeNodeProvider(net.minecraft.world.item.ItemStack)">
+<h3>getPipeNodeProvider</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="../../api/pipe/PipeNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a>&lt;<a href="PipeNodeItem.html" title="type parameter in PipeNodeItem">T</a>&gt;</span>&nbsp;<span class="element-name">getPipeNodeProvider</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 </section>
 </li>
 <li>

@@ -3,6 +3,7 @@ net.jcm.vsch.accessor
 net.jcm.vsch.api.block
 net.jcm.vsch.api.force
 net.jcm.vsch.api.pipe
+net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
 net.jcm.vsch.blocks.custom
 net.jcm.vsch.blocks.custom.template
@@ -22,7 +23,7 @@ net.jcm.vsch.compat.jade.componentproviders
 net.jcm.vsch.config
 net.jcm.vsch.entity
 net.jcm.vsch.event
-net.jcm.vsch.fluids
+net.jcm.vsch.fluid
 net.jcm.vsch.items
 net.jcm.vsch.items.custom
 net.jcm.vsch.items.pipe

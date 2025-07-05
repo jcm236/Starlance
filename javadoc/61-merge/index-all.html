@@ -55,7 +55,7 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" class="type-name-link" title="class in net.jcm.vsch.api.pipe">AbstractCustomNode</a>&lt;<a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="type parameter in AbstractCustomNode">T</a> extends <a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="class in net.jcm.vsch.api.pipe">AbstractCustomNode</a>&lt;<a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="type parameter in AbstractCustomNode">T</a>&gt;&gt; - Class in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html#%3Cinit%3E(net.minecraft.world.item.DyeColor)" class="member-name-link">AbstractCustomNode(DyeColor)</a> - Constructor for class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="class in net.jcm.vsch.api.pipe">AbstractCustomNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html#%3Cinit%3E(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">AbstractCustomNode(NodeLevel, NodePos)</a> - Constructor for class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="class in net.jcm.vsch.api.pipe">AbstractCustomNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" class="type-name-link" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a> - Class in <a href="net/jcm/vsch/blocks/thruster/package-summary.html">net.jcm.vsch.blocks.thruster</a></dt>
 <dd>&nbsp;</dd>
@@ -240,23 +240,29 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canAnchor()" class="member-name-link">canAnchor()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/NodePos.html#canAnchoredIn(net.minecraft.world.level.Level,double)" class="member-name-link">canAnchoredIn(Level, double)</a> - Method in record class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html#canAssembleBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">canAssembleBlock(BlockState)</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/VSCHConfig.html#CANCEL_ASSEMBLY" class="member-name-link">CANCEL_ASSEMBLY</a> - Static variable in class net.jcm.vsch.config.<a href="net/jcm/vsch/config/VSCHConfig.html" title="class in net.jcm.vsch.config">VSCHConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canConnect(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction)" class="member-name-link">canConnect(NodeLevel, NodePos, Direction)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canConnect(net.minecraft.core.Direction)" class="member-name-link">canConnect(Direction)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/pipe/OmniNode.html#canConnect(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction)" class="member-name-link">canConnect(NodeLevel, NodePos, Direction)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#canConnect(net.minecraft.core.Direction)" class="member-name-link">canConnect(Direction)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#canExtract()" class="member-name-link">canExtract()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/PipeNetwork.html#canFlow(net.jcm.vsch.api.pipe.NodePos,net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">canFlow(NodePos, NodePos)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/PipeNetwork.html" title="class in net.jcm.vsch.pipe">PipeNetwork</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canFluidFlow(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction,net.minecraft.world.level.material.Fluid)" class="member-name-link">canFluidFlow(NodeLevel, NodePos, Direction, Fluid)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canFlowIn(net.minecraft.core.Direction)" class="member-name-link">canFlowIn(Direction)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/pipe/OmniNode.html#canFluidFlow(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.core.Direction,net.minecraft.world.level.material.Fluid)" class="member-name-link">canFluidFlow(NodeLevel, NodePos, Direction, Fluid)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#canFlowIn(net.minecraft.core.Direction)" class="member-name-link">canFlowIn(Direction)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#canFlowOut(net.minecraft.core.Direction)" class="member-name-link">canFlowOut(Direction)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#canFlowOut(net.minecraft.core.Direction)" class="member-name-link">canFlowOut(Direction)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#canReceive()" class="member-name-link">canReceive()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
@@ -316,6 +322,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html#createLinkedEntity(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">createLinkedEntity(ServerLevel, BlockPos)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNodeProvider.html#createNode(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">createNode(NodeLevel, NodePos)</a> - Method in interface net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/CustomNodeRegistry.html#createNode(net.minecraft.resources.ResourceLocation,net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">createNode(ResourceLocation, NodeLevel, NodePos)</a> - Static method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/CustomNodeRegistry.html" title="class in net.jcm.vsch.api.pipe">CustomNodeRegistry</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/AirThrusterBlockEntity.html#createThrusterEngine()" class="member-name-link">createThrusterEngine()</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/AirThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">AirThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/CreativeThrusterBlockEntity.html#createThrusterEngine()" class="member-name-link">createThrusterEngine()</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/CreativeThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">CreativeThrusterBlockEntity</a></dt>
@@ -337,8 +347,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/util/rot/RotShapes.html#cube()" class="member-name-link">cube()</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShapes.html" title="class in net.jcm.vsch.util.rot">RotShapes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/PipeNode.Type.html#CUSTOM" class="member-name-link">CUSTOM</a> - Enum constant in enum class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.Type.html" title="enum class in net.jcm.vsch.api.pipe">PipeNode.Type</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/CustomNodeProvider.html" class="type-name-link" title="interface in net.jcm.vsch.api.pipe">CustomNodeProvider</a> - Interface in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/CustomNodeRegistry.html" class="type-name-link" title="class in net.jcm.vsch.api.pipe">CustomNodeRegistry</a> - Class in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
@@ -381,6 +389,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html#%3Cinit%3E(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">DockerBlockEntity(BlockPos, BlockState)</a> - Constructor for class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DockerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#down()" class="member-name-link">down()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>down</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#down(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">down(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#DRAG_INDUCER_BLOCK" class="member-name-link">DRAG_INDUCER_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
@@ -419,15 +431,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.html#drawBox(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,org.joml.Vector4f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i)" class="member-name-link">drawBox(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, Vector4f, Vector3i, Quaternionf, Vector3i)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)" class="member-name-link">drawBoxWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ResourceLocation, Vector3f, Vector3i, Quaternionf, Vector3i, float, float, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.jcm.vsch.api.resource.ModelTextures,org.joml.Vector3f,org.joml.Vector3f,org.joml.Quaternionf,org.joml.Vector3f,float)" class="member-name-link">drawBoxWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ModelTextures, Vector3f, Vector3f, Quaternionf, Vector3f, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,org.joml.Vector3i,org.joml.Quaternionf,org.joml.Vector3i,float,float,float)" class="member-name-link">drawBoxWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ResourceLocation, Vector4f, Vector3i, Quaternionf, Vector3i, float, float, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawBoxWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.jcm.vsch.api.resource.ModelTextures,org.joml.Vector4f,org.joml.Vector3f,org.joml.Quaternionf,org.joml.Vector3f,float)" class="member-name-link">drawBoxWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ModelTextures, Vector4f, Vector3f, Quaternionf, Vector3f, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.html#drawPlane(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f)" class="member-name-link">drawPlane(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, Vector4f, Direction, Vector3f, Vector3f)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)" class="member-name-link">drawPlaneWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ResourceLocation, Vector3f, Direction, Vector3f, Vector3f, float, float, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.jcm.vsch.api.resource.TextureLocation,org.joml.Vector3f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float)" class="member-name-link">drawPlaneWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, TextureLocation, Vector3f, Direction, Vector3f, Vector3f, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.minecraft.resources.ResourceLocation,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float,float,float)" class="member-name-link">drawPlaneWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, ResourceLocation, Vector4f, Direction, Vector3f, Vector3f, float, float, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.html#drawPlaneWithTexture(com.mojang.blaze3d.vertex.PoseStack,com.mojang.blaze3d.vertex.VertexConsumer,net.jcm.vsch.client.RenderUtil.BoxLightMap,net.jcm.vsch.api.resource.TextureLocation,org.joml.Vector4f,net.minecraft.core.Direction,org.joml.Vector3f,org.joml.Vector3f,float)" class="member-name-link">drawPlaneWithTexture(PoseStack, VertexConsumer, RenderUtil.BoxLightMap, TextureLocation, Vector4f, Direction, Vector3f, Vector3f, float)</a> - Static method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" title="class in net.jcm.vsch.client">RenderUtil</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#dse" class="member-name-link">dse</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
@@ -436,7 +448,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:E">E</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#east()" class="member-name-link">east()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>east</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#east(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">east(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#edn" class="member-name-link">edn</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#eds" class="member-name-link">eds</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/EmptyChunkAccess.html" class="type-name-link" title="class in net.jcm.vsch.util">EmptyChunkAccess</a> - Class in <a href="net/jcm/vsch/util/package-summary.html">net.jcm.vsch.util</a></dt>
 <dd>&nbsp;</dd>
@@ -456,6 +476,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html#ENERGY_METHODS" class="member-name-link">ENERGY_METHODS</a> - Static variable in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html" title="class in net.jcm.vsch.compat.cc.peripherals">CCGenerics</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#energyFlowAmount(net.minecraft.core.Direction)" class="member-name-link">energyFlowAmount(Direction)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#energyFlowAmount(net.minecraft.core.Direction)" class="member-name-link">energyFlowAmount(Direction)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/VSCHEntities.html#ENTITIES" class="member-name-link">ENTITIES</a> - Static variable in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/VSCHEntities.html" title="class in net.jcm.vsch.entity">VSCHEntities</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html#equals(dan200.computercraft.api.peripheral.IPeripheral)" class="member-name-link">equals(IPeripheral)</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a></dt>
@@ -470,10 +494,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/Pair.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class net.jcm.vsch.util.<a href="net/jcm/vsch/util/Pair.html" title="class in net.jcm.vsch.util">Pair</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#eun" class="member-name-link">eun</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#eus" class="member-name-link">eus</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/CompatMods.html#executeIfInstalled(java.util.function.Supplier)" class="member-name-link">executeIfInstalled(Supplier&lt;Runnable&gt;)</a> - Method in enum class net.jcm.vsch.compat.<a href="net/jcm/vsch/compat/CompatMods.html" title="enum class in net.jcm.vsch.compat">CompatMods</a></dt>
 <dd>
 <div class="block">Simple hook to execute code if a mod is installed</div>
@@ -487,7 +523,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html#FLUID_METHODS" class="member-name-link">FLUID_METHODS</a> - Static variable in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html" title="class in net.jcm.vsch.compat.cc.peripherals">CCGenerics</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#FLUIDS" class="member-name-link">FLUIDS</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#fluidFlowAmount(net.minecraft.core.Direction,net.minecraft.world.level.material.Fluid)" class="member-name-link">fluidFlowAmount(Direction, Fluid)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#FLUIDS" class="member-name-link">FLUIDS</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/s2c/PipeNodeSyncChunkS2C.html#fromChunk(net.minecraft.world.level.chunk.ChunkAccess)" class="member-name-link">fromChunk(ChunkAccess)</a> - Static method in class net.jcm.vsch.network.s2c.<a href="net/jcm/vsch/network/s2c/PipeNodeSyncChunkS2C.html" title="class in net.jcm.vsch.network.s2c">PipeNodeSyncChunkS2C</a></dt>
 <dd>&nbsp;</dd>
@@ -502,9 +540,9 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/fluids/GasFluidType.html" class="type-name-link" title="class in net.jcm.vsch.fluids">GasFluidType</a> - Class in <a href="net/jcm/vsch/fluids/package-summary.html">net.jcm.vsch.fluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/GasFluidType.html" class="type-name-link" title="class in net.jcm.vsch.fluid">GasFluidType</a> - Class in <a href="net/jcm/vsch/fluid/package-summary.html">net.jcm.vsch.fluid</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/GasFluidType.html#%3Cinit%3E(net.minecraft.resources.ResourceLocation,net.minecraft.resources.ResourceLocation,int,net.minecraftforge.fluids.FluidType.Properties)" class="member-name-link">GasFluidType(ResourceLocation, ResourceLocation, int, FluidType.Properties)</a> - Constructor for class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/GasFluidType.html" title="class in net.jcm.vsch.fluids">GasFluidType</a></dt>
+<dt><a href="net/jcm/vsch/fluid/GasFluidType.html#%3Cinit%3E(net.minecraft.resources.ResourceLocation,net.minecraft.resources.ResourceLocation,int,net.minecraftforge.fluids.FluidType.Properties)" class="member-name-link">GasFluidType(ResourceLocation, ResourceLocation, int, FluidType.Properties)</a> - Constructor for class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/GasFluidType.html" title="class in net.jcm.vsch.fluid">GasFluidType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#get(net.minecraft.core.Direction)" class="member-name-link">get(Direction)</a> - Method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
@@ -547,8 +585,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#getBrain()" class="member-name-link">getBrain()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/pipe/OmniNodeItem.html#getByColor(net.minecraft.world.item.DyeColor)" class="member-name-link">getByColor(DyeColor)</a> - Static method in class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/OmniNodeItem.html" title="class in net.jcm.vsch.items.pipe">OmniNodeItem</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/pipe/OmniNode.html#getByColor(net.minecraft.world.item.DyeColor)" class="member-name-link">getByColor(DyeColor)</a> - Static method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#getCapability(net.minecraftforge.common.capabilities.Capability,net.minecraft.core.Direction)" class="member-name-link">getCapability(Capability&lt;T&gt;, Direction)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
@@ -654,7 +690,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#getLED()" class="member-name-link">getLED()</a> - Method in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#getLevel()" class="member-name-link">getLevel()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html#getLevel()" class="member-name-link">getLevel()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngineContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#getLevel()" class="member-name-link">getLevel()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeLevel.html#getLevel()" class="member-name-link">getLevel()</a> - Method in class net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></dt>
 <dd>&nbsp;</dd>
@@ -678,6 +718,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html#getMode()" class="member-name-link">getMode()</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">ThrusterPeripheral</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#getModel()" class="member-name-link">getModel()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#getModel()" class="member-name-link">getModel()</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/assemble/MoveUtil.html#getMover(java.lang.Object)" class="member-name-link">getMover(Object)</a> - Static method in class net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/MoveUtil.html" title="class in net.jcm.vsch.util.assemble">MoveUtil</a></dt>
 <dd>
 <div class="block">getMover will check mover registered for class and subclass first,
@@ -694,21 +738,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the nearest (if available) planet to the position in the dimensionId.</div>
 </dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#getNode(int,int,int,int)" class="member-name-link">getNode(int, int, int, int)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#getNode(int,int,int,int)" class="member-name-link">getNode(int, int, int, int)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#getNode(int,int,int,int)" class="member-name-link">getNode(int, int, int, int)</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeLevel.html#getNode(net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">getNode(NodePos)</a> - Method in class net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/CustomNodeRegistry.html#getNode(net.minecraft.resources.ResourceLocation,net.minecraft.world.item.DyeColor)" class="member-name-link">getNode(ResourceLocation, DyeColor)</a> - Static method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/CustomNodeRegistry.html" title="class in net.jcm.vsch.api.pipe">CustomNodeRegistry</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/CustomNodeProvider.html#getNode(net.minecraft.world.item.DyeColor)" class="member-name-link">getNode(DyeColor)</a> - Method in interface net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/CustomNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">CustomNodeProvider</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeLevel.html#getNodeChunk(int,int)" class="member-name-link">getNodeChunk(int, int)</a> - Method in class net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/PipeNetwork.html#getNodes()" class="member-name-link">getNodes()</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/PipeNetwork.html" title="class in net.jcm.vsch.pipe">PipeNetwork</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#getNodes(int,int,int)" class="member-name-link">getNodes(int, int, int)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#getNodes(int,int,int)" class="member-name-link">getNodes(int, int, int)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#getNodes(int,int,int)" class="member-name-link">getNodes(int, int, int)</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
@@ -748,14 +788,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#getPeripheralType()" class="member-name-link">getPeripheralType()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/items/pipe/OmniNodeItem.html#getPipeNode(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNode(ItemStack)</a> - Method in class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/OmniNodeItem.html" title="class in net.jcm.vsch.items.pipe">OmniNodeItem</a></dt>
+<dt><a href="net/jcm/vsch/items/pipe/OmniNodeItem.html#getPipeNodeProvider(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNodeProvider(ItemStack)</a> - Method in class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/OmniNodeItem.html" title="class in net.jcm.vsch.items.pipe">OmniNodeItem</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/items/pipe/PipeNodeItem.html#getPipeNode(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNode(ItemStack)</a> - Method in class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></dt>
+<dt><a href="net/jcm/vsch/items/pipe/PipeNodeItem.html#getPipeNodeProvider(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNodeProvider(ItemStack)</a> - Method in class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/VSCHUtils.html#getPlayerCap(net.minecraft.world.entity.player.Player)" class="member-name-link">getPlayerCap(Player)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
 <dd>
 <div class="block">Gets a players Cosmos variables capability.</div>
 </dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#getPos()" class="member-name-link">getPos()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#getPower()" class="member-name-link">getPower()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html#getPower()" class="member-name-link">getPower()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngineContext</a></dt>
@@ -776,10 +818,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html#getScale()" class="member-name-link">getScale()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngineContext</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#getSection(int)" class="member-name-link">getSection(int)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#getSections()" class="member-name-link">getSections()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html#getSerializedName()" class="member-name-link">getSerializedName()</a> - Method in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleLED</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/thruster/ThrusterData.ThrusterMode.html#getSerializedName()" class="member-name-link">getSerializedName()</a> - Method in enum class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.ThrusterMode.html" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a></dt>
@@ -790,6 +828,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#getSize()" class="member-name-link">getSize()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#getSkyLightMap()" class="member-name-link">getSkyLightMap()</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html#getStateForPlacement(net.minecraft.world.item.context.BlockPlaceContext)" class="member-name-link">getStateForPlacement(BlockPlaceContext)</a> - Method in class net.jcm.vsch.blocks.custom.<a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html" title="class in net.jcm.vsch.blocks.custom">BaseThrusterBlock</a></dt>
@@ -813,6 +853,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/GyroPeripheral.html#getTarget()" class="member-name-link">getTarget()</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/GyroPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">GyroPeripheral</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html#getTarget()" class="member-name-link">getTarget()</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">ThrusterPeripheral</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#getTexture(net.minecraft.core.Direction)" class="member-name-link">getTexture(Direction)</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#getThrusterAtPos(net.minecraft.core.BlockPos)" class="member-name-link">getThrusterAtPos(BlockPos)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
@@ -910,6 +952,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#getUpdateTag()" class="member-name-link">getUpdateTag()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#getWaterFlowRate()" class="member-name-link">getWaterFlowRate()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>
+<div class="block">Water flow rate used to calculate other fluids flow rate based on their viscosity.</div>
+</dd>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#getWaterFlowRate()" class="member-name-link">getWaterFlowRate()</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/thruster/ThrusterData.ThrusterMode.html#GLOBAL" class="member-name-link">GLOBAL</a> - Enum constant in enum class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.ThrusterMode.html" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/Gravity.html" class="type-name-link" title="class in net.jcm.vsch.event">Gravity</a> - Class in <a href="net/jcm/vsch/event/package-summary.html">net.jcm.vsch.event</a></dt>
@@ -995,11 +1043,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#handleTeleport(org.valkyrienskies.core.api.ships.Ship,org.joml.Vector3d)" class="member-name-link">handleTeleport(Ship, Vector3d)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#hasAnyNode()" class="member-name-link">hasAnyNode()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#hasAnyNode()" class="member-name-link">hasAnyNode()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#hasAnyNode()" class="member-name-link">hasAnyNode()</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/NodePos.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
@@ -1011,7 +1067,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinClockworkBearingBlockEntity.html#hourHand" class="member-name-link">hourHand</a> - Variable in class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinClockworkBearingBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinClockworkBearingBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN" class="member-name-link">HYDROGEN</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN" class="member-name-link">HYDROGEN</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHTags.Fluids.html#HYDROGEN" class="member-name-link">HYDROGEN</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHTags.Fluids.html" title="class in net.jcm.vsch">VSCHTags.Fluids</a></dt>
 <dd>&nbsp;</dd>
@@ -1019,23 +1075,23 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#HYDROGEN_BUCKET" class="member-name-link">HYDROGEN_BUCKET</a> - Static variable in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN_FLOWING" class="member-name-link">HYDROGEN_FLOWING</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN_FLOWING" class="member-name-link">HYDROGEN_FLOWING</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#HYDROGEN_FLUID_TYPE" class="member-name-link">HYDROGEN_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html#HYDROGEN_FLUID_TYPE" class="member-name-link">HYDROGEN_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN_PEROXIDE" class="member-name-link">HYDROGEN_PEROXIDE</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN_PEROXIDE" class="member-name-link">HYDROGEN_PEROXIDE</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#HYDROGEN_PEROXIDE_BLOCK" class="member-name-link">HYDROGEN_PEROXIDE_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#HYDROGEN_PEROXIDE_BUCKET" class="member-name-link">HYDROGEN_PEROXIDE_BUCKET</a> - Static variable in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN_PEROXIDE_FLOWING" class="member-name-link">HYDROGEN_PEROXIDE_FLOWING</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN_PEROXIDE_FLOWING" class="member-name-link">HYDROGEN_PEROXIDE_FLOWING</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#HYDROGEN_PEROXIDE_FLUID_TYPE" class="member-name-link">HYDROGEN_PEROXIDE_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html#HYDROGEN_PEROXIDE_FLUID_TYPE" class="member-name-link">HYDROGEN_PEROXIDE_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN_PEROXIDE_PROPERTIES" class="member-name-link">HYDROGEN_PEROXIDE_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN_PEROXIDE_PROPERTIES" class="member-name-link">HYDROGEN_PEROXIDE_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#HYDROGEN_PROPERTIES" class="member-name-link">HYDROGEN_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#HYDROGEN_PROPERTIES" class="member-name-link">HYDROGEN_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
@@ -1060,7 +1116,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/INetworkPacket.html" class="type-name-link" title="interface in net.jcm.vsch.network">INetworkPacket</a> - Interface in <a href="net/jcm/vsch/network/package-summary.html">net.jcm.vsch.network</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/GasFluidType.html#initializeClient(java.util.function.Consumer)" class="member-name-link">initializeClient(Consumer&lt;IClientFluidTypeExtensions&gt;)</a> - Method in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/GasFluidType.html" title="class in net.jcm.vsch.fluids">GasFluidType</a></dt>
+<dt><a href="net/jcm/vsch/fluid/GasFluidType.html#initializeClient(java.util.function.Consumer)" class="member-name-link">initializeClient(Consumer&lt;IClientFluidTypeExtensions&gt;)</a> - Method in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/GasFluidType.html" title="class in net.jcm.vsch.fluid">GasFluidType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
 <dd>&nbsp;</dd>
@@ -1102,7 +1158,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/CompatMods.html#isLoaded()" class="member-name-link">isLoaded()</a> - Method in enum class net.jcm.vsch.compat.<a href="net/jcm/vsch/compat/CompatMods.html" title="enum class in net.jcm.vsch.compat">CompatMods</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#isNodesUnsaved()" class="member-name-link">isNodesUnsaved()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#isNodesUnsaved()" class="member-name-link">isNodesUnsaved()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#isNodesUnsaved()" class="member-name-link">isNodesUnsaved()</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
@@ -1114,13 +1170,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#isSuccess()" class="member-name-link">isSuccess()</a> - Method in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#isUnsaved()" class="member-name-link">isUnsaved()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterEngine.html#isValidFuel(int,net.minecraft.world.level.material.Fluid)" class="member-name-link">isValidFuel(int, Fluid)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngine.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngine</a></dt>
 <dd>
 <div class="block">isValidFuel checks if the fluid can be uses as fuel.</div>
 </dd>
-<dt><a href="net/jcm/vsch/fluids/GasFluidType.html#isVaporizedOnPlacement(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraftforge.fluids.FluidStack)" class="member-name-link">isVaporizedOnPlacement(Level, BlockPos, FluidStack)</a> - Method in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/GasFluidType.html" title="class in net.jcm.vsch.fluids">GasFluidType</a></dt>
+<dt><a href="net/jcm/vsch/fluid/GasFluidType.html#isVaporizedOnPlacement(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraftforge.fluids.FluidStack)" class="member-name-link">isVaporizedOnPlacement(Level, BlockPos, FluidStack)</a> - Method in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/GasFluidType.html" title="class in net.jcm.vsch.fluid">GasFluidType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#isWorking()" class="member-name-link">isWorking()</a> - Method in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
@@ -1172,6 +1226,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#load(net.minecraft.nbt.CompoundTag)" class="member-name-link">load(CompoundTag)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#location()" class="member-name-link">location()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>location</code> record component.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
@@ -1223,10 +1281,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html#%3Cinit%3E()" class="member-name-link">MixinBeltBlockEntity()</a> - Constructor for class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinBeltBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#%3Cinit%3E()" class="member-name-link">MixinChunkAccess()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html#%3Cinit%3E()" class="member-name-link">MixinChunkMap()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a></dt>
@@ -1258,6 +1312,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevel.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLevel</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevel.html#%3Cinit%3E()" class="member-name-link">MixinLevel()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevel.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevel</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#%3Cinit%3E()" class="member-name-link">MixinLevelChunk()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunkSection</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
@@ -1303,6 +1361,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/thruster/ThrusterData.html#mode" class="member-name-link">mode</a> - Variable in class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.html" title="class in net.jcm.vsch.ship.thruster">ThrusterData</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html" class="type-name-link" title="class in net.jcm.vsch.api.resource">ModelTextures</a> - Record Class in <a href="net/jcm/vsch/api/resource/package-summary.html">net.jcm.vsch.api.resource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#%3Cinit%3E(net.jcm.vsch.api.resource.TextureLocation,net.jcm.vsch.api.resource.TextureLocation,net.jcm.vsch.api.resource.TextureLocation,net.jcm.vsch.api.resource.TextureLocation,net.jcm.vsch.api.resource.TextureLocation,net.jcm.vsch.api.resource.TextureLocation)" class="member-name-link">ModelTextures(TextureLocation, TextureLocation, TextureLocation, TextureLocation, TextureLocation, TextureLocation)</a> - Constructor for record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>ModelTextures</code> record class.</div>
+</dd>
 <dt><a href="net/jcm/vsch/compat/create/ponder/scenes/ThrusterScenes.html#modes(com.simibubi.create.foundation.ponder.SceneBuilder,com.simibubi.create.foundation.ponder.SceneBuildingUtil)" class="member-name-link">modes(SceneBuilder, SceneBuildingUtil)</a> - Static method in class net.jcm.vsch.compat.create.ponder.scenes.<a href="net/jcm/vsch/compat/create/ponder/scenes/ThrusterScenes.html" title="class in net.jcm.vsch.compat.create.ponder.scenes">ThrusterScenes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHMod.html#MODID" class="member-name-link">MODID</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHMod.html" title="class in net.jcm.vsch">VSCHMod</a></dt>
@@ -1320,6 +1384,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#nde" class="member-name-link">nde</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#ndw" class="member-name-link">ndw</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#neighborChanged(net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity,net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)" class="member-name-link">neighborChanged(AbstractThrusterBlockEntity, Block, BlockPos, boolean)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#neighborChanged(net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)" class="member-name-link">neighborChanged(Block, BlockPos, boolean)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
@@ -1349,6 +1417,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/api/force/package-summary.html">net.jcm.vsch.api.force</a> - package net.jcm.vsch.api.force</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a> - package net.jcm.vsch.api.pipe</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/package-summary.html">net.jcm.vsch.api.resource</a> - package net.jcm.vsch.api.resource</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/package-summary.html">net.jcm.vsch.blocks</a> - package net.jcm.vsch.blocks</dt>
 <dd>&nbsp;</dd>
@@ -1388,7 +1458,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/package-summary.html">net.jcm.vsch.event</a> - package net.jcm.vsch.event</dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/package-summary.html">net.jcm.vsch.fluids</a> - package net.jcm.vsch.fluids</dt>
+<dt><a href="net/jcm/vsch/fluid/package-summary.html">net.jcm.vsch.fluid</a> - package net.jcm.vsch.fluid</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/package-summary.html">net.jcm.vsch.items</a> - package net.jcm.vsch.items</dt>
 <dd>&nbsp;</dd>
@@ -1464,18 +1534,36 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates an instance of a <code>NodePos</code> record class.</div>
 </dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#north()" class="member-name-link">north()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>north</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#north(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">north(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/NoSourceClipContext.html" class="type-name-link" title="class in net.jcm.vsch.util">NoSourceClipContext</a> - Class in <a href="net/jcm/vsch/util/package-summary.html">net.jcm.vsch.util</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/NoSourceClipContext.html#%3Cinit%3E(net.minecraft.world.phys.Vec3,net.minecraft.world.phys.Vec3,net.minecraft.core.BlockPos)" class="member-name-link">NoSourceClipContext(Vec3, Vec3, BlockPos)</a> - Constructor for class net.jcm.vsch.util.<a href="net/jcm/vsch/util/NoSourceClipContext.html" title="class in net.jcm.vsch.util">NoSourceClipContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#nue" class="member-name-link">nue</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#nuw" class="member-name-link">nuw</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#offsetX()" class="member-name-link">offsetX()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>offsetX</code> record component.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#offsetY()" class="member-name-link">offsetY()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>offsetY</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/api/pipe/PipeNode.Type.html#OMNI" class="member-name-link">OMNI</a> - Enum constant in enum class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.Type.html" title="enum class in net.jcm.vsch.api.pipe">PipeNode.Type</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/OmniNode.html" class="type-name-link" title="class in net.jcm.vsch.pipe">OmniNode</a> - Class in <a href="net/jcm/vsch/pipe/package-summary.html">net.jcm.vsch.pipe</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/pipe/OmniNode.html#%3Cinit%3E(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">OmniNode(NodeLevel, NodePos)</a> - Constructor for class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/pipe/OmniNodeItem.html" class="type-name-link" title="class in net.jcm.vsch.items.pipe">OmniNodeItem</a> - Class in <a href="net/jcm/vsch/items/pipe/package-summary.html">net.jcm.vsch.items.pipe</a></dt>
 <dd>&nbsp;</dd>
@@ -1531,7 +1619,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#onUseWrench(net.minecraft.world.item.context.UseOnContext)" class="member-name-link">onUseWrench(UseOnContext)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/GasFluidType.html#onVaporize(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraftforge.fluids.FluidStack)" class="member-name-link">onVaporize(Player, Level, BlockPos, FluidStack)</a> - Method in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/GasFluidType.html" title="class in net.jcm.vsch.fluids">GasFluidType</a></dt>
+<dt><a href="net/jcm/vsch/fluid/GasFluidType.html#onVaporize(net.minecraft.world.entity.player.Player,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraftforge.fluids.FluidStack)" class="member-name-link">onVaporize(Player, Level, BlockPos, FluidStack)</a> - Method in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/GasFluidType.html" title="class in net.jcm.vsch.fluid">GasFluidType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/rot/RotShapes.html#or(net.jcm.vsch.util.rot.RotShape...)" class="member-name-link">or(RotShape...)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShapes.html" title="class in net.jcm.vsch.util.rot">RotShapes</a></dt>
 <dd>&nbsp;</dd>
@@ -1541,7 +1629,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#OTHER_ASSEMBLING" class="member-name-link">OTHER_ASSEMBLING</a> - Enum constant in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#OXYGEN" class="member-name-link">OXYGEN</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#OXYGEN" class="member-name-link">OXYGEN</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHTags.Fluids.html#OXYGEN" class="member-name-link">OXYGEN</a> - Static variable in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHTags.Fluids.html" title="class in net.jcm.vsch">VSCHTags.Fluids</a></dt>
 <dd>&nbsp;</dd>
@@ -1549,11 +1637,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#OXYGEN_BUCKET" class="member-name-link">OXYGEN_BUCKET</a> - Static variable in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#OXYGEN_FLOWING" class="member-name-link">OXYGEN_FLOWING</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#OXYGEN_FLOWING" class="member-name-link">OXYGEN_FLOWING</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#OXYGEN_FLUID_TYPE" class="member-name-link">OXYGEN_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html#OXYGEN_FLUID_TYPE" class="member-name-link">OXYGEN_FLUID_TYPE</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#OXYGEN_PROPERTIES" class="member-name-link">OXYGEN_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#OXYGEN_PROPERTIES" class="member-name-link">OXYGEN_PROPERTIES</a> - Static variable in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:P">P</h2>
@@ -1580,13 +1668,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/PipeNode.html" class="type-name-link" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="type parameter in PipeNode">T</a> extends <a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="type parameter in PipeNode">T</a>&gt;&gt; - Class in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#%3Cinit%3E(net.minecraft.world.item.DyeColor,net.jcm.vsch.api.pipe.PipeNode.Type)" class="member-name-link">PipeNode(DyeColor, PipeNode.Type)</a> - Constructor for class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#%3Cinit%3E(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.jcm.vsch.api.pipe.PipeNode.Type)" class="member-name-link">PipeNode(NodeLevel, NodePos, PipeNode.Type)</a> - Constructor for class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/PipeNode.Type.html" class="type-name-link" title="enum class in net.jcm.vsch.api.pipe">PipeNode.Type</a> - Enum Class in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" class="type-name-link" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a> - Class in <a href="net/jcm/vsch/items/pipe/package-summary.html">net.jcm.vsch.items.pipe</a></dt>
+<dt><a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" class="type-name-link" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a>&lt;<a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" title="type parameter in PipeNodeItem">T</a> extends <a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" title="type parameter in PipeNodeItem">T</a>&gt;&gt; - Class in <a href="net/jcm/vsch/items/pipe/package-summary.html">net.jcm.vsch.items.pipe</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/pipe/PipeNodeItem.html#%3Cinit%3E(net.minecraft.world.item.DyeColor,net.minecraft.world.item.Item.Properties)" class="member-name-link">PipeNodeItem(DyeColor, Item.Properties)</a> - Constructor for class net.jcm.vsch.items.pipe.<a href="net/jcm/vsch/items/pipe/PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNodeProvider.html" class="type-name-link" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a>&lt;<a href="net/jcm/vsch/api/pipe/PipeNodeProvider.html" title="type parameter in PipeNodeProvider">T</a> extends <a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="net/jcm/vsch/api/pipe/PipeNodeProvider.html" title="type parameter in PipeNodeProvider">T</a>&gt;&gt; - Interface in <a href="net/jcm/vsch/api/pipe/package-summary.html">net.jcm.vsch.api.pipe</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/s2c/PipeNodeSyncChunkS2C.html" class="type-name-link" title="class in net.jcm.vsch.network.s2c">PipeNodeSyncChunkS2C</a> - Class in <a href="net/jcm/vsch/network/s2c/package-summary.html">net.jcm.vsch.network.s2c</a></dt>
 <dd>&nbsp;</dd>
@@ -1638,17 +1728,17 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html#readAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readAdditional(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/AbstractCustomNode.html" title="class in net.jcm.vsch.api.pipe">AbstractCustomNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#readAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readAdditional(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/MagnetEntity.html#readAdditionalSaveData(net.minecraft.nbt.CompoundTag)" class="member-name-link">readAdditionalSaveData(CompoundTag)</a> - Method in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/NodePos.html#readFrom(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom(FriendlyByteBuf)</a> - Static method in record class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#readFrom(net.jcm.vsch.pipe.level.NodeLevel,net.jcm.vsch.api.pipe.NodePos,net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom(NodeLevel, NodePos, FriendlyByteBuf)</a> - Static method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#readFrom(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom(FriendlyByteBuf)</a> - Static method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dt><a href="net/jcm/vsch/api/pipe/NodePos.html#readFrom(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readFrom(FriendlyByteBuf)</a> - Static method in record class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#readFromNBT(net.minecraft.nbt.CompoundTag)" class="member-name-link">readFromNBT(CompoundTag)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#readNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readNodes(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#readNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readNodes(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#readNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">readNodes(FriendlyByteBuf)</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
@@ -1688,9 +1778,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/VSCHEntities.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/VSCHEntities.html" title="class in net.jcm.vsch.entity">VSCHEntities</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#register(net.minecraftforge.eventbus.api.IEventBus)" class="member-name-link">register(IEventBus)</a> - Static method in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
 <dd>&nbsp;</dd>
@@ -1706,6 +1796,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/assemble/MoveUtil.html#registerDefaultMovers()" class="member-name-link">registerDefaultMovers()</a> - Static method in class net.jcm.vsch.util.assemble.<a href="net/jcm/vsch/util/assemble/MoveUtil.html" title="class in net.jcm.vsch.util.assemble">MoveUtil</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/items/VSCHItems.html#registerNodeItem(java.lang.String,java.util.function.Supplier)" class="member-name-link">registerNodeItem(String, Supplier&lt;I&gt;)</a> - Static method in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHMod.html#registerRenderers(net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers)" class="member-name-link">registerRenderers(EntityRenderersEvent.RegisterRenderers)</a> - Method in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHMod.html" title="class in net.jcm.vsch">VSCHMod</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/VSCHNetwork.html#registerS2C(java.lang.Class,java.util.function.Function)" class="member-name-link">registerS2C(Class&lt;T&gt;, Function&lt;FriendlyByteBuf, T&gt;)</a> - Static method in class net.jcm.vsch.network.<a href="net/jcm/vsch/network/VSCHNetwork.html" title="class in net.jcm.vsch.network">VSCHNetwork</a></dt>
@@ -1713,8 +1805,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#registerTab(java.util.function.Consumer)" class="member-name-link">registerTab(Consumer&lt;Item&gt;)</a> - Static method in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#registerTabItem(java.lang.String,java.util.function.Supplier)" class="member-name-link">registerTabItem(String, Supplier&lt;I&gt;)</a> - Static method in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#REGISTERY" class="member-name-link">REGISTERY</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/VSCHUtils.html#registeryDimToLevel(java.lang.String)" class="member-name-link">registeryDimToLevel(String)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
 <dd>
@@ -1803,6 +1893,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html#saveShared(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveShared(CompoundTag)</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#sde" class="member-name-link">sde</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#sdw" class="member-name-link">sdw</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/VSCHNetwork.html#sendToPlayer(net.jcm.vsch.network.INetworkPacket,net.minecraft.server.level.ServerPlayer)" class="member-name-link">sendToPlayer(INetworkPacket, ServerPlayer)</a> - Static method in class net.jcm.vsch.network.<a href="net/jcm/vsch/network/VSCHNetwork.html" title="class in net.jcm.vsch.network">VSCHNetwork</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/VSCHNetwork.html#sendToServer(net.jcm.vsch.network.INetworkPacket)" class="member-name-link">sendToServer(INetworkPacket)</a> - Static method in class net.jcm.vsch.network.<a href="net/jcm/vsch/network/VSCHNetwork.html" title="class in net.jcm.vsch.network">VSCHNetwork</a></dt>
@@ -1823,8 +1917,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html#serverTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">serverTick(Level, BlockPos, BlockState, BlockEntity)</a> - Static method in interface net.jcm.vsch.blocks.entity.template.<a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#set(int,int,int,int,int,int,int,int)" class="member-name-link">set(int, int, int, int, int, int, int, int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setAll(int)" class="member-name-link">setAll(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/Gravity.html#setAll(net.minecraft.server.level.ServerLevel)" class="member-name-link">setAll(ServerLevel)</a> - Static method in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/Gravity.html" title="class in net.jcm.vsch.event">Gravity</a></dt>
@@ -1843,7 +1935,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinGui.html#setChatDisabledByPlayerShown(boolean)" class="member-name-link">setChatDisabledByPlayerShown(boolean)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinGui.html" title="class in net.jcm.vsch.mixin.client">MixinGui</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#setColor(net.minecraft.world.item.DyeColor)" class="member-name-link">setColor(DyeColor)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setCorners(int,int,int,int,int,int,int,int)" class="member-name-link">setCorners(int, int, int, int, int, int, int, int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#setCurrentPower(double)" class="member-name-link">setCurrentPower(double)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setDNE(int)" class="member-name-link">setDNE(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setDNW(int)" class="member-name-link">setDNW(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setDSE(int)" class="member-name-link">setDSE(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setDSW(int)" class="member-name-link">setDSW(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
@@ -1851,15 +1955,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#setEnabled(boolean,boolean)" class="member-name-link">setEnabled(boolean, boolean)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setFace(net.minecraft.core.Direction,int)" class="member-name-link">setFace(Direction, int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setFaces(int,int,int,int,int,int)" class="member-name-link">setFaces(int, int, int, int, int, int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html#setMode(dan200.computercraft.api.lua.IArguments)" class="member-name-link">setMode(IArguments)</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">ThrusterPeripheral</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#setNode(int,int,int,int,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">setNode(int, int, int, int, PipeNode)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#setNode(int,int,int,int,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">setNode(int, int, int, int, PipeNode)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#setNode(int,int,int,int,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">setNode(int, int, int, int, PipeNode)</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeLevel.html#setNode(net.jcm.vsch.api.pipe.NodePos,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">setNode(NodePos, PipeNode)</a> - Method in class net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeLevel.html" title="class in net.jcm.vsch.pipe.level">NodeLevel</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#setNodesUnsaved()" class="member-name-link">setNodesUnsaved()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#setNodesUnsaved()" class="member-name-link">setNodesUnsaved()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#setNodesUnsaved()" class="member-name-link">setNodesUnsaved()</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
@@ -1897,7 +2005,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html#setTorqueZ(double)" class="member-name-link">setTorqueZ(double)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GyroBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#setUnsaved(boolean)" class="member-name-link">setUnsaved(boolean)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setUNE(int)" class="member-name-link">setUNE(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setUNW(int)" class="member-name-link">setUNW(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setUSE(int)" class="member-name-link">setUSE(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setUSW(int)" class="member-name-link">setUSW(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/GravityInducer.html#ship" class="member-name-link">ship</a> - Variable in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
 <dd>&nbsp;</dd>
@@ -1919,6 +2033,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinKineticBlockEntity.html#source" class="member-name-link">source</a> - Variable in class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinKineticBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinKineticBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#south()" class="member-name-link">south()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>south</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#south(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">south(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#spawnEvaporateParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.core.Direction)" class="member-name-link">spawnEvaporateParticles(Level, BlockPos, Direction)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
@@ -1965,6 +2083,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#SUCCESS" class="member-name-link">SUCCESS</a> - Enum constant in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#sue" class="member-name-link">sue</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#suw" class="member-name-link">suw</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
@@ -1978,6 +2100,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler(ServerLevel, ServerLevel, boolean)</a> - Constructor for class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html" class="type-name-link" title="class in net.jcm.vsch.api.resource">TextureLocation</a> - Record Class in <a href="net/jcm/vsch/api/resource/package-summary.html">net.jcm.vsch.api.resource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#%3Cinit%3E(net.minecraft.resources.ResourceLocation,int,int)" class="member-name-link">TextureLocation(ResourceLocation, int, int)</a> - Constructor for record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>TextureLocation</code> record class.</div>
+</dd>
 <dt><a href="net/jcm/vsch/ship/thruster/ThrusterData.html#throttle" class="member-name-link">throttle</a> - Variable in class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.html" title="class in net.jcm.vsch.ship.thruster">ThrusterData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#THRUSTER_BLOCK" class="member-name-link">THRUSTER_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
@@ -2091,6 +2219,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#toString()" class="member-name-link">toString()</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#toString()" class="member-name-link">toString()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#toString()" class="member-name-link">toString()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="net/jcm/vsch/ship/dragger/DraggerData.html#toString()" class="member-name-link">toString()</a> - Method in class net.jcm.vsch.ship.dragger.<a href="net/jcm/vsch/ship/dragger/DraggerData.html" title="class in net.jcm.vsch.ship.dragger">DraggerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/gyro/GyroData.html#toString()" class="member-name-link">toString()</a> - Method in class net.jcm.vsch.ship.gyro.<a href="net/jcm/vsch/ship/gyro/GyroData.html" title="class in net.jcm.vsch.ship.gyro">GyroData</a></dt>
@@ -2130,6 +2268,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#unw" class="member-name-link">unw</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#up()" class="member-name-link">up()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>up</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#up(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">up(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#use" class="member-name-link">use</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
@@ -2216,9 +2358,9 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html#vsch$hasAnyNode()" class="member-name-link">vsch$hasAnyNode()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunkSection</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html#vsch$readNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">vsch$readNodes(FriendlyByteBuf)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a></dt>
+<dt><a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html#vsch$readNodes(net.jcm.vsch.pipe.level.NodeLevel,net.minecraft.core.SectionPos,net.minecraft.network.FriendlyByteBuf)" class="member-name-link">vsch$readNodes(NodeLevel, SectionPos, FriendlyByteBuf)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html#vsch$readNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">vsch$readNodes(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunkSection</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html#vsch$readNodes(net.jcm.vsch.pipe.level.NodeLevel,net.minecraft.core.SectionPos,net.minecraft.network.FriendlyByteBuf)" class="member-name-link">vsch$readNodes(NodeLevel, SectionPos, FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunkSection.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunkSection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html#vsch$setNode(int,int,int,int,net.jcm.vsch.api.pipe.PipeNode)" class="member-name-link">vsch$setNode(int, int, int, int, PipeNode)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/INodeLevelChunkSection.html" title="interface in net.jcm.vsch.accessor">INodeLevelChunkSection</a></dt>
 <dd>&nbsp;</dd>
@@ -2252,13 +2394,13 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHEvents.html#%3Cinit%3E()" class="member-name-link">VSCHEvents()</a> - Constructor for class net.jcm.vsch.<a href="net/jcm/vsch/VSCHEvents.html" title="class in net.jcm.vsch">VSCHEvents</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html" class="type-name-link" title="class in net.jcm.vsch.fluids">VSCHFluids</a> - Class in <a href="net/jcm/vsch/fluids/package-summary.html">net.jcm.vsch.fluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html" class="type-name-link" title="class in net.jcm.vsch.fluid">VSCHFluids</a> - Class in <a href="net/jcm/vsch/fluid/package-summary.html">net.jcm.vsch.fluid</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluids.html#%3Cinit%3E()" class="member-name-link">VSCHFluids()</a> - Constructor for class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluids.html" title="class in net.jcm.vsch.fluids">VSCHFluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluids.html#%3Cinit%3E()" class="member-name-link">VSCHFluids()</a> - Constructor for class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluids.html" title="class in net.jcm.vsch.fluid">VSCHFluids</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" class="type-name-link" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a> - Class in <a href="net/jcm/vsch/fluids/package-summary.html">net.jcm.vsch.fluids</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" class="type-name-link" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a> - Class in <a href="net/jcm/vsch/fluid/package-summary.html">net.jcm.vsch.fluid</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#%3Cinit%3E()" class="member-name-link">VSCHFluidTypes()</a> - Constructor for class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/fluid/VSCHFluidTypes.html#%3Cinit%3E()" class="member-name-link">VSCHFluidTypes()</a> - Constructor for class net.jcm.vsch.fluid.<a href="net/jcm/vsch/fluid/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluid">VSCHFluidTypes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" class="type-name-link" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a> - Class in <a href="net/jcm/vsch/ship/package-summary.html">net.jcm.vsch.ship</a></dt>
 <dd>&nbsp;</dd>
@@ -2311,17 +2453,17 @@ the order they are declared.</div>
 </dl>
 <h2 class="title" id="I:W">W</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#WATER_FLOW_RL" class="member-name-link">WATER_FLOW_RL</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#wdn" class="member-name-link">wdn</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/fluids/VSCHFluidTypes.html#WATER_STILL_RL" class="member-name-link">WATER_STILL_RL</a> - Static variable in class net.jcm.vsch.fluids.<a href="net/jcm/vsch/fluids/VSCHFluidTypes.html" title="class in net.jcm.vsch.fluids">VSCHFluidTypes</a></dt>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#wds" class="member-name-link">wds</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#west()" class="member-name-link">west()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>west</code> record component.</div>
+</dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#west(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">west(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html#WHITE_OMNI_NODE" class="member-name-link">WHITE_OMNI_NODE</a> - Static variable in class net.jcm.vsch.items.<a href="net/jcm/vsch/items/VSCHItems.html" title="class in net.jcm.vsch.items">VSCHItems</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#withColor(net.minecraft.world.item.DyeColor)" class="member-name-link">withColor(DyeColor)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/pipe/OmniNode.html#withColor(net.minecraft.world.item.DyeColor)" class="member-name-link">withColor(DyeColor)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html#WORKING" class="member-name-link">WORKING</a> - Enum constant in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></dt>
 <dd>&nbsp;</dd>
@@ -2335,9 +2477,7 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/pipe/PipeNode.html#writeAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeAdditional(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.api.pipe.<a href="net/jcm/vsch/api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/pipe/OmniNode.html#writeAdditional(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeAdditional(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.pipe.<a href="net/jcm/vsch/pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html#writeNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeNodes(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkAccess.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkAccess</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html#writeNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeNodes(FriendlyByteBuf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevelChunk.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevelChunk</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/pipe/level/NodeGetter.html#writeNodes(net.minecraft.network.FriendlyByteBuf)" class="member-name-link">writeNodes(FriendlyByteBuf)</a> - Method in interface net.jcm.vsch.pipe.level.<a href="net/jcm/vsch/pipe/level/NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></dt>
 <dd>&nbsp;</dd>
@@ -2348,6 +2488,10 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#writeToNBT(net.minecraft.nbt.CompoundTag)" class="member-name-link">writeToNBT(CompoundTag)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/EncodeHelper.html#writeVarInt22(net.minecraft.network.FriendlyByteBuf,int)" class="member-name-link">writeVarInt22(FriendlyByteBuf, int)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/EncodeHelper.html" title="class in net.jcm.vsch.util">EncodeHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#wun" class="member-name-link">wun</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#wus" class="member-name-link">wus</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:X">X</h2>

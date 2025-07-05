@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraft.world.item.Item
-<div class="inheritance"><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">net.jcm.vsch.items.pipe.PipeNodeItem</a>
+<div class="inheritance"><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">net.jcm.vsch.items.pipe.PipeNodeItem</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;
 <div class="inheritance">net.jcm.vsch.items.pipe.OmniNodeItem</div>
 </div>
 </div>
@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">OmniNodeItem</span>
-<span class="extends-implements">extends <a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></span></div>
+<span class="extends-implements">extends <a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -141,8 +141,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescriptionName()" class="member-name-link">getDescriptionName</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPipeNode(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNode</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPipeNodeProvider(net.minecraft.world.item.ItemStack)" class="member-name-link">getPipeNodeProvider</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -200,17 +200,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getDescriptionName</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="PipeNodeItem.html#getDescriptionName()">getDescriptionName</a></code>&nbsp;in class&nbsp;<code><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></code></dd>
+<dd><code><a href="PipeNodeItem.html#getDescriptionName()">getDescriptionName</a></code>&nbsp;in class&nbsp;<code><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getPipeNode(net.minecraft.world.item.ItemStack)">
-<h3>getPipeNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></span>&nbsp;<span class="element-name">getPipeNode</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<section class="detail" id="getPipeNodeProvider(net.minecraft.world.item.ItemStack)">
+<h3>getPipeNodeProvider</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../api/pipe/PipeNodeProvider.html" title="interface in net.jcm.vsch.api.pipe">PipeNodeProvider</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</span>&nbsp;<span class="element-name">getPipeNodeProvider</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="PipeNodeItem.html#getPipeNode(net.minecraft.world.item.ItemStack)">getPipeNode</a></code>&nbsp;in class&nbsp;<code><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a></code></dd>
+<dd><code><a href="PipeNodeItem.html#getPipeNodeProvider(net.minecraft.world.item.ItemStack)">getPipeNodeProvider</a></code>&nbsp;in class&nbsp;<code><a href="PipeNodeItem.html" title="class in net.jcm.vsch.items.pipe">PipeNodeItem</a>&lt;<a href="../../pipe/OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
