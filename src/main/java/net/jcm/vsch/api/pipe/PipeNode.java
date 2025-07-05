@@ -1,7 +1,9 @@
 package net.jcm.vsch.api.pipe;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.api.resource.ModelTextures;
 import net.jcm.vsch.pipe.OmniNode;
+import net.jcm.vsch.pipe.PipeNetwork;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Direction;
@@ -10,6 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,29 +21,90 @@ import org.apache.logging.log4j.Logger;
 public abstract class PipeNode<T extends PipeNode<T>> {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
-	private final DyeColor color;
+	private final NodeLevel level;
+	private final NodePos pos;
+	private PipeNetwork network = new PipeNetwork();
 	private final Type type;
+	private DyeColor color = DyeColor.WHITE;
 
-	protected PipeNode(final DyeColor color, final Type type) {
-		this.color = color;
+	protected PipeNode(final NodeLevel level, final NodePos pos, final Type type) {
+		this.level = level;
+		this.pos = pos;
 		this.type = type;
+		this.network.addNode(pos);
 	}
 
-	public final DyeColor getColor() {
-		return this.color;
+	public final NodeLevel getLevel() {
+		return this.level;
+	}
+
+	public final NodePos getPos() {
+		return this.pos;
 	}
 
 	public final Type getType() {
 		return this.type;
 	}
 
-	public abstract T withColor(DyeColor color);
+	public DyeColor getColor() {
+		return this.color;
+	}
+
+	public void setColor(final DyeColor color) {
+		this.color = color;
+	}
+
+	public double getSize() {
+		return 4.0 / 16;
+	}
 
 	public abstract ItemStack asItemStack();
 
-	public abstract boolean canConnect(NodeLevel level, NodePos pos, Direction dir);
+	public abstract ModelTextures getModel();
 
-	public abstract boolean canFluidFlow(NodeLevel level, NodePos pos, Direction dir, Fluid fluid);
+	/**
+	 * @return if pipes can connect from the direction
+	 */
+	public abstract boolean canConnect(Direction dir);
+
+	/**
+	 * @return if contents can flow from the direction
+	 */
+	public abstract boolean canFlowIn(Direction dir);
+
+	/**
+	 * @return if contents can flow towards the direction
+	 */
+	public abstract boolean canFlowOut(Direction dir);
+
+	/**
+	 * Water flow rate used to calculate other fluids flow rate based on their viscosity.
+	 *
+	 * @return How fast can water transfer in mB/tick
+	 * @see FluidType#getViscosity
+	 * @see fluidFlowAmount
+	 */
+	protected abstract int getWaterFlowRate();
+
+	/**
+	 * @param dir Direction the fluid flowing towards to
+	 * @param fluid The fluid
+	 * @return How fast can the fluid transfer in mB/tick
+	 * @see getWaterFlowRate
+	 * @see canFluidFlow
+	 */
+	public int fluidFlowAmount(final Direction dir, final Fluid fluid) {
+		if (!this.canFlowOut(dir)) {
+			return 0;
+		}
+		return this.getWaterFlowRate() * ForgeMod.WATER_TYPE.get().getViscosity() / fluid.getFluidType().getViscosity();
+	}
+
+	public abstract int energyFlowAmount(Direction dir);
+
+	public void writeAdditional(final FriendlyByteBuf buf) {}
+
+	public void readAdditional(final FriendlyByteBuf buf) {}
 
 	public final void writeTo(final FriendlyByteBuf buf) {
 		buf.writeByte((this.type.getCode() << 4) | this.color.getId());
@@ -49,30 +114,41 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 		this.writeAdditional(buf);
 	}
 
-	public abstract void writeAdditional(FriendlyByteBuf buf);
-
-	public static PipeNode readFrom(final FriendlyByteBuf buf) {
+	public static PipeNode readFrom(final NodeLevel level, final NodePos pos, final FriendlyByteBuf buf) {
 		final int typeAndColor = buf.readByte();
 		final DyeColor color = DyeColor.byId(typeAndColor & 0xf);
 		final int typeCode = (typeAndColor >> 4) & 0xf;
 		final Type type = Type.CODE_MAP[typeCode];
-		return switch (type) {
-			case OMNI -> OmniNode.getByColor(color);
+		final PipeNode node = switch (type) {
+			case OMNI -> new OmniNode(level, pos);
 			case CUSTOM -> {
 				final ResourceLocation id = buf.readResourceLocation();
-				final AbstractCustomNode node = CustomNodeRegistry.getNode(id, color);
-				if (node == null) {
+				final AbstractCustomNode n = CustomNodeRegistry.createNode(id, level, pos);
+				if (n == null) {
 					LOGGER.error("[starlance]: custom node with ID " + id + " is not found");
 					yield null;
 				}
-				node.readAdditional(buf);
-				yield node;
+				yield n;
 			}
 			default -> {
 				LOGGER.error("[starlance]: unexpected node type: " + Integer.toString(typeCode, 16));
 				yield null;
 			}
 		};
+		if (node == null) {
+			return null;
+		}
+		node.setColor(color);
+		node.readAdditional(buf);
+		return node;
+	}
+
+	public String toString() {
+		return String.format("<%s level=%s pos=%s>", this.getClass().getName(), this.level.getLevel(), this.pos);
+	}
+
+	public boolean canAnchor() {
+		return this.pos.canAnchoredIn(this.level.getLevel(), this.getSize());
 	}
 
 	public enum Type {

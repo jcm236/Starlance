@@ -1,38 +1,33 @@
 package net.jcm.vsch.pipe;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.api.resource.ModelTextures;
+import net.jcm.vsch.api.resource.TextureLocation;
 import net.jcm.vsch.items.pipe.OmniNodeItem;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.EnumMap;
 
-public final class OmniNode extends PipeNode<OmniNode> {
-	private static final EnumMap<DyeColor, OmniNode> COLOR_MAP = new EnumMap<>(DyeColor.class);
+public class OmniNode extends PipeNode<OmniNode> {
+	private static final ModelTextures MODEL;
 
 	static {
-		for (final DyeColor color : DyeColor.values()) {
-			COLOR_MAP.put(color, new OmniNode(color));
-		}
+		final ResourceLocation resource = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
+		final TextureLocation texture1 = new TextureLocation(resource, 0, 1);
+		final TextureLocation texture2 = new TextureLocation(resource, 0, 0);
+		MODEL = new ModelTextures(texture1, texture2, texture1, texture2, texture1, texture2);
 	}
 
-	private OmniNode(final DyeColor color) {
-		super(color, Type.OMNI);
-	}
-
-	public static OmniNode getByColor(final DyeColor color) {
-		return COLOR_MAP.get(color);
-	}
-
-	@Override
-	public OmniNode withColor(final DyeColor color) {
-		return getByColor(color);
+	public OmniNode(final NodeLevel level, final NodePos pos) {
+		super(level, pos, Type.OMNI);
 	}
 
 	@Override
@@ -41,15 +36,33 @@ public final class OmniNode extends PipeNode<OmniNode> {
 	}
 
 	@Override
-	public boolean canConnect(final NodeLevel level, final NodePos pos, final Direction dir) {
+	public ModelTextures getModel() {
+		return MODEL;
+	}
+
+	@Override
+	public boolean canConnect(final Direction dir) {
 		return true;
 	}
 
 	@Override
-	public boolean canFluidFlow(final NodeLevel level, final NodePos pos, final Direction dir, final Fluid fluid) {
+	public boolean canFlowIn(final Direction dir) {
 		return true;
 	}
 
 	@Override
-	public void writeAdditional(final FriendlyByteBuf buf) {}
+	public boolean canFlowOut(final Direction dir) {
+		return true;
+	}
+
+	@Override
+	protected int getWaterFlowRate() {
+		// TODO: adjust the value
+		return 6400;
+	}
+
+	@Override
+	public int energyFlowAmount(final Direction dir) {
+		return 8 * 1024;
+	}
 }

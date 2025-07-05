@@ -4,37 +4,36 @@ import net.jcm.vsch.accessor.INodeLevelChunkSection;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.pipe.level.NodeGetter;
+import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(ChunkAccess.class)
-public abstract class MixinChunkAccess implements BlockGetter, NodeGetter {
+@Mixin(LevelChunk.class)
+public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter, NodeGetter {
 	@Unique
 	private static final PipeNode[] EMPTY_NODES = new PipeNode[NodePos.UNIQUE_INDEX_BOUND];
 
-	@Shadow
-	public abstract LevelChunkSection[] getSections();
+	protected MixinLevelChunk() {
+		super(null, null, null, null, 0, null, null);
+	}
 
 	@Shadow
-	public abstract LevelChunkSection getSection(int index);
-
-	@Shadow
-	public abstract boolean isUnsaved();
-
-	@Shadow
-	public abstract void setUnsaved(boolean value);
+	public abstract Level getLevel();
 
 	@Unique
 	private INodeLevelChunkSection getNodeSectionAtBlock(final int y) {
-		if (y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight()) {
+		if (this.isOutsideBuildHeight(y)) {
 			return null;
 		}
 		return this.getSection(this.getSectionIndex(y)) instanceof INodeLevelChunkSection nodeSection ? nodeSection : null;
@@ -88,8 +87,12 @@ public abstract class MixinChunkAccess implements BlockGetter, NodeGetter {
 
 	@Override
 	public void readNodes(final FriendlyByteBuf buf) {
+		final NodeLevel level = NodeLevel.get(this.getLevel());
+		final ChunkPos chunkPos = this.getPos();
+		int i = 0;
 		for (final LevelChunkSection section : this.getSections()) {
-			((INodeLevelChunkSection) (section)).vsch$readNodes(buf);
+			((INodeLevelChunkSection) (section)).vsch$readNodes(level, SectionPos.of(chunkPos, this.getSectionYFromSectionIndex(i)), buf);
+			i++;
 		}
 	}
 

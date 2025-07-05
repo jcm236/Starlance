@@ -1,11 +1,11 @@
 package net.jcm.vsch.api.pipe;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -17,24 +17,24 @@ import java.util.function.Supplier;
 public final class CustomNodeRegistry {
 	private CustomNodeRegistry() {}
 
-	public static final ResourceKey<Registry<CustomNodeProvider>> ID = ResourceKey.createRegistryKey(new ResourceLocation(VSCHMod.MODID, "custom_node"));
-	private static final DeferredRegister<CustomNodeProvider> REGISTRY = DeferredRegister.create(ID, VSCHMod.MODID);
-	private static Supplier<IForgeRegistry<CustomNodeProvider>> REGISTERED_REGISTRY = null;
+	public static final ResourceKey<Registry<PipeNodeProvider<? extends AbstractCustomNode>>> ID = ResourceKey.createRegistryKey(new ResourceLocation(VSCHMod.MODID, "custom_node"));
+	private static final DeferredRegister<PipeNodeProvider<? extends AbstractCustomNode>> REGISTRY = DeferredRegister.create(ID, VSCHMod.MODID);
+	private static Supplier<IForgeRegistry<PipeNodeProvider<? extends AbstractCustomNode>>> REGISTERED_REGISTRY = null;
 
-	public static IForgeRegistry<CustomNodeProvider> getRegistry() {
+	public static IForgeRegistry<PipeNodeProvider<? extends AbstractCustomNode>> getRegistry() {
 		return REGISTERED_REGISTRY.get();
 	}
 
-	public static AbstractCustomNode getNode(final ResourceLocation id, final DyeColor color) {
-		final IForgeRegistry<CustomNodeProvider> registry = REGISTERED_REGISTRY.get();
+	public static AbstractCustomNode createNode(final ResourceLocation id, final NodeLevel level, final NodePos pos) {
+		final IForgeRegistry<PipeNodeProvider<? extends AbstractCustomNode>> registry = REGISTERED_REGISTRY.get();
 		if (registry == null) {
 			throw new IllegalStateException("Trying to use registry before it get registered");
 		}
-		final CustomNodeProvider provider = registry.getValue(id);
+		final PipeNodeProvider<? extends AbstractCustomNode> provider = registry.getValue(id);
 		if (provider == null) {
 			return null;
 		}
-		return provider.getNode(color);
+		return provider.createNode(level, pos);
 	}
 
 	/**

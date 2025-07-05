@@ -1,6 +1,6 @@
 package net.jcm.vsch.items.pipe;
 
-import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.PipeNodeProvider;
 import net.jcm.vsch.pipe.OmniNode;
 
 import net.minecraft.world.item.DyeColor;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.EnumMap;
 
-public final class OmniNodeItem extends PipeNodeItem {
+public final class OmniNodeItem extends PipeNodeItem<OmniNode> {
 	private static final EnumMap<DyeColor, OmniNodeItem> COLOR_MAP = new EnumMap<>(DyeColor.class);
 
 	public OmniNodeItem(final DyeColor color, final Item.Properties props) {
@@ -27,7 +27,11 @@ public final class OmniNodeItem extends PipeNodeItem {
 	}
 
 	@Override
-	public PipeNode getPipeNode(final ItemStack stack) {
-		return OmniNode.getByColor(this.getColor());
+	public PipeNodeProvider<OmniNode> getPipeNodeProvider(final ItemStack stack) {
+		return (level, pos) -> {
+			final OmniNode node = new OmniNode(level, pos);
+			node.setColor(this.getColor());
+			return node;
+		};
 	}
 }

@@ -5,7 +5,6 @@ import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.network.s2c.PipeNodeUpdateS2C;
-import net.jcm.vsch.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -56,16 +55,16 @@ public class NodeLevel {
 		);
 	}
 
-	public List<Pair<NodePos, PipeNode>> getNodesOn(final BlockPos blockPos) {
-		return NodePos.streamNodePosOn(blockPos).map((pos) -> {
-			final PipeNode node = this.getNode(pos);
-			return node == null ? null : new Pair<>(pos, node);
-		})
+	public List<PipeNode> getNodesOn(final BlockPos blockPos) {
+		return NodePos.streamNodePosOn(blockPos).map(this::getNode)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
 	public void setNode(final NodePos pos, final PipeNode node) {
+		if (node != null && !node.getPos().equals(pos)) {
+			throw new IllegalArgumentException("Node position not match");
+		}
 		final BlockPos blockPos = pos.blockPos();
 		final int x = blockPos.getX(), y = blockPos.getY(), z = blockPos.getZ();
 		final NodeGetter getter = this.getNodeChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));

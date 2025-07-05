@@ -51,10 +51,11 @@ public class PipeNodeUpdateS2C implements INetworkPacket {
 	public void handle(final NetworkEvent.Context ctx) {
 		ctx.setPacketHandled(true);
 		final NodePos pos = this.pos;
-		final PipeNode node = this.data.length > 0 ? PipeNode.readFrom(new FriendlyByteBuf(Unpooled.wrappedBuffer(this.data))) : null;
+		final byte[] data = this.data;
 		ctx.enqueueWork(() -> {
 			final ClientLevel level = Minecraft.getInstance().level;
 			final NodeLevel nodeLevel = NodeLevel.get(level);
+			final PipeNode node = data.length > 0 ? PipeNode.readFrom(nodeLevel, pos, new FriendlyByteBuf(Unpooled.wrappedBuffer(data))) : null;
 			nodeLevel.setNode(pos, node);
 		});
 	}

@@ -81,13 +81,13 @@ public class VSCHEvents {
 			return;
 		}
 		final NodeLevel nodeLevel = NodeLevel.get(level);
-		for (final Pair<NodePos, PipeNode> node : nodeLevel.getNodesOn(blockPos)) {
-			final NodePos pos = node.left();
-			if (pos.canAnchoredIn(level, 4.0 / 16)) {
+		for (final PipeNode node : nodeLevel.getNodesOn(blockPos)) {
+			if (node.canAnchor()) {
 				continue;
 			}
+			final NodePos pos = node.getPos();
 			nodeLevel.setNode(pos, null);
-			final ItemStack stack = node.right().asItemStack();
+			final ItemStack stack = node.asItemStack();
 			if (stack.isEmpty()) {
 				continue;
 			}

@@ -2,6 +2,7 @@ package net.jcm.vsch.items.pipe;
 
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.PipeNodeProvider;
 import net.jcm.vsch.pipe.level.NodeLevel;
 import net.jcm.vsch.items.custom.WrenchItem;
 
@@ -17,7 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class PipeNodeItem extends Item {
+public abstract class PipeNodeItem<T extends PipeNode<T>> extends Item {
 	private final DyeColor color;
 	private String descriptionId = null;
 
@@ -50,7 +51,7 @@ public abstract class PipeNodeItem extends Item {
 		return Component.translatable("color.minecraft." + this.color).append(" ").append(Component.translatable(this.getDescriptionId(stack)));
 	}
 
-	public abstract PipeNode getPipeNode(final ItemStack stack);
+	public abstract PipeNodeProvider<T> getPipeNodeProvider(final ItemStack stack);
 
 	@Override
 	public InteractionResult onItemUseFirst(final ItemStack stack, final UseOnContext context) {
@@ -70,14 +71,15 @@ public abstract class PipeNodeItem extends Item {
 			return InteractionResult.PASS;
 		}
 
-		final PipeNode node = this.getPipeNode(stack);
-		if (node == null) {
+		final PipeNodeProvider<?> provider = this.getPipeNodeProvider(stack);
+		if (provider == null) {
 			return InteractionResult.FAIL;
 		}
 		if (nodeLevel.getNode(nodePos) != null) {
 			return InteractionResult.FAIL;
 		}
-		if (!nodePos.canAnchoredIn(level, 4.0 / 16)) {
+		final PipeNode node = provider.createNode(nodeLevel, nodePos);
+		if (!node.canAnchor()) {
 			return InteractionResult.FAIL;
 		}
 		nodeLevel.setNode(nodePos, node);

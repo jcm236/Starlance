@@ -4,6 +4,8 @@ import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.accessor.INodeLevelChunkSection;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.api.resource.ModelTextures;
+import net.jcm.vsch.api.resource.TextureLocation;
 import net.jcm.vsch.client.RenderUtil;
 import net.jcm.vsch.items.custom.WrenchItem;
 import net.jcm.vsch.pipe.level.NodeGetter;
@@ -64,13 +66,21 @@ import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = VSCHMod.MODID, value = Dist.CLIENT)
 public class PipeLevelRenderer {
-	private static final Vector3i ZERO_VEC3I = new Vector3i();
+	private static final Vector3f ZERO_VEC3F = new Vector3f();
 	private static final int PIPE_VIEW_RANGE = 8;
 
 	private static final Vector4f HINT_COLOR = new Vector4f(0.25f, 0.70f, 0.25f, 0.6f);
 	private static final float HINT_SCALE = 0.7f;
 	private static final Vector4f HINT_SELECTING_COLOR = new Vector4f(0.25f, 0.92f, 0.25f, 0.8f);
 	private static final float HINT_SELECTING_SCALE = 0.85f;
+	private static final ModelTextures HINT_MODEL;
+
+	static {
+		final ResourceLocation resource = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
+		final TextureLocation texture1 = new TextureLocation(resource, 0, 1);
+		final TextureLocation texture2 = new TextureLocation(resource, 0, 0);
+		HINT_MODEL = new ModelTextures(texture1, texture2, texture1, texture2, texture1, texture2);
+	}
 
 	@SubscribeEvent
 	public static void renderLevelState(final RenderLevelStageEvent event) {
@@ -234,32 +244,32 @@ public class PipeLevelRenderer {
 	}
 
 	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
-		final int size = 4;
+		final double size = node.getSize();
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
-		final double r = size / 2.0 / 16;
-		lightMap.use = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, r)));
-		lightMap.usw = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, r)));
-		lightMap.une = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, -r)));
-		lightMap.unw = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, -r)));
-		lightMap.dse = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, r)));
-		lightMap.dsw = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, r)));
-		lightMap.dne = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, -r)));
-		lightMap.dnw = LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, -r)));
+		final double r = size / 2;
+		lightMap.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, r))));
+		lightMap.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, r))));
+		lightMap.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, -r))));
+		lightMap.setUNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, -r))));
+		lightMap.setDSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, r))));
+		lightMap.setDSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, r))));
+		lightMap.setDNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, -r))));
+		lightMap.setDNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, -r))));
 
 		final RenderUtil.BoxLightMap blockLightMap = lightMap.getBlockLightMap();
 		final RenderUtil.BoxLightMap skyLightMap = lightMap.getSkyLightMap();
 
 		for (final RenderUtil.BoxLightMap lights : new RenderUtil.BoxLightMap[]{blockLightMap, skyLightMap}) {
 			for (int i = 0; i < 2; i++) {
-				blockLightMap.use = Math.max(blockLightMap.use, Math.max(Math.max(blockLightMap.usw, blockLightMap.une), blockLightMap.dse) - 2);
-				blockLightMap.usw = Math.max(blockLightMap.usw, Math.max(Math.max(blockLightMap.use, blockLightMap.unw), blockLightMap.dsw) - 2);
-				blockLightMap.une = Math.max(blockLightMap.une, Math.max(Math.max(blockLightMap.unw, blockLightMap.use), blockLightMap.dne) - 2);
-				blockLightMap.unw = Math.max(blockLightMap.unw, Math.max(Math.max(blockLightMap.une, blockLightMap.usw), blockLightMap.dnw) - 2);
-				blockLightMap.dse = Math.max(blockLightMap.dse, Math.max(Math.max(blockLightMap.dsw, blockLightMap.dne), blockLightMap.use) - 2);
-				blockLightMap.dsw = Math.max(blockLightMap.dsw, Math.max(Math.max(blockLightMap.dse, blockLightMap.dnw), blockLightMap.usw) - 2);
-				blockLightMap.dne = Math.max(blockLightMap.dne, Math.max(Math.max(blockLightMap.dnw, blockLightMap.dse), blockLightMap.une) - 2);
-				blockLightMap.dnw = Math.max(blockLightMap.dnw, Math.max(Math.max(blockLightMap.dne, blockLightMap.dsw), blockLightMap.unw) - 2);
+				lights.setUSE(Math.max(lights.use, Math.max(Math.max(lights.usw, lights.une), lights.dse) - 2));
+				lights.setUSW(Math.max(lights.usw, Math.max(Math.max(lights.use, lights.unw), lights.dsw) - 2));
+				lights.setUNE(Math.max(lights.une, Math.max(Math.max(lights.unw, lights.use), lights.dne) - 2));
+				lights.setUNW(Math.max(lights.unw, Math.max(Math.max(lights.une, lights.usw), lights.dnw) - 2));
+				lights.setDSE(Math.max(lights.dse, Math.max(Math.max(lights.dsw, lights.dne), lights.use) - 2));
+				lights.setDSW(Math.max(lights.dsw, Math.max(Math.max(lights.dse, lights.dnw), lights.usw) - 2));
+				lights.setDNE(Math.max(lights.dne, Math.max(Math.max(lights.dnw, lights.dse), lights.une) - 2));
+				lights.setDNW(Math.max(lights.dnw, Math.max(Math.max(lights.dne, lights.dsw), lights.unw) - 2));
 			}
 		}
 
@@ -277,13 +287,11 @@ public class PipeLevelRenderer {
 		poseStack.pushPose();
 
 		poseStack.translate(nodeCenterRender.x - view.x, nodeCenterRender.y - view.y, nodeCenterRender.z - view.z);
-		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
-			nodeTexture, new Vector3f(node.getColor().getTextureDiffuseColors()),
-			ZERO_VEC3I, rotation, new Vector3i(size, size, size),
-			0, 0,
+			node.getModel(), new Vector3f(node.getColor().getTextureDiffuseColors()),
+			ZERO_VEC3F, rotation, new Vector3f().set(size, size, size),
 			1f
 		);
 
@@ -306,13 +314,11 @@ public class PipeLevelRenderer {
 		poseStack.pushPose();
 
 		poseStack.translate(nodeCenter.x - view.x, nodeCenter.y - view.y, nodeCenter.z - view.z);
-		ResourceLocation nodeTexture = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
-			nodeTexture, color,
-			ZERO_VEC3I, rotation, new Vector3i(size, size, size),
-			0, 0,
+			HINT_MODEL, color,
+			ZERO_VEC3F, rotation, new Vector3f(size, size, size).div(16),
 			scale
 		);
 

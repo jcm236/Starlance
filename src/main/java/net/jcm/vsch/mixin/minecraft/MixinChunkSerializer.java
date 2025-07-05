@@ -2,19 +2,24 @@ package net.jcm.vsch.mixin.minecraft;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.accessor.INodeLevelChunkSection;
+import net.jcm.vsch.pipe.level.NodeLevel;
 
 import io.netty.buffer.Unpooled;
+import net.minecraft.core.Holder;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.PalettedContainer;
 import net.minecraft.world.level.chunk.PalettedContainerRO;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,33 +44,33 @@ public abstract class MixinChunkSerializer {
 	@WrapOperation(
 		method = "read",
 		at = @At(
-			value = "NEW",
-			target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;",
-			ordinal = 0
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;checkConsistencyWithBlocks(Lnet/minecraft/core/SectionPos;Lnet/minecraft/world/level/chunk/LevelChunkSection;)V"
 		)
 	)
-	private static LevelChunkSection readLevelChunkSection(
-		final PalettedContainer blockStates,
-		final PalettedContainerRO biomes,
-		final Operation<LevelChunkSection> operation,
+	private static void readLevelChunkSection(
+		final PoiManager poiManager,
+		final SectionPos sectionPos,
+		final LevelChunkSection section,
+		final Operation<Void> operation,
+		final @Local(argsOnly = true) ServerLevel level,
 		final @Local(ordinal = 1) CompoundTag sectionData
 	) {
-		final LevelChunkSection section = operation.call(blockStates, biomes);
+		operation.call(poiManager, sectionPos, section);
 		if (!(section instanceof INodeLevelChunkSection nodeSection)) {
-			return section;
+			return;
 		}
 		if (!sectionData.contains(SECTION_NODES_KEY)) {
-			return section;
+			return;
 		}
 		final byte[] sectionNodesData = sectionData.getByteArray(SECTION_NODES_KEY);
 		final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(sectionNodesData));
 		try {
-			nodeSection.vsch$readNodes(buf);
+			nodeSection.vsch$readNodes(NodeLevel.get(level), sectionPos, buf);
 		} catch (RuntimeException	e) {
 			LOGGER.error("[starlance]: Error when parsing pipe nodes", e);
 			throw e;
 		}
-		return section;
 	}
 
 	@WrapOperation(

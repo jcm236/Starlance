@@ -1,7 +1,9 @@
 package net.jcm.vsch.accessor;
 
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.pipe.level.NodeLevel;
 
+import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 
 public interface INodeLevelChunkSection {
@@ -18,6 +20,6 @@ public interface INodeLevelChunkSection {
 
 	void vsch$writeNodes(FriendlyByteBuf buf);
 
-	void vsch$readNodes(FriendlyByteBuf buf);
+	void vsch$readNodes(NodeLevel level, SectionPos sectionPos, FriendlyByteBuf buf);
 }
 

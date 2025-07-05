@@ -17,6 +17,9 @@
  */
 package net.jcm.vsch.client;
 
+import net.jcm.vsch.api.resource.ModelTextures;
+import net.jcm.vsch.api.resource.TextureLocation;
+
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -113,29 +116,25 @@ public final class RenderUtil {
 		posestack.popPose();
 	}
 
-	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Vector3i offseti, Quaternionf rot, Vector3i sizei, float pUOffset, float pVOffset, float scale) {
-		drawBoxWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), offseti, rot, sizei, pUOffset, pVOffset, scale);
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector3f rgb, Vector3f offset, Quaternionf rot, Vector3f size, float scale) {
+		drawBoxWithTexture(poseStack, buffer, lightMap, model, new Vector4f(rgb, 1f), offset, rot, size, scale);
 	}
 
-	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector4f rgba, Vector3i offseti, Quaternionf rot, Vector3i sizei, float pUOffset, float pVOffset, float scale) {
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector4f rgba, Vector3f offset, Quaternionf rot, Vector3f size, float scale) {
 		poseStack.pushPose();
-		// Sizes are in pixels
-		final Vector3f offset = new Vector3f(offseti).div(16);
-		final Vector3f size = new Vector3f(sizei).div(16);
-
 		poseStack.mulPose(rot);
 
 		for (final Direction dir : Direction.values()) {
-			drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, dir, offset, size, pUOffset, pVOffset, scale);
+			drawPlaneWithTexture(poseStack, buffer, lightMap, model.getTexture(dir), rgba, dir, offset, size, scale);
 		}
 		poseStack.popPose();
 	}
 
-	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3f size, float pUOffset, float pVOffset, float scale) {
-		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), perspective, offset, size, pUOffset, pVOffset, scale);
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3f size, float scale) {
+		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), perspective, offset, size, scale);
 	}
 
-	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ResourceLocation texture, Vector4f rgba, Direction perspective, Vector3f offset, Vector3f size, float pUOffset, float pVOffset, float scale) {
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector4f rgba, Direction perspective, Vector3f offset, Vector3f size, float scale) {
 		poseStack.pushPose();
 
 		float pX = offset.x, pY = offset.y, pZ = offset.z;
@@ -154,8 +153,8 @@ public final class RenderUtil {
 
 		final float r = rgba.x, g = rgba.y, b = rgba.z, a = rgba.w;
 
-		final TextureAtlasSprite stillTexture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-
+		final TextureAtlasSprite stillTexture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture.location());
+		final double pUOffset = texture.offsetX(), pVOffset = texture.offsetY();
 		final float u1 = stillTexture.getU(pUOffset);
 		final float v1 = stillTexture.getV(pVOffset);
 
@@ -171,10 +170,10 @@ public final class RenderUtil {
 			case DOWN -> {
 				final float u2 = stillTexture.getU(pUOffset + size.z * 16);
 				final float v2 = stillTexture.getV(pVOffset + size.x * 16);
-				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dnw).normal(0f, -1f, 0f).endVertex();
-				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dne).normal(0f, -1f, 0f).endVertex();
-				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dse).normal(0f, -1f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dsw).normal(0f, -1f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dnw).normal(0f, -1f, 0f).endVertex();
+				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dne).normal(0f, -1f, 0f).endVertex();
+				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dse).normal(0f, -1f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dsw).normal(0f, -1f, 0f).endVertex();
 			}
 			case SOUTH -> {
 				final float u2 = stillTexture.getU(pUOffset + size.x * 16);
@@ -187,10 +186,10 @@ public final class RenderUtil {
 			case NORTH -> {
 				final float u2 = stillTexture.getU(pUOffset + size.x * 16);
 				final float v2 = stillTexture.getV(pVOffset + size.y * 16);
-				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.ndw).normal(0f, 0f, -1f).endVertex();
-				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nuw).normal(0f, 0f, -1f).endVertex();
-				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nue).normal(0f, 0f, -1f).endVertex();
-				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nde).normal(0f, 0f, -1f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.ndw).normal(0f, 0f, -1f).endVertex();
+				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nuw).normal(0f, 0f, -1f).endVertex();
+				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nue).normal(0f, 0f, -1f).endVertex();
+				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nde).normal(0f, 0f, -1f).endVertex();
 			}
 			case EAST -> {
 				final float u2 = stillTexture.getU(pUOffset + size.y * 16);
@@ -203,10 +202,10 @@ public final class RenderUtil {
 			case WEST -> {
 				final float u2 = stillTexture.getU(pUOffset + size.y * 16);
 				final float v2 = stillTexture.getV(pVOffset + size.z * 16);
-				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wdn).normal(-1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wds).normal(-1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wus).normal(-1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wun).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wdn).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wds).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wus).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wun).normal(-1f, 0f, 0f).endVertex();
 			}
 		}
 		poseStack.popPose();

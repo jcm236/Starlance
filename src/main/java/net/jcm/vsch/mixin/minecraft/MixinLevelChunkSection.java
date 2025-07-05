@@ -3,8 +3,10 @@ package net.jcm.vsch.mixin.minecraft;
 import net.jcm.vsch.accessor.INodeLevelChunkSection;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.pipe.level.NodeLevel;
 import net.jcm.vsch.util.EncodeHelper;
 
+import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
@@ -22,12 +24,17 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	@Unique
 	private int nodeCount = 0;
 
+	@Unique
+	private static short getBlockIndex(final int x, final int y, final int z) {
+		return (short)(x << 8 | z << 4 | y);
+	}
+
 	@Override
 	public PipeNode vsch$getNode(final int x, final int y, final int z, final int index) {
 		if (this.nodes == null) {
 			return null;
 		}
-		final PipeNode[] nodes = this.nodes[x << 8 | z << 4 | y];
+		final PipeNode[] nodes = this.nodes[getBlockIndex(x, y, z)];
 		return nodes == null ? null : nodes[index];
 	}
 
@@ -36,7 +43,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		if (this.nodes == null) {
 			return null;
 		}
-		final PipeNode[] nodes = this.nodes[x << 8 | z << 4 | y];
+		final PipeNode[] nodes = this.nodes[getBlockIndex(x, y, z)];
 		return nodes == null ? null : nodes;
 	}
 
@@ -45,7 +52,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		if (this.nodes == null) {
 			this.nodes = new PipeNode[LevelChunkSection.SECTION_SIZE][];
 		}
-		final int blockIndex = x << 8 | z << 4 | y;
+		final int blockIndex = getBlockIndex(x, y, z);
 		PipeNode[] nodes = this.nodes[blockIndex];
 		if (nodes == null) {
 			nodes = new PipeNode[NodePos.UNIQUE_INDEX_BOUND];
@@ -107,7 +114,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public void vsch$readNodes(final FriendlyByteBuf buf) {
+	public void vsch$readNodes(final NodeLevel level, final SectionPos sectionPos, final FriendlyByteBuf buf) {
 		final int maxRead = buf.readVarInt();
 		this.nodeCount = maxRead;
 		if (maxRead == 0) {
@@ -116,7 +123,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		}
 		this.nodes = new PipeNode[LevelChunkSection.SECTION_SIZE][];
 		int read = 0;
-		for (int blockIndex = 0; blockIndex < LevelChunkSection.SECTION_SIZE && read < maxRead; blockIndex++) {
+		for (short blockIndex = 0; blockIndex < LevelChunkSection.SECTION_SIZE && read < maxRead; blockIndex++) {
 			int bitset = EncodeHelper.readVarInt22(buf);
 			if (bitset == 0) {
 				continue;
@@ -126,7 +133,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 			for (int i = 0; bitset != 0; i++) {
 				if ((bitset & 1) != 0) {
 					read++;
-					final PipeNode node = PipeNode.readFrom(buf);
+					final PipeNode node = PipeNode.readFrom(level, NodePos.fromUniqueIndex(sectionPos.relativeToBlockPos(blockIndex), i), buf);
 					if (node == null) {
 						this.nodeCount--;
 					} else {
