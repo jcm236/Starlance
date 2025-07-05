@@ -65,10 +65,18 @@ public class VSCHEvents {
 		}
 	}
 
+	@SubscribeEvent
+	public static void onBlockUpdate(final BlockEvent.NeighborNotifyEvent event) {
+		if (!(event.getLevel() instanceof Level level)) {
+			return;
+		}
+		onBlockChange(level, event.getPos());
+	}
+
 	/**
 	 * Do not use BlockEvent.NeighborNotifyEvent here, since it won't trigger for shape update.
 	 */
-	public static void onBlockUpdate(final Level level, final BlockPos blockPos) {
+	public static void onBlockChange(final Level level, final BlockPos blockPos) {
 		if (level.isClientSide) {
 			return;
 		}

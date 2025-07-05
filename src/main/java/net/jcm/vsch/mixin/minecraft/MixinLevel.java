@@ -33,7 +33,7 @@ public abstract class MixinLevel implements ILevelAccessor {
 	@Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z", at = @At("RETURN"))
 	public void setBlock(final BlockPos pos, final BlockState newState, final int flags, final int maxUpdates, final CallbackInfoReturnable<Boolean> cir) {
 		if (cir.getReturnValueZ()) {
-			VSCHEvents.onBlockUpdate((Level)((Object)(this)), pos);
+			VSCHEvents.onBlockChange((Level)((Object)(this)), pos);
 		}
 	}
 }
