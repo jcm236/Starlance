@@ -19,6 +19,13 @@
 	"fluid_type.vsch.oxygen": "Liquid Oxygen",
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"item.vsch.wrench": "Wrench",
+	"pipe.vsch.corner_node": "Corner Node",
+	"pipe.vsch.limited_omni_node": "Limited Omni Node",
+	"pipe.vsch.limited_pull_node": "Limited Pull Node",
+	"pipe.vsch.limited_push_node": "Limited Push Node",
+	"pipe.vsch.omni_node": "Omni Node",
+	"pipe.vsch.oneway_node": "Check Valve",
+	"pipe.vsch.straight_node": "Straight Node",
 
 	"config.jade.plugin_vsch.gyro_component_config": "Gyro Mode Details",
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",

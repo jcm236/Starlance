@@ -5,6 +5,8 @@ import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.pipe.level.NodeLevel;
 import net.jcm.vsch.items.custom.WrenchItem;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class PipeNodeItem extends Item {
 	private final DyeColor color;
+	private String descriptionId = null;
 
 	protected PipeNodeItem(final DyeColor color, final Item.Properties props) {
 		super(props);
@@ -25,6 +28,26 @@ public abstract class PipeNodeItem extends Item {
 
 	public DyeColor getColor() {
 		return this.color;
+	}
+
+	protected abstract String getDescriptionName();
+
+	@Override
+	protected String getOrCreateDescriptionId() {
+		if (this.descriptionId == null) {
+			this.descriptionId = "pipe." + BuiltInRegistries.ITEM.getKey(this).getNamespace() + "." + this.getDescriptionName();
+		}
+		return this.descriptionId;
+	}
+
+	@Override
+	public Component getDescription() {
+		return Component.translatable("color.minecraft." + this.color).append(" ").append(Component.translatable(this.getDescriptionId()));
+	}
+
+	@Override
+	public Component getName(final ItemStack stack) {
+		return Component.translatable("color.minecraft." + this.color).append(" ").append(Component.translatable(this.getDescriptionId(stack)));
 	}
 
 	public abstract PipeNode getPipeNode(final ItemStack stack);

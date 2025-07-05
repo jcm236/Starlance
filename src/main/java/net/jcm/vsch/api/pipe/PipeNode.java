@@ -76,18 +76,20 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	}
 
 	public enum Type {
-		// Can connect, push, or pull for all directions
+		// Can connect to all directions; push/pull for all directions
 		OMNI(0x0),
-		// Can only connect on two opposite directions, push/pull for all directions
+		// Can only connect on two opposite directions; push/pull for all directions
 		STRAIGHT(0x1),
-		// Can only connect on two perpendicular directions, push/pull for all directions
+		// Can only connect on two perpendicular directions; push/pull for all directions
 		CORNER(0x2),
-		// Can only transfer from one direction to its opposite direction, push/pull for all directions
+		// Can only connect & transfer from one direction to its opposite direction; no interact with machine
 		ONEWAY(0x3),
-		// Can connect on all directions, but only one side can push to machine
-		LIMIT_PUSH(0x4),
-		// Can connect on all directions, but only one side can pull from machine
-		LIMIT_PULL(0x5),
+		// Can connect on all directions; no interact with machine
+		LIMITED_OMNI(0x4),
+		// Can connect on all directions; only one side can push to machine
+		LIMITED_PUSH(0x5),
+		// Can connect on all directions; only one side can pull from machine
+		LIMITED_PULL(0x6),
 		// Custom node
 		CUSTOM(0xf);
 

@@ -22,6 +22,11 @@ public final class OmniNodeItem extends PipeNodeItem {
 	}
 
 	@Override
+	protected String getDescriptionName() {
+		return "omni_node";
+	}
+
+	@Override
 	public PipeNode getPipeNode(final ItemStack stack) {
 		return OmniNode.getByColor(this.getColor());
 	}
