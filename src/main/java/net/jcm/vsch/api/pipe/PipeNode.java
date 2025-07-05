@@ -63,16 +63,19 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	public abstract ModelTextures getModel();
 
 	/**
+	 * @param dir Direction of another pipe node
 	 * @return if pipes can connect from the direction
 	 */
 	public abstract boolean canConnect(Direction dir);
 
 	/**
+	 * @param dir Direction contents flowing from
 	 * @return if contents can flow from the direction
 	 */
 	public abstract boolean canFlowIn(Direction dir);
 
 	/**
+	 * @param dir Direction contents flowing towards to
 	 * @return if contents can flow towards the direction
 	 */
 	public abstract boolean canFlowOut(Direction dir);
@@ -90,8 +93,9 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	 * @param dir Direction the fluid flowing towards to
 	 * @param fluid The fluid
 	 * @return How fast can the fluid transfer in mB/tick
+	 *
 	 * @see getWaterFlowRate
-	 * @see canFluidFlow
+	 * @see canFlowOut
 	 */
 	public int fluidFlowAmount(final Direction dir, final Fluid fluid) {
 		if (!this.canFlowOut(dir)) {
