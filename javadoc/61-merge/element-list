@@ -3,6 +3,7 @@ net.jcm.vsch.accessor
 net.jcm.vsch.api.block
 net.jcm.vsch.api.force
 net.jcm.vsch.api.pipe
+net.jcm.vsch.api.pipe.capability
 net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
 net.jcm.vsch.blocks.custom

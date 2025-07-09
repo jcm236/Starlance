@@ -113,12 +113,19 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final net.minecraft.world.level.Level</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevel()" class="member-name-link">getLevel</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode(net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">getNode</a><wbr>(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../PipeNetworkOperator.html" title="class in net.jcm.vsch.pipe">PipeNetworkOperator</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNetwork()" class="member-name-link">getNetwork</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodeChunk(int,int)" class="member-name-link">getNodeChunk</a><wbr>(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode(net.jcm.vsch.api.pipe.NodePos)" class="member-name-link">getNode</a><wbr>(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodeChunk(int,int)" class="member-name-link">getNodeChunk</a><wbr>(int&nbsp;x,
  int&nbsp;z)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../api/pipe/capability/NodePort.html" title="interface in net.jcm.vsch.api.pipe.capability">NodePort</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodePort(net.minecraft.core.BlockPos,net.jcm.vsch.api.pipe.RelativeNodePos)" class="member-name-link">getNodePort</a><wbr>(net.minecraft.core.BlockPos&nbsp;blockPos,
+ <a href="../../api/pipe/RelativeNodePos.html" title="class in net.jcm.vsch.api.pipe">RelativeNodePos</a>&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodesOn(net.minecraft.core.BlockPos)" class="member-name-link">getNodesOn</a><wbr>(net.minecraft.core.BlockPos&nbsp;blockPos)</code></div>
@@ -180,6 +187,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getNetwork()">
+<h3>getNetwork</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../PipeNetworkOperator.html" title="class in net.jcm.vsch.pipe">PipeNetworkOperator</a></span>&nbsp;<span class="element-name">getNetwork</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getNodeChunk(int,int)">
 <h3>getNodeChunk</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="NodeGetter.html" title="interface in net.jcm.vsch.pipe.level">NodeGetter</a></span>&nbsp;<span class="element-name">getNodeChunk</span><wbr><span class="parameters">(int&nbsp;x,
@@ -203,6 +216,13 @@ loadScripts(document, 'script');</script>
 <h3>setNode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNode</span><wbr><span class="parameters">(<a href="../../api/pipe/NodePos.html" title="class in net.jcm.vsch.api.pipe">NodePos</a>&nbsp;pos,
  <a href="../../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&nbsp;node)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNodePort(net.minecraft.core.BlockPos,net.jcm.vsch.api.pipe.RelativeNodePos)">
+<h3>getNodePort</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../api/pipe/capability/NodePort.html" title="interface in net.jcm.vsch.api.pipe.capability">NodePort</a></span>&nbsp;<span class="element-name">getNodePort</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;blockPos,
+ <a href="../../api/pipe/RelativeNodePos.html" title="class in net.jcm.vsch.api.pipe">RelativeNodePos</a>&nbsp;pos)</span></div>
 </section>
 </li>
 </ul>
