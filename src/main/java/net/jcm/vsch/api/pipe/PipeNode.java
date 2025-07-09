@@ -3,7 +3,7 @@ package net.jcm.vsch.api.pipe;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.resource.ModelTextures;
 import net.jcm.vsch.pipe.OmniNode;
-import net.jcm.vsch.pipe.PipeNetwork;
+import net.jcm.vsch.pipe.PipeNetworkOperator;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
 import net.minecraft.core.Direction;
@@ -21,9 +21,12 @@ import org.apache.logging.log4j.Logger;
 public abstract class PipeNode<T extends PipeNode<T>> {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
+	/**
+	 * module private
+	 */
+	public final PipeNetworkOperator.RelationHolder relation = new PipeNetworkOperator.RelationHolder();
 	private final NodeLevel level;
 	private final NodePos pos;
-	private PipeNetwork network = new PipeNetwork();
 	private final Type type;
 	private DyeColor color = DyeColor.WHITE;
 
@@ -31,7 +34,6 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 		this.level = level;
 		this.pos = pos;
 		this.type = type;
-		this.network.addNode(pos);
 	}
 
 	public final NodeLevel getLevel() {
@@ -69,16 +71,10 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	public abstract boolean canConnect(Direction dir);
 
 	/**
-	 * @param dir Direction contents flowing from
-	 * @return if contents can flow from the direction
+	 * @param dir Direction contents tring to interact with
+	 * @return {@link FlowDirection}
 	 */
-	public abstract boolean canFlowIn(Direction dir);
-
-	/**
-	 * @param dir Direction contents flowing towards to
-	 * @return if contents can flow towards the direction
-	 */
-	public abstract boolean canFlowOut(Direction dir);
+	public abstract FlowDirection getFlowDirection(Direction dir);
 
 	/**
 	 * Water flow rate used to calculate other fluids flow rate based on their viscosity.
@@ -95,10 +91,10 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	 * @return How fast can the fluid transfer in mB/tick
 	 *
 	 * @see getWaterFlowRate
-	 * @see canFlowOut
+	 * @see getFlowDirection
 	 */
 	public int fluidFlowAmount(final Direction dir, final Fluid fluid) {
-		if (!this.canFlowOut(dir)) {
+		if (!this.getFlowDirection(dir).canFlowOut()) {
 			return 0;
 		}
 		return this.getWaterFlowRate() * ForgeMod.WATER_TYPE.get().getViscosity() / fluid.getFluidType().getViscosity();

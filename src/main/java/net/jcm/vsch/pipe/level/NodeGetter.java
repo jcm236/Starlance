@@ -9,7 +9,7 @@ public interface NodeGetter {
 
 	PipeNode[] getNodes(int x, int y, int z);
 
-	void setNode(int x, int y, int z, int index, PipeNode node);
+	PipeNode setNode(int x, int y, int z, int index, PipeNode node);
 
 	boolean hasAnyNode();
 

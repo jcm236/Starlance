@@ -1,15 +1,21 @@
 package net.jcm.vsch.pipe.level;
 
+import net.jcm.vsch.VSCHCapabilities;
 import net.jcm.vsch.accessor.ILevelAccessor;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
+import net.jcm.vsch.api.pipe.RelativeNodePos;
+import net.jcm.vsch.api.pipe.capability.INodePortProvider;
+import net.jcm.vsch.api.pipe.capability.NodePort;
 import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.network.s2c.PipeNodeUpdateS2C;
+import net.jcm.vsch.pipe.PipeNetworkOperator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.List;
@@ -17,6 +23,7 @@ import java.util.Objects;
 
 public class NodeLevel {
 	private final Level level;
+	private final PipeNetworkOperator network = new PipeNetworkOperator(this);
 
 	/**
 	 * DO NOT initialize, use {@link get} instead.
@@ -33,6 +40,10 @@ public class NodeLevel {
 
 	public final Level getLevel() {
 		return this.level;
+	}
+
+	public final PipeNetworkOperator getNetwork() {
+		return this.network;
 	}
 
 	protected NodeGetter getNodeChunk(final int x, final int z) {
@@ -71,15 +82,33 @@ public class NodeLevel {
 		if (getter == null) {
 			return;
 		}
-		getter.setNode(
+		final PipeNode oldNode = getter.setNode(
 			SectionPos.sectionRelative(x),
 			y,
 			SectionPos.sectionRelative(z),
 			pos.uniqueIndex(),
 			node
 		);
+		if (oldNode != null) {
+			this.network.onNodeRemove(oldNode);
+		}
+		if (node != null) {
+			this.network.onNodeJoin(node);
+		}
 		if (this.level instanceof ServerLevel serverLevel) {
 			VSCHNetwork.sendToTracking(PipeNodeUpdateS2C.fromNode(pos, node), serverLevel, blockPos);
 		}
+	}
+
+	public NodePort getNodePort(final BlockPos blockPos, final RelativeNodePos pos) {
+		final BlockEntity be = this.level.getBlockEntity(blockPos);
+		if (be == null) {
+			return null;
+		}
+		final INodePortProvider provider = be.getCapability(VSCHCapabilities.PORT_PROVIDER).orElse(null);
+		if (provider == null) {
+			return null;
+		}
+		return provider.getNodePort(pos);
 	}
 }

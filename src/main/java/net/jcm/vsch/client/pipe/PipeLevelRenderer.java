@@ -248,14 +248,14 @@ public class PipeLevelRenderer {
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
 		final double r = size / 2;
-		lightMap.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, r))));
-		lightMap.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, r))));
-		lightMap.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, r, -r))));
-		lightMap.setUNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, r, -r))));
-		lightMap.setDSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, r))));
-		lightMap.setDSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, r))));
-		lightMap.setDNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(r, -r, -r))));
-		lightMap.setDNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.add(-r, -r, -r))));
+		lightMap.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y + r)));
+		lightMap.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y + r, nodeCenter.y + r)));
+		lightMap.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y - r)));
+		lightMap.setUNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y + r, nodeCenter.y - r)));
+		lightMap.setDSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y - r, nodeCenter.y + r)));
+		lightMap.setDSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y - r, nodeCenter.y + r)));
+		lightMap.setDNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y - r, nodeCenter.y - r)));
+		lightMap.setDNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y - r, nodeCenter.y - r)));
 
 		final RenderUtil.BoxLightMap blockLightMap = lightMap.getBlockLightMap();
 		final RenderUtil.BoxLightMap skyLightMap = lightMap.getSkyLightMap();

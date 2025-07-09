@@ -227,4 +227,57 @@ public record NodePos(
 		}
 		return Stream.of(axises);
 	}
+
+	public RelativeNodePos asRelative(final BlockPos blockPos) {
+		if (this.blockPos.equals(blockPos)) {
+			return new RelativeNodePos(
+				this.axis.choose(this.index, 0, 0),
+				this.axis.choose(0, this.index, 0),
+				this.axis.choose(0, 0, this.index)
+			);
+		}
+		final int xIndex = this.blockPos.getX() == blockPos.getX() ? 0 : this.blockPos.getX() == blockPos.getX() + 1 ? INDEX_BOUND : -1;
+		final int yIndex = this.blockPos.getY() == blockPos.getY() ? 0 : this.blockPos.getY() == blockPos.getY() + 1 ? INDEX_BOUND : -1;
+		final int zIndex = this.blockPos.getZ() == blockPos.getZ() ? 0 : this.blockPos.getZ() == blockPos.getZ() + 1 ? INDEX_BOUND : -1;
+		if (xIndex != -1 && yIndex != -1 && zIndex != -1) {
+			if (this.isOrigin()) {
+				return new RelativeNodePos(xIndex, yIndex, zIndex);
+			}
+			switch (this.axis) {
+				case X -> {
+					if (xIndex == 0) {
+						return new RelativeNodePos(this.index, yIndex, zIndex);
+					}
+				}
+				case Y -> {
+					if (yIndex == 0) {
+						return new RelativeNodePos(xIndex, this.index, zIndex);
+					}
+				}
+				case Z -> {
+					if (zIndex == 0) {
+						return new RelativeNodePos(xIndex, yIndex, this.index);
+					}
+				}
+			}
+		}
+		throw new IllegalArgumentException("Invalid base block pos " + blockPos + " to find relative of " + this.toString());
+	}
+
+	public Stream<BlockPos> streamTouchingBlocks() {
+		final double size = 4.0 / 16;
+		final double r = size / 2;
+		final Vec3 centerPos = this.getCenter();
+		return Stream.of(
+			BlockPos.containing(centerPos.x + r, centerPos.y + r, centerPos.y + r),
+			BlockPos.containing(centerPos.x - r, centerPos.y + r, centerPos.y + r),
+			BlockPos.containing(centerPos.x + r, centerPos.y + r, centerPos.y - r),
+			BlockPos.containing(centerPos.x - r, centerPos.y + r, centerPos.y - r),
+			BlockPos.containing(centerPos.x + r, centerPos.y - r, centerPos.y + r),
+			BlockPos.containing(centerPos.x - r, centerPos.y - r, centerPos.y + r),
+			BlockPos.containing(centerPos.x + r, centerPos.y - r, centerPos.y - r),
+			BlockPos.containing(centerPos.x - r, centerPos.y - r, centerPos.y - r)
+		)
+			.distinct();
+	}
 }

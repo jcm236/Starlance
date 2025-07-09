@@ -48,7 +48,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public void vsch$setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
+	public PipeNode vsch$setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
 		if (this.nodes == null) {
 			this.nodes = new PipeNode[LevelChunkSection.SECTION_SIZE][];
 		}
@@ -69,6 +69,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 		} else if (hasNew) {
 			this.nodeCount++;
 		}
+		return oldNode;
 	}
 
 	@Override
@@ -115,6 +116,22 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 
 	@Override
 	public void vsch$readNodes(final NodeLevel level, final SectionPos sectionPos, final FriendlyByteBuf buf) {
+		if (this.nodeCount > 0) {
+			final int maxCount = this.nodeCount;
+			int count = 0;
+			for (int blockIndex = 0; blockIndex < LevelChunkSection.SECTION_SIZE && count < maxCount; blockIndex++) {
+				final PipeNode[] nodes = this.nodes[blockIndex];
+				if (nodes == null) {
+					continue;
+				}
+				for (final PipeNode node : nodes) {
+					if (node != null) {
+						count++;
+						level.getNetwork().onNodeRemove(node);
+					}
+				}
+			}
+		}
 		final int maxRead = buf.readVarInt();
 		this.nodeCount = maxRead;
 		if (maxRead == 0) {
@@ -138,6 +155,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 						this.nodeCount--;
 					} else {
 						nodes[i] = node;
+						level.getNetwork().onNodeJoin(node);
 					}
 				}
 				bitset >>>= 1;

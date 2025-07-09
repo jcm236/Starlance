@@ -14,7 +14,7 @@ public interface INodeLevelChunkSection {
 	 */
 	PipeNode[] vsch$getNodes(int x, int y, int z);
 
-	void vsch$setNode(int x, int y, int z, int index, PipeNode node);
+	PipeNode vsch$setNode(int x, int y, int z, int index, PipeNode node);
 
 	boolean vsch$hasAnyNode();
 

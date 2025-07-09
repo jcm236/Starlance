@@ -1,6 +1,7 @@
 package net.jcm.vsch.pipe;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.api.pipe.FlowDirection;
 import net.jcm.vsch.api.pipe.NodePos;
 import net.jcm.vsch.api.pipe.PipeNode;
 import net.jcm.vsch.api.resource.ModelTextures;
@@ -46,13 +47,8 @@ public class OmniNode extends PipeNode<OmniNode> {
 	}
 
 	@Override
-	public boolean canFlowIn(final Direction dir) {
-		return true;
-	}
-
-	@Override
-	public boolean canFlowOut(final Direction dir) {
-		return true;
+	public FlowDirection getFlowDirection(final Direction dir) {
+		return FlowDirection.BOTH;
 	}
 
 	@Override

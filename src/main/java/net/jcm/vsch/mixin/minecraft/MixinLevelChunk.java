@@ -59,13 +59,14 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 	}
 
 	@Override
-	public void setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
+	public PipeNode setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
 		final INodeLevelChunkSection nodeSection = this.getNodeSectionAtBlock(y);
 		if (nodeSection == null) {
-			return;
+			return null;
 		}
-		nodeSection.vsch$setNode(x, SectionPos.sectionRelative(y), z, index, node);
+		final PipeNode oldNode = nodeSection.vsch$setNode(x, SectionPos.sectionRelative(y), z, index, node);
 		this.setNodesUnsaved();
+		return oldNode;
 	}
 
 	@Override
