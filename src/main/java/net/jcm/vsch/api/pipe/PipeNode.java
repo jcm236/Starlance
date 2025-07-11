@@ -71,7 +71,13 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	public abstract boolean canConnect(Direction dir);
 
 	/**
-	 * @param dir Direction contents tring to interact with
+	 * @param dir Block direction contents tring to interact with
+	 * @return {@link FlowDirection}
+	 */
+	public abstract FlowDirection getAccessFlowDirection(Direction dir);
+
+	/**
+	 * @param dir Pipe direction contents tring to interact with
 	 * @return {@link FlowDirection}
 	 */
 	public abstract FlowDirection getFlowDirection(Direction dir);

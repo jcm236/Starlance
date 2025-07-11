@@ -1,21 +1,30 @@
 package net.jcm.vsch.api.pipe.capability;
 
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.fluids.FluidStack;
 
 public interface NodeFluidPort extends NodePort {
 	/**
-	 * @param fluid    The type of the fluid pushing
-	 * @param amount   The amount of the fluid pushing
+	 * Check the fluid the port may interact with.
+	 * If the raw type of the fluid stack is {@link Fluids#EMPTY}, any fluids may push to the port and no fluids can be pulled.
+	 * Otherwise, the port may only accept that type of fluid.
+	 *
+	 * @return The fluid the port may interact with.
+	 */
+	FluidStack peekFluid();
+
+	/**
+	 * @param stack    The fluid pushing
 	 * @param simulate If this is a simulate action
 	 * @return The actual amount of fluid pushed
 	 */
-	int pushFluid(Fluid fluid, int amount, boolean simulate);
+	int pushFluid(FluidStack stack, boolean simulate);
 
 	/**
-	 * @param fluid    The type of the fluid pulling
-	 * @param amount   The amount of the fluid pulling
+	 * @param amount   The maximum amount of the fluid pulling
 	 * @param simulate If this is a simulate action
-	 * @return The actual amount of fluid pulled
+	 * @return The actual fluid pulled
 	 */
-	int pullFluid(Fluid fluid, int amount, boolean simulate);
+	FluidStack pullFluid(int amount, boolean simulate);
 }

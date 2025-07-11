@@ -120,6 +120,12 @@ public record NodePos(
 		);
 	}
 
+	public double manhattanDistTo(final NodePos other) {
+		final Vec3 center = this.getCenter();
+		final Vec3 otherCenter = other.getCenter();
+		return Math.abs(center.x - otherCenter.x) + Math.abs(center.y - otherCenter.y) + Math.abs(center.z - otherCenter.z);
+	}
+
 	public AABB getAABB(final double size) {
 		final double r = size / 2;
 		final Vec3 center = this.getCenter();

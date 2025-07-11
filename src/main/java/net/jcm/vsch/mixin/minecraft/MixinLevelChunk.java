@@ -19,6 +19,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 @Mixin(LevelChunk.class)
 public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter, NodeGetter {
 	@Unique
@@ -67,6 +73,34 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		final PipeNode oldNode = nodeSection.vsch$setNode(x, SectionPos.sectionRelative(y), z, index, node);
 		this.setNodesUnsaved();
 		return oldNode;
+	}
+
+	@Override
+	public Stream<PipeNode> streamNodes() {
+		final LevelChunkSection[] sections = this.getSections();
+		return IntStream.range(0, sections.length)
+			.mapToObj((sectionIndex) -> {
+				final LevelChunkSection section = sections[sectionIndex];
+				if (!(section instanceof INodeLevelChunkSection nodeSection)) {
+					return null;
+				}
+				if (!nodeSection.vsch$hasAnyNode()) {
+					return null;
+				}
+				return IntStream.range(0, 16 * 16 * 16)
+					.mapToObj((index) -> {
+						final int x = index & 0xf, y = (index >> 8) & 0xf, z = (index >> 4) & 0xf;
+						PipeNode[] nodes = nodeSection.vsch$getNodes(x, y, z);
+						if (nodes == null) {
+							return null;
+						}
+						return Arrays.stream(nodes).filter(Objects::nonNull);
+					})
+					.filter(Objects::nonNull)
+					.flatMap(Function.identity());
+			})
+			.filter(Objects::nonNull)
+			.flatMap(Function.identity());
 	}
 
 	@Override

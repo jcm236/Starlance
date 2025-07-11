@@ -4,7 +4,7 @@ import net.jcm.vsch.api.pipe.FlowDirection;
 
 public interface NodePort {
 	/**
-	 * @return pressure on the port
+	 * @return pressure on the port, cannot be less than {@code 0}
 	 */
 	double getPressure();
 

@@ -28,18 +28,23 @@ import net.minecraftforge.fml.common.Mod;
 public class VSCHEvents {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onServerTick(final TickEvent.ServerTickEvent event) {
-		if (event.phase != TickEvent.Phase.END) {
+	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
+		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
-		for (final ServerLevel level : event.getServer().getAllLevels()) {
-			if (level.getPlayers(player -> true, 1).isEmpty()) {
-				// skip if the no player is in the world
-				// TODO: maybe we'll have automated ships in the future and this need to be removed?
-				continue;
+		switch (event.phase) {
+			case START -> {
+				NodeLevel.get(serverLevel).getNetwork().onTick();
 			}
-			AtmosphericCollision.atmosphericCollisionTick(level);
-			PlanetCollision.planetCollisionTick(level);
+			case END -> {
+				if (serverLevel.getPlayers(player -> true, 1).isEmpty()) {
+					// skip if the no player is in the world
+					// TODO: maybe we'll have automated ships in the future and this need to be removed?
+					return;
+				}
+				AtmosphericCollision.atmosphericCollisionTick(serverLevel);
+				PlanetCollision.planetCollisionTick(serverLevel);
+			}
 		}
 	}
 

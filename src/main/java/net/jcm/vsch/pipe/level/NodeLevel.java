@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.List;
 import java.util.Objects;
@@ -100,15 +101,17 @@ public class NodeLevel {
 		}
 	}
 
-	public NodePort getNodePort(final BlockPos blockPos, final RelativeNodePos pos) {
+	public LazyOptional<NodePort> getNodePort(final BlockPos blockPos, final RelativeNodePos pos) {
 		final BlockEntity be = this.level.getBlockEntity(blockPos);
 		if (be == null) {
-			return null;
+			return LazyOptional.empty();
 		}
-		final INodePortProvider provider = be.getCapability(VSCHCapabilities.PORT_PROVIDER).orElse(null);
-		if (provider == null) {
-			return null;
+		final LazyOptional<INodePortProvider> lazyProvider = be.getCapability(VSCHCapabilities.PORT_PROVIDER);
+		if (!lazyProvider.isPresent()) {
+			return LazyOptional.empty();
 		}
-		return provider.getNodePort(pos);
+		final LazyOptional<NodePort> lazyPort = lazyProvider.lazyMap((provider) -> provider.getNodePort(pos));
+		lazyProvider.addListener((lazyProviderAccess) -> lazyPort.invalidate());
+		return lazyPort;
 	}
 }

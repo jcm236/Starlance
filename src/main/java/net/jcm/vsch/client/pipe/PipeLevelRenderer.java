@@ -214,37 +214,12 @@ public class PipeLevelRenderer {
 		if (!nodeGetter.hasAnyNode()) {
 			return;
 		}
-		final ChunkPos chunkPos = chunk.getPos();
-		int sectionIndex = 0;
-		for (final LevelChunkSection section : chunk.getSections()) {
-			sectionIndex++;
-			if (!(section instanceof INodeLevelChunkSection nodeSection)) {
-				continue;
-			}
-			if (!nodeSection.vsch$hasAnyNode()) {
-				continue;
-			}
-			final int sectionY = chunk.getSectionYFromSectionIndex(sectionIndex - 1);
-			final SectionPos sectionPos = SectionPos.of(chunkPos, sectionY);
-			final BlockPos sectionOrigin = sectionPos.origin();
-			for (int index = 0; index < 16 * 16 * 16; index++) {
-				final int x = index & 0xf, y = (index >> 8) & 0xf, z = (index >> 4) & 0xf;
-				PipeNode[] nodes = nodeSection.vsch$getNodes(x, y, z);
-				if (nodes == null) {
-					continue;
-				}
-				for (int i = 0; i < NodePos.UNIQUE_INDEX_BOUND; i++) {
-					final PipeNode node = nodes[i];
-					if (node != null) {
-						renderNode(level, poseStack, vertexBuilder, view, NodePos.fromUniqueIndex(sectionOrigin.offset(x, y, z), i), node);
-					}
-				}
-			}
-		}
+		nodeGetter.streamNodes().forEach((node) -> renderNode(level, poseStack, vertexBuilder, view, node));
 	}
 
-	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final PipeNode node) {
+	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final PipeNode node) {
 		final double size = node.getSize();
+		final NodePos pos = node.getPos();
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
 		final double r = size / 2;

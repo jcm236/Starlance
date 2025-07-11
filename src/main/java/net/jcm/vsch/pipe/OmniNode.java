@@ -47,6 +47,11 @@ public class OmniNode extends PipeNode<OmniNode> {
 	}
 
 	@Override
+	public FlowDirection getAccessFlowDirection(final Direction dir) {
+		return FlowDirection.BOTH;
+	}
+
+	@Override
 	public FlowDirection getFlowDirection(final Direction dir) {
 		return FlowDirection.BOTH;
 	}
