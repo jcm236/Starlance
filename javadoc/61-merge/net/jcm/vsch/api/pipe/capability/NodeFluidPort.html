@@ -93,16 +93,19 @@ extends <a href="NodePort.html" title="interface in net.jcm.vsch.api.pipe.capabi
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#pullFluid(net.minecraft.world.level.material.Fluid,int,boolean)" class="member-name-link">pullFluid</a><wbr>(net.minecraft.world.level.material.Fluid&nbsp;fluid,
- int&nbsp;amount,
- boolean&nbsp;simulate)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#pushFluid(net.minecraft.world.level.material.Fluid,int,boolean)" class="member-name-link">pushFluid</a><wbr>(net.minecraft.world.level.material.Fluid&nbsp;fluid,
- int&nbsp;amount,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraftforge.fluids.FluidStack</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#peekFluid()" class="member-name-link">peekFluid</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Check the fluid the port may interact with.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>net.minecraftforge.fluids.FluidStack</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#pullFluid(int,boolean)" class="member-name-link">pullFluid</a><wbr>(int&nbsp;amount,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#pushFluid(net.minecraftforge.fluids.FluidStack,boolean)" class="member-name-link">pushFluid</a><wbr>(net.minecraftforge.fluids.FluidStack&nbsp;stack,
+ boolean&nbsp;simulate)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -121,15 +124,26 @@ extends <a href="NodePort.html" title="interface in net.jcm.vsch.api.pipe.capabi
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="pushFluid(net.minecraft.world.level.material.Fluid,int,boolean)">
+<section class="detail" id="peekFluid()">
+<h3>peekFluid</h3>
+<div class="member-signature"><span class="return-type">net.minecraftforge.fluids.FluidStack</span>&nbsp;<span class="element-name">peekFluid</span>()</div>
+<div class="block">Check the fluid the port may interact with.
+ If the raw type of the fluid stack is <code>Fluids.EMPTY</code>, any fluids may push to the port and no fluids can be pulled.
+ Otherwise, the port may only accept that type of fluid.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The fluid the port may interact with.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="pushFluid(net.minecraftforge.fluids.FluidStack,boolean)">
 <h3>pushFluid</h3>
-<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">pushFluid</span><wbr><span class="parameters">(net.minecraft.world.level.material.Fluid&nbsp;fluid,
- int&nbsp;amount,
+<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">pushFluid</span><wbr><span class="parameters">(net.minecraftforge.fluids.FluidStack&nbsp;stack,
  boolean&nbsp;simulate)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fluid</code> - The type of the fluid pushing</dd>
-<dd><code>amount</code> - The amount of the fluid pushing</dd>
+<dd><code>stack</code> - The fluid pushing</dd>
 <dd><code>simulate</code> - If this is a simulate action</dd>
 <dt>Returns:</dt>
 <dd>The actual amount of fluid pushed</dd>
@@ -137,18 +151,16 @@ extends <a href="NodePort.html" title="interface in net.jcm.vsch.api.pipe.capabi
 </section>
 </li>
 <li>
-<section class="detail" id="pullFluid(net.minecraft.world.level.material.Fluid,int,boolean)">
+<section class="detail" id="pullFluid(int,boolean)">
 <h3>pullFluid</h3>
-<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">pullFluid</span><wbr><span class="parameters">(net.minecraft.world.level.material.Fluid&nbsp;fluid,
- int&nbsp;amount,
+<div class="member-signature"><span class="return-type">net.minecraftforge.fluids.FluidStack</span>&nbsp;<span class="element-name">pullFluid</span><wbr><span class="parameters">(int&nbsp;amount,
  boolean&nbsp;simulate)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>fluid</code> - The type of the fluid pulling</dd>
-<dd><code>amount</code> - The amount of the fluid pulling</dd>
+<dd><code>amount</code> - The maximum amount of the fluid pulling</dd>
 <dd><code>simulate</code> - If this is a simulate action</dd>
 <dt>Returns:</dt>
-<dd>The actual amount of fluid pulled</dd>
+<dd>The actual fluid pulled</dd>
 </dl>
 </section>
 </li>

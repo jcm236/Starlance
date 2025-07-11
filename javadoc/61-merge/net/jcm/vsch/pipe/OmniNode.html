@@ -136,14 +136,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#energyFlowAmount(net.minecraft.core.Direction)" class="member-name-link">energyFlowAmount</a><wbr>(net.minecraft.core.Direction&nbsp;dir)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe">FlowDirection</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFlowDirection(net.minecraft.core.Direction)" class="member-name-link">getFlowDirection</a><wbr>(net.minecraft.core.Direction&nbsp;dir)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAccessFlowDirection(net.minecraft.core.Direction)" class="member-name-link">getAccessFlowDirection</a><wbr>(net.minecraft.core.Direction&nbsp;dir)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getModel()" class="member-name-link">getModel</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe">FlowDirection</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFlowDirection(net.minecraft.core.Direction)" class="member-name-link">getFlowDirection</a><wbr>(net.minecraft.core.Direction&nbsp;dir)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaterFlowRate()" class="member-name-link">getWaterFlowRate</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getModel()" class="member-name-link">getModel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaterFlowRate()" class="member-name-link">getWaterFlowRate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Water flow rate used to calculate other fluids flow rate based on their viscosity.</div>
 </div>
 </div>
@@ -216,6 +219,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getAccessFlowDirection(net.minecraft.core.Direction)">
+<h3>getAccessFlowDirection</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe">FlowDirection</a></span>&nbsp;<span class="element-name">getAccessFlowDirection</span><wbr><span class="parameters">(net.minecraft.core.Direction&nbsp;dir)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../api/pipe/PipeNode.html#getAccessFlowDirection(net.minecraft.core.Direction)">getAccessFlowDirection</a></code>&nbsp;in class&nbsp;<code><a href="../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</code></dd>
+<dt>Parameters:</dt>
+<dd><code>dir</code> - Block direction contents tring to interact with</dd>
+<dt>Returns:</dt>
+<dd><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe"><code>FlowDirection</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getFlowDirection(net.minecraft.core.Direction)">
 <h3>getFlowDirection</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe">FlowDirection</a></span>&nbsp;<span class="element-name">getFlowDirection</span><wbr><span class="parameters">(net.minecraft.core.Direction&nbsp;dir)</span></div>
@@ -223,7 +240,7 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code><a href="../api/pipe/PipeNode.html#getFlowDirection(net.minecraft.core.Direction)">getFlowDirection</a></code>&nbsp;in class&nbsp;<code><a href="../api/pipe/PipeNode.html" title="class in net.jcm.vsch.api.pipe">PipeNode</a>&lt;<a href="OmniNode.html" title="class in net.jcm.vsch.pipe">OmniNode</a>&gt;</code></dd>
 <dt>Parameters:</dt>
-<dd><code>dir</code> - Direction contents tring to interact with</dd>
+<dd><code>dir</code> - Pipe direction contents tring to interact with</dd>
 <dt>Returns:</dt>
 <dd><a href="../api/pipe/FlowDirection.html" title="enum class in net.jcm.vsch.api.pipe"><code>FlowDirection</code></a></dd>
 </dl>
