@@ -12,17 +12,16 @@ import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber
 public class VSCHEvents {
@@ -56,7 +55,7 @@ public class VSCHEvents {
 	// For next vs update
 	//	@SubscribeEvent
 	//	public static void shipLoad(VSEvents.ShipLoadEvent event) {
-	////		Gravity.setAll(event.getServer().overworld());
+	//		Gravity.setAll(event.getServer().overworld());
 	//	}
 
 	@SubscribeEvent
@@ -86,18 +85,9 @@ public class VSCHEvents {
 			return;
 		}
 		final NodeLevel nodeLevel = NodeLevel.get(level);
-		for (final PipeNode node : nodeLevel.getNodesOn(blockPos)) {
-			if (node.canAnchor()) {
-				continue;
-			}
-			final NodePos pos = node.getPos();
-			nodeLevel.setNode(pos, null);
-			final ItemStack stack = node.asItemStack();
-			if (stack.isEmpty()) {
-				continue;
-			}
-			final Vec3 center = pos.getCenter();
-			level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack));
-		}
+		nodeLevel.streamNodesOn(blockPos)
+			.filter(Predicate.not(PipeNode::canAnchor))
+			.map(PipeNode::getPos)
+			.forEach(nodeLevel::breakNode);
 	}
 }

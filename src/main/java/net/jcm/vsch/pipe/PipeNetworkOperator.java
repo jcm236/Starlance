@@ -11,6 +11,7 @@ import net.jcm.vsch.pipe.level.NodeGetter;
 import net.jcm.vsch.pipe.level.NodeLevel;
 import net.jcm.vsch.util.Pair;
 
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,8 +20,10 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
@@ -41,17 +44,29 @@ public class PipeNetworkOperator {
 
 	public void onNodeRemove(final PipeNode node) {
 		final NodePos nodePos = node.getPos();
-		for (final NodePos otherPos : node.relation.connections) {
+		for (final NodePos otherPos : node.relation.connections.keySet()) {
 			final PipeNode other = this.level.getNode(otherPos);
 			if (other != null) {
 				other.relation.connections.remove(nodePos);
-				other.relation.flows.remove(nodePos);
 			}
 		}
 	}
 
 	public void onNodeJoin(final PipeNode node) {
-		//
+		final NodePos pos = node.getPos();
+		pos.streamPossibleToConnect()
+			.map(this.level::getNode)
+			.filter(Objects::nonNull)
+			.forEach((other) -> {
+				final NodePos otherPos = other.getPos();
+				final Direction[] connectPath = pos.connectPathTo(otherPos);
+				final Direction nodeOutDir = connectPath[0];
+				final Direction otherOutDir = connectPath[connectPath.length - 1].getOpposite();
+				if (!node.canConnect(nodeOutDir) || !other.canConnect(otherOutDir)) {
+					return;
+				}
+				this.connectNodes(node, nodeOutDir, other, otherOutDir);
+			});
 	}
 
 	public void onTick() {
@@ -73,6 +88,8 @@ public class PipeNetworkOperator {
 				}
 			}
 		}
+		this.conflicted.forEach(this.level::breakNode);
+		this.conflicted.clear();
 	}
 
 	public Stream<PipeNode> streamServerNodes() {
@@ -87,43 +104,19 @@ public class PipeNetworkOperator {
 	}
 
 	public Set<NodePos> getConnections(final PipeNode node) {
-		return Collections.unmodifiableSet(node.relation.connections);
+		return Collections.unmodifiableSet(node.relation.connections.keySet());
 	}
 
-	public boolean connectNodes(final PipeNode node1, final PipeNode node2) {
-		return node1.relation.connections.add(node2.getPos()) && node2.relation.connections.add(node1.getPos());
+	public boolean connectNodes(final PipeNode node1, final Direction dirToNode2, final PipeNode node2, final Direction dirToNode1) {
+		final boolean updated1 = node1.relation.connections.put(node2.getPos(), dirToNode2) != dirToNode2;
+		final boolean updated2 = node2.relation.connections.put(node1.getPos(), dirToNode1) != dirToNode1;
+		return updated1 || updated2;
 	}
 
 	public boolean disconnectNodes(final PipeNode node1, final PipeNode node2) {
-		if (!node1.relation.connections.remove(node2.getPos())) {
-			return false;
-		}
-		node2.relation.connections.remove(node1.getPos());
-		return true;
-	}
-
-	public Set<NodePos> getFlows(final PipeNode node) {
-		return Collections.unmodifiableSet(node.relation.flows);
-	}
-
-	public boolean canFlow(final PipeNode from, final NodePos to) {
-		return from.relation.flows.contains(to);
-	}
-
-	public boolean addFlow(final PipeNode from, final NodePos to) {
-		return from.relation.flows.add(to);
-	}
-
-	public boolean removeFlows(final PipeNode node) {
-		boolean ok = !node.relation.flows.isEmpty();
-		node.relation.flows.clear();
-		for (final NodePos otherPos : node.relation.connections) {
-			final PipeNode other = this.level.getNode(otherPos);
-			if (other != null) {
-				ok |= other.relation.flows.remove(node);
-			}
-		}
-		return ok;
+		final boolean removed1 = node1.relation.connections.remove(node2.getPos()) != null;
+		final boolean removed2 = node2.relation.connections.remove(node1.getPos()) != null;
+		return removed1 || removed2;
 	}
 
 	private void streamFluidFrom(final NodePos from, final NodeFluidPort fromPort) {
@@ -177,10 +170,18 @@ public class PipeNetworkOperator {
 				pendingOut.add(new Pair.RefDouble<>(fluidPort, flowRate));
 			}
 
-			for (final NodePos flowing : node.relation.flows) {
-				if (streamed.add(flowing)) {
-					queue.add(new Pair.RefDouble<>(flowing, dist + from.manhattanDistTo(flowing)));
+			for (final Map.Entry<NodePos, Direction> entry : node.relation.connections.entrySet()) {
+				final NodePos flowing = entry.getKey();
+				if (streamed.contains(flowing)) {
+					continue;
 				}
+				final PipeNode flowingNode = this.level.getNode(flowing);
+				final Direction outDir = entry.getValue();
+				if (flowingNode == null || !flowingNode.getFlowDirection(outDir).canFlowOut()) {
+					continue;
+				}
+				streamed.add(flowing);
+				queue.add(new Pair.RefDouble<>(flowing, dist + from.manhattanDistTo(flowing)));
 			}
 		}
 
@@ -196,8 +197,7 @@ public class PipeNetworkOperator {
 	}
 
 	public static final class RelationHolder {
-		private final Set<NodePos> connections = new HashSet<>();
-		private final Set<NodePos> flows = new HashSet<>();
+		private final Map<NodePos, Direction> connections = new HashMap<>();
 		private int lastTick = 0;
 		private List<NodePort> portsCache = null;
 		private Object recentlyStreamed = null;
@@ -208,6 +208,7 @@ public class PipeNetworkOperator {
 			}
 			this.lastTick = tick;
 			this.portsCache = null;
+			this.recentlyStreamed = null;
 			return true;
 		}
 
@@ -217,7 +218,7 @@ public class PipeNetworkOperator {
 
 		private List<NodePort> getPorts(final NodeLevel level, final NodePos pos) {
 			if (this.portsCache == null) {
-				this.portsCache = pos.streamTouchingBlocks()
+				this.portsCache = pos.streamTouchingBlocks(level.getLevel())
 					.map((blockPos) -> level.getNodePort(blockPos, pos.asRelative(blockPos)))
 					.filter(LazyOptional::isPresent)
 					.map((lazyPort) -> lazyPort.orElseThrow(IllegalStateException::new))

@@ -9,6 +9,7 @@ public interface NodeFluidPort extends NodePort {
 	 * Check the fluid the port may interact with.
 	 * If the raw type of the fluid stack is {@link Fluids#EMPTY}, any fluids may push to the port and no fluids can be pulled.
 	 * Otherwise, the port may only accept that type of fluid.
+	 * The returned FluidStack must not be modified.
 	 *
 	 * @return The fluid the port may interact with.
 	 */

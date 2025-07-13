@@ -150,7 +150,7 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	}
 
 	public String toString() {
-		return String.format("<%s level=%s pos=%s>", this.getClass().getName(), this.level.getLevel(), this.pos);
+		return String.format("<%s level=%s pos=%s>", this.getClass().getName(), this.level.getLevel().dimension().location(), this.pos);
 	}
 
 	public boolean canAnchor() {

@@ -223,6 +223,159 @@ public record NodePos(
 			});
 	}
 
+	public Direction[] connectPathTo(final NodePos other) {
+		final boolean selfIsOrigin = this.isOrigin();
+		final boolean otherIsOrigin = other.isOrigin();
+
+		final int xDiff = (other.blockPos.getX() - this.blockPos.getX()) * INDEX_BOUND +
+			(other.axis.choose(other.index, 0, 0) - this.axis.choose(this.index, 0, 0));
+		final int yDiff = (other.blockPos.getY() - this.blockPos.getY()) * INDEX_BOUND +
+			(other.axis.choose(0, other.index, 0) - this.axis.choose(0, this.index, 0));
+		final int zDiff = (other.blockPos.getZ() - this.blockPos.getZ()) * INDEX_BOUND +
+			(other.axis.choose(0, 0, other.index) - this.axis.choose(0, 0, this.index));
+		final int alignCount = (xDiff == 0 ? 1 : 0) + (yDiff == 0 ? 1 : 0) + (zDiff == 0 ? 1 : 0);
+		if (alignCount == 0) {
+			throw new IllegalArgumentException("Impossible connection: node positions must align on at least one plane");
+		}
+		if (alignCount == 3) {
+			throw new IllegalArgumentException("Cannot connect to self");
+		}
+		final Direction xDir = Direction.fromAxisAndDirection(
+			Direction.Axis.X,
+			xDiff > 0 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE
+		);
+		final Direction yDir = Direction.fromAxisAndDirection(
+			Direction.Axis.Y,
+			yDiff > 0 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE
+		);
+		final Direction zDir = Direction.fromAxisAndDirection(
+			Direction.Axis.Z,
+			zDiff > 0 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE
+		);
+		if (selfIsOrigin) {
+			if (otherIsOrigin) {
+				throw new IllegalArgumentException("Impossible connection: origin node cannot connect to another origin node");
+			}
+			if (alignCount == 2) {
+				throw new IllegalArgumentException("Impossible connection: origin node cannot connect to another node that on the same line");
+			}
+			if (xDiff == 0) {
+				switch (other.axis) {
+					case Y:
+						return new Direction[]{yDir, zDir};
+					case Z:
+						return new Direction[]{zDir, yDir};
+				}
+			} else if (yDiff == 0) {
+				switch (other.axis) {
+					case X:
+						return new Direction[]{xDir, zDir};
+					case Z:
+						return new Direction[]{zDir, xDir};
+				}
+			} else if (zDiff == 0) {
+				switch (other.axis) {
+					case X:
+						return new Direction[]{xDir, yDir};
+					case Y:
+						return new Direction[]{yDir, xDir};
+				}
+			}
+			throw new IllegalStateException("unreachable");
+		}
+		if (otherIsOrigin) {
+			if (alignCount == 2) {
+				throw new IllegalArgumentException("Impossible connection: origin node cannot connect to another node that on the same line");
+			}
+			if (xDiff == 0) {
+				switch (this.axis) {
+					case Y:
+						return new Direction[]{zDir, yDir};
+					case Z:
+						return new Direction[]{yDir, zDir};
+				}
+			} else if (yDiff == 0) {
+				switch (this.axis) {
+					case X:
+						return new Direction[]{zDir, xDir};
+					case Z:
+						return new Direction[]{xDir, zDir};
+				}
+			} else if (zDiff == 0) {
+				switch (this.axis) {
+					case X:
+						return new Direction[]{yDir, xDir};
+					case Y:
+						return new Direction[]{xDir, yDir};
+				}
+			}
+			throw new IllegalStateException("unreachable");
+		}
+		if (alignCount == 2) {
+			if (xDiff != 0) {
+				return new Direction[]{xDir};
+			}
+			if (yDiff != 0) {
+				return new Direction[]{yDir};
+			}
+			if (zDiff != 0) {
+				return new Direction[]{zDir};
+			}
+			throw new IllegalStateException("unreachable");
+		}
+		if (alignCount == 1) {
+			if (this.axis == other.axis) {
+				if (xDiff == 0) {
+					switch (this.axis) {
+						case Y:
+							return new Direction[]{zDir, yDir, zDir};
+						case Z:
+							return new Direction[]{yDir, zDir, yDir};
+					}
+				} else if (yDiff == 0) {
+					switch (this.axis) {
+						case X:
+							return new Direction[]{zDir, xDir, zDir};
+						case Z:
+							return new Direction[]{xDir, zDir, xDir};
+					}
+				} else if (zDiff == 0) {
+					switch (this.axis) {
+						case X:
+							return new Direction[]{yDir, xDir, yDir};
+						case Y:
+							return new Direction[]{xDir, yDir, xDir};
+					}
+				}
+				throw new IllegalStateException("unreachable");
+			}
+			if (xDiff == 0) {
+				switch (this.axis) {
+					case Y:
+						return new Direction[]{zDir, yDir};
+					case Z:
+						return new Direction[]{yDir, zDir};
+				}
+			} else if (yDiff == 0) {
+				switch (this.axis) {
+					case X:
+						return new Direction[]{zDir, xDir};
+					case Z:
+						return new Direction[]{xDir, zDir};
+				}
+			} else if (zDiff == 0) {
+				switch (this.axis) {
+					case X:
+						return new Direction[]{yDir, xDir};
+					case Y:
+						return new Direction[]{xDir, yDir};
+				}
+			}
+			throw new IllegalStateException("unreachable");
+		}
+		throw new IllegalStateException("unreachable");
+	}
+
 	private static Stream<Direction.Axis> streamAxisesExclude(final Direction.Axis exclude) {
 		final Direction.Axis[] axises = new Direction.Axis[2];
 		int index = 0;
@@ -270,20 +423,34 @@ public record NodePos(
 		throw new IllegalArgumentException("Invalid base block pos " + blockPos + " to find relative of " + this.toString());
 	}
 
-	public Stream<BlockPos> streamTouchingBlocks() {
+	public Stream<BlockPos> streamTouchingBlocks(final Level level) {
 		final double size = 4.0 / 16;
 		final double r = size / 2;
 		final Vec3 centerPos = this.getCenter();
 		return Stream.of(
-			BlockPos.containing(centerPos.x + r, centerPos.y + r, centerPos.y + r),
-			BlockPos.containing(centerPos.x - r, centerPos.y + r, centerPos.y + r),
-			BlockPos.containing(centerPos.x + r, centerPos.y + r, centerPos.y - r),
-			BlockPos.containing(centerPos.x - r, centerPos.y + r, centerPos.y - r),
-			BlockPos.containing(centerPos.x + r, centerPos.y - r, centerPos.y + r),
-			BlockPos.containing(centerPos.x - r, centerPos.y - r, centerPos.y + r),
-			BlockPos.containing(centerPos.x + r, centerPos.y - r, centerPos.y - r),
-			BlockPos.containing(centerPos.x - r, centerPos.y - r, centerPos.y - r)
+			new Vec3(centerPos.x + r, centerPos.y + r, centerPos.z + r),
+			new Vec3(centerPos.x - r, centerPos.y + r, centerPos.z + r),
+			new Vec3(centerPos.x + r, centerPos.y + r, centerPos.z - r),
+			new Vec3(centerPos.x - r, centerPos.y + r, centerPos.z - r),
+			new Vec3(centerPos.x + r, centerPos.y - r, centerPos.z + r),
+			new Vec3(centerPos.x - r, centerPos.y - r, centerPos.z + r),
+			new Vec3(centerPos.x + r, centerPos.y - r, centerPos.z - r),
+			new Vec3(centerPos.x - r, centerPos.y - r, centerPos.z - r)
 		)
+			.filter((corner) -> {
+				final double EPSILON = 1e-6;
+				final double x = centerPos.x + (corner.x > centerPos.x ? EPSILON : -EPSILON);
+				final double y = centerPos.y + (corner.y > centerPos.y ? EPSILON : -EPSILON);
+				final double z = centerPos.z + (corner.z > centerPos.z ? EPSILON : -EPSILON);
+				final AABB box = new AABB(x, y, z, corner.x, corner.y, corner.z);
+				for (final VoxelShape shape : level.getBlockCollisions(null, box)) {
+					if (!shape.isEmpty()) {
+						return true;
+					}
+				}
+				return false;
+			})
+			.map(BlockPos::containing)
 			.distinct();
 	}
 }
