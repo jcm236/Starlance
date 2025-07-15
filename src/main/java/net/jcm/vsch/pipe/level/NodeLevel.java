@@ -178,7 +178,7 @@ public class NodeLevel {
 			final int amount = stack.getAmount();
 			final double cap = this.fluidHandler.getTankCapacity(0);
 			// TODO: more realistic pressure
-			return amount;
+			return amount / 2.0;
 		}
 
 		@Override

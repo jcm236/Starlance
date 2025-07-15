@@ -428,7 +428,7 @@ public record NodePos(
 			new Vec3(centerPos.x - r, centerPos.y - r, centerPos.z - r)
 		)
 			.filter((corner) -> {
-				final double EPSILON = 1e-6;
+				final double EPSILON = 1e-7;
 				final double x = centerPos.x + (corner.x > centerPos.x ? EPSILON : -EPSILON);
 				final double y = centerPos.y + (corner.y > centerPos.y ? EPSILON : -EPSILON);
 				final double z = centerPos.z + (corner.z > centerPos.z ? EPSILON : -EPSILON);

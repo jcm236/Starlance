@@ -11,6 +11,8 @@ import net.jcm.vsch.pipe.level.NodeGetter;
 import net.jcm.vsch.pipe.level.NodeLevel;
 import net.jcm.vsch.util.Pair;
 
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
@@ -70,19 +72,40 @@ public class PipeNetworkOperator {
 	}
 
 	public void onTick() {
+		final int iter = 3;
+		for (int i = 0; i < iter; i++) {
+			this.tick();
+		}
+	}
+
+	public void tick() {
 		this.tick++;
 		final int tick = this.tick;
-		for (final PipeNode node : (Iterable<PipeNode>)(this.streamServerNodes()::iterator)) {
-			if (!node.relation.checkAndUpdateTick(tick)) {
-				continue;
-			}
+		final Object2DoubleOpenHashMap<NodePort> freezedPressures = new Object2DoubleOpenHashMap<>();
+		final Object2ObjectOpenHashMap<NodeFluidPort, FluidStack> freezedFluids = new Object2ObjectOpenHashMap<>();
+		final List<PipeNode> nodes = this.streamServerNodes()
+			.filter((node) -> node.relation.checkAndUpdateTick(tick))
+			.filter((node) -> !node.relation.getPorts(this.level, node.getPos()).isEmpty())
+			.toList();
+		nodes.stream()
+			.map((node) -> node.relation.portsCache)
+			.flatMap(List::stream)
+			.forEach((port) -> {
+				freezedPressures.put(port, port.getPressure());
+				if (port instanceof NodeFluidPort fluidPort) {
+					freezedFluids.put(fluidPort, fluidPort.peekFluid());
+				}
+			});
+		freezedPressures.trim();
+		freezedFluids.trim();
+		for (final PipeNode node : nodes) {
 			final NodePos nodePos = node.getPos();
-			for (final NodePort port : node.relation.getPorts(this.level, nodePos)) {
+			for (final NodePort port : node.relation.portsCache) {
 				if (!port.getFlowDirection().canFlowOut()) {
 					continue;
 				}
 				if (port instanceof NodeFluidPort fluidPort) {
-					this.streamFluidFrom(nodePos, fluidPort);
+					this.streamFluidFrom(nodePos, fluidPort, freezedPressures, freezedFluids);
 				} else if (port instanceof NodeEnergyPort energyPort) {
 					// TODO
 				}
@@ -119,15 +142,19 @@ public class PipeNetworkOperator {
 		return removed1 || removed2;
 	}
 
-	private void streamFluidFrom(final NodePos from, final NodeFluidPort fromPort) {
-		final double r = 2.0 / 16;
-		final double constQ = Math.PI * r * r * r * r / 8;
+	private void streamFluidFrom(
+		final NodePos from,
+		final NodeFluidPort fromPort,
+		final Object2DoubleOpenHashMap<NodePort> freezedPressures,
+		final Object2ObjectOpenHashMap<NodeFluidPort, FluidStack> freezedFluids
+	) {
+		final double constQ = 1000;
 
-		final double fromPressure = fromPort.getPressure();
+		final double fromPressure = freezedPressures.getDouble(fromPort);
 		if (fromPressure <= 0) {
 			return;
 		}
-		final FluidStack stack = fromPort.peekFluid();
+		final FluidStack stack = freezedFluids.get(fromPort);
 		if (stack.isEmpty()) {
 			return;
 		}
@@ -157,11 +184,11 @@ public class PipeNetworkOperator {
 				if (!(port instanceof NodeFluidPort fluidPort)) {
 					continue;
 				}
-				final double pressureDiff = fromPressure - fluidPort.getPressure();
-				if (!fluidPort.getFlowDirection().canFlowIn() || pressureDiff <= 0) {
+				if (!fluidPort.getFlowDirection().canFlowIn() || fluidPort.pushFluid(stack, true) <= 0) {
 					continue;
 				}
-				if (fluidPort.pushFluid(stack, true) <= 0) {
+				final double pressureDiff = fromPressure - freezedPressures.getDouble(fluidPort);
+				if (pressureDiff <= 0) {
 					continue;
 				}
 				final double vd = viscosity * dist;
@@ -185,7 +212,7 @@ public class PipeNetworkOperator {
 			}
 		}
 
-		final double flowRateScale = totalFlowRate > maxAmount ? maxAmount / totalFlowRate : 1;
+		final double flowRateScale = (totalFlowRate > maxAmount ? maxAmount / totalFlowRate : 1) * 0.1;
 
 		for (final Pair.RefDouble<NodeFluidPort> portRate : pendingOut) {
 			final NodeFluidPort fluidPort = portRate.left();
@@ -224,6 +251,9 @@ public class PipeNetworkOperator {
 					.map((lazyPort) -> lazyPort.orElseThrow(IllegalStateException::new))
 					.filter((port) -> port.getFlowDirection() != FlowDirection.NONE)
 					.toList();
+				if (this.portsCache.isEmpty()) {
+					this.portsCache = List.of();
+				}
 			}
 			return this.portsCache;
 		}
