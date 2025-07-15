@@ -63,7 +63,7 @@ public class NodeLevel {
 	}
 
 	protected NodeGetter getNodeChunk(final int x, final int z) {
-		final LevelChunk chunk = this.level.getChunk(x, z);
+		final LevelChunk chunk = this.level.getChunkSource().getChunkNow(x, z);
 		return chunk instanceof NodeGetter getter ? getter : null;
 	}
 

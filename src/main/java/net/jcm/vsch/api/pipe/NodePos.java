@@ -402,22 +402,12 @@ public record NodePos(
 			if (this.isOrigin()) {
 				return new RelativeNodePos(xIndex, yIndex, zIndex);
 			}
-			switch (this.axis) {
-				case X -> {
-					if (xIndex == 0) {
-						return new RelativeNodePos(this.index, yIndex, zIndex);
-					}
-				}
-				case Y -> {
-					if (yIndex == 0) {
-						return new RelativeNodePos(xIndex, this.index, zIndex);
-					}
-				}
-				case Z -> {
-					if (zIndex == 0) {
-						return new RelativeNodePos(xIndex, yIndex, this.index);
-					}
-				}
+			if (this.axis.choose(xIndex, yIndex, zIndex) == 0) {
+				return new RelativeNodePos(
+					this.axis.choose(this.index, xIndex, xIndex),
+					this.axis.choose(yIndex, this.index, yIndex),
+					this.axis.choose(zIndex, zIndex, this.index)
+				);
 			}
 		}
 		throw new IllegalArgumentException("Invalid base block pos " + blockPos + " to find relative of " + this.toString());
