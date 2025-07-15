@@ -1,0 +1,57 @@
+{
+	"gui_light": "side",
+	"textures": {
+		"main": "vsch:block/pipe/omni_node"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [4, 4, 4],
+			"faces": {
+				"down":  { "texture": "#main", "tintindex": 0, "uv": [0, 1, 4, 5] },
+				"up":    { "texture": "#main", "tintindex": 0, "uv": [0, 0, 4, 4] },
+				"north": { "texture": "#main", "tintindex": 0, "uv": [0, 1, 4, 5] },
+				"south": { "texture": "#main", "tintindex": 0, "uv": [0, 0, 4, 4] },
+				"west":  { "texture": "#main", "tintindex": 0, "uv": [0, 1, 4, 5] },
+				"east":  { "texture": "#main", "tintindex": 0, "uv": [0, 0, 4, 4] }
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"translation": [-12, 7, -9],
+			"scale":[1.4, 1.4, 1.4]
+		},
+		"ground": {
+			"rotation": [0, 0, 0],
+			"translation": [3, 3, 3],
+			"scale":[0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"rotation": [0, 0, 0],
+			"translation": [6, 6, 6],
+			"scale":[1, 1, 1]
+		},
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [4, 2, 4],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, -45, 0],
+			"translation": [-4, 2, 4],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"translation": [1, 8, 6],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -135, 0],
+			"translation": [-4.5, 8.25, 1.25],
+			"scale": [0.6, 0.6, 0.6]
+		}
+	}
+}

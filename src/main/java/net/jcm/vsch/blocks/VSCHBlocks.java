@@ -7,7 +7,7 @@ import net.jcm.vsch.blocks.entity.CreativeThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.PowerfulThrusterBlockEntity;
 import net.jcm.vsch.blocks.entity.ThrusterBlockEntity;
 import net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlock;
-import net.jcm.vsch.fluids.VSCHFluids;
+import net.jcm.vsch.fluid.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.util.rot.DirectionalShape;
 import net.jcm.vsch.util.rot.RotShapes;
@@ -180,7 +180,7 @@ public class VSCHBlocks {
 	}
 
 	private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
-		return VSCHItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+		return VSCHItems.registerTabItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
 	}
 
 	public static void register(IEventBus eventBus) {

@@ -1,7 +1,7 @@
 package net.jcm.vsch.ship.dragger;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.jcm.vsch.util.VSCHUtils;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3d;

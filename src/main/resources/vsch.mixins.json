@@ -7,6 +7,7 @@
   "mixins": [
     "cosmos.MixinLightRenderer",
     "cosmos.MixinPlaceplatformOnKeyPressedProcedure",
+    "cosmos.MixinShipspawnspaceProcedure",
     "cosmos.MixinSpacesuitwornLogicProcedure",
     "create.MixinBeltBlockEntity",
     "create.MixinClockworkBearingBlockEntity",
@@ -15,7 +16,13 @@
     "create.MixinLinearActuatorBlockEntity",
     "create.MixinMechanicalBearingBlockEntity",
     "minecraft.MixinChunkMap",
+    "minecraft.MixinChunkSerializer",
+    "minecraft.MixinClientboundLevelChunkWithLightPacket",
+    "minecraft.MixinLevel",
+    "minecraft.MixinLevelChunk",
+    "minecraft.MixinLevelChunkSection",
     "minecraft.MixinMob",
+    "minecraft.MixinServerPlayer",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"

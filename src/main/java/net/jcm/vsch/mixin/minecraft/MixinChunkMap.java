@@ -1,5 +1,6 @@
 package net.jcm.vsch.mixin.minecraft;
 
+import net.jcm.vsch.accessor.IChunkMapAccessor;
 import net.jcm.vsch.util.EmptyChunkAccess;
 
 import com.mojang.datafixers.util.Either;
@@ -20,10 +21,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.concurrent.CompletableFuture;
 
 @Mixin(ChunkMap.class)
-public class MixinChunkMap {
+public abstract class MixinChunkMap implements IChunkMapAccessor {
 	@Shadow
 	@Final
 	ServerLevel level;
+
+	@Shadow
+	protected abstract Iterable<ChunkHolder> getChunks();
+
+	@Override
+	public Iterable<ChunkHolder> vsch$getChunks() {
+		return this.getChunks();
+	}
 
 	@Inject(method = "schedule", at = @At("HEAD"), cancellable = true)
 	private void schedule(final ChunkHolder holder, final ChunkStatus status, final CallbackInfoReturnable<CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>>> cir) {

@@ -1,7 +1,7 @@
 {
 	"vsch.error.thruster_modes_disabled": "推进器模式切换已禁用!",
 	"vsch.global": "§6全局",
-	"vsch.itemtab": "Starlance",
+	"vsch.itemtab": "星槊",
 	"vsch.message.gyro": "力度已设置为 §6%s%%",
 	"vsch.message.mode": "模式: ",
 	"vsch.message.strength": "力度: ",
@@ -19,6 +19,13 @@
 	"fluid_type.vsch.oxygen": "液氧",
 	"item.vsch.magnet_boot": "磁力靴",
 	"item.vsch.wrench": "扳手",
+	"pipe.vsch.corner_node": "转角节点",
+	"pipe.vsch.limited_omni_node": "受限的全向节点",
+	"pipe.vsch.limited_pull_node": "受限的拉取节点",
+	"pipe.vsch.limited_push_node": "受限的推送节点",
+	"pipe.vsch.omni_node": "全向节点",
+	"pipe.vsch.oneway_node": "单向阀",
+	"pipe.vsch.straight_node": "直流节点",
 
 	"config.jade.plugin_vsch.gyro_component_config": "陀螺仪配置信息",
 	"config.jade.plugin_vsch.thruster_component_config": "推进器配置信息",

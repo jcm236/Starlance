@@ -1,7 +1,7 @@
 package net.jcm.vsch.ship.thruster;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.ship.IVSCHForceApplier;
 
 import net.minecraft.core.BlockPos;
 
