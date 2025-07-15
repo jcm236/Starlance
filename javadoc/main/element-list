@@ -1,7 +1,6 @@
 net.jcm.vsch
 net.jcm.vsch.accessor
 net.jcm.vsch.api.block
-net.jcm.vsch.api.force
 net.jcm.vsch.blocks
 net.jcm.vsch.blocks.custom
 net.jcm.vsch.blocks.custom.template

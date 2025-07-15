@@ -95,7 +95,7 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.core.BlockPos,<wbr><a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a>&gt;</code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.core.BlockPos,<wbr><a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#appliers" class="member-name-link">appliers</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Don't mess with this unless you know what your doing.</div>
@@ -130,8 +130,8 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.api.force.IVSCHForceApplier)" class="member-name-link">addApplier</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
- <a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a>&nbsp;applier)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.ship.IVSCHForceApplier)" class="member-name-link">addApplier</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
+ <a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>&nbsp;applier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addDragger(net.minecraft.core.BlockPos,net.jcm.vsch.ship.dragger.DraggerData)" class="member-name-link">addDragger</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos,
@@ -152,7 +152,7 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#get(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">get</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getApplierAtPos(net.minecraft.core.BlockPos)" class="member-name-link">getApplierAtPos</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="dragger/DraggerData.html" title="class in net.jcm.vsch.ship.dragger">DraggerData</a></code></div>
@@ -206,14 +206,14 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <li>
 <section class="detail" id="appliers">
 <h3>appliers</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.core.BlockPos,<wbr><a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a>&gt;</span>&nbsp;<span class="element-name">appliers</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;net.minecraft.core.BlockPos,<wbr><a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>&gt;</span>&nbsp;<span class="element-name">appliers</span></div>
 <div class="block">Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.
- Instead, look at <a href="#addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.api.force.IVSCHForceApplier)"><code>addApplier(BlockPos, IVSCHForceApplier)</code></a> or <a href="#removeApplier(net.minecraft.core.BlockPos)"><code>removeApplier(BlockPos)</code></a> or <a href="#getApplierAtPos(net.minecraft.core.BlockPos)"><code>getApplierAtPos(BlockPos)</code></a> or their respective thruster/dragger counterparts.</div>
+ Instead, look at <a href="#addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.ship.IVSCHForceApplier)"><code>addApplier(BlockPos, IVSCHForceApplier)</code></a> or <a href="#removeApplier(net.minecraft.core.BlockPos)"><code>removeApplier(BlockPos)</code></a> or <a href="#getApplierAtPos(net.minecraft.core.BlockPos)"><code>getApplierAtPos(BlockPos)</code></a> or their respective thruster/dragger counterparts.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force"><code>IVSCHForceApplier</code></a></li>
+<li><a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship"><code>IVSCHForceApplier</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -259,10 +259,10 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.api.force.IVSCHForceApplier)">
+<section class="detail" id="addApplier(net.minecraft.core.BlockPos,net.jcm.vsch.ship.IVSCHForceApplier)">
 <h3>addApplier</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addApplier</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos,
- <a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a>&nbsp;applier)</span></div>
+ <a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>&nbsp;applier)</span></div>
 </section>
 </li>
 <li>
@@ -275,7 +275,7 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <section class="detail" id="getApplierAtPos(net.minecraft.core.BlockPos)">
 <h3>getApplierAtPos</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../api/force/IVSCHForceApplier.html" title="interface in net.jcm.vsch.api.force">IVSCHForceApplier</a></span>&nbsp;<span class="element-name">getApplierAtPos</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></span>&nbsp;<span class="element-name">getApplierAtPos</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
 </section>
 </li>
 <li>
