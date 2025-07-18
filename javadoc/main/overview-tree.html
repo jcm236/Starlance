@@ -54,6 +54,7 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/package-tree.html">net.jcm.vsch</a>, </li>
 <li><a href="net/jcm/vsch/accessor/package-tree.html">net.jcm.vsch.accessor</a>, </li>
 <li><a href="net/jcm/vsch/api/block/package-tree.html">net.jcm.vsch.api.block</a>, </li>
+<li><a href="net/jcm/vsch/api/resource/package-tree.html">net.jcm.vsch.api.resource</a>, </li>
 <li><a href="net/jcm/vsch/blocks/package-tree.html">net.jcm.vsch.blocks</a>, </li>
 <li><a href="net/jcm/vsch/blocks/custom/package-tree.html">net.jcm.vsch.blocks.custom</a>, </li>
 <li><a href="net/jcm/vsch/blocks/custom/template/package-tree.html">net.jcm.vsch.blocks.custom.template</a>, </li>
@@ -61,6 +62,8 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/blocks/entity/template/package-tree.html">net.jcm.vsch.blocks.entity.template</a>, </li>
 <li><a href="net/jcm/vsch/blocks/rocketassembler/package-tree.html">net.jcm.vsch.blocks.rocketassembler</a>, </li>
 <li><a href="net/jcm/vsch/blocks/thruster/package-tree.html">net.jcm.vsch.blocks.thruster</a>, </li>
+<li><a href="net/jcm/vsch/client/package-tree.html">net.jcm.vsch.client</a>, </li>
+<li><a href="net/jcm/vsch/client/renderer/package-tree.html">net.jcm.vsch.client.renderer</a>, </li>
 <li><a href="net/jcm/vsch/commands/package-tree.html">net.jcm.vsch.commands</a>, </li>
 <li><a href="net/jcm/vsch/compat/package-tree.html">net.jcm.vsch.compat</a>, </li>
 <li><a href="net/jcm/vsch/compat/cc/peripherals/package-tree.html">net.jcm.vsch.compat.cc.peripherals</a>, </li>
@@ -160,6 +163,7 @@ loadScripts(document, 'script');</script>
 </li>
 </ul>
 </li>
+<li class="circle">net.jcm.vsch.client.<a href="net/jcm/vsch/client/ClientRegistry.html" class="type-name-link" title="class in net.jcm.vsch.client">ClientRegistry</a></li>
 <li class="circle">net.minecraft.world.level.ClipContext
 <ul>
 <li class="circle">net.jcm.vsch.util.<a href="net/jcm/vsch/util/NoSourceClipContext.html" class="type-name-link" title="class in net.jcm.vsch.util">NoSourceClipContext</a></li>
@@ -176,6 +180,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.ship.gyro.<a href="net/jcm/vsch/ship/gyro/GyroData.html" class="type-name-link" title="class in net.jcm.vsch.ship.gyro">GyroData</a></li>
 <li class="circle">net.jcm.vsch.ship.gyro.<a href="net/jcm/vsch/ship/gyro/GyroForceApplier.html" class="type-name-link" title="class in net.jcm.vsch.ship.gyro">GyroForceApplier</a> (implements net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>)</li>
 <li class="circle">net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/GyroPeripheral.html" class="type-name-link" title="class in net.jcm.vsch.compat.cc.peripherals">GyroPeripheral</a> (implements dan200.computercraft.api.peripheral.IPeripheral)</li>
+<li class="circle">net.jcm.vsch.client.renderer.<a href="net/jcm/vsch/client/renderer/GyroRenderer.html" class="type-name-link" title="class in net.jcm.vsch.client.renderer">GyroRenderer</a> (implements net.minecraft.client.renderer.blockentity.BlockEntityRenderer&lt;T&gt;)</li>
 <li class="circle">net.minecraft.world.item.Item (implements net.minecraft.world.flag.FeatureElement, net.minecraftforge.common.extensions.IForgeItem, net.minecraft.world.level.ItemLike)
 <ul>
 <li class="circle">net.minecraft.world.item.ArmorItem (implements net.minecraft.world.item.Equipable)
@@ -211,9 +216,13 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.event.<a href="net/jcm/vsch/event/PlanetCollision.html" class="type-name-link" title="class in net.jcm.vsch.event">PlanetCollision</a></li>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html" class="type-name-link external-link" title="class or interface in java.lang">Record</a>
 <ul>
+<li class="circle">net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" class="type-name-link" title="class in net.jcm.vsch.api.resource">ModelTextures</a></li>
 <li class="circle">net.jcm.vsch.util.<a href="net/jcm/vsch/util/Pair.html" class="type-name-link" title="class in net.jcm.vsch.util">Pair</a>&lt;T,<wbr>U&gt;</li>
+<li class="circle">net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" class="type-name-link" title="class in net.jcm.vsch.api.resource">TextureLocation</a></li>
 </ul>
 </li>
+<li class="circle">net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.html" class="type-name-link" title="class in net.jcm.vsch.client">RenderUtil</a></li>
+<li class="circle">net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" class="type-name-link" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></li>
 <li class="circle">net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" class="type-name-link" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a> (implements dan200.computercraft.api.peripheral.IPeripheral)</li>
 <li class="circle">net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShapes.html" class="type-name-link" title="class in net.jcm.vsch.util.rot">RotShapes</a></li>
 <li class="circle">net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" class="type-name-link" title="class in net.jcm.vsch.util">ShipUtils</a></li>

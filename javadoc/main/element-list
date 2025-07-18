@@ -1,6 +1,7 @@
 net.jcm.vsch
 net.jcm.vsch.accessor
 net.jcm.vsch.api.block
+net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
 net.jcm.vsch.blocks.custom
 net.jcm.vsch.blocks.custom.template
@@ -8,6 +9,8 @@ net.jcm.vsch.blocks.entity
 net.jcm.vsch.blocks.entity.template
 net.jcm.vsch.blocks.rocketassembler
 net.jcm.vsch.blocks.thruster
+net.jcm.vsch.client
+net.jcm.vsch.client.renderer
 net.jcm.vsch.commands
 net.jcm.vsch.compat
 net.jcm.vsch.compat.cc.peripherals
