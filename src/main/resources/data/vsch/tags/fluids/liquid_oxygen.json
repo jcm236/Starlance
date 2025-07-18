@@ -1,5 +1,6 @@
 {
 	"values": [
-		"mekanism:oxygen"
+		"mekanism:oxygen",
+		"vsch:oxygen"
 	]
 }
