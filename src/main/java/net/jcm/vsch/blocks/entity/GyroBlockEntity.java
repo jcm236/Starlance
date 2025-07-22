@@ -31,9 +31,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity, WrenchableBlock {
 	private final GyroData data;
@@ -146,6 +143,10 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 	}
 
+	public Quaternionf getCoreRotation(float partialTick) {
+		return this.rotationO.slerp(this.rotation, partialTick, new Quaternionf());
+	}
+
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
 		if (this.wasPeripheralMode != this.isPeripheralMode && !this.isPeripheralMode) {
@@ -153,23 +154,14 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 		this.wasPeripheralMode = this.isPeripheralMode;
 
-		Ship ship = VSGameUtilsKt.getShipObjectManagingPos(level, pos);
-
-		double x = this.torqueX;
-		double y = this.torqueY;
-		double z = this.torqueZ;
+		final Vector3d torque = new Vector3d(this.torqueX, this.torqueY, this.torqueZ);
 		if (this.energyStorage.maxEnergy > 0) {
-			final double requirePower = (Math.abs(x) + Math.abs(y) + Math.abs(z)) * this.energyStorage.maxEnergy / 3;
+			final double requirePower = (Math.abs(torque.x) + Math.abs(torque.y) + Math.abs(torque.z)) * this.energyStorage.maxEnergy / 3;
 			final double availablePower = this.energyStorage.storedEnergy;
 			if (availablePower <= 0) {
-				x = 0;
-				y = 0;
-				z = 0;
+				torque.zero();
 			} else if (requirePower > availablePower) {
-				final double ratio = availablePower / requirePower;
-				x *= ratio;
-				y *= ratio;
-				z *= ratio;
+				torque.mul(availablePower / requirePower);
 				this.energyStorage.storedEnergy = 0;
 			} else {
 				this.energyStorage.storedEnergy -= requirePower;
@@ -177,12 +169,19 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 
 		final double force = this.getTorqueForce();
-		this.data.torque.set(x * force, y * force, z * force);
+		this.data.torque.set(torque.x * force, torque.y * force, torque.z * force);
 
-		if (x != 0 || y != 0 || z != 0) {
+		if (torque.x != 0 || torque.y != 0 || torque.z != 0) {
 			this.setChanged();
+			this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
 			if (force != 0) {
-				this.rotation.rotateXYZ((float) (x * Math.PI), (float) (y * Math.PI), (float) (z * Math.PI));
+				torque.mul(-force * Math.PI * 1e-6);
+				this.rotation.conjugate(new Quaternionf()).transform(torque);
+				final float angle = (float) (torque.length());
+				torque.normalize();
+				this.rotation
+					.mul(new Quaternionf().fromAxisAngleRad((float) (torque.x), (float) (torque.y), (float) (torque.z), angle))
+					.normalize();
 			}
 		}
 
@@ -202,11 +201,11 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 
 		final int newPower = (this.getPercentPower() % 10) + 1;
-		this.setPercentPower(newPower);
+		this.setPercentPower(newPower * 10);
 
 		final Player player = ctx.getPlayer();
 		if (player != null) {
-			player.displayClientMessage(Component.translatable("vsch.message.gyro", newPower * 10), true);
+			player.displayClientMessage(Component.translatable("vsch.message.gyro", this.getPercentPower()), true);
 		}
 
 		return InteractionResult.SUCCESS;

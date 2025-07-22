@@ -45,6 +45,7 @@ public final class RenderUtil {
 		Vector3f offset = new Vector3f(offseti).div(16);
 		Vector3f size = new Vector3f(sizei).div(16);
 
+		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.mulPose(rot);
 
 		drawPlane(poseStack, buffer, lightMap, rgba, Direction.UP, offset, size);
@@ -59,12 +60,7 @@ public final class RenderUtil {
 	public static void drawPlane(PoseStack posestack, VertexConsumer buffer, BoxLightMap lightMap, Vector4f rgba, Direction perspective, Vector3f offset, Vector3f size) {
 		posestack.pushPose();
 
-		float pX = offset.x, pY = offset.y, pZ = offset.z;
-		pX += 0.5f;
-		pY += 0.5f;
-		pZ += 0.5f;
-
-		posestack.translate(pX, pY, pZ);
+		posestack.translate(offset.x, offset.y, offset.z);
 
 		Matrix4f matrix4f = posestack.last().pose();
 
@@ -116,92 +112,93 @@ public final class RenderUtil {
 		posestack.popPose();
 	}
 
-	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector3f rgb, Vector3f offset, Quaternionf rot, Vector3f size, float scale) {
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector3f rgb, Vector3f offset, Quaternionf rot, Vector3i size, float scale) {
 		drawBoxWithTexture(poseStack, buffer, lightMap, model, new Vector4f(rgb, 1f), offset, rot, size, scale);
 	}
 
-	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector4f rgba, Vector3f offset, Quaternionf rot, Vector3f size, float scale) {
+	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector4f rgba, Vector3f offset, Quaternionf rot, Vector3i size, float scale) {
 		poseStack.pushPose();
+
+		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.mulPose(rot);
 
 		for (final Direction dir : Direction.values()) {
-			drawPlaneWithTexture(poseStack, buffer, lightMap, model.getTexture(dir), rgba, dir, offset, size, scale);
+			final TextureLocation texture = model.getTexture(dir);
+			if (texture != null) {
+				drawPlaneWithTexture(poseStack, buffer, lightMap, texture, rgba, dir, offset, size, scale);
+			}
 		}
 		poseStack.popPose();
 	}
 
-	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3f size, float scale) {
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector3f rgb, Direction perspective, Vector3f offset, Vector3i size, float scale) {
 		drawPlaneWithTexture(poseStack, buffer, lightMap, texture, new Vector4f(rgb, 1f), perspective, offset, size, scale);
 	}
 
-	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector4f rgba, Direction perspective, Vector3f offset, Vector3f size, float scale) {
+	public static void drawPlaneWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, TextureLocation texture, Vector4f rgba, Direction perspective, Vector3f offset, Vector3i size, float scale) {
 		poseStack.pushPose();
 
-		float pX = offset.x, pY = offset.y, pZ = offset.z;
-		pX += 0.5f;
-		pY += 0.5f;
-		pZ += 0.5f;
-
-		poseStack.translate(pX, pY, pZ);
+		poseStack.translate(offset.x, offset.y, offset.z);
 
 		Matrix4f matrix4f = poseStack.last().pose();
 
 		float sX = size.x, sY = size.y, sZ = size.z;
-		sX *= scale / 2;
-		sY *= scale / 2;
-		sZ *= scale / 2;
+		sX *= scale / 16f / 2;
+		sY *= scale / 16f / 2;
+		sZ *= scale / 16f / 2;
 
 		final float r = rgba.x, g = rgba.y, b = rgba.z, a = rgba.w;
 
 		final TextureAtlasSprite stillTexture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture.location());
-		final double pUOffset = texture.offsetX(), pVOffset = texture.offsetY();
+		final float textureScale = texture.scale();
+		final double pUOffset = texture.offsetX() * textureScale, pVOffset = texture.offsetY() * textureScale;
 		final float u1 = stillTexture.getU(pUOffset);
 		final float v1 = stillTexture.getV(pVOffset);
 
 		switch (perspective) {
 			case UP -> {
-				final float u2 = stillTexture.getU(pUOffset + size.z * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.x * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.x * textureScale);
 				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.unw).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.usw).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.use).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.une).normal(0f, 1f, 0f).endVertex();
 			}
 			case DOWN -> {
-				final float u2 = stillTexture.getU(pUOffset + size.z * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.x * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.x * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dnw).normal(0f, -1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dne).normal(0f, -1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dse).normal(0f, -1f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dsw).normal(0f, -1f, 0f).endVertex();
 			}
 			case SOUTH -> {
-				final float u2 = stillTexture.getU(pUOffset + size.x * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.y * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.x * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.y * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.sde).normal(0f, 0f, 1f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.sdw).normal(0f, 0f, 1f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.sue).normal(0f, 0f, 1f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.suw).normal(0f, 0f, 1f).endVertex();
 			}
 			case NORTH -> {
-				final float u2 = stillTexture.getU(pUOffset + size.x * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.y * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.x * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.y * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.ndw).normal(0f, 0f, -1f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nuw).normal(0f, 0f, -1f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nue).normal(0f, 0f, -1f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nde).normal(0f, 0f, -1f).endVertex();
 			}
 			case EAST -> {
-				final float u2 = stillTexture.getU(pUOffset + size.y * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.z * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.y * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.edn).normal(1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eun).normal(1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eus).normal(1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eds).normal(1f, 0f, 0f).endVertex();
 			}
 			case WEST -> {
-				final float u2 = stillTexture.getU(pUOffset + size.y * 16);
-				final float v2 = stillTexture.getV(pVOffset + size.z * 16);
+				final float u2 = stillTexture.getU(pUOffset + size.y * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wdn).normal(-1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wds).normal(-1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wus).normal(-1f, 0f, 0f).endVertex();
