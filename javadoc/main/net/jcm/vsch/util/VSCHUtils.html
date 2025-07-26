@@ -150,21 +150,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gets a players Cosmos variables capability.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isCollidingWithPlanet(net.minecraft.nbt.CompoundTag,net.minecraft.world.phys.Vec3)" class="member-name-link">isCollidingWithPlanet</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;planetData,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.network.chat.Component</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getWarningComponent()" class="member-name-link">getWarningComponent</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isCollidingWithPlanet(net.minecraft.nbt.CompoundTag,net.minecraft.world.phys.Vec3)" class="member-name-link">isCollidingWithPlanet</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;planetData,
  net.minecraft.world.phys.Vec3&nbsp;position)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines if a Vec3 position is colliding with / inside a planet.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerLevel</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registeryDimToLevel(java.lang.String)" class="member-name-link">registeryDimToLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerLevel</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registeryDimToLevel(java.lang.String)" class="member-name-link">registeryDimToLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get <code>ServerLevel</code> from a VS dimension ID.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.joml.primitives.AABBd</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformToAABBd(org.valkyrienskies.core.api.ships.properties.ShipTransform,org.joml.primitives.AABBic)" class="member-name-link">transformToAABBd</a><wbr>(org.valkyrienskies.core.api.ships.properties.ShipTransform&nbsp;transform,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.joml.primitives.AABBd</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformToAABBd(org.valkyrienskies.core.api.ships.properties.ShipTransform,org.joml.primitives.AABBic)" class="member-name-link">transformToAABBd</a><wbr>(org.valkyrienskies.core.api.ships.properties.ShipTransform&nbsp;transform,
  org.joml.primitives.AABBic&nbsp;shipAABB)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Takes in a
  <code>ShipTransform</code> and its ship <code>AABBic</code> (its
  <b>shipyard</b> <code>AABBic</code>) and returns a
@@ -173,9 +176,9 @@ loadScripts(document, 'script');</script>
  Basically the same as
  <code>Ship#getWorldAABB()</code> but can take in a specified transform and ship AABBic</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vsDimToDim(java.lang.String)" class="member-name-link">vsDimToDim</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vsDimToDim(java.lang.String)" class="member-name-link">vsDimToDim</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a VS dimension id string of
  <code>'minecraft:dimension:namespace:dimension_name'</code> to a normal
  dimension id string of <code>'namespace:dimension_name'</code></div>
@@ -391,6 +394,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getLoadedShipsInLevel(net.minecraft.server.level.ServerLevel)">
 <h3>getLoadedShipsInLevel</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.valkyrienskies.core.api.ships.LoadedServerShip&gt;</span>&nbsp;<span class="element-name">getLoadedShipsInLevel</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getWarningComponent()">
+<h3>getWarningComponent</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.network.chat.Component</span>&nbsp;<span class="element-name">getWarningComponent</span>()</div>
 </section>
 </li>
 </ul>
