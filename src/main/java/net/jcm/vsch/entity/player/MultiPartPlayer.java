@@ -42,6 +42,11 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	}
 
 	@Override
+	public boolean onGround() {
+		return this.getParent().onGround();
+	}
+
+	@Override
 	public boolean isNoGravity() {
 		return true;
 	}
@@ -54,6 +59,11 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	@Override
 	public ItemStack getPickResult() {
 		return this.getParent().getPickResult();
+	}
+
+	@Override
+	public boolean isShiftKeyDown() {
+		return this.getParent().isShiftKeyDown();
 	}
 
 	@Override
@@ -102,6 +112,11 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	@Override
 	public void addDeltaMovement(final Vec3 vel) {
 		this.getParent().addDeltaMovement(vel);
+	}
+
+	@Override
+	public float maxUpStep() {
+		return this.getParent().maxUpStep();
 	}
 
 	@Override
