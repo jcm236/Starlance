@@ -1,5 +1,7 @@
 package net.jcm.vsch.entity.player;
 
+import net.jcm.vsch.accessor.EntityAccessor;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -7,6 +9,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 
@@ -31,6 +34,11 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	@Override
 	public boolean shouldBeSaved() {
 		return false;
+	}
+
+	@Override
+	protected void onInsideBlock(final BlockState block) {
+		((EntityAccessor)(this.getParent())).vsch$onInsideBlock(block);
 	}
 
 	@Override

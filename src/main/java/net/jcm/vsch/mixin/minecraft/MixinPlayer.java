@@ -1,5 +1,6 @@
 package net.jcm.vsch.mixin.minecraft;
 
+import net.jcm.vsch.accessor.EntityAccessor;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
 import net.jcm.vsch.util.VSCHUtils;
@@ -101,6 +102,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Vec3 pos = this.position();
 		double dx = 0, dy = newHeight - oldHeight, dz = 0;
 		this.setPos(pos.x + dx, pos.y + dy, pos.z + dz);
+	}
+
+	@Override
+	protected void checkInsideBlocks() {
+		super.checkInsideBlocks();
+		((EntityAccessor)(this.chestPart)).vsch$checkInsideBlocks();
+		((EntityAccessor)(this.feetPart)).vsch$checkInsideBlocks();
 	}
 
 	@Override
