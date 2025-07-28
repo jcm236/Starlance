@@ -17,6 +17,7 @@
     "create.MixinMechanicalBearingBlockEntity",
     "minecraft.MixinChunkMap",
     "minecraft.MixinEntity",
+    "minecraft.MixinLivingEntity",
     "minecraft.MixinMob",
     "minecraft.MixinPlayer",
     "minecraft.MixinPlayerRenderer",
@@ -26,7 +27,8 @@
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
   ],
   "client": [
-    "client.MixinGui"
+    "client.MixinGui",
+    "client.MixinLocalPlayer"
   ],
   "injectors": {
     "defaultRequire": 1

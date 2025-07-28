@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -58,6 +59,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	protected MixinPlayer() {
 		super(null, null);
 	}
+
+	@Shadow
+	public abstract Abilities getAbilities();
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void postInit(final Level level, final BlockPos pos, final float yRot, final GameProfile profile, final CallbackInfo ci) {
@@ -112,31 +116,34 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public boolean shouldDiscardFriction() {
-		if (super.shouldDiscardFriction()) {
-			return true;
-		}
+		return super.shouldDiscardFriction() || this.vsch$shouldFreeRotate();
+	}
+
+	@Override
+	public boolean vsch$hasSupportingBlock() {
 		if (!this.vsch$shouldFreeRotate()) {
 			return false;
 		}
 		final Level level = this.level();
-		final BooleanRef hasFirction = new BooleanRef(false);
+		final BooleanRef hasSupport = new BooleanRef(false);
 		final Entity[] parts = new Entity[]{this, this.chestPart, this.feetPart};
 		for (final Entity part : parts) {
 			VSGameUtilsKt.transformFromWorldToNearbyShipsAndWorld(level, part.getBoundingBox(), (box) -> {
-				if (hasFirction.value) {
+				if (hasSupport.value) {
 					return;
 				}
 				for (final VoxelShape shape : level.getBlockCollisions(part, box.inflate(SUPPORT_CHECK_DISTANCE))) {
 					if (!shape.isEmpty()) {
-						hasFirction.value = true;
+						hasSupport.value = true;
+						return;
 					}
 				}
 			});
-			if (hasFirction.value) {
+			if (hasSupport.value) {
 				break;
 			}
 		}
-		return !hasFirction.value;
+		return hasSupport.value;
 	}
 
 	@Override
