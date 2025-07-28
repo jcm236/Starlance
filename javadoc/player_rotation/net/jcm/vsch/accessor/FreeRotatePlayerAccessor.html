@@ -74,7 +74,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></code>, <code><a href="../mixin/minecraft/MixinServerPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerPlayer</a></code></dd>
+<dd><code><a href="../mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></code>, <code><a href="../mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></code>, <code><a href="../mixin/minecraft/MixinServerPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerPlayer</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">FreeRotatePlayerAccessor</span></div>
@@ -96,8 +96,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vsch$getVanillaDimensions(net.minecraft.world.entity.Pose)" class="member-name-link">vsch$getVanillaDimensions</a><wbr>(net.minecraft.world.entity.Pose&nbsp;pose)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vsch$shouldFreeRotate()" class="member-name-link">vsch$shouldFreeRotate</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vsch$hasSupportingBlock()" class="member-name-link">vsch$hasSupportingBlock</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#vsch$shouldFreeRotate()" class="member-name-link">vsch$shouldFreeRotate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -116,6 +119,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="vsch$shouldFreeRotate()">
 <h3>vsch$shouldFreeRotate</h3>
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">vsch$shouldFreeRotate</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="vsch$hasSupportingBlock()">
+<h3>vsch$hasSupportingBlock</h3>
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">vsch$hasSupportingBlock</span>()</div>
 </section>
 </li>
 <li>
