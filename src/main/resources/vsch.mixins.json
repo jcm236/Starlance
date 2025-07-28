@@ -20,6 +20,7 @@
     "minecraft.MixinMob",
     "minecraft.MixinPlayer",
     "minecraft.MixinPlayerRenderer",
+    "minecraft.MixinServerPlayer",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
