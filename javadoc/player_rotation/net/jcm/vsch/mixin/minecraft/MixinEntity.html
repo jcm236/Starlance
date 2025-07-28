@@ -110,15 +110,26 @@ implements <a href="../../accessor/EntityAccessor.html" title="interface in net.
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract net.minecraft.world.phys.Vec3</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#collide(net.minecraft.world.phys.Vec3)" class="member-name-link">collide</a><wbr>(net.minecraft.world.phys.Vec3&nbsp;movement)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#checkInsideBlocks()" class="member-name-link">checkInsideBlocks</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#collide(net.minecraft.world.phys.Vec3,org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable)" class="member-name-link">collide</a><wbr>(net.minecraft.world.phys.Vec3&nbsp;originMovement,
- org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable&lt;net.minecraft.world.phys.Vec3&gt;&nbsp;cir)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract net.minecraft.world.phys.Vec3</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#collide(net.minecraft.world.phys.Vec3)" class="member-name-link">collide</a><wbr>(net.minecraft.world.phys.Vec3&nbsp;movement)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract net.minecraft.world.level.Level</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#level()" class="member-name-link">level</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onInsideBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">onInsideBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;block)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vsch$checkInsideBlocks()" class="member-name-link">vsch$checkInsideBlocks</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vsch$collide(net.minecraft.world.phys.Vec3)" class="member-name-link">vsch$collide</a><wbr>(net.minecraft.world.phys.Vec3&nbsp;movement)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.phys.Vec3</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vsch$collide(net.minecraft.world.phys.Vec3)" class="member-name-link">vsch$collide</a><wbr>(net.minecraft.world.phys.Vec3&nbsp;movement)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vsch$onInsideBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vsch$onInsideBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;block)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -152,9 +163,27 @@ implements <a href="../../accessor/EntityAccessor.html" title="interface in net.
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="level()">
+<h3>level</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">net.minecraft.world.level.Level</span>&nbsp;<span class="element-name">level</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="collide(net.minecraft.world.phys.Vec3)">
 <h3>collide</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">net.minecraft.world.phys.Vec3</span>&nbsp;<span class="element-name">collide</span><wbr><span class="parameters">(net.minecraft.world.phys.Vec3&nbsp;movement)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkInsideBlocks()">
+<h3>checkInsideBlocks</h3>
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkInsideBlocks</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onInsideBlock(net.minecraft.world.level.block.state.BlockState)">
+<h3>onInsideBlock</h3>
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onInsideBlock</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;block)</span></div>
 </section>
 </li>
 <li>
@@ -168,10 +197,23 @@ implements <a href="../../accessor/EntityAccessor.html" title="interface in net.
 </section>
 </li>
 <li>
-<section class="detail" id="collide(net.minecraft.world.phys.Vec3,org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable)">
-<h3>collide</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">collide</span><wbr><span class="parameters">(net.minecraft.world.phys.Vec3&nbsp;originMovement,
- org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable&lt;net.minecraft.world.phys.Vec3&gt;&nbsp;cir)</span></div>
+<section class="detail" id="vsch$checkInsideBlocks()">
+<h3>vsch$checkInsideBlocks</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">vsch$checkInsideBlocks</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../accessor/EntityAccessor.html#vsch$checkInsideBlocks()">vsch$checkInsideBlocks</a></code>&nbsp;in interface&nbsp;<code><a href="../../accessor/EntityAccessor.html" title="interface in net.jcm.vsch.accessor">EntityAccessor</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="vsch$onInsideBlock(net.minecraft.world.level.block.state.BlockState)">
+<h3>vsch$onInsideBlock</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">vsch$onInsideBlock</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;block)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../accessor/EntityAccessor.html#vsch$onInsideBlock(net.minecraft.world.level.block.state.BlockState)">vsch$onInsideBlock</a></code>&nbsp;in interface&nbsp;<code><a href="../../accessor/EntityAccessor.html" title="interface in net.jcm.vsch.accessor">EntityAccessor</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>
