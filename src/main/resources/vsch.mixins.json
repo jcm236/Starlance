@@ -16,7 +16,10 @@
     "create.MixinLinearActuatorBlockEntity",
     "create.MixinMechanicalBearingBlockEntity",
     "minecraft.MixinChunkMap",
+    "minecraft.MixinEntity",
     "minecraft.MixinMob",
+    "minecraft.MixinPlayer",
+    "minecraft.MixinPlayerRenderer",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"

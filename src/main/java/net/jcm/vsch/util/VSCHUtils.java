@@ -25,6 +25,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -140,6 +141,12 @@ public class VSCHUtils {
 
 	public static ServerLevel dimToLevel(final String dimensionString) {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
+	}
+
+	public static boolean isSpaceLevel(final Level level) {
+		return level.dimension().location().getNamespace().equals("cosmos");
+		// final CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(level);
+		// return worldVars.dimension_type.getString(level.dimension().location().toString()).equals("space");
 	}
 
 	/**

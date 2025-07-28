@@ -66,6 +66,8 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
 
+	public static final ForgeConfigSpec.BooleanValue PLAYER_FREE_ROTATION_IN_SPACE;
+
 	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
 		"minecraft:barrier",
 		"minecraft:bedrock",
@@ -128,6 +130,8 @@ public class VSCHConfig {
 		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.08);
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
+
+		PLAYER_FREE_ROTATION_IN_SPACE = BUILDER.comment("Allow player to free rotate in space.").define("player_free_rotation_in_space", false);
 
 		BUILDER.pop();
 
