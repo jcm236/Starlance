@@ -23,6 +23,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -114,9 +116,23 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.setPos(pos.x + dx, pos.y + dy, pos.z + dz);
 	}
 
+	@WrapOperation(
+		method = "updatePlayerPose",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isShiftKeyDown()Z")
+	)
+	protected boolean updatePlayerPose$isShiftKeyDown(final Player self, final Operation operation) {
+		if (((Boolean)(operation.call(self))) == Boolean.FALSE) {
+			return false;
+		}
+		if (this.getAbilities().flying || !this.vsch$shouldFreeRotate()) {
+			return true;
+		}
+		return this.onGround();
+	}
+
 	@Override
 	public boolean shouldDiscardFriction() {
-		return super.shouldDiscardFriction() || this.vsch$shouldFreeRotate();
+		return super.shouldDiscardFriction() || !this.getAbilities().flying && this.vsch$shouldFreeRotate();
 	}
 
 	@Override
