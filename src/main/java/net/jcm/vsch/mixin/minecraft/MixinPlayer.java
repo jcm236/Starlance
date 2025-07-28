@@ -3,6 +3,7 @@ package net.jcm.vsch.mixin.minecraft;
 import net.jcm.vsch.accessor.EntityAccessor;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
+import net.jcm.vsch.util.BooleanRef;
 import net.jcm.vsch.util.VSCHUtils;
 
 import com.mojang.authlib.GameProfile;
@@ -17,6 +18,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,6 +43,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	private static final float SPACE_ENTITY_SIZE = 0.6f;
 	@Unique
 	private static final EntityDimensions SPACE_ENTITY_DIM = EntityDimensions.scalable(SPACE_ENTITY_SIZE, SPACE_ENTITY_SIZE);
+	@Unique
+	private static final double SUPPORT_CHECK_DISTANCE = 0.1;
 
 	@Unique
 	private MultiPartPlayer[] parts;
@@ -102,6 +108,35 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Vec3 pos = this.position();
 		double dx = 0, dy = newHeight - oldHeight, dz = 0;
 		this.setPos(pos.x + dx, pos.y + dy, pos.z + dz);
+	}
+
+	@Override
+	public boolean shouldDiscardFriction() {
+		if (super.shouldDiscardFriction()) {
+			return true;
+		}
+		if (!this.vsch$shouldFreeRotate()) {
+			return false;
+		}
+		final Level level = this.level();
+		final BooleanRef hasFirction = new BooleanRef(false);
+		final Entity[] parts = new Entity[]{this, this.chestPart, this.feetPart};
+		for (final Entity part : parts) {
+			VSGameUtilsKt.transformFromWorldToNearbyShipsAndWorld(level, part.getBoundingBox(), (box) -> {
+				if (hasFirction.value) {
+					return;
+				}
+				for (final VoxelShape shape : level.getBlockCollisions(part, box.inflate(SUPPORT_CHECK_DISTANCE))) {
+					if (!shape.isEmpty()) {
+						hasFirction.value = true;
+					}
+				}
+			});
+			if (hasFirction.value) {
+				break;
+			}
+		}
+		return !hasFirction.value;
 	}
 
 	@Override
