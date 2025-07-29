@@ -1,7 +1,7 @@
 package net.jcm.vsch.mixin.client;
 
+import net.jcm.vsch.accessor.EntityRotationPacketAccessor;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
-import net.jcm.vsch.accessor.ServerboundMovePlayerPacketAccessor;
 
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
@@ -20,7 +20,7 @@ public abstract class MixinMultiPlayerGameMode {
 	)
 	public ServerboundMovePlayerPacket.PosRot useItem$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet, @Local final Player player) {
 		if (player instanceof FreeRotatePlayerAccessor frp) {
-			((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}

@@ -1,11 +1,11 @@
 package net.jcm.vsch.mixin.minecraft;
 
-import net.jcm.vsch.accessor.ClientboundPlayerPositionPacketAccessor;
+import net.jcm.vsch.accessor.EntityRotationPacketAccessor;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 
 import org.joml.Quaternionf;
 
@@ -15,8 +15,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientboundPlayerPositionPacket.class)
-public abstract class MixinClientboundPlayerPositionPacket implements Packet<ClientGamePacketListener>, ClientboundPlayerPositionPacketAccessor {
+@Mixin({
+	ClientboundAddPlayerPacket.class,
+	ClientboundPlayerPositionPacket.class,
+	ClientboundTeleportEntityPacket.class
+})
+public abstract class MixinEntityRotationPacketsFinal implements EntityRotationPacketAccessor {
 	@Unique
 	private Quaternionf rotation = new Quaternionf();
 

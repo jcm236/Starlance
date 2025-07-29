@@ -1,8 +1,7 @@
 package net.jcm.vsch.mixin.minecraft;
 
-import net.jcm.vsch.accessor.ClientboundPlayerPositionPacketAccessor;
+import net.jcm.vsch.accessor.EntityRotationPacketAccessor;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
-import net.jcm.vsch.accessor.ServerboundMovePlayerPacketAccessor;
 
 import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
@@ -47,7 +46,7 @@ public abstract class MixinServerGamePacketListenerImpl {
 		if (!packet.hasRotation()) {
 			return false;
 		}
-		final Quaternionf rotation = ((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation();
+		final Quaternionf rotation = ((EntityRotationPacketAccessor)(packet)).vsch$getRotation();
 		return !rotation.isFinite();
 	}
 
@@ -56,7 +55,7 @@ public abstract class MixinServerGamePacketListenerImpl {
 		if (!packet.hasRotation() || !(this.player instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setRotation(((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation());
+		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$getRotation());
 	}
 
 	@ModifyExpressionValue(
@@ -65,7 +64,7 @@ public abstract class MixinServerGamePacketListenerImpl {
 	)
 	public ClientboundPlayerPositionPacket teleport$new$ClientboundPlayerPositionPacket(final ClientboundPlayerPositionPacket packet) {
 		if (this.player instanceof FreeRotatePlayerAccessor frp) {
-			((ClientboundPlayerPositionPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}

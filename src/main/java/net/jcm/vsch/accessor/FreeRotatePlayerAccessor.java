@@ -16,6 +16,10 @@ public interface FreeRotatePlayerAccessor {
 
 	void vsch$setRotationO(Quaternionf rotation);
 
+	Quaternionf vsch$getLerpRotation();
+
+	void vsch$setLerpRotation(Quaternionf rotation);
+
 	boolean vsch$hasSupportingBlock();
 
 	EntityDimensions vsch$getVanillaDimensions(Pose pose);

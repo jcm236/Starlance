@@ -63,6 +63,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Quaternionf rotationO = new Quaternionf();
 	@Unique
+	private Quaternionf rotationLerp = new Quaternionf();
+	@Unique
 	private MultiPartPlayer[] parts;
 	@Unique
 	private MultiPartPlayer chestPart;
@@ -114,7 +116,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.rotation != rotation) {
 			this.rotation.set(rotation);
 		}
-		final Vector3f angles = rotation.getEulerAnglesYXZ(new Vector3f());
+		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
 		super.setXRot(angles.x * Mth.RAD_TO_DEG);
 		super.setYRot(-angles.y * Mth.RAD_TO_DEG);
 		this.yHeadRot = this.yBodyRot = this.getYRot();
@@ -136,6 +138,16 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	public Quaternionf vsch$getLerpRotation() {
+		return this.rotationLerp;
+	}
+
+	@Override
+	public void vsch$setLerpRotation(final Quaternionf rotation) {
+		this.rotationLerp.set(rotation);
+	}
+
+	@Override
 	public void setYRot(final float yRot) {
 		super.setYRot(yRot);
 		this.reCalcRotation();
@@ -149,7 +161,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private void reCalcRotation() {
-		if (this.firstTick) {
+		if (this.firstTick || !this.freeRotation) {
 			return;
 		}
 		final Quaternionf rotation = this.vsch$getRotation();

@@ -7,15 +7,22 @@ import net.minecraft.world.entity.LivingEntity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
 	protected MixinLivingEntity() {
 		super(null, null);
 	}
+
+	@Shadow
+	protected int lerpSteps;
 
 	@WrapOperation(
 		method = "travel",
@@ -31,5 +38,19 @@ public abstract class MixinLivingEntity extends Entity {
 			z *= 0.91;
 		}
 		operation.call(self, x, y, z);
+	}
+
+	@Inject(
+		method = "aiStep",
+		slice = @Slice(
+			from = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setXRot(F)V", ordinal = 0)
+		),
+		at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;lerpSteps:I", opcode = Opcodes.PUTFIELD)
+	)
+	public void aiStep$lerp(final CallbackInfo ci) {
+		if (!(this instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
+			return;
+		}
+		frp.vsch$setRotation(frp.vsch$getRotation().slerp(frp.vsch$getLerpRotation(), 1.0f / this.lerpSteps));
 	}
 }

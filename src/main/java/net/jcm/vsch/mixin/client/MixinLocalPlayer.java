@@ -1,6 +1,6 @@
 package net.jcm.vsch.mixin.client;
 
-import net.jcm.vsch.accessor.ServerboundMovePlayerPacketAccessor;
+import net.jcm.vsch.accessor.EntityRotationPacketAccessor;
 import net.jcm.vsch.mixin.minecraft.MixinPlayer;
 
 import net.minecraft.client.player.Input;
@@ -25,11 +25,11 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 	protected abstract boolean isControlledCamera();
 
 	@ModifyExpressionValue(
-		method = "tick",
+		method = {"tick", "sendPosition"},
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Rot;")
 	)
-	public ServerboundMovePlayerPacket.Rot tick$new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
-		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+	public ServerboundMovePlayerPacket.Rot new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
+		((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
 		return packet;
 	}
 
@@ -38,16 +38,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;")
 	)
 	public ServerboundMovePlayerPacket.PosRot sendPosition$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet) {
-		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
-		return packet;
-	}
-
-	@ModifyExpressionValue(
-		method = "sendPosition",
-		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Rot;")
-	)
-	public ServerboundMovePlayerPacket.Rot sendPosition$new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
-		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
 		return packet;
 	}
 
