@@ -29,7 +29,6 @@ public abstract class MixinPlayerRenderer {
 		final int packedLight,
 		final Operation<Void> operation
 	) {
-		System.out.println("rendering player: " + player + ", " + (player instanceof FreeRotatePlayerAccessor) + ", " + (!(player instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()));
 		if (!(player instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
 			operation.call(player, yaw, partialTick, poseStack, bufferSource, packedLight);
 			return;

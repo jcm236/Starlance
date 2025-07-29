@@ -148,7 +148,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.rotation == null) {
 			return;
 		}
-		this.rotation.rotationYXZ(Mth.DEG_TO_RAD * -this.getYRot(), Mth.DEG_TO_RAD * this.getXRot(), 0);
+		final Vector3f oldAngles = this.rotation.getEulerAnglesYXZ(new Vector3f());
+		this.rotation.rotationYXZ(Mth.DEG_TO_RAD * -this.getYRot(), Mth.DEG_TO_RAD * this.getXRot(), oldAngles.z);
 	}
 
 	@Unique
@@ -161,7 +162,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.refreshDimensions();
 		if (freeRotation) {
 			this.reCalcRotation();
-			this.rotationO.rotationYXZ(Mth.DEG_TO_RAD * -this.yRotO, Mth.DEG_TO_RAD * this.xRotO, 0);
+			final Vector3f oldAnglesO = this.rotation.getEulerAnglesYXZ(new Vector3f());
+			this.rotationO.rotationYXZ(Mth.DEG_TO_RAD * -this.yRotO, Mth.DEG_TO_RAD * this.xRotO, oldAnglesO.z);
 		}
 	}
 
@@ -216,16 +218,14 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (x == 0 && y == 0) {
 			return;
 		}
-		final float yaw = (float)(x) * 0.15f * Mth.DEG_TO_RAD;
-		final float pitch = -(float)(y) * 0.15f * Mth.DEG_TO_RAD;
-		final Vector3f localX = new Vector3f(1, 0, 0).rotate(this.rotation);
-		final Vector3f localY = new Vector3f(0, 1, 0).rotate(this.rotation);
+		final float yaw = -(float)(x) * 0.15f * Mth.DEG_TO_RAD;
+		final float pitch = (float)(y) * 0.15f * Mth.DEG_TO_RAD;
 
-		final Quaternionf pitchRot = new Quaternionf().rotationAxis(pitch, localX.x, localX.y, localX.z);
-		final Quaternionf yawRot = new Quaternionf().rotationAxis(yaw, localY.x, localY.y, localY.z);
+		final Quaternionf pitchRot = new Quaternionf().rotateX(pitch);
+		final Quaternionf yawRot = new Quaternionf().rotateY(yaw);
 
-		this.vsch$setRotation(this.rotation.mul(pitchRot).mul(yawRot).normalize());
-		this.vsch$setRotationO(this.rotationO.mul(pitchRot).mul(yawRot).normalize());
+		this.vsch$setRotation(this.rotation.mul(yawRot).mul(pitchRot).normalize());
+		this.vsch$setRotationO(this.rotationO.mul(yawRot).mul(pitchRot).normalize());
 	}
 
 	@Override

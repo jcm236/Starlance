@@ -41,10 +41,9 @@ public abstract class MixinCamera {
 		if (!(entity instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
 			return;
 		}
-		// frp.vsch$getRotationO().slerp(frp.vsch$getRotation(), partialTick, this.rotation);
-		this.rotation.set(frp.vsch$getRotation());
+		frp.vsch$getRotationO().slerp(frp.vsch$getRotation(), partialTick, this.rotation);
 		if (isThirdPerson && isMirrored) {
-			this.rotation.conjugate();
+			this.rotation.rotateY((float)(Math.PI));
 		}
 	}
 
