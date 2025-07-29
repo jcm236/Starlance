@@ -51,7 +51,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -105,6 +105,15 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected int</code></div>
+<div class="col-second even-row-color"><code><a href="#lerpSteps" class="member-name-link">lerpSteps</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.entity.Entity">Fields inherited from class&nbsp;net.minecraft.world.entity.Entity</h3>
 <code>BASE_TICKS_REQUIRED_TO_FREEZE, blocksBuilding, BOARDING_COOLDOWN, boardingCooldown, BREATHING_DISTANCE_BELOW_EYES, DATA_POSE, DATA_SHARED_FLAGS_ID, DEFAULT_BB_HEIGHT, DEFAULT_BB_WIDTH, DELTA_AFFECTED_BY_BLOCKS_BELOW_0_2, DELTA_AFFECTED_BY_BLOCKS_BELOW_0_5, DELTA_AFFECTED_BY_BLOCKS_BELOW_1_0, ENTITY_COUNTER, entityData, fallDistance, firstTick, FLAG_FALL_FLYING, FLAG_GLOWING, FLAG_ONFIRE, fluidHeight, flyDist, forgeFluidTypeHeight, FREEZE_HURT_FREQUENCY, hasImpulse, horizontalCollision, hurtMarked, ID_TAG, invulnerableTime, isInPowderSnow, isInsidePortal, mainSupportingBlockPos, MAX_ENTITY_TAG_COUNT, minorHorizontalCollision, moveDist, noCulling, noPhysics, PASSENGERS_TAG, portalEntrancePos, portalTime, random, stringUUID, stuckSpeedMultiplier, tickCount, TOTAL_AIR_SUPPLY, uuid, UUID_TAG, verticalCollision, verticalCollisionBelow, walkDist, walkDistO, wasEyeInWater, wasInPowderSnow, wasOnFire, wasTouchingWater, xo, xOld, xRotO, yo, yOld, yRotO, zo, zOld</code></div>
@@ -140,12 +149,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">travel</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;self,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep$lerp</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">travel</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;self,
  double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z,
  com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;operation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -173,6 +185,20 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="lerpSteps">
+<h3>lerpSteps</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">lerpSteps</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -200,6 +226,12 @@ loadScripts(document, 'script');</script>
  double&nbsp;y,
  double&nbsp;z,
  com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;operation)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)">
+<h3>aiStep$lerp</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">aiStep$lerp</span><wbr><span class="parameters">(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</span></div>
 </section>
 </li>
 </ul>

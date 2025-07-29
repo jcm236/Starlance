@@ -106,6 +106,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleAddPlayer(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.client.player.RemotePlayer)" class="member-name-link">handleAddPlayer</a><wbr>(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.client.player.RemotePlayer&nbsp;player)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMoveEntity(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)" class="member-name-link">handleMoveEntity</a><wbr>(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.world.entity.Entity&nbsp;entity)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMovePlayer$acceptTeleport$before(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.player.Player)" class="member-name-link">handleMovePlayer$acceptTeleport$before</a><wbr>(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket&nbsp;packet,
  org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
  net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
@@ -114,6 +124,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMovePlayer$new$ServerboundMovePlayerPacket$PosRot(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot,net.minecraft.world.entity.player.Player)" class="member-name-link">handleMovePlayer$new$ServerboundMovePlayerPacket$PosRot</a><wbr>(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot&nbsp;packet,
  net.minecraft.world.entity.player.Player&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleTeleportEntity(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)" class="member-name-link">handleTeleportEntity</a><wbr>(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.world.entity.Entity&nbsp;entity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -145,6 +160,30 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="handleAddPlayer(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.client.player.RemotePlayer)">
+<h3>handleAddPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleAddPlayer</span><wbr><span class="parameters">(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.client.player.RemotePlayer&nbsp;player)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleTeleportEntity(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)">
+<h3>handleTeleportEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleTeleportEntity</span><wbr><span class="parameters">(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.world.entity.Entity&nbsp;entity)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleMoveEntity(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)">
+<h3>handleMoveEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleMoveEntity</span><wbr><span class="parameters">(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci,
+ net.minecraft.world.entity.Entity&nbsp;entity)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="handleMovePlayer$acceptTeleport$before(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.player.Player)">
 <h3>handleMovePlayer$acceptTeleport$before</h3>

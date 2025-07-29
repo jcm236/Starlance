@@ -107,6 +107,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/AirThrusterBlockEntity.html#%3Cinit%3E(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">AirThrusterBlockEntity(BlockPos, BlockState)</a> - Constructor for class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/AirThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">AirThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html#aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep$lerp(CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#aiStep$setCrouching$isShiftKeyDown(net.minecraft.client.player.LocalPlayer,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">aiStep$setCrouching$isShiftKeyDown(LocalPlayer, Operation&lt;Boolean&gt;)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html#appendHoverText(net.minecraft.world.item.ItemStack,net.minecraft.world.level.BlockGetter,java.util.List,net.minecraft.world.item.TooltipFlag)" class="member-name-link">appendHoverText(ItemStack, BlockGetter, List&lt;Component&gt;, TooltipFlag)</a> - Method in class net.jcm.vsch.blocks.custom.<a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html" title="class in net.jcm.vsch.blocks.custom">BaseThrusterBlock</a></dt>
@@ -264,8 +266,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Clamps all axis of a Vector3d between -limit and +limit (not abs).</div>
 </dd>
-<dt><a href="net/jcm/vsch/accessor/ClientboundPlayerPositionPacketAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">ClientboundPlayerPositionPacketAccessor</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/ClientRegistry.html" class="type-name-link" title="class in net.jcm.vsch.client">ClientRegistry</a> - Class in <a href="net/jcm/vsch/client/package-summary.html">net.jcm.vsch.client</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/ClientRegistry.html#%3Cinit%3E()" class="member-name-link">ClientRegistry()</a> - Constructor for class net.jcm.vsch.client.<a href="net/jcm/vsch/client/ClientRegistry.html" title="class in net.jcm.vsch.client">ClientRegistry</a></dt>
@@ -447,6 +447,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/entity/VSCHEntities.html#ENTITIES" class="member-name-link">ENTITIES</a> - Static variable in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/VSCHEntities.html" title="class in net.jcm.vsch.entity">VSCHEntities</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/EntityAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">EntityAccessor</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/EntityRotationPacketAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">EntityRotationPacketAccessor</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html#equals(dan200.computercraft.api.peripheral.IPeripheral)" class="member-name-link">equals(IPeripheral)</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a></dt>
 <dd>&nbsp;</dd>
@@ -933,6 +935,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html#handleAddPlayer(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.client.player.RemotePlayer)" class="member-name-link">handleAddPlayer(ClientboundAddPlayerPacket, CallbackInfo, RemotePlayer)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html" title="class in net.jcm.vsch.mixin.client">MixinClientPacketListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html#handleMoveEntity(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)" class="member-name-link">handleMoveEntity(ClientboundMoveEntityPacket, CallbackInfo, Entity)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html" title="class in net.jcm.vsch.mixin.client">MixinClientPacketListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html#handleMovePlayer$acceptTeleport$before(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.player.Player)" class="member-name-link">handleMovePlayer$acceptTeleport$before(ClientboundPlayerPositionPacket, CallbackInfo, Player)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html" title="class in net.jcm.vsch.mixin.client">MixinClientPacketListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerGamePacketListenerImpl.html#handleMovePlayer$containsInvalidValues(double,double,double,float,float,com.llamalad7.mixinextras.injector.wrapoperation.Operation,net.minecraft.network.protocol.game.ServerboundMovePlayerPacket)" class="member-name-link">handleMovePlayer$containsInvalidValues(double, double, double, float, float, Operation&lt;Boolean&gt;, ServerboundMovePlayerPacket)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerGamePacketListenerImpl.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerGamePacketListenerImpl</a></dt>
@@ -942,6 +948,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerGamePacketListenerImpl.html#handleMovePlayer$wrapDegrees(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">handleMovePlayer$wrapDegrees(ServerboundMovePlayerPacket, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerGamePacketListenerImpl.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerGamePacketListenerImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#handleTeleport(org.valkyrienskies.core.api.ships.Ship,org.joml.Vector3d)" class="member-name-link">handleTeleport(Ship, Vector3d)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html#handleTeleportEntity(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo,net.minecraft.world.entity.Entity)" class="member-name-link">handleTeleportEntity(ClientboundTeleportEntityPacket, CallbackInfo, Entity)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html" title="class in net.jcm.vsch.mixin.client">MixinClientPacketListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
 <dd>
@@ -970,7 +978,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/create/ponder/scenes/DragInducerScene.html#inducer(com.simibubi.create.foundation.ponder.SceneBuilder,com.simibubi.create.foundation.ponder.SceneBuildingUtil)" class="member-name-link">inducer(SceneBuilder, SceneBuildingUtil)</a> - Static method in class net.jcm.vsch.compat.create.ponder.scenes.<a href="net/jcm/vsch/compat/create/ponder/scenes/DragInducerScene.html" title="class in net.jcm.vsch.compat.create.ponder.scenes">DragInducerScene</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html#init$read(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">init$read(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundPlayerPositionPacket</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html#init$read(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">init$read(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketsFinal</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#input" class="member-name-link">input</a> - Variable in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
 <dd>&nbsp;</dd>
@@ -1064,6 +1072,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of the <code>left</code> record component.</div>
 </dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html#lerpSteps" class="member-name-link">lerpSteps</a> - Variable in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#level()" class="member-name-link">level()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/VSCHConfig.html#LIMIT_SPEED" class="member-name-link">LIMIT_SPEED</a> - Static variable in class net.jcm.vsch.config.<a href="net/jcm/vsch/config/VSCHConfig.html" title="class in net.jcm.vsch.config">VSCHConfig</a></dt>
@@ -1145,9 +1155,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html#%3Cinit%3E()" class="member-name-link">MixinChunkMap()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundPlayerPositionPacket</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_PosRot.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundMoveEntityPacket_PosRot</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html#%3Cinit%3E()" class="member-name-link">MixinClientboundPlayerPositionPacket()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundPlayerPositionPacket</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_PosRot.html#%3Cinit%3E()" class="member-name-link">MixinClientboundMoveEntityPacket_PosRot()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_PosRot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundMoveEntityPacket_PosRot</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_Rot.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundMoveEntityPacket_Rot</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_Rot.html#%3Cinit%3E()" class="member-name-link">MixinClientboundMoveEntityPacket_Rot()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundMoveEntityPacket_Rot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundMoveEntityPacket_Rot</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinClientPacketListener.html" class="type-name-link" title="class in net.jcm.vsch.mixin.client">MixinClientPacketListener</a> - Class in <a href="net/jcm/vsch/mixin/client/package-summary.html">net.jcm.vsch.mixin.client</a></dt>
 <dd>&nbsp;</dd>
@@ -1164,6 +1178,18 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#%3Cinit%3E()" class="member-name-link">MixinEntity()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPackets</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html#%3Cinit%3E()" class="member-name-link">MixinEntityRotationPackets()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPackets</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketsFinal</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html#%3Cinit%3E()" class="member-name-link">MixinEntityRotationPacketsFinal()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketsFinal</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketSubClasses.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketSubClasses</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketSubClasses.html#%3Cinit%3E()" class="member-name-link">MixinEntityRotationPacketSubClasses()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketSubClasses.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketSubClasses</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinGameRenderer.html" class="type-name-link" title="class in net.jcm.vsch.mixin.client">MixinGameRenderer</a> - Class in <a href="net/jcm/vsch/mixin/client/package-summary.html">net.jcm.vsch.mixin.client</a></dt>
 <dd>&nbsp;</dd>
@@ -1215,10 +1241,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#%3Cinit%3E()" class="member-name-link">MixinPlayer()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket.html#%3Cinit%3E()" class="member-name-link">MixinServerboundMovePlayerPacket()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_PosRot.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_PosRot</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_PosRot.html#%3Cinit%3E()" class="member-name-link">MixinServerboundMovePlayerPacket_PosRot()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_PosRot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_PosRot</a></dt>
@@ -1226,6 +1248,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_Rot.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_Rot</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_Rot.html#%3Cinit%3E()" class="member-name-link">MixinServerboundMovePlayerPacket_Rot()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_Rot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_Rot</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerEntity</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html#%3Cinit%3E()" class="member-name-link">MixinServerEntity()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerGamePacketListenerImpl.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinServerGamePacketListenerImpl</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
@@ -1387,6 +1413,16 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/util/assemble/package-summary.html">net.jcm.vsch.util.assemble</a> - package net.jcm.vsch.util.assemble</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/rot/package-summary.html">net.jcm.vsch.util.rot</a> - package net.jcm.vsch.util.rot</dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerPlayer.html#new$ClientboundAddPlayerPacket(net.minecraft.network.protocol.game.ClientboundAddPlayerPacket)" class="member-name-link">new$ClientboundAddPlayerPacket(ClientboundAddPlayerPacket)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerPlayer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html#new$ClientboundMoveEntityPacket$PosRot(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket.PosRot)" class="member-name-link">new$ClientboundMoveEntityPacket$PosRot(ClientboundMoveEntityPacket.PosRot)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html#new$ClientboundMoveEntityPacket$Rot(net.minecraft.network.protocol.game.ClientboundMoveEntityPacket.Rot)" class="member-name-link">new$ClientboundMoveEntityPacket$Rot(ClientboundMoveEntityPacket.Rot)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html#new$ClientboundTeleportEntityPacket(net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket)" class="member-name-link">new$ClientboundTeleportEntityPacket(ClientboundTeleportEntityPacket)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#new$ServerboundMovePlayerPacket$Rot(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.Rot)" class="member-name-link">new$ServerboundMovePlayerPacket$Rot(ServerboundMovePlayerPacket.Rot)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html#newBlockEntity(net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">newBlockEntity(BlockPos, BlockState)</a> - Method in class net.jcm.vsch.blocks.custom.<a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html" title="class in net.jcm.vsch.blocks.custom">BaseThrusterBlock</a></dt>
 <dd>&nbsp;</dd>
@@ -1701,11 +1737,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#sendPosition$new$ServerboundMovePlayerPacket$PosRot(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot)" class="member-name-link">sendPosition$new$ServerboundMovePlayerPacket$PosRot(ServerboundMovePlayerPacket.PosRot)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#sendPosition$new$ServerboundMovePlayerPacket$Rot(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.Rot)" class="member-name-link">sendPosition$new$ServerboundMovePlayerPacket$Rot(ServerboundMovePlayerPacket.Rot)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#serverAiStep(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">serverAiStep(CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/accessor/ServerboundMovePlayerPacketAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">ServerboundMovePlayerPacketAccessor</a> - Interface in <a href="net/jcm/vsch/accessor/package-summary.html">net.jcm.vsch.accessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.mixin.valkyrienskies.accessor">ServerShipObjectWorldAccessor</a> - Interface in <a href="net/jcm/vsch/mixin/valkyrienskies/accessor/package-summary.html">net.jcm.vsch.mixin.valkyrienskies.accessor</a></dt>
 <dd>
@@ -1983,8 +2015,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#tick(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">tick(CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html#tick$new$ServerboundMovePlayerPacket$Rot(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.Rot)" class="member-name-link">tick$new$ServerboundMovePlayerPacket$Rot(ServerboundMovePlayerPacket.Rot)</a> - Method in class net.jcm.vsch.mixin.client.<a href="net/jcm/vsch/mixin/client/MixinLocalPlayer.html" title="class in net.jcm.vsch.mixin.client">MixinLocalPlayer</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterEngine.html#tickBurningObjects(net.jcm.vsch.blocks.thruster.ThrusterEngineContext,java.util.List,net.minecraft.core.Direction)" class="member-name-link">tickBurningObjects(ThrusterEngineContext, List&lt;BlockPos&gt;, Direction)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngine.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterEngine</a></dt>
 <dd>
 <div class="block">tickBurningObjects sets on fire entities/blocks that should be burned by the thruster</div>
@@ -2143,17 +2173,19 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#vsch$collide(net.minecraft.world.phys.Vec3)" class="member-name-link">vsch$collide(Vec3)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/accessor/ClientboundPlayerPositionPacketAccessor.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ClientboundPlayerPositionPacketAccessor.html" title="interface in net.jcm.vsch.accessor">ClientboundPlayerPositionPacketAccessor</a></dt>
+<dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$getLerpRotation()" class="member-name-link">vsch$getLerpRotation()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$getLerpRotation()" class="member-name-link">vsch$getLerpRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/EntityRotationPacketAccessor.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/EntityRotationPacketAccessor.html" title="interface in net.jcm.vsch.accessor">EntityRotationPacketAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/accessor/ServerboundMovePlayerPacketAccessor.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ServerboundMovePlayerPacketAccessor.html" title="interface in net.jcm.vsch.accessor">ServerboundMovePlayerPacketAccessor</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPackets</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundPlayerPositionPacket</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketsFinal</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket.html#vsch$getRotation()" class="member-name-link">vsch$getRotation()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$getRotationO()" class="member-name-link">vsch$getRotationO()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
 <dd>&nbsp;</dd>
@@ -2174,6 +2206,10 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/accessor/EntityAccessor.html#vsch$onInsideBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vsch$onInsideBlock(BlockState)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/EntityAccessor.html" title="interface in net.jcm.vsch.accessor">EntityAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#vsch$onInsideBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">vsch$onInsideBlock(BlockState)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$setLerpRotation(org.joml.Quaternionf)" class="member-name-link">vsch$setLerpRotation(Quaternionf)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$setLerpRotation(org.joml.Quaternionf)" class="member-name-link">vsch$setLerpRotation(Quaternionf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/IGuiAccessor.html#vsch$setOverlayMessageIfNotExist(net.minecraft.network.chat.Component,int)" class="member-name-link">vsch$setOverlayMessageIfNotExist(Component, int)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IGuiAccessor.html" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></dt>
 <dd>&nbsp;</dd>
@@ -2276,11 +2312,9 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/custom/WrenchItem.html#%3Cinit%3E(net.minecraft.world.item.Item.Properties)" class="member-name-link">WrenchItem(Item.Properties)</a> - Constructor for class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/WrenchItem.html" title="class in net.jcm.vsch.items.custom">WrenchItem</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html#write(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">write(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinClientboundPlayerPositionPacket.html" title="class in net.jcm.vsch.mixin.minecraft">MixinClientboundPlayerPositionPacket</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html#write(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">write(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketsFinal.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketsFinal</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_PosRot.html#write(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">write(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_PosRot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_PosRot</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_Rot.html#write(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">write(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinServerboundMovePlayerPacket_Rot.html" title="class in net.jcm.vsch.mixin.minecraft">MixinServerboundMovePlayerPacket_Rot</a></dt>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketSubClasses.html#write(net.minecraft.network.FriendlyByteBuf,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">write(FriendlyByteBuf, CallbackInfo)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPacketSubClasses.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPacketSubClasses</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#writeToNBT(net.minecraft.nbt.CompoundTag)" class="member-name-link">writeToNBT(CompoundTag)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
