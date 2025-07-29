@@ -8,6 +8,9 @@ import net.jcm.vsch.util.VSCHUtils;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -23,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.joml.Quaternionf;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -110,7 +114,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.rotation != rotation) {
 			this.rotation.set(rotation);
 		}
-		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
+		final Vector3f angles = rotation.getEulerAnglesYXZ(new Vector3f());
 		super.setXRot(angles.x * Mth.RAD_TO_DEG);
 		super.setYRot(-angles.y * Mth.RAD_TO_DEG);
 		this.yHeadRot = this.yBodyRot = this.getYRot();
@@ -145,11 +149,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private void reCalcRotation() {
-		if (this.rotation == null) {
+		if (this.firstTick) {
 			return;
 		}
-		final Vector3f oldAngles = this.rotation.getEulerAnglesYXZ(new Vector3f());
-		this.rotation.rotationYXZ(Mth.DEG_TO_RAD * -this.getYRot(), Mth.DEG_TO_RAD * this.getXRot(), oldAngles.z);
+		final Quaternionf rotation = this.vsch$getRotation();
+		final Vector3f oldAngles = rotation.getEulerAnglesYXZ(new Vector3f());
+		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -this.getYRot(), Mth.DEG_TO_RAD * this.getXRot(), oldAngles.z));
 	}
 
 	@Unique
@@ -162,9 +167,26 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.refreshDimensions();
 		if (freeRotation) {
 			this.reCalcRotation();
-			final Vector3f oldAnglesO = this.rotation.getEulerAnglesYXZ(new Vector3f());
+			final Vector3f oldAnglesO = this.rotationO.getEulerAnglesYXZ(new Vector3f());
 			this.rotationO.rotationYXZ(Mth.DEG_TO_RAD * -this.yRotO, Mth.DEG_TO_RAD * this.xRotO, oldAnglesO.z);
 		}
+	}
+
+	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
+	public void readAdditionalSaveData(final CompoundTag data, final CallbackInfo ci) {
+		if (data.contains("RotationQuat", Tag.TAG_LIST)) {
+			final ListTag rotQuat = data.getList("RotationQuat", Tag.TAG_FLOAT);
+			this.rotation.set(rotQuat.getFloat(0), rotQuat.getFloat(1), rotQuat.getFloat(2), rotQuat.getFloat(3));
+			if (!this.rotation.normalize().isFinite()) {
+				this.rotation.set(0, 0, 0, 1);
+			}
+			this.rotationO.set(this.rotation);
+		}
+	}
+
+	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+	public void addAdditionalSaveData(final CompoundTag data, final CallbackInfo ci) {
+		data.put("RotationQuat", this.newFloatList(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w));
 	}
 
 	@Override
@@ -198,7 +220,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isShiftKeyDown()Z")
 	)
 	protected boolean updatePlayerPose$isShiftKeyDown(final Player self, final Operation<Boolean> operation) {
-		if (operation.call(self) == Boolean.FALSE) {
+		if (!operation.call(self)) {
 			return false;
 		}
 		if (this.getAbilities().flying || !this.vsch$isFreeRotating()) {
@@ -224,7 +246,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Quaternionf pitchRot = new Quaternionf().rotateX(pitch);
 		final Quaternionf yawRot = new Quaternionf().rotateY(yaw);
 
-		this.vsch$setRotation(this.rotation.mul(yawRot).mul(pitchRot).normalize());
+		this.vsch$setRotation(this.vsch$getRotation().mul(yawRot).mul(pitchRot).normalize());
 		this.vsch$setRotationO(this.rotationO.mul(yawRot).mul(pitchRot).normalize());
 	}
 
@@ -270,6 +292,24 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Override
 	public boolean isInLava() {
 		return super.isInLava() || this.chestPart.isInLava() || this.feetPart.isInLava();
+	}
+
+	@Override
+	public void moveRelative(final float power, final Vec3 movement) {
+		if (!this.vsch$isFreeRotating()) {
+			super.moveRelative(power, movement);
+			return;
+		}
+		final double speed = movement.lengthSqr();
+		if (speed < 1.0e-7) {
+			return;
+		}
+		final Vector3d move = new Vector3d(movement.x, movement.y, movement.z);
+		if (speed > 1) {
+			move.normalize();
+		}
+		this.vsch$getRotation().transform(move.mul(power));
+		this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
 	}
 
 	@Override
@@ -336,12 +376,23 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.updateDefaultFreeRotation();
 	}
 
-	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;setSpeed(F)V", ordinal = 0))
-	public void aiStep(final CallbackInfo ci) {
+	@Override
+	public void baseTick() {
+		super.baseTick();
+		this.rotationO.set(this.vsch$getRotation());
+	}
+
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;updatePlayerPose()V", ordinal = 0))
+	public void tick(final CallbackInfo ci) {
+		this.updateParts();
+	}
+
+	@Unique
+	private void updateParts() {
 		this.setYBodyRot(this.getYHeadRot());
 		final float height = this.vsch$getVanillaDimensions(this.getPose()).height;
 		final Vector3f feetPos = new Vector3f(0, SPACE_ENTITY_SIZE - height, 0);
-		feetPos.rotate(this.rotation);
+		feetPos.rotate(this.vsch$getRotation());
 		this.updatePartPos(this.feetPart, feetPos.x, feetPos.y, feetPos.z);
 		this.updatePartPos(this.chestPart, feetPos.x / 2, feetPos.y / 2, feetPos.z / 2);
 	}

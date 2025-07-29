@@ -1,38 +1,45 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.jcm.vsch.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "mixins.vsch.refmap.json",
-  "mixins": [
-    "cosmos.MixinLightRenderer",
-    "cosmos.MixinPlaceplatformOnKeyPressedProcedure",
-    "cosmos.MixinShipspawnspaceProcedure",
-    "cosmos.MixinSpacesuitwornLogicProcedure",
-    "create.MixinBeltBlockEntity",
-    "create.MixinClockworkBearingBlockEntity",
-    "create.MixinControlledContraptionEntity",
-    "create.MixinKineticBlockEntity",
-    "create.MixinLinearActuatorBlockEntity",
-    "create.MixinMechanicalBearingBlockEntity",
-    "minecraft.MixinChunkMap",
-    "minecraft.MixinEntity",
-    "minecraft.MixinLivingEntity",
-    "minecraft.MixinMob",
-    "minecraft.MixinPlayer",
-    "minecraft.MixinServerPlayer",
-    "valkyrienskies.MixinShipAssemblyKt",
-    "valkyrienskies.MixinVSGameUtilsKt",
-    "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
-  ],
-  "client": [
-    "client.MixinCamera",
-    "client.MixinGameRenderer",
-    "client.MixinGui",
-    "client.MixinLocalPlayer",
-    "client.MixinPlayerRenderer"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.jcm.vsch.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "mixins.vsch.refmap.json",
+	"mixins": [
+		"cosmos.MixinLightRenderer",
+		"cosmos.MixinPlaceplatformOnKeyPressedProcedure",
+		"cosmos.MixinShipspawnspaceProcedure",
+		"cosmos.MixinSpacesuitwornLogicProcedure",
+		"create.MixinBeltBlockEntity",
+		"create.MixinClockworkBearingBlockEntity",
+		"create.MixinControlledContraptionEntity",
+		"create.MixinKineticBlockEntity",
+		"create.MixinLinearActuatorBlockEntity",
+		"create.MixinMechanicalBearingBlockEntity",
+		"minecraft.MixinChunkMap",
+		"minecraft.MixinClientboundPlayerPositionPacket",
+		"minecraft.MixinEntity",
+		"minecraft.MixinLivingEntity",
+		"minecraft.MixinMob",
+		"minecraft.MixinPlayer",
+		"minecraft.MixinServerGamePacketListenerImpl",
+		"minecraft.MixinServerPlayer",
+		"minecraft.MixinServerboundMovePlayerPacket",
+		"minecraft.MixinServerboundMovePlayerPacket_PosRot",
+		"minecraft.MixinServerboundMovePlayerPacket_Rot",
+		"valkyrienskies.MixinShipAssemblyKt",
+		"valkyrienskies.MixinVSGameUtilsKt",
+		"valkyrienskies.accessor.ServerShipObjectWorldAccessor"
+	],
+	"client": [
+		"client.MixinCamera",
+		"client.MixinClientPacketListener",
+		"client.MixinGameRenderer",
+		"client.MixinGui",
+		"client.MixinLivingEntityRenderer",
+		"client.MixinLocalPlayer",
+		"client.MixinMultiPlayerGameMode"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

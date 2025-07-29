@@ -1,10 +1,13 @@
 package net.jcm.vsch.mixin.client;
 
+import net.jcm.vsch.accessor.ServerboundMovePlayerPacketAccessor;
 import net.jcm.vsch.mixin.minecraft.MixinPlayer;
 
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +23,33 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 
 	@Shadow
 	protected abstract boolean isControlledCamera();
+
+	@ModifyExpressionValue(
+		method = "tick",
+		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Rot;")
+	)
+	public ServerboundMovePlayerPacket.Rot tick$new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
+		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		return packet;
+	}
+
+	@ModifyExpressionValue(
+		method = "sendPosition",
+		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;")
+	)
+	public ServerboundMovePlayerPacket.PosRot sendPosition$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet) {
+		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		return packet;
+	}
+
+	@ModifyExpressionValue(
+		method = "sendPosition",
+		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Rot;")
+	)
+	public ServerboundMovePlayerPacket.Rot sendPosition$new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
+		((ServerboundMovePlayerPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		return packet;
+	}
 
 	@WrapOperation(
 		method = "aiStep",
@@ -37,27 +67,11 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		return false;
 	}
 
-	@Inject(
-		method = "aiStep",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/player/LocalPlayer;jumpableVehicle()Lnet/minecraft/world/entity/PlayerRideableJumping;",
-			ordinal = 0
-		)
-	)
-	public void aiStep$afterFlying(final CallbackInfo ci) {
+	@Inject(method = "serverAiStep", at = @At("RETURN"))
+	public void serverAiStep(final CallbackInfo ci) {
 		if (!this.vsch$isFreeRotating() || this.getAbilities().flying || !this.isControlledCamera()) {
 			return;
 		}
-		int direction = 0;
-		if (this.input.shiftKeyDown) {
-			direction--;
-		}
-		if (this.input.jumping) {
-			direction++;
-		}
-		if (direction != 0) {
-			this.setDeltaMovement(this.getDeltaMovement().add(0, direction * this.getFlyingSpeed(), 0));
-		}
+		this.yya = (this.input.jumping ? 1 : 0) + (this.input.shiftKeyDown ? -1 : 0);
 	}
 }
