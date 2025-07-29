@@ -25,14 +25,16 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		method = "aiStep",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isShiftKeyDown()Z", ordinal = 0)
 	)
-	protected boolean aiStep$setCrouching$isShiftKeyDown(final LocalPlayer self, final Operation operation) {
-		if (((Boolean)(operation.call(self))) == Boolean.FALSE) {
+	protected boolean aiStep$setCrouching$isShiftKeyDown(final LocalPlayer self, final Operation<Boolean> operation) {
+		if (operation.call(self) == Boolean.FALSE) {
 			return false;
 		}
-		if (this.getAbilities().flying || !this.vsch$shouldFreeRotate()) {
+		if (this.getAbilities().flying || !this.vsch$isFreeRotating()) {
 			return true;
 		}
-		return this.onGround();
+		// TODO: fix crouching pose
+		// return this.onGround();
+		return false;
 	}
 
 	@Inject(
@@ -44,7 +46,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		)
 	)
 	public void aiStep$afterFlying(final CallbackInfo ci) {
-		if (!this.vsch$shouldFreeRotate() || this.getAbilities().flying || !this.isControlledCamera()) {
+		if (!this.vsch$isFreeRotating() || this.getAbilities().flying || !this.isControlledCamera()) {
 			return;
 		}
 		int direction = 0;

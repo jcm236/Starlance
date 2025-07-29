@@ -20,15 +20,17 @@
     "minecraft.MixinLivingEntity",
     "minecraft.MixinMob",
     "minecraft.MixinPlayer",
-    "minecraft.MixinPlayerRenderer",
     "minecraft.MixinServerPlayer",
     "valkyrienskies.MixinShipAssemblyKt",
     "valkyrienskies.MixinVSGameUtilsKt",
     "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
   ],
   "client": [
+    "client.MixinCamera",
+    "client.MixinGameRenderer",
     "client.MixinGui",
-    "client.MixinLocalPlayer"
+    "client.MixinLocalPlayer",
+    "client.MixinPlayerRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

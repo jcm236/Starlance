@@ -14,7 +14,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
 		index = 1
 	)
 	public double dismountTo$setPos$y(double y) {
-		if (this.vsch$shouldFreeRotate()) {
+		if (this.vsch$isFreeRotating()) {
 			final float oldHeight = this.vsch$getVanillaDimensions(this.getPose()).height;
 			final float newHeight = 0.6f;
 			y += oldHeight - newHeight;

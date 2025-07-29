@@ -24,7 +24,7 @@ public abstract class MixinLivingEntity extends Entity {
 		),
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V", ordinal = 0)
 	)
-	public void travel(final LivingEntity self, double x, double y, double z, final Operation operation) {
+	public void travel(final LivingEntity self, double x, double y, double z, final Operation<Void> operation) {
 		if (self instanceof FreeRotatePlayerAccessor frp && frp.vsch$hasSupportingBlock()) {
 			x *= 0.91;
 			y *= 0.91;

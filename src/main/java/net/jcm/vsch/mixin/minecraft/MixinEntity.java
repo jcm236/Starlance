@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
@@ -52,7 +53,7 @@ public abstract class MixinEntity implements EntityAccessor {
 		if (!(((Object)(this)) instanceof Player player) || !(player instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		if (!frp.vsch$shouldFreeRotate()) {
+		if (!frp.vsch$isFreeRotating()) {
 			return;
 		}
 		Vec3 movement = cir.getReturnValue();
@@ -61,5 +62,13 @@ public abstract class MixinEntity implements EntityAccessor {
 			movement = ((EntityAccessor)(part)).vsch$collide(movement);
 		}
 		cir.setReturnValue(movement);
+	}
+
+	@Inject(method = "setOldPosAndRot", at = @At("RETURN"))
+	private void setOldPosAndRot(final CallbackInfo ci) {
+		if (!(((Object)(this)) instanceof FreeRotatePlayerAccessor frp)) {
+			return;
+		}
+		frp.vsch$getRotationO().set(frp.vsch$getRotation());
 	}
 }
