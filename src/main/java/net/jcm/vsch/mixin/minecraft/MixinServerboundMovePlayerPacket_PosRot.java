@@ -15,6 +15,6 @@ public abstract class MixinServerboundMovePlayerPacket_PosRot {
 	@Inject(method = "read", at = @At("RETURN"))
 	private static void read(final FriendlyByteBuf buf, final CallbackInfoReturnable<ServerboundMovePlayerPacket.PosRot> cir) {
 		final EntityRotationPacketAccessor packet = (EntityRotationPacketAccessor)(cir.getReturnValue());
-		packet.vsch$getRotation().set(buf.readQuaternion()).normalize();
+		packet.vsch$rotation().set(buf.readQuaternion()).normalize();
 	}
 }

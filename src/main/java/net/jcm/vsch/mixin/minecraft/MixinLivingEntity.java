@@ -51,6 +51,6 @@ public abstract class MixinLivingEntity extends Entity {
 		if (!(this instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
 			return;
 		}
-		frp.vsch$setRotation(frp.vsch$getRotation().slerp(frp.vsch$getLerpRotation(), 1.0f / this.lerpSteps));
+		frp.vsch$setRotation(frp.vsch$getRotation().nlerp(frp.vsch$getLerpRotation(), 1.0f / this.lerpSteps).normalize());
 	}
 }

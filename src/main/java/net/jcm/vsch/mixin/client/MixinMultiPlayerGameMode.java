@@ -20,7 +20,7 @@ public abstract class MixinMultiPlayerGameMode {
 	)
 	public ServerboundMovePlayerPacket.PosRot useItem$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet, @Local final Player player) {
 		if (player instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}

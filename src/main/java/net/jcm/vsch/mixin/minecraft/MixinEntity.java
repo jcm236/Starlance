@@ -67,7 +67,7 @@ public abstract class MixinEntity implements EntityAccessor {
 	@Inject(method = "setOldPosAndRot", at = @At("RETURN"))
 	private void setOldPosAndRot(final CallbackInfo ci) {
 		if (((Object)(this)) instanceof FreeRotatePlayerAccessor frp) {
-			frp.vsch$getRotationO().set(frp.vsch$getRotation());
+			frp.vsch$setRotationO(frp.vsch$getRotationO().set(frp.vsch$getRotation()));
 		}
 	}
 }

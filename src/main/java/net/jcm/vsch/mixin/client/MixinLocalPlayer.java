@@ -29,7 +29,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Rot;")
 	)
 	public ServerboundMovePlayerPacket.Rot new$ServerboundMovePlayerPacket$Rot(final ServerboundMovePlayerPacket.Rot packet) {
-		((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(this.vsch$getRotation());
 		return packet;
 	}
 
@@ -38,7 +38,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;")
 	)
 	public ServerboundMovePlayerPacket.PosRot sendPosition$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet) {
-		((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(this.vsch$getRotation());
 		return packet;
 	}
 

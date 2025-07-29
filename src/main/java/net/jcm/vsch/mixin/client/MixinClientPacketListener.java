@@ -13,8 +13,6 @@ import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-import org.joml.Quaternionf;
-
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,16 +26,14 @@ public abstract class MixinClientPacketListener {
 		method = "handleAddPlayer",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/multiplayer/ClientLevel;addPlayer(ILnet/minecraft/client/player/AbstractClientPlayer;)V"
+			target = "Lnet/minecraft/client/player/RemotePlayer;setOldPosAndRot()V"
 		)
 	)
 	public void handleAddPlayer(final ClientboundAddPlayerPacket packet, final CallbackInfo ci, @Local final RemotePlayer player) {
 		if (!(player instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		final Quaternionf rotation = ((EntityRotationPacketAccessor)(packet)).vsch$getRotation();
-		frp.vsch$setRotation(rotation);
-		frp.vsch$setRotationO(rotation);
+		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
 	}
 
 	@Inject(method = "handleTeleportEntity", at = @At("RETURN"))
@@ -45,7 +41,7 @@ public abstract class MixinClientPacketListener {
 		if (!(entity instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$getRotation());
+		frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
 	}
 
 	@Inject(method = "handleMoveEntity", at = @At("RETURN"))
@@ -53,10 +49,12 @@ public abstract class MixinClientPacketListener {
 		if (entity == null || entity.isControlledByLocalInstance()) {
 			return;
 		}
-		if (!(entity instanceof FreeRotatePlayerAccessor frp) || !packet.hasRotation()) {
+		if (!(entity instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$getRotation());
+		if (packet.hasRotation()) {
+			frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+		}
 	}
 
 	@Inject(
@@ -67,7 +65,7 @@ public abstract class MixinClientPacketListener {
 		if (!(player instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$getRotation());
+		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
 	}
 
 	@ModifyExpressionValue(
@@ -76,7 +74,7 @@ public abstract class MixinClientPacketListener {
 	)
 	public ServerboundMovePlayerPacket.PosRot handleMovePlayer$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet, @Local final Player player) {
 		if (player instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}

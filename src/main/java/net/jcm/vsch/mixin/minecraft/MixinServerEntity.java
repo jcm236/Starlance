@@ -26,7 +26,7 @@ public abstract class MixinServerEntity {
 	)
 	public ClientboundTeleportEntityPacket new$ClientboundTeleportEntityPacket(final ClientboundTeleportEntityPacket packet) {
 		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}
@@ -37,7 +37,7 @@ public abstract class MixinServerEntity {
 	)
 	public ClientboundMoveEntityPacket.PosRot new$ClientboundMoveEntityPacket$PosRot(final ClientboundMoveEntityPacket.PosRot packet) {
 		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}
@@ -48,7 +48,7 @@ public abstract class MixinServerEntity {
 	)
 	public ClientboundMoveEntityPacket.Rot new$ClientboundMoveEntityPacket$Rot(final ClientboundMoveEntityPacket.Rot packet) {
 		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(frp.vsch$getRotation());
+			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
 		}
 		return packet;
 	}

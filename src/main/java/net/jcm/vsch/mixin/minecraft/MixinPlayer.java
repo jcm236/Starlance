@@ -118,8 +118,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
 		super.setXRot(angles.x * Mth.RAD_TO_DEG);
-		super.setYRot(-angles.y * Mth.RAD_TO_DEG);
-		this.yHeadRot = this.yBodyRot = this.getYRot();
+		final float yRot = -angles.y * Mth.RAD_TO_DEG;
+		super.setYRot(yRot);
+		this.yHeadRot = this.yBodyRot = yRot;
 	}
 
 	@Override
@@ -148,25 +149,43 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	public float getYRot() {
+		return this.vsch$isFreeRotating() ? -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG : super.getYRot();
+	}
+
+	@Override
 	public void setYRot(final float yRot) {
-		super.setYRot(yRot);
-		this.reCalcRotation();
+		if (!this.vsch$isFreeRotating()) {
+			super.setYRot(yRot);
+		}
+	}
+
+	@Override
+	public float getXRot() {
+		return this.vsch$isFreeRotating() ? this.rotation.getEulerAnglesYXZ(new Vector3f()).x * Mth.RAD_TO_DEG : super.getXRot();
 	}
 
 	@Override
 	public void setXRot(final float xRot) {
-		super.setXRot(xRot);
-		this.reCalcRotation();
+		if (!this.vsch$isFreeRotating()) {
+			super.setXRot(xRot);
+		}
+	}
+
+	@Override
+	protected void setRot(final float yRot, final float xRot) {
+		super.setYRot(yRot % 360f);
+		super.setXRot(xRot % 360f);
 	}
 
 	@Unique
 	private void reCalcRotation() {
-		if (this.firstTick || !this.freeRotation) {
+		if (this.firstTick || !this.vsch$isFreeRotating()) {
 			return;
 		}
 		final Quaternionf rotation = this.vsch$getRotation();
 		final Vector3f oldAngles = rotation.getEulerAnglesYXZ(new Vector3f());
-		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -this.getYRot(), Mth.DEG_TO_RAD * this.getXRot(), oldAngles.z));
+		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * -super.getXRot(), oldAngles.z));
 	}
 
 	@Unique
@@ -260,6 +279,29 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 		this.vsch$setRotation(this.vsch$getRotation().mul(yawRot).mul(pitchRot).normalize());
 		this.vsch$setRotationO(this.rotationO.mul(yawRot).mul(pitchRot).normalize());
+	}
+
+	@Override
+	public void absMoveTo(final double x, final double y, final double z, final float yRot, final float xRot) {
+		if (!this.vsch$isFreeRotating()) {
+			super.absMoveTo(x, y, z, yRot, xRot);
+			return;
+		}
+		this.absMoveTo(x, y, z);
+		super.setYRot(yRot % 360f);
+		super.setXRot(xRot % 360f);
+		// this.reCalcRotation();
+		this.vsch$setRotationO(this.vsch$getRotation());
+	}
+
+	@Override
+	public void moveTo(final double x, final double y, final double z, final float yRot, final float xRot) {
+		this.setPosRaw(x, y, z);
+		super.setYRot(yRot);
+		super.setXRot(xRot);
+		this.reCalcRotation();
+		this.setOldPosAndRot();
+		this.reapplyPosition();
 	}
 
 	@Override
@@ -391,7 +433,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Override
 	public void baseTick() {
 		super.baseTick();
-		this.rotationO.set(this.vsch$getRotation());
+		this.vsch$setRotationO(this.vsch$getRotation());
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;updatePlayerPose()V", ordinal = 0))

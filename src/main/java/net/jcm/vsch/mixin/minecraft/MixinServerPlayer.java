@@ -31,7 +31,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ClientboundAddPlayerPacket;")
 	)
 	public ClientboundAddPlayerPacket new$ClientboundAddPlayerPacket(final ClientboundAddPlayerPacket packet) {
-		((EntityRotationPacketAccessor)(packet)).vsch$getRotation().set(this.vsch$getRotation());
+		((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(this.vsch$getRotation());
 		return packet;
 	}
 
