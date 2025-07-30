@@ -31,7 +31,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-apply from: '/gradle-scripts/publish-mod.gradle'
+apply from: './gradle-scripts/publish-mod.gradle'
 
 //group = mod_version
 
