@@ -11,6 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -55,9 +58,11 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	private static final EntityDimensions SPACE_ENTITY_DIM = EntityDimensions.scalable(SPACE_ENTITY_SIZE, SPACE_ENTITY_SIZE);
 	@Unique
 	private static final double SUPPORT_CHECK_DISTANCE = 0.1;
+	@Unique
+	private static final EntityDataAccessor<Boolean> FREE_ROTATION_ID = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
-	private boolean freeRotation = false;
+	private boolean wasFreeRotating = false;
 	@Unique
 	private Quaternionf rotation = new Quaternionf();
 	@Unique
@@ -88,7 +93,11 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.feetPart = new MultiPartPlayer(player, SPACE_ENTITY_SIZE);
 		this.parts = new MultiPartPlayer[]{this.chestPart, this.feetPart};
 		this.oldPose = this.getPose();
-		this.updateDefaultFreeRotation();
+	}
+
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void defineSynchedData(final CallbackInfo ci) {
+		this.entityData.define(FREE_ROTATION_ID, false);
 	}
 
 	@Override
@@ -103,7 +112,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public boolean vsch$isFreeRotating() {
-		return this.freeRotation;
+		return !this.firstTick && this.entityData.get(FREE_ROTATION_ID);
 	}
 
 	@Override
@@ -115,6 +124,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	public void vsch$setRotation(final Quaternionf rotation) {
 		if (this.rotation != rotation) {
 			this.rotation.set(rotation);
+		}
+		if (!this.vsch$isFreeRotating()) {
+			return;
 		}
 		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
 		super.setXRot(angles.x * Mth.RAD_TO_DEG);
@@ -132,6 +144,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	public void vsch$setRotationO(final Quaternionf rotation) {
 		if (this.rotationO != rotation) {
 			this.rotationO.set(rotation);
+		}
+		if (!this.vsch$isFreeRotating()) {
+			return;
 		}
 		final Vector3f angles = this.rotationO.getEulerAnglesYXZ(new Vector3f());
 		this.xRotO = angles.x * Mth.RAD_TO_DEG;
@@ -191,16 +206,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	protected void updateDefaultFreeRotation() {
 		final boolean freeRotation = !this.isPassenger() && VSCHUtils.isSpaceLevel(this.level());
-		if (this.freeRotation == freeRotation) {
-			return;
-		}
-		this.freeRotation = freeRotation;
-		this.refreshDimensions();
-		if (freeRotation) {
-			this.reCalcRotation();
-			final Vector3f oldAnglesO = this.rotationO.getEulerAnglesYXZ(new Vector3f());
-			this.rotationO.rotationYXZ(Mth.DEG_TO_RAD * -this.yRotO, Mth.DEG_TO_RAD * this.xRotO, oldAnglesO.z);
-		}
+		this.entityData.set(FREE_ROTATION_ID, freeRotation);
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
@@ -296,6 +302,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public void moveTo(final double x, final double y, final double z, final float yRot, final float xRot) {
+		if (!this.vsch$isFreeRotating()) {
+			super.moveTo(x, y, z, yRot, xRot);
+			return;
+		}
 		this.setPosRaw(x, y, z);
 		super.setYRot(yRot);
 		super.setXRot(xRot);
@@ -368,6 +378,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	protected void checkFallDamage(final double dy, final boolean onGround, final BlockState block, final BlockPos pos) {
+		if (!this.vsch$isFreeRotating()) {
+			super.checkFallDamage(dy, onGround, block, pos);
+			return;
+		}
 		// TODO: implement fall damage / collision damage in space
 	}
 
@@ -387,6 +401,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public void dismountTo(final double x, final double y, final double z) {
+		if (!this.vsch$isFreeRotating()) {
+			super.dismountTo(x, y, z);
+			return;
+		}
 		final float oldHeight = this.vsch$getVanillaDimensions(this.getPose()).height;
 		final float newHeight = SPACE_ENTITY_SIZE;
 		super.dismountTo(x, y + oldHeight - newHeight, z);
@@ -432,7 +450,18 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public void baseTick() {
+		if (this.firstTick) {
+			this.updateDefaultFreeRotation();
+		}
 		super.baseTick();
+		final boolean freeRotation = this.vsch$isFreeRotating();
+		if (freeRotation != this.wasFreeRotating) {
+			this.wasFreeRotating = freeRotation;
+			this.refreshDimensions();
+			if (freeRotation) {
+				this.reCalcRotation();
+			}
+		}
 		this.vsch$setRotationO(this.vsch$getRotation());
 	}
 

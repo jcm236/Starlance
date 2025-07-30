@@ -37,7 +37,6 @@
 	"client": [
 		"client.MixinCamera",
 		"client.MixinClientPacketListener",
-		"client.MixinGameRenderer",
 		"client.MixinGui",
 		"client.MixinLivingEntityRenderer",
 		"client.MixinLocalPlayer",

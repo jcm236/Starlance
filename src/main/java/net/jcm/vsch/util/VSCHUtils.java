@@ -144,9 +144,11 @@ public class VSCHUtils {
 	}
 
 	public static boolean isSpaceLevel(final Level level) {
-		return level.dimension().location().getNamespace().equals("cosmos");
-		// final CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(level);
-		// return worldVars.dimension_type.getString(level.dimension().location().toString()).equals("space");
+		if (level.isClientSide) {
+			return false;
+		}
+		final CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(level);
+		return worldVars.dimension_type.getString(level.dimension().location().toString()).equals("space");
 	}
 
 	/**
