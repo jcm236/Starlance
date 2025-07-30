@@ -185,7 +185,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Quaternionf rotation = this.vsch$getRotation();
 		final Vector3f oldAngles = rotation.getEulerAnglesYXZ(new Vector3f());
-		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * -super.getXRot(), oldAngles.z));
+		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * super.getXRot(), oldAngles.z));
 	}
 
 	@Unique

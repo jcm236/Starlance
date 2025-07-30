@@ -41,7 +41,8 @@
 		"client.MixinGui",
 		"client.MixinLivingEntityRenderer",
 		"client.MixinLocalPlayer",
-		"client.MixinMultiPlayerGameMode"
+		"client.MixinMultiPlayerGameMode",
+		"client.MixinRemotePlayer"
 	],
 	"injectors": {
 		"defaultRequire": 1
