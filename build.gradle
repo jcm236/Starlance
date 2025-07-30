@@ -20,6 +20,10 @@ plugins {
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+
+    // For auto-publishing
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -27,6 +31,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
+apply from: './gradle-scripts/publish-mod.gradle'
 
 //group = mod_version
 
@@ -37,6 +42,8 @@ base {
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
+
+
 
 minecraft {
 
@@ -276,7 +283,7 @@ tasks.named('jar', Jar).configure {
     }
 
     // This is the preferred method to reobfuscate your jar file
-    //finalizedBy 'reobfJar'
+    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
