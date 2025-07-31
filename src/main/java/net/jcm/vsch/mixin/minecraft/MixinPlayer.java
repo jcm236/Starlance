@@ -95,8 +95,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	public void postInit(final Level level, final BlockPos pos, final float yRot, final GameProfile profile, final CallbackInfo ci) {
 		final Player player = (Player)((Object)(this));
 
-		this.chestPart = new MultiPartPlayer(player, SPACE_ENTITY_SIZE);
-		this.feetPart = new MultiPartPlayer(player, SPACE_ENTITY_SIZE);
+		this.chestPart = new MultiPartPlayer(player, SPACE_ENTITY_SIZE, false);
+		this.feetPart = new MultiPartPlayer(player, SPACE_ENTITY_SIZE, true);
 		this.parts = new MultiPartPlayer[]{this.chestPart, this.feetPart};
 		this.oldPose = this.getPose();
 	}

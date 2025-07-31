@@ -57,7 +57,7 @@ public abstract class MixinLivingEntityRenderer {
 			target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V"
 		)
 	)
-	public void render$setupAnim(setupAnim
+	public void render$setupAnim(
 		final EntityModel model,
 		final Entity entity,
 		final float limbSwing,
