@@ -17,6 +17,7 @@ public final class ClientEvents {
 		final Camera camera = event.getCamera();
 		if (camera.getEntity() instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
 			event.setRoll(camera.rotation().getEulerAnglesYXZ(new Vector3f()).z * Mth.RAD_TO_DEG);
+			event.setPitch(event.getPitch() + frp.vsch$getHeadPitch());
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package net.jcm.vsch.entity.player;
 
+import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.jcm.vsch.accessor.EntityAccessor;
 
 import net.minecraft.nbt.CompoundTag;
@@ -15,10 +16,12 @@ import net.minecraftforge.entity.PartEntity;
 
 public class MultiPartPlayer extends PartEntity<Player> {
 	private final EntityDimensions size;
+	private final boolean isFeet;
 
-	public MultiPartPlayer(final Player parent, final float size) {
+	public MultiPartPlayer(final Player parent, final float size, final boolean isFeet) {
 		super(parent);
 		this.size = EntityDimensions.scalable(size, size);
+		this.isFeet = isFeet;
 		this.refreshDimensions();
 	}
 
@@ -37,13 +40,23 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	}
 
 	@Override
-	protected void onInsideBlock(final BlockState block) {
-		((EntityAccessor)(this.getParent())).vsch$onInsideBlock(block);
+	public boolean isAlive() {
+		return ((FreeRotatePlayerAccessor)(this.getParent())).vsch$isFreeRotating();
+	}
+
+	@Override
+	public boolean isSpectator() {
+		return !this.isAlive();
 	}
 
 	@Override
 	public boolean onGround() {
-		return this.getParent().onGround();
+		return this.isFeet && super.onGround();
+	}
+
+	@Override
+	protected void onInsideBlock(final BlockState block) {
+		((EntityAccessor)(this.getParent())).vsch$onInsideBlock(block);
 	}
 
 	@Override
@@ -53,12 +66,12 @@ public class MultiPartPlayer extends PartEntity<Player> {
 
 	@Override
 	public boolean isPickable() {
-		return this.getParent().isPickable();
+		return this.isAlive() && this.getParent().isPickable();
 	}
 
 	@Override
 	public ItemStack getPickResult() {
-		return this.getParent().getPickResult();
+		return this.isAlive() ? this.getParent().getPickResult() : null;
 	}
 
 	@Override
@@ -68,7 +81,7 @@ public class MultiPartPlayer extends PartEntity<Player> {
 
 	@Override
 	public boolean isInvulnerableTo(final DamageSource source) {
-		return this.getParent().isInvulnerableTo(source);
+		return !this.isAlive() || this.getParent().isInvulnerableTo(source);
 	}
 
 	@Override
@@ -106,12 +119,16 @@ public class MultiPartPlayer extends PartEntity<Player> {
 
 	@Override
 	public void setDeltaMovement(final Vec3 vel) {
-		this.getParent().setDeltaMovement(vel);
+		if (this.isAlive()) {
+			this.getParent().setDeltaMovement(vel);
+		}
 	}
 
 	@Override
 	public void addDeltaMovement(final Vec3 vel) {
-		this.getParent().addDeltaMovement(vel);
+		if (this.isAlive()) {
+			this.getParent().addDeltaMovement(vel);
+		}
 	}
 
 	@Override
@@ -120,7 +137,7 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	}
 
 	@Override
-	public void tick() {
+	public void baseTick() {
 		this.firstTick = false;
 	}
 }

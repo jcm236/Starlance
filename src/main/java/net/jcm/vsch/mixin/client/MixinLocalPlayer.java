@@ -47,15 +47,13 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isShiftKeyDown()Z", ordinal = 0)
 	)
 	protected boolean aiStep$setCrouching$isShiftKeyDown(final LocalPlayer self, final Operation<Boolean> operation) {
-		if (operation.call(self) == Boolean.FALSE) {
+		if (!operation.call(self)) {
 			return false;
 		}
 		if (this.getAbilities().flying || !this.vsch$isFreeRotating()) {
 			return true;
 		}
-		// TODO: fix crouching pose
-		// return this.onGround();
-		return false;
+		return this.onGround();
 	}
 
 	@Inject(method = "serverAiStep", at = @At("RETURN"))

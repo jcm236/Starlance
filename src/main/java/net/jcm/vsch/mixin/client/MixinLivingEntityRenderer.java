@@ -57,7 +57,7 @@ public abstract class MixinLivingEntityRenderer {
 			target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V"
 		)
 	)
-	public void render$setupAnim(
+	public void render$setupAnim(setupAnim
 		final EntityModel model,
 		final Entity entity,
 		final float limbSwing,
@@ -69,7 +69,7 @@ public abstract class MixinLivingEntityRenderer {
 	) {
 		if ((entity instanceof Player player) && (player instanceof FreeRotatePlayerAccessor frp) && frp.vsch$isFreeRotating()) {
 			headYaw = 0;
-			headPitch = 0;
+			headPitch = frp.vsch$getHeadPitch();
 		}
 		operation.call(model, entity, limbSwing, limbSwingAmount, age, headYaw, headPitch);
 	}

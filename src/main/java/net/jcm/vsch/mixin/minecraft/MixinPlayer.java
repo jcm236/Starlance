@@ -70,6 +70,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Quaternionf rotationLerp = new Quaternionf();
 	@Unique
+	private float headPitch = 0;
+	@Unique
+	private float headPitchO = 0;
+	@Unique
+	private float headPitchLerp = 0;
+	@Unique
 	private MultiPartPlayer[] parts;
 	@Unique
 	private MultiPartPlayer chestPart;
@@ -132,7 +138,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		super.setXRot(angles.x * Mth.RAD_TO_DEG);
 		final float yRot = -angles.y * Mth.RAD_TO_DEG;
 		super.setYRot(yRot);
-		this.yHeadRot = this.yBodyRot = yRot;
+		this.yBodyRot = yRot;
 	}
 
 	@Override
@@ -150,12 +156,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Vector3f angles = this.rotationO.getEulerAnglesYXZ(new Vector3f());
 		this.xRotO = angles.x * Mth.RAD_TO_DEG;
-		this.yHeadRotO = this.yBodyRotO = this.yRotO = -angles.y * Mth.RAD_TO_DEG;
-	}
-
-	@Override
-	public Quaternionf vsch$getLerpRotation() {
-		return this.rotationLerp;
+		this.yBodyRotO = this.yRotO = -angles.y * Mth.RAD_TO_DEG;
 	}
 
 	@Override
@@ -165,7 +166,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public float getYRot() {
-		return this.vsch$isFreeRotating() ? -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG : super.getYRot();
+		return this.vsch$isFreeRotating()
+			? -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG
+			: super.getYRot();
 	}
 
 	@Override
@@ -177,7 +180,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public float getXRot() {
-		return this.vsch$isFreeRotating() ? this.rotation.getEulerAnglesYXZ(new Vector3f()).x * Mth.RAD_TO_DEG : super.getXRot();
+		return this.vsch$isFreeRotating()
+			? this.rotation.getEulerAnglesYXZ(new Vector3f()).x * Mth.RAD_TO_DEG
+			: super.getXRot();
 	}
 
 	@Override
@@ -188,9 +193,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	protected void setRot(final float yRot, final float xRot) {
-		super.setYRot(yRot % 360f);
-		super.setXRot(xRot % 360f);
+	public float vsch$getHeadPitch() {
+		return this.headPitch;
+	}
+
+	@Override
+	public void vsch$setLerpHeadPitch(final float pitch) {
+		this.headPitchLerp = pitch;
 	}
 
 	@Unique
@@ -252,6 +261,15 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.setPos(pos.x + dx, pos.y + dy, pos.z + dz);
 	}
 
+	@Override
+	public boolean onGround() {
+		if (!this.vsch$isFreeRotating()) {
+			return super.onGround();
+		}
+		// TODO: fix on ground check
+		return false;
+	}
+
 	@WrapOperation(
 		method = "updatePlayerPose",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isShiftKeyDown()Z")
@@ -263,9 +281,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.getAbilities().flying || !this.vsch$isFreeRotating()) {
 			return true;
 		}
-		// TODO: fix crouching pose
-		// return this.onGround();
-		return false;
+		return this.onGround();
 	}
 
 	@Override
@@ -312,6 +328,18 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.reCalcRotation();
 		this.setOldPosAndRot();
 		this.reapplyPosition();
+	}
+
+	@Override
+	public void vsch$setOldPosAndRot() {
+		this.vsch$setRotationO(this.vsch$getRotation());
+		this.headPitchO = this.headPitch;
+	}
+
+	@Override
+	public void vsch$stepLerp(final int steps) {
+		this.vsch$setRotation(this.vsch$getRotation().nlerp(this.rotationLerp, 1.0f / steps).normalize());
+		this.headPitch += (this.headPitchLerp - this.headPitch) / steps;
 	}
 
 	@Override
@@ -420,10 +448,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!this.vsch$isFreeRotating()) {
 			return;
 		}
-		final float height = this.vsch$getVanillaDimensions(pose).height;
-		float eyeHeight = cir.getReturnValueF();
-		eyeHeight += SPACE_ENTITY_SIZE - height;
-		cir.setReturnValue(eyeHeight);
+		cir.setReturnValue(SPACE_ENTITY_SIZE / 2);
+		// TODO: fix eye height after rotated
+		// final float height = this.vsch$getVanillaDimensions(pose).height;
+		// float eyeHeight = cir.getReturnValueF();
+		// eyeHeight += SPACE_ENTITY_SIZE - height;
+		// cir.setReturnValue(eyeHeight);
 	}
 
 	@Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
@@ -462,7 +492,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 				this.reCalcRotation();
 			}
 		}
-		this.vsch$setRotationO(this.vsch$getRotation());
+		this.vsch$setOldPosAndRot();
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;updatePlayerPose()V", ordinal = 0))

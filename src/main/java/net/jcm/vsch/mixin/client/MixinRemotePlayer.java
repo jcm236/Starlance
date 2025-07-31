@@ -29,6 +29,6 @@ public abstract class MixinRemotePlayer extends AbstractClientPlayer {
 		if (!(this instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
 			return;
 		}
-		frp.vsch$setRotation(frp.vsch$getRotation().nlerp(frp.vsch$getLerpRotation(), 1.0f / this.lerpSteps).normalize());
+		frp.vsch$stepLerp(this.lerpSteps);
 	}
 }
