@@ -128,7 +128,6 @@ public class EmptyChunkAccess extends LevelChunk {
 		if (VSGameUtilsKt.isChunkInShipyard(level, x, z)) {
 			return false;
 		}
-		final CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(level);
-		return worldVars.dimension_type.getString(level.dimension().location().toString()).equals("space");
+		return VSCHUtils.isSpaceLevel(level);
 	}
 }
