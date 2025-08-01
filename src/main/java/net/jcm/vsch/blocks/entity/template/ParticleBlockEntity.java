@@ -23,6 +23,9 @@ public interface ParticleBlockEntity {
 	void tickParticles(Level level, BlockPos pos, BlockState state);
 
 	public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		if (level.getBlockEntity(pos) != blockEntity) {
+			blockEntity.setRemoved();
+		}
 		if (blockEntity.isRemoved()) {
 			return;
 		}
@@ -31,6 +34,9 @@ public interface ParticleBlockEntity {
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		if (level.getBlockEntity(pos) != blockEntity) {
+			blockEntity.setRemoved();
+		}
 		if (blockEntity.isRemoved()) {
 			return;
 		}
