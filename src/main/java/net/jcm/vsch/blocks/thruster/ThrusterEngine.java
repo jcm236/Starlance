@@ -233,8 +233,22 @@ public abstract class ThrusterEngine {
 				clipDist = particleHitResult.getLocation().distanceTo(centerPosWorld);
 			}
 
-			final Vec3 cornerPos = Vec3.atLowerCornerOf(pos).relative(direction, 0.5);
-			final AABB box = new AABB(cornerPos, cornerPos.relative(direction, clipDist - 1.5).add(1, 1, 1));
+			final Direction.Axis axis = direction.getAxis();
+			final Vec3 cornerPos = switch (axis) {
+				case X -> new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ());
+				case Y -> new Vec3(pos.getX(), pos.getY() + 0.5, pos.getZ());
+				case Z -> new Vec3(pos.getX(), pos.getY(), pos.getZ() + 0.5);
+			};
+			final AABB box = new AABB(
+				cornerPos,
+				cornerPos
+					.relative(direction, clipDist - 0.5)
+					.add(
+						axis.choose(0, 1, 1),
+						axis.choose(1, 0, 1),
+						axis.choose(1, 1, 0)
+					)
+			);
 			level.getEntities(
 				ANY_ENTITY_TESTER,
 				VSGameUtilsKt.transformAabbToWorld(level, box),
