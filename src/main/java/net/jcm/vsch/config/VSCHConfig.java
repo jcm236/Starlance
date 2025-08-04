@@ -23,8 +23,11 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
+	/* Thrusters */
+
 	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
 	public static final ForgeConfigSpec.ConfigValue<ThrusterMode> THRUSTER_MODE;
+	public static final ForgeConfigSpec.BooleanValue THRUSTER_FLAME_IMPACT;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> THRUSTER_STRENGTH;
 	public static final ForgeConfigSpec.ConfigValue<Integer> THRUSTER_ENERGY_CONSUME_RATE;
@@ -38,6 +41,8 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
+	/* Gyro */
+
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
 	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
@@ -48,10 +53,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
 	private static Set<ResourceLocation> ASSEMBLE_BLACKLIST_SET = null;
 
-	// Optimize
+	/* Optimize */
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_EMPTY_SPACE_CHUNK;
 
-	// Misc
+	/* Misc */
+
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
@@ -77,6 +84,7 @@ public class VSCHConfig {
 
 		THRUSTER_TOGGLE = BUILDER.comment("Thruster Mode Toggling").define("thruster_mode_toggle", true);
 		THRUSTER_MODE = BUILDER.comment("Default Thruster Mode").defineEnum("thruster_default_mode", ThrusterMode.POSITION);
+		THRUSTER_FLAME_IMPACT = BUILDER.comment("This setting will allow thruster flame to push and to burn entities in its area, and set the first block it hits on fire.").define("thruster_flame_impact", true);
 
 		THRUSTER_STRENGTH = BUILDER.comment("Thruster max force. (Newtons)").define("thruster_strength", 120000);
 		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").define("thruster_energy_consume_rate", 0);

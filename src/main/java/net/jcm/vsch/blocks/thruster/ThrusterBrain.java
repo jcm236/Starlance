@@ -244,7 +244,9 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			this.setCurrentPower(0);
 		} else {
 			final List<BlockPos> positions = this.connectedBlocks.stream().map(BlockEntity::getBlockPos).collect(Collectors.toList());
-			this.engine.tickBurningObjects(context, positions, this.facing.getOpposite());
+			if (VSCHConfig.THRUSTER_FLAME_IMPACT.get()) {
+				this.engine.tickBurningObjects(context, positions, this.facing.getOpposite());
+			}
 			this.setCurrentPower((float) (context.getPower()));
 			context.consume();
 		}

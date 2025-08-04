@@ -123,7 +123,7 @@ public abstract class ThrusterEngine {
 	/**
 	 * tickBurningObjects sets on fire entities/blocks that should be burned by the thruster
 	 *
-	 * @param context   A {@link ThrusterEngineContext}
+	 * @param context   A {@link ThrusterEngineContext}, should never be modified
 	 * @param thrusters Thrusters' positions
 	 * @param direction Thrusters' facing direction
 	 */
