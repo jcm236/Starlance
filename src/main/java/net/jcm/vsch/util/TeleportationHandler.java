@@ -81,7 +81,7 @@ public class TeleportationHandler {
 		if (currentPhysObject == null || shipToPos.containsKey(currentPhysObject)) {
 			return;
 		}
-		final Vector3dc pos = transformFromId(currentPhysObject, shipWorld).getPositionInWorld();
+		final Vector3dc pos = transformFromId(currentPhysObject, this.shipWorld).getPositionInWorld();
 
 		// TODO: if planet collision position matters for reentry angle THIS SHOULD BE FIXED!! Currently a fix is not needed.
 		final double offset = pos.y() - origin.y();
@@ -101,14 +101,14 @@ public class TeleportationHandler {
 		}
 	}
 
-	private void collectShips(Ship ship, Vector3d newPos) {
+	private void collectShips(final Ship ship, final Vector3d newPos) {
 		final Vector3dc origin = ship.getTransform().getPositionInWorld();
 		this.collectConnected(ship.getId(), origin, newPos);
 		this.collectNearby(origin, newPos);
 	}
 
-	private void collectNearby(Vector3dc origin, Vector3d newPos) {
-		final QueryableShipData<LoadedServerShip> loadedShips = shipWorld.getLoadedShips();
+	private void collectNearby(final Vector3dc origin, final Vector3d newPos) {
+		final QueryableShipData<LoadedServerShip> loadedShips = this.shipWorld.getLoadedShips();
 		final Vector3d offset = newPos.sub(origin, new Vector3d());
 		List.copyOf(this.shipToPos.keySet())
 			.stream()
@@ -139,13 +139,13 @@ public class TeleportationHandler {
 		}
 		final Vector3d transform = shipNewPos.sub(ship.getTransform().getPositionInWorld(), new Vector3d());
 		// Entities in range
-		final AABBd shipBoxd = ship.getWorldAABB();
+		final AABBd shipBoxd = new AABBd(ship.getWorldAABB());
 		final AABBic shipBoxi = ship.getShipAABB();
 		if (shipBoxi != null) {
 			final AABBd shipYardBox = new AABBd(
 				shipBoxi.minX(), shipBoxi.minY(), shipBoxi.minZ(),
 				shipBoxi.maxX(), shipBoxi.maxY(), shipBoxi.maxZ()
-			)
+			);
 			for (final Entity entity : this.originalDim.getEntities(
 				((Entity)(null)),
 				new AABB(
@@ -207,7 +207,7 @@ public class TeleportationHandler {
 			ship.setTransformProvider(new ServerShipTransformProvider() {
 				@Override
 				public NextTransformAndVelocityData provideNextTransformAndVelocity(final ShipTransform transform, final ShipTransform nextTransform) {
-					final LoadedServerShip ship2 = this.shipWorld.getLoadedShips().getById(id);
+					final LoadedServerShip ship2 = TeleportationHandler.this.shipWorld.getLoadedShips().getById(id);
 					if (!transform.getPositionInWorld().equals(nextTransform.getPositionInWorld()) || !transform.getShipToWorldRotation().equals(nextTransform.getShipToWorldRotation())) {
 						ship2.setTransformProvider(null);
 						return null;
