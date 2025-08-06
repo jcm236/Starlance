@@ -150,12 +150,12 @@ public class TeleportationHandler {
 			for (final Entity entity : this.originalDim.getEntities(
 				((Entity)(null)),
 				new AABB(
-					shipYardBox.minX - 16, shipYardBox.minY - 16, shipYardBox.minZ - 16,
-					shipYardBox.maxX + 16, shipYardBox.maxY + 16, shipYardBox.maxZ + 16
+					shipYardBox.minX - 16 * 4, shipYardBox.minY - 16 * 4, shipYardBox.minZ - 16 * 4,
+					shipYardBox.maxX + 16 * 4, shipYardBox.maxY + 16 * 4, shipYardBox.maxZ + 16 * 4
 				),
-				(entity) -> !entity.isPassenger() && !this.entityToPos.containsKey(entity)
+				(entity) -> !this.entityToPos.containsKey(entity)
 			)) {
-				this.entityToPos.put(entity, entity.position());
+				this.collectEntity(entity, transform);
 			}
 			shipBoxd.union(shipYardBox.transform(ship.getPrevTickTransform().getShipToWorld()));
 		}
@@ -166,14 +166,22 @@ public class TeleportationHandler {
 		for (final Entity entity : this.originalDim.getEntities(
 			((Entity)(null)),
 			inflatedBox,
-			(entity) -> !entity.isPassenger() && !this.entityToPos.containsKey(entity)
+			(entity) -> !this.entityToPos.containsKey(entity)
 		)) {
-			this.collectEntityWithTransform(entity, transform);
+			this.collectEntity(entity, transform);
 		}
 	}
 
-	private void collectEntityWithTransform(final Entity entity, final Vector3d transform) {
-		this.entityToPos.put(entity, entity.position().add(transform.x, transform.y - this.greatestOffset, transform.z));
+	private void collectEntity(final Entity entity, final Vector3d transform) {
+		final Entity root = entity.getRootVehicle();
+		if (this.entityToPos.containsKey(root)) {
+			return;
+		}
+		Vec3 pos = root.position();
+		if (!VSGameUtilsKt.isBlockInShipyard(this.originalDim, pos)) {
+			pos = pos.add(transform.x, transform.y - this.greatestOffset, transform.z);
+		}
+		this.entityToPos.put(root, pos);
 	}
 
 	private void teleportEntities() {
@@ -230,6 +238,11 @@ public class TeleportationHandler {
 	private static <T extends Entity> T teleportToWithPassengers(final T entity, final ServerLevel newLevel, final Vec3 newPos) {
 		final Vec3 oldPos = entity.position();
 		final List<Entity> passengers = new ArrayList<>(entity.getPassengers());
+		passengers.forEach((e) -> {
+			if (e instanceof ISpecialTeleportLogicEntity specialEntity) {
+				specialEntity.starlance$beforeTeleport();
+			}
+		});
 		final T newEntity;
 		if (entity instanceof ServerPlayer player) {
 			player.teleportTo(newLevel, newPos.x, newPos.y, newPos.z, player.getYRot(), player.getXRot());
@@ -237,6 +250,9 @@ public class TeleportationHandler {
 		} else {
 			newEntity = (T) entity.getType().create(newLevel);
 			if (newEntity == null) {
+				if (entity instanceof ISpecialTeleportLogicEntity specialEntity) {
+					specialEntity.starlance$afterTeleport(null);
+				}
 				return null;
 			}
 			entity.ejectPassengers();
@@ -250,11 +266,16 @@ public class TeleportationHandler {
 		for (final Entity p : passengers) {
 			final Entity newPassenger = teleportToWithPassengers(p, newLevel, p.position().subtract(oldPos).add(newPos));
 			if (newPassenger != null) {
+				if (newPassenger instanceof ISpecialTeleportLogicEntity specialEntity) {
+					specialEntity.starlance$afterTeleport((ISpecialTeleportLogicEntity)(p));
+				}
 				newPassenger.startRiding(newEntity, true);
+			} else if (p instanceof ISpecialTeleportLogicEntity specialEntity) {
+				specialEntity.starlance$afterTeleport(null);
 			}
 		}
 		if (newEntity instanceof ISpecialTeleportLogicEntity specialEntity) {
-			specialEntity.starlance$afterTeleport();
+			specialEntity.starlance$afterTeleport((ISpecialTeleportLogicEntity)(entity));
 		}
 		return newEntity;
 	}
