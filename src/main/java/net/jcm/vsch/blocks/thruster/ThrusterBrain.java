@@ -71,13 +71,18 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	private boolean wasPeripheralMode = true;
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
 
-	private ThrusterBrain(List<AbstractThrusterBlockEntity> connectedBlocks, String peripheralType, Direction facing, ThrusterEngine engine) {
+	private ThrusterBrain(
+		final List<AbstractThrusterBlockEntity> connectedBlocks,
+		final String peripheralType,
+		final Direction facing,
+		final ThrusterEngine engine
+	) {
 		this.connectedBlocks = connectedBlocks;
 		this.peripheralType = peripheralType;
 		this.facing = facing;
 		this.thrusterData = new ThrusterData(VectorConversionsMCKt.toJOMLD(facing.getNormal()), 0, VSCHConfig.THRUSTER_MODE.get());
 		this.engine = engine;
-		int count = this.connectedBlocks.size();
+		final int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		this.tanks = new FluidTank[this.engine.getTanks()];
 		for (int i = 0; i < this.tanks.length; i++) {
@@ -126,7 +131,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		return this.engine.getMaxThrottle() * this.scale;
 	}
 
-	protected void setCurrentPower(double power) {
+	protected void setCurrentPower(final double power) {
 		if (this.currentPower == power) {
 			return;
 		}
@@ -145,29 +150,29 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		return this.power;
 	}
 
-	public void setPower(double power) {
-		double newPower = Math.min(Math.max(power, 0), 1);
+	public void setPower(final double power) {
+		final double newPower = Math.min(Math.max(power, 0), 1);
+		if (this.power == newPower) {
+			return;
+		}
 		this.power = newPower;
+		this.setChanged();
 	}
 
 	public boolean getPeripheralMode() {
 		return this.isPeripheralMode;
 	}
 
-	public void setPeripheralMode(boolean on) {
-		if (this.isPeripheralMode != on) {
-			this.isPeripheralMode = on;
-			this.getDataBlock().setChanged();
+	public void setPeripheralMode(final boolean on) {
+		if (this.isPeripheralMode == on) {
+			return;
 		}
+		this.isPeripheralMode = on;
+		this.setChanged();
 	}
 
 	public AbstractThrusterBlockEntity getDataBlock() {
 		return this.connectedBlocks.get(0);
-	}
-
-	protected void markPowerChanged() {
-		this.powerChanged = true;
-		this.getDataBlock().sendUpdate();
 	}
 
 	public ThrusterData.ThrusterMode getThrusterMode() {
@@ -178,19 +183,34 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		return this.thrusterData;
 	}
 
-	public void readFromNBT(CompoundTag data) {
-		int count = data.getInt(THRUSTERS_COUNT_TAG_NAME);
+	public void setChanged() {
+		this.getDataBlock().setChanged();
+	}
+
+	protected void markPowerChanged() {
+		this.powerChanged = true;
+		this.getDataBlock().sendUpdate();
+	}
+
+	public void copySettingFrom(final ThrusterBrain origin) {
+		this.power = origin.getPower();
+		this.isPeripheralMode = origin.getPeripheralMode();
+		this.thrusterData.mode = origin.getThrusterMode();
+	}
+
+	public void readFromNBT(final CompoundTag data) {
+		final int count = data.getInt(THRUSTERS_COUNT_TAG_NAME);
 		this.thrusterData.mode = ThrusterData.ThrusterMode.values()[data.getByte(MODE_TAG_NAME)];
-		this.setPower(data.getDouble(POWER_TAG_NAME));
+		this.power = Math.min(Math.max(data.getDouble(POWER_TAG_NAME), 0), 1);
 		this.currentPower = data.getDouble(CURRENT_POWER_TAG_NAME);
 		this.isPeripheralMode = CompatMods.COMPUTERCRAFT.isLoaded() && data.getBoolean(PERIPHERAL_MOD_TAG_NAME);
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		this.storedEnergy = Math.min(this.maxEnergy, data.getInt(ENERGY_TAG_NAME));
 		if (data.contains(TANKS_TAG_NAME)) {
-			ListTag tanks = data.getList(TANKS_TAG_NAME, Tag.TAG_COMPOUND);
+			final ListTag tanks = data.getList(TANKS_TAG_NAME, Tag.TAG_COMPOUND);
 			if (tanks.size() == this.tanks.length) {
 				for (int i = 0; i < this.tanks.length; i++) {
-					FluidTank tank = this.tanks[i];
+					final FluidTank tank = this.tanks[i];
 					tank.setCapacity(FLUID_TANK_CAPACITY * count);
 					tank.readFromNBT(tanks.getCompound(i));
 				}
@@ -199,33 +219,32 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.thrusterData.throttle = this.getCurrentThrottle();
 	}
 
-	public void writeToNBT(CompoundTag data) {
+	public CompoundTag writeToNBT(final CompoundTag data) {
 		data.putInt(THRUSTERS_COUNT_TAG_NAME, this.connectedBlocks.size());
 		data.putByte(MODE_TAG_NAME, (byte) (this.thrusterData.mode.ordinal()));
 		data.putDouble(POWER_TAG_NAME, this.getPower());
 		data.putDouble(CURRENT_POWER_TAG_NAME, this.getCurrentPower());
 		data.putBoolean(PERIPHERAL_MOD_TAG_NAME, this.getPeripheralMode());
 		data.putInt(ENERGY_TAG_NAME, this.storedEnergy);
-		ListTag tanks = new ListTag();
+		final ListTag tanks = new ListTag();
 		for (int i = 0; i < this.tanks.length; i++) {
-			FluidTank tank = this.tanks[i];
-			CompoundTag tag = new CompoundTag();
-			tank.writeToNBT(tag);
-			tanks.add(tag);
+			final FluidTank tank = this.tanks[i];
+			tanks.add(tank.writeToNBT(new CompoundTag()));
 		}
 		data.put(TANKS_TAG_NAME, tanks);
+		return data;
 	}
 
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
+	public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction direction) {
 		if (cap == ForgeCapabilities.ENERGY || cap == ForgeCapabilities.FLUID_HANDLER) {
 			return LazyOptional.of(() -> this).cast();
 		}
 		if (CompatMods.COMPUTERCRAFT.isLoaded() && cap == Capabilities.CAPABILITY_PERIPHERAL) {
-			if (!lazyPeripheral.isPresent()) {
-				lazyPeripheral = LazyOptional.of(() -> new ThrusterPeripheral(this));
+			if (!this.lazyPeripheral.isPresent()) {
+				this.lazyPeripheral = LazyOptional.of(() -> new ThrusterPeripheral(this));
 			}
-			return lazyPeripheral.cast();
+			return this.lazyPeripheral.cast();
 		}
 		return LazyOptional.empty();
 	}
@@ -256,18 +275,18 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 	}
 
-	public void neighborChanged(AbstractThrusterBlockEntity thruster, Block block, BlockPos pos, boolean moving) {
-		Level level = thruster.getLevel();
-		BlockEntity changed = level.getBlockEntity(pos);
+	public void neighborChanged(final AbstractThrusterBlockEntity thruster, final Block block, final BlockPos pos, final boolean moving) {
+		final Level level = thruster.getLevel();
+		final BlockEntity changed = level.getBlockEntity(pos);
 		if (changed instanceof AbstractThrusterBlockEntity newThruster) {
 			// TODO: check if facing changed
-			ThrusterBrain newBrain = newThruster.getBrain();
+			final ThrusterBrain newBrain = newThruster.getBrain();
 			if (newBrain != this) {
 				this.tryMergeBrain(thruster.getBlockPos(), newBrain, pos);
 			}
 		} else {
 			for (int i = 0; i < this.connectedBlocks.size(); i++) {
-				AbstractThrusterBlockEntity be = this.connectedBlocks.get(i);
+				final AbstractThrusterBlockEntity be = this.connectedBlocks.get(i);
 				if (be.getBlockPos().equals(pos)) {
 					this.removeFromBrain(level, i);
 					break;
@@ -280,20 +299,28 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 	}
 
-	private void tryMergeBrain(BlockPos atPos, ThrusterBrain other, BlockPos otherPos) {
-		if (this.facing != other.facing || !this.peripheralType.equals(other.peripheralType)) {
+	public boolean canMerge(final ThrusterBrain other) {
+		return this.facing == other.facing &&
+			this.peripheralType.equals(other.peripheralType) &&
+			this.getThrusterMode() == other.getThrusterMode();
+	}
+
+	private void tryMergeBrain(final BlockPos atPos, final ThrusterBrain other, final BlockPos otherPos) {
+		if (!this.canMerge(other)) {
 			return;
 		}
 		if (this.facing.getAxis().choose(otherPos.getX() - atPos.getX(), otherPos.getY() - atPos.getY(), otherPos.getZ() - atPos.getZ()) != 0) {
 			return;
 		}
 		int minX, minY, minZ, maxX, maxY, maxZ;
-		BlockPos dataPos = this.getDataBlock().getBlockPos();
-		minX = maxX = dataPos.getX();
-		minY = maxY = dataPos.getY();
-		minZ = maxZ = dataPos.getZ();
-		for (AbstractThrusterBlockEntity be : this.connectedBlocks) {
-			BlockPos pos = be.getBlockPos();
+		{
+			final BlockPos dataPos = this.getDataBlock().getBlockPos();
+			minX = maxX = dataPos.getX();
+			minY = maxY = dataPos.getY();
+			minZ = maxZ = dataPos.getZ();
+		}
+		for (final AbstractThrusterBlockEntity be : this.connectedBlocks) {
+			final BlockPos pos = be.getBlockPos();
 			int x = pos.getX(), y = pos.getY(), z = pos.getZ();
 			if (x < minX) {
 				minX = x;
@@ -316,28 +343,28 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 
 		this.connectedBlocks.addAll(other.connectedBlocks);
-		for (AbstractThrusterBlockEntity be : other.connectedBlocks) {
+		for (final AbstractThrusterBlockEntity be : other.connectedBlocks) {
 			be.setBrain(this);
 		}
-		int count = this.connectedBlocks.size();
+		final int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		this.storedEnergy += other.storedEnergy;
 		for (int i = 0; i < this.tanks.length; i++) {
-			FluidTank tank = this.tanks[i];
+			final FluidTank tank = this.tanks[i];
 			tank.setCapacity(FLUID_TANK_CAPACITY * count);
 			tank.fill(other.tanks[i].getFluid(), IFluidHandler.FluidAction.EXECUTE);
 		}
 		this.getDataBlock().sendUpdate();
 	}
 
-	private void removeFromBrain(Level level, int index) {
-		AbstractThrusterBlockEntity removed = this.connectedBlocks.remove(index);
+	private void removeFromBrain(final Level level, final int index) {
+		final AbstractThrusterBlockEntity removed = this.connectedBlocks.remove(index);
 		if (index == 0) {
 			this.broadcastDataBlockUpdate();
 		}
-		Set<BlockPos> collected = new HashSet<>();
+		final Set<BlockPos> collected = new HashSet<>();
 		collected.add(removed.getBlockPos());
-		List<AbstractThrusterBlockEntity>[] sets = streamNeighborPositions(removed.getBlockPos(), this.facing)
+		final List<AbstractThrusterBlockEntity>[] sets = streamNeighborPositions(removed.getBlockPos(), this.facing)
 			.map(level::getBlockEntity)
 			.filter(AbstractThrusterBlockEntity.class::isInstance)
 			.map(AbstractThrusterBlockEntity.class::cast)
@@ -346,15 +373,15 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			.toArray(List[]::new);
 
 		this.connectedBlocks = sets[0];
-		int count = this.connectedBlocks.size();
+		final int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
 		int lastEnergy = this.storedEnergy;
 		this.storedEnergy = Math.min(this.maxEnergy, lastEnergy);
 		lastEnergy -= this.storedEnergy;
-		int[] lastFluids = new int[this.tanks.length];
+		final int[] lastFluids = new int[this.tanks.length];
 		for (int i = 0; i < this.tanks.length; i++) {
-			FluidTank tank = this.tanks[i];
-			FluidStack stack = tank.getFluid();
+			final FluidTank tank = this.tanks[i];
+			final FluidStack stack = tank.getFluid();
 			tank.setCapacity(FLUID_TANK_CAPACITY * count);
 			if (stack.isEmpty()) {
 				continue;
@@ -364,23 +391,25 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			lastFluids[i] -= stack.getAmount();
 		}
 		for (int i = 1; i < sets.length; i++) {
-			List<AbstractThrusterBlockEntity> set = sets[i];
-			ThrusterBrain newBrain = new ThrusterBrain(set, this.peripheralType, this.facing, engine);
+			final List<AbstractThrusterBlockEntity> set = sets[i];
+			final ThrusterBrain newBrain = new ThrusterBrain(set, this.peripheralType, this.facing, engine);
+			newBrain.copySettingFrom(this);
 			newBrain.storedEnergy = Math.min(newBrain.maxEnergy, lastEnergy);
 			lastEnergy -= newBrain.storedEnergy;
 			for (int j = 0; j < newBrain.tanks.length; j++) {
-				FluidTank tank = newBrain.tanks[j];
-				FluidStack stack = tank.getFluid();
+				final FluidTank tank = newBrain.tanks[j];
+				final FluidStack stack = tank.getFluid();
 				if (lastFluids[j] > 0) {
-					int amount = Math.min(tank.getCapacity(), lastFluids[j]);
+					final int amount = Math.min(tank.getCapacity(), lastFluids[j]);
 					lastFluids[j] -= amount;
 					newBrain.tanks[j].setFluid(new FluidStack(stack.getFluid(), amount));
 				}
 			}
-			for (AbstractThrusterBlockEntity t : set) {
+			for (final AbstractThrusterBlockEntity t : set) {
 				t.setBrain(newBrain);
 			}
 		}
+		this.getDataBlock().sendUpdate();
 	}
 
 	private static Stream<BlockPos> streamNeighborPositions(BlockPos origin, Direction facing) {
@@ -388,16 +417,16 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	private static List<AbstractThrusterBlockEntity> collectAllConnecting(Level level, AbstractThrusterBlockEntity be, Direction facing, Set<BlockPos> collected) {
-		List<AbstractThrusterBlockEntity> result = new ArrayList<>();
+		final List<AbstractThrusterBlockEntity> result = new ArrayList<>();
 		if (!collected.add(be.getBlockPos())) {
 			return result;
 		}
-		ArrayDeque<AbstractThrusterBlockEntity> deque = new ArrayDeque<>();
+		final ArrayDeque<AbstractThrusterBlockEntity> deque = new ArrayDeque<>();
 		deque.addLast(be);
 		while (!deque.isEmpty()) {
-			AbstractThrusterBlockEntity b = deque.removeLast();
+			final AbstractThrusterBlockEntity b = deque.removeLast();
 			result.add(b);
-			BlockPos pos = b.getBlockPos();
+			final BlockPos pos = b.getBlockPos();
 			streamNeighborPositions(pos, facing)
 				.filter(collected::add)
 				.map(level::getBlockEntity)
@@ -409,17 +438,20 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	private void broadcastDataBlockUpdate() {
-		for (AbstractThrusterBlockEntity be : this.connectedBlocks) {
+		for (final AbstractThrusterBlockEntity be : this.connectedBlocks) {
 			be.sendUpdate();
 		}
 	}
 
 	private void updatePowerByRedstone() {
 		float newPower = 0;
-		for (AbstractThrusterBlockEntity be : this.connectedBlocks) {
-			float power = getPowerByRedstone(be.getLevel(), be.getBlockPos());
+		for (final AbstractThrusterBlockEntity be : this.connectedBlocks) {
+			final float power = getPowerByRedstone(be.getLevel(), be.getBlockPos());
 			if (power > newPower) {
 				newPower = power;
+				if (power == 1) {
+					break;
+				}
 			}
 		}
 		this.setPower(newPower);
@@ -432,13 +464,14 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	/// IEnergyStorage
 
 	@Override
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		int needs = this.maxEnergy - this.storedEnergy;
+	public int receiveEnergy(int maxReceive, final boolean simulate) {
+		final int needs = this.maxEnergy - this.storedEnergy;
 		if (needs < maxReceive) {
 			maxReceive = needs;
 		}
 		if (!simulate) {
 			this.storedEnergy += maxReceive;
+			this.setChanged();
 		}
 		return maxReceive;
 	}
@@ -475,12 +508,13 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 
 		@Override
-		public int extractEnergy(int maxExtract, boolean simulate) {
+		public int extractEnergy(int maxExtract, final boolean simulate) {
 			if (maxExtract > ThrusterBrain.this.storedEnergy) {
 				maxExtract = ThrusterBrain.this.storedEnergy;
 			}
 			if (!simulate) {
 				ThrusterBrain.this.storedEnergy -= maxExtract;
+				ThrusterBrain.this.setChanged();
 			}
 			return maxExtract;
 		}
@@ -532,11 +566,11 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		return this.engine.isValidFuel(tank, stack.getFluid());
 	}
 
-	private FluidTank getFillable(FluidStack resource) {
-		Fluid fluid = resource.getFluid();
+	private FluidTank getFillableTank(final FluidStack resource) {
+		final Fluid fluid = resource.getFluid();
 		for (int i = 0; i < this.tanks.length; i++) {
 			if (this.engine.isValidFuel(i, fluid)) {
-				FluidTank tank = this.tanks[i];
+				final FluidTank tank = this.tanks[i];
 				FluidStack stack = tank.getFluid();
 				if (stack.getFluid() != fluid) {
 					if (!stack.isEmpty()) {
@@ -552,14 +586,20 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	@Override
-	public int fill(FluidStack resource, FluidAction action) {
-		FluidTank tank = this.getFillable(resource);
-		return tank == null ? 0 : tank.fill(resource, action);
+	public int fill(final FluidStack resource, final FluidAction action) {
+		final FluidTank tank = this.getFillableTank(resource);
+		if (tank == null) {
+			return 0;
+		}
+		if (action.execute()) {
+			this.setChanged();
+		}
+		return tank.fill(resource, action);
 	}
 
-	private FluidTank getDrainable(FluidStack resource) {
-		Fluid fluid = resource.getFluid();
-		for (FluidTank tank : this.tanks) {
+	private FluidTank getDrainableTank(final FluidStack resource) {
+		final Fluid fluid = resource.getFluid();
+		for (final FluidTank tank : this.tanks) {
 			if (tank.getFluid().getFluid() == fluid) {
 				return tank;
 			}
@@ -604,16 +644,23 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			FluidTank tank = ThrusterBrain.this.getDrainable(resource);
-			return tank == null ? FluidStack.EMPTY : tank.drain(resource, action);
+		public FluidStack drain(final FluidStack resource, final FluidAction action) {
+			final FluidTank tank = ThrusterBrain.this.getDrainableTank(resource);
+			if (tank == null) {
+				return FluidStack.EMPTY;
+			}
+			if (action.execute()) {
+				ThrusterBrain.this.setChanged();
+			}
+			return tank.drain(resource, action);
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
-			for (FluidTank tank : ThrusterBrain.this.tanks) {
-				FluidStack stack = tank.drain(maxDrain, action);
+		public FluidStack drain(final int maxDrain, final FluidAction action) {
+			for (final FluidTank tank : ThrusterBrain.this.tanks) {
+				final FluidStack stack = tank.drain(maxDrain, action);
 				if (!stack.isEmpty()) {
+					ThrusterBrain.this.setChanged();
 					return stack;
 				}
 			}
