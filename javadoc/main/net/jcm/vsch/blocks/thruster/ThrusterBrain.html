@@ -128,7 +128,13 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canExtract()" class="member-name-link">canExtract</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canReceive()" class="member-name-link">canReceive</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canMerge(net.jcm.vsch.blocks.thruster.ThrusterBrain)" class="member-name-link">canMerge</a><wbr>(<a href="ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a>&nbsp;other)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canReceive()" class="member-name-link">canReceive</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copySettingFrom(net.jcm.vsch.blocks.thruster.ThrusterBrain)" class="member-name-link">copySettingFrom</a><wbr>(<a href="ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a>&nbsp;origin)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraftforge.fluids.FluidStack</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drain(int,net.minecraftforge.fluids.capability.IFluidHandler.FluidAction)" class="member-name-link">drain</a><wbr>(int&nbsp;maxDrain,
@@ -221,24 +227,27 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#receiveEnergy(int,boolean)" class="member-name-link">receiveEnergy</a><wbr>(int&nbsp;maxReceive,
  boolean&nbsp;simulate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentPower(double)" class="member-name-link">setCurrentPower</a><wbr>(double&nbsp;power)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setChanged()" class="member-name-link">setChanged</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPeripheralMode(boolean)" class="member-name-link">setPeripheralMode</a><wbr>(boolean&nbsp;on)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentPower(double)" class="member-name-link">setCurrentPower</a><wbr>(double&nbsp;power)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(double)" class="member-name-link">setPower</a><wbr>(double&nbsp;power)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPeripheralMode(boolean)" class="member-name-link">setPeripheralMode</a><wbr>(boolean&nbsp;on)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setThrusterMode(net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode)" class="member-name-link">setThrusterMode</a><wbr>(<a href="../../ship/thruster/ThrusterData.ThrusterMode.html" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a>&nbsp;mode)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(double)" class="member-name-link">setPower</a><wbr>(double&nbsp;power)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(net.minecraft.server.level.ServerLevel)" class="member-name-link">tick</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setThrusterMode(net.jcm.vsch.ship.thruster.ThrusterData.ThrusterMode)" class="member-name-link">setThrusterMode</a><wbr>(<a href="../../ship/thruster/ThrusterData.ThrusterMode.html" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a>&nbsp;mode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeToNBT(net.minecraft.nbt.CompoundTag)" class="member-name-link">writeToNBT</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(net.minecraft.server.level.ServerLevel)" class="member-name-link">tick</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeToNBT(net.minecraft.nbt.CompoundTag)" class="member-name-link">writeToNBT</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -365,12 +374,6 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
 </section>
 </li>
 <li>
-<section class="detail" id="markPowerChanged()">
-<h3>markPowerChanged</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markPowerChanged</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getThrusterMode()">
 <h3>getThrusterMode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../ship/thruster/ThrusterData.ThrusterMode.html" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a></span>&nbsp;<span class="element-name">getThrusterMode</span>()</div>
@@ -383,6 +386,24 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
 </section>
 </li>
 <li>
+<section class="detail" id="setChanged()">
+<h3>setChanged</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setChanged</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="markPowerChanged()">
+<h3>markPowerChanged</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markPowerChanged</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="copySettingFrom(net.jcm.vsch.blocks.thruster.ThrusterBrain)">
+<h3>copySettingFrom</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">copySettingFrom</span><wbr><span class="parameters">(<a href="ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a>&nbsp;origin)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="readFromNBT(net.minecraft.nbt.CompoundTag)">
 <h3>readFromNBT</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">readFromNBT</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;data)</span></div>
@@ -391,7 +412,7 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
 <li>
 <section class="detail" id="writeToNBT(net.minecraft.nbt.CompoundTag)">
 <h3>writeToNBT</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">writeToNBT</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;data)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">writeToNBT</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;data)</span></div>
 </section>
 </li>
 <li>
@@ -419,6 +440,12 @@ implements net.minecraftforge.energy.IEnergyStorage, net.minecraftforge.fluids.c
  net.minecraft.world.level.block.Block&nbsp;block,
  net.minecraft.core.BlockPos&nbsp;pos,
  boolean&nbsp;moving)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="canMerge(net.jcm.vsch.blocks.thruster.ThrusterBrain)">
+<h3>canMerge</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canMerge</span><wbr><span class="parameters">(<a href="ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a>&nbsp;other)</span></div>
 </section>
 </li>
 <li>
