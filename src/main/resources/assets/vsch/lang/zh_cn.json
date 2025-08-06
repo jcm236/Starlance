@@ -17,6 +17,8 @@
 	"block.vsch.thruster_block": "推进器",
 	"item.vsch.magnet_boot": "磁力靴",
 	"item.vsch.wrench": "扳手",
+	"key.vsch.roll_clockwise": "顺时针旋转",
+	"key.vsch.roll_counter_clockwise": "逆时针旋转",
 
 	"config.jade.plugin_vsch.gyro_component_config": "陀螺仪配置信息",
 	"config.jade.plugin_vsch.thruster_component_config": "推进器配置信息",

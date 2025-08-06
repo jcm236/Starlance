@@ -2,6 +2,10 @@ package net.jcm.vsch.mixin.minecraft;
 
 import net.jcm.vsch.accessor.EntityAccessor;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
+import net.jcm.vsch.client.ClientEvents;
+import net.jcm.vsch.client.VSCHKeyBindings;
+import net.jcm.vsch.config.VSCHClientConfig;
+import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
 import net.jcm.vsch.util.BooleanRef;
 import net.jcm.vsch.util.VSCHUtils;
@@ -223,7 +227,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.level().isClientSide) {
 			return;
 		}
-		final boolean freeRotation = !this.isPassenger() && VSCHUtils.isSpaceLevel(this.level());
+		final boolean freeRotation = VSCHConfig.PLAYER_FREE_ROTATION_IN_SPACE.get() && !this.isPassenger() && VSCHUtils.isSpaceLevel(this.level());
 		this.entityData.set(FREE_ROTATION_ID, freeRotation);
 	}
 
@@ -299,17 +303,33 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			super.turn(x, y);
 			return;
 		}
-		if (x == 0 && y == 0) {
+
+		final boolean isClientSide = this.level().isClientSide;
+
+		final float roll;
+		if (isClientSide) {
+			int rollDir = 0;
+			if (VSCHKeyBindings.ROLL_CLOCKWISE.isDown()) {
+				rollDir++;
+			}
+			if (VSCHKeyBindings.ROLL_COUNTER_CLOCKWISE.isDown()) {
+				rollDir--;
+			}
+			roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * ClientEvents.getSpf() * Mth.DEG_TO_RAD;
+		} else {
+			roll = 0;
+		}
+
+		if (x == 0 && y == 0 && roll == 0) {
 			return;
 		}
 		final float yaw = -(float)(x) * 0.15f * Mth.DEG_TO_RAD;
 		final float pitch = (float)(y) * 0.15f * Mth.DEG_TO_RAD;
 
-		final Quaternionf pitchRot = new Quaternionf().rotateX(pitch);
-		final Quaternionf yawRot = new Quaternionf().rotateY(yaw);
+		final Quaternionf rotation = new Quaternionf().rotateYXZ(yaw, pitch, roll);
 
-		this.vsch$setRotation(this.vsch$getRotation().mul(yawRot).mul(pitchRot).normalize());
-		this.vsch$setRotationO(this.rotationO.mul(yawRot).mul(pitchRot).normalize());
+		this.vsch$setRotation(this.vsch$getRotation().mul(rotation).normalize());
+		this.vsch$setRotationO(this.rotationO.mul(rotation).normalize());
 	}
 
 	@Override
