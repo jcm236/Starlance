@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.Team;
 import net.minecraftforge.entity.PartEntity;
 
 public class MultiPartPlayer extends PartEntity<Player> {
@@ -70,8 +71,33 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	}
 
 	@Override
-	public ItemStack getPickResult() {
-		return this.isAlive() ? this.getParent().getPickResult() : null;
+	public boolean isPushable() {
+		return this.isAlive() && this.getParent().isPushable();
+	}
+
+	@Override
+	public void push(final double x, final double y, final double z) {
+		if (this.isAlive()) {
+			this.getParent().push(x, y, z);
+		}
+	}
+
+	@Override
+	public boolean hurt(final DamageSource source, final float damage) {
+		if (this.isInvulnerableTo(source)) {
+			return false;
+		}
+		return this.getParent().hurt(source, damage);
+	}
+
+	@Override
+	public boolean isPassenger() {
+		return this.isAlive() && this.getParent().isPassenger();
+	}
+
+	@Override
+	public boolean isVehicle() {
+		return this.isAlive() && this.getParent().isVehicle();
 	}
 
 	@Override
@@ -85,11 +111,13 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	}
 
 	@Override
-	public boolean hurt(final DamageSource source, final float damage) {
-		if (this.isInvulnerableTo(source)) {
-			return false;
-		}
-		return this.getParent().hurt(source, damage);
+	public String getScoreboardName() {
+		return this.getParent().getScoreboardName();
+	}
+
+	@Override
+	public ItemStack getPickResult() {
+		return this.isAlive() ? this.getParent().getPickResult() : null;
 	}
 
 	@Override

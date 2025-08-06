@@ -29,6 +29,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.scores.Team;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -49,6 +50,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlayerAccessor {
@@ -218,6 +220,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	protected void updateDefaultFreeRotation() {
+		if (this.level().isClientSide) {
+			return;
+		}
 		final boolean freeRotation = !this.isPassenger() && VSCHUtils.isSpaceLevel(this.level());
 		this.entityData.set(FREE_ROTATION_ID, freeRotation);
 	}
@@ -499,18 +504,40 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	protected void pushEntities() {
-		super.pushEntities();
 		if (!this.vsch$isFreeRotating()) {
+			super.pushEntities();
 			return;
 		}
 		final Level level = this.level();
-		for (final MultiPartPlayer part : this.parts) {
+		final Team selfTeam = this.getTeam();
+		final Team.CollisionRule selfTeamRule = selfTeam == null ? Team.CollisionRule.ALWAYS : selfTeam.getCollisionRule();
+		if (selfTeamRule == Team.CollisionRule.NEVER) {
+			return;
+		}
+		Predicate<Entity> selector = EntitySelector.NO_SPECTATORS
+			.and(Entity::isPushable)
+			.and((e) -> {
+				final Team team = e.getTeam();
+				final Team.CollisionRule teamRule = team == null ? Team.CollisionRule.ALWAYS : team.getCollisionRule();
+				if (teamRule == Team.CollisionRule.NEVER) {
+					return false;
+				}
+				final boolean sameTeam = selfTeam != null && selfTeam.isAlliedTo(team);
+				if (sameTeam) {
+					return selfTeamRule != Team.CollisionRule.PUSH_OWN_TEAM && teamRule != Team.CollisionRule.PUSH_OWN_TEAM;
+				}
+				return selfTeamRule != Team.CollisionRule.PUSH_OTHER_TEAMS && teamRule != Team.CollisionRule.PUSH_OTHER_TEAMS;
+			});
+		// if (level.isClientSide()) {
+		// 	selector.and((e) -> e instanceof Player || e instanceof MultiPartPlayer);
+		// }
+		for (final Entity part : new Entity[]{this, this.chestPart, this.feetPart}) {
 			level.getEntities(
-				EntityTypeTest.forClass(Player.class),
+				part,
 				part.getBoundingBox(),
-				EntitySelector.pushableBy(this)
+				selector
 			)
-				.forEach((e) -> e.push(part));
+				.forEach((e) -> push3Dim(part, e));
 		}
 	}
 
@@ -580,5 +607,30 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		part.setOldPosAndRot();
 		part.setPos(pos);
+	}
+
+	@Unique
+	private static void push3Dim(final Entity e1, final Entity e2) {
+		if (e1.noPhysics || e2.noPhysics || e1.isPassengerOfSameVehicle(e2)) {
+			return;
+		}
+		final AABB e1Box = e1.getBoundingBox();
+		final AABB e2Box = e2.getBoundingBox();
+		final Vector3d movement = new Vector3d(
+			e1.getX() - e2.getX(),
+			(e1.getY() + e1Box.getYsize() / 2) - (e2.getY() + e2Box.getYsize() / 2),
+			e1.getZ() - e2.getZ()
+		);
+		final double lengthSqr = movement.lengthSquared();
+		if (lengthSqr < 0.0001) {
+			return;
+		}
+		movement.normalize(Math.min(1 / Math.sqrt(lengthSqr), 0.2)).mul(1.0 / 20);
+		if (!e1.isVehicle() && e1.isPushable()) {
+			e1.push(movement.x, movement.y, movement.z);
+		}
+		if (!e2.isVehicle() && e2.isPushable()) {
+			e2.push(-movement.x, -movement.y, -movement.z);
+		}
 	}
 }
