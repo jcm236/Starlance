@@ -1,6 +1,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.api.entity.ISpecialTeleportLogicEntity;
 import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
 
 import net.minecraft.server.level.ServerLevel;
@@ -176,6 +177,11 @@ public class TeleportationHandler {
 	}
 
 	private void teleportEntities() {
+		this.entityToPos.keySet().forEach((entity) -> {
+			if (entity instanceof ISpecialTeleportLogicEntity specialEntity) {
+				specialEntity.starlance$beforeTeleport();
+			}
+		});
 		this.entityToPos.forEach((entity, newPos) -> {
 			teleportToWithPassengers(entity, this.newDim, newPos);
 		});
@@ -246,6 +252,9 @@ public class TeleportationHandler {
 			if (newPassenger != null) {
 				newPassenger.startRiding(newEntity, true);
 			}
+		}
+		if (newEntity instanceof ISpecialTeleportLogicEntity specialEntity) {
+			specialEntity.starlance$afterTeleport();
 		}
 		return newEntity;
 	}
