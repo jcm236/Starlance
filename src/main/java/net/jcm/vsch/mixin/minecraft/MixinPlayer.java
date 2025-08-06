@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,9 +43,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Map;
 
 @Mixin(Player.class)
@@ -387,6 +391,21 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	public boolean isInWater() {
+		return super.isInWater() || this.chestPart.isInWater() || this.feetPart.isInWater();
+	}
+
+	@Override
+	public boolean isInWaterRainOrBubble() {
+		return super.isInWaterRainOrBubble() || this.chestPart.isInWaterRainOrBubble() || this.feetPart.isInWaterRainOrBubble();
+	}
+
+	@Override
+	public boolean isInWaterOrBubble() {
+		return super.isInWaterOrBubble() || this.chestPart.isInWaterOrBubble() || this.feetPart.isInWaterOrBubble();
+	}
+
+	@Override
 	public void moveRelative(final float power, final Vec3 movement) {
 		if (!this.vsch$isFreeRotating()) {
 			super.moveRelative(power, movement);
@@ -479,6 +498,23 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	protected void pushEntities() {
+		super.pushEntities();
+		if (!this.vsch$isFreeRotating()) {
+			return;
+		}
+		final Level level = this.level();
+		for (final MultiPartPlayer part : this.parts) {
+			level.getEntities(
+				EntityTypeTest.forClass(Player.class),
+				part.getBoundingBox(),
+				EntitySelector.pushableBy(this)
+			)
+				.forEach((e) -> e.push(part));
+		}
+	}
+
+	@Override
 	public void baseTick() {
 		if (this.firstTick) {
 			this.updateDefaultFreeRotation();
@@ -495,9 +531,35 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.vsch$setOldPosAndRot();
 	}
 
-	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;updatePlayerPose()V", ordinal = 0))
-	public void tick(final CallbackInfo ci) {
+	@Inject(
+		method = "tick",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;updatePlayerPose()V", ordinal = 0)
+	)
+	public void tick$updatePlayerPose(final CallbackInfo ci) {
 		this.updateParts();
+	}
+
+	@WrapOperation(
+		method = "aiStep",
+		slice = @Slice(
+			from = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isSpectator()Z")
+		),
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;",
+			ordinal = 0
+		)
+	)
+	public List<Entity> aiStep$getEntities$touch(
+		final Level level,
+		final Entity self,
+		AABB box,
+		final Operation<List<Entity>> operation
+	) {
+		for (final MultiPartPlayer part : this.parts) {
+			box = box.minmax(part.getBoundingBox().inflate(0.5, 0.5, 0.5));
+		}
+		return operation.call(level, self, box);
 	}
 
 	@Unique
