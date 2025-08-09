@@ -16,6 +16,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+
 @Mod.EventBusSubscriber
 public class VSCHEvents {
 
@@ -23,6 +26,9 @@ public class VSCHEvents {
 	public static void onServerTick(TickEvent.ServerTickEvent event) {
 		if (event.phase != TickEvent.Phase.END) {
 			return;
+		}
+		for (final LoadedServerShip ship : VSGameUtilsKt.getShipObjectWorld(event.getServer()).getLoadedShips()) {
+			GravityInducer.getOrCreate(ship);
 		}
 		for (ServerLevel level : event.getServer().getAllLevels()) {
 			if (level.getPlayers(player -> true, 1).isEmpty()) {
