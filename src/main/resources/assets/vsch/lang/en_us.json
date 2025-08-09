@@ -17,6 +17,8 @@
 	"block.vsch.thruster_block": "Thruster",
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"item.vsch.wrench": "Wrench",
+	"key.vsch.roll_clockwise": "Roll Clockwise",
+	"key.vsch.roll_counter_clockwise": "Roll Counter Clockwise",
 
 	"config.jade.plugin_vsch.gyro_component_config": "Gyro Mode Details",
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
