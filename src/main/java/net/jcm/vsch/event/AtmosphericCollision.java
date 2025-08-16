@@ -54,7 +54,15 @@ public class AtmosphericCollision {
 		final TeleportationHandler teleportHandler = new TeleportationHandler(targetLevel, level, false);
 
 		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
-			if (ship.getTransform().getPositionInWorld().y() <= atmoHeight) {
+			final double shipY = ship.getTransform().getPositionInWorld().y();
+			final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+			if (shipY < atmoHeight - 10) {
+				if (landingAttachment != null) {
+					ship.saveAttachment(ShipLandingAttachment.class, null);
+				}
+				continue;
+			}
+			if (landingAttachment != null && landingAttachment.landing && shipY < atmoHeight + 128) {
 				continue;
 			}
 
@@ -65,7 +73,7 @@ public class AtmosphericCollision {
 			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-			ship.setAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
+			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
 			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ));
 		}
 		teleportHandler.finalizeTeleport();

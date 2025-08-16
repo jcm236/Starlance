@@ -3,6 +3,7 @@ package net.jcm.vsch.ship;
 import net.minecraft.server.level.ServerPlayer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 
@@ -13,7 +14,10 @@ import org.valkyrienskies.core.api.ships.LoadedServerShip;
 	setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 public final class ShipLandingAttachment {
+	@JsonProperty
 	public boolean launching;
+	@JsonProperty
+	public boolean landing = false;
 	public ServerPlayer commander = null;
 	public Vector3dc velocity = null;
 	public Vector3dc omega = null;

@@ -75,7 +75,7 @@ public class PlanetCollision {
 					if (landingAttachment.commander != null && landingAttachment.commander.containerMenu instanceof ShipLandingSelectorMenu) {
 						landingAttachment.commander.doCloseContainer();
 					}
-					ship.setAttachment(ShipLandingAttachment.class, null);
+					ship.saveAttachment(ShipLandingAttachment.class, null);
 				}
 				continue;
 			}
@@ -90,7 +90,7 @@ public class PlanetCollision {
 					continue;
 				}
 				landingAttachment = new ShipLandingAttachment();
-				ship.setAttachment(ShipLandingAttachment.class, landingAttachment);
+				ship.saveAttachment(ShipLandingAttachment.class, landingAttachment);
 			}
 
 			if (landingAttachment.commander == null || !landingAttachment.commander.isAlive()) {
@@ -169,11 +169,12 @@ public class PlanetCollision {
 		final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
 		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
 		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
-		final double posY = atmoY - 10;
+		final double posY = atmoY;
 
 		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
 		ship.setStatic(false);
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+		landingAttachment.landing = true;
 		final TeleportationHandler handler = handlers.computeIfAbsent(targetDim, (dimStr) -> new TeleportationHandler(VSCHUtils.dimToLevel(dimStr), level, true));
 		handler.addShipWithVelocity(ship, new Vector3d(posX, posY, posZ), landingAttachment.velocity, landingAttachment.omega);
 
@@ -192,7 +193,7 @@ public class PlanetCollision {
 	private static ServerPlayer getShipNearestPlayer(final Ship ship, final ServerLevel level) {
 		// Get the AABB of the last tick and the AABB of the current tick
 		final AABBdc shipBox = ship.getWorldAABB();
-		final AABB prevWorldAABB = VectorConversionsMCKt.toMinecraft(VSCHUtils.transformToAABBd(ship.getPrevTickTransform(), ship.getShipAABB())).inflate(10);
+		final AABB prevWorldAABB = VectorConversionsMCKt.toMinecraft(VSCHUtils.transformToAABBd(ship.getPrevTickTransform(), ship.getShipAABB())).inflate(8);
 		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
 		final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
 
