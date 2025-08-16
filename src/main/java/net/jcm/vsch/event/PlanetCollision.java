@@ -9,6 +9,7 @@ import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,7 @@ import net.minecraftforge.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBdc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
@@ -69,7 +71,8 @@ public class PlanetCollision {
 				return;
 			}
 			ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-			final double distance = VSCHUtils.getDistanceToPlanet(nearestPlanet, shipCenter);
+			final VSCHUtils.DistanceInfo distanceInfo = VSCHUtils.getDistanceToPlanet(nearestPlanet, shipCenter);
+			final double distance = distanceInfo.distance();
 			if (distance > OUTER_RANGE) {
 				if (landingAttachment != null) {
 					if (landingAttachment.commander != null && landingAttachment.commander.containerMenu instanceof ShipLandingSelectorMenu) {
@@ -136,7 +139,7 @@ public class PlanetCollision {
 			}
 
 			// Otherwise, we just skip them since the playerMenuTick will take care of them.
-			playerMenuTick(commander, ship, level, nearestPlanet, handlers);
+			playerMenuTick(commander, ship, level, nearestPlanet, distanceInfo.direction(), handlers);
 		}
 		handlers.values().forEach(TeleportationHandler::finalizeTeleport);
 	}
@@ -146,6 +149,7 @@ public class PlanetCollision {
 		final ServerShip ship,
 		final ServerLevel level,
 		final CompoundTag planet,
+		final Direction direction,
 		final Map<String, TeleportationHandler> handlers
 	) {
 		if (!(player.containerMenu instanceof ShipLandingSelectorMenu shipMenu)) {
@@ -170,13 +174,14 @@ public class PlanetCollision {
 		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
 		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
 		final double posY = atmoY;
+		final Quaterniond rotation = new Quaterniond(direction.getRotation());
 
 		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
 		ship.setStatic(false);
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
 		landingAttachment.landing = true;
 		final TeleportationHandler handler = handlers.computeIfAbsent(targetDim, (dimStr) -> new TeleportationHandler(VSCHUtils.dimToLevel(dimStr), level, true));
-		handler.addShipWithVelocity(ship, new Vector3d(posX, posY, posZ), landingAttachment.velocity, landingAttachment.omega);
+		handler.addShipWithVelocity(ship, new Vector3d(posX, posY, posZ), rotation, landingAttachment.velocity, landingAttachment.omega);
 
 		vars.landing_coords = "^";
 		vars.check_collision = true;

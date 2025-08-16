@@ -12,6 +12,7 @@ import net.minecraft.world.level.LevelAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -74,7 +75,8 @@ public class AtmosphericCollision {
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
 			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
-			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ));
+			// TODO: map ship loaction around the planet instead of always spawn at same location
+			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ), new Quaterniond());
 		}
 		teleportHandler.finalizeTeleport();
 	}

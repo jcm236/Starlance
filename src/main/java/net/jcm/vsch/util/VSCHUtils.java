@@ -7,6 +7,7 @@ import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -174,7 +175,7 @@ public class VSCHUtils {
 	 * @author DEA__TH, Brickyboy
 	 * @see #getNearestPlanet(LevelAccessor, Vec3, String)
 	 */
-	public static double getDistanceToPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
+	public static DistanceInfo getDistanceToPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
 		// getDouble returns 0.0D if not found, which is fine
 		final float
 			yaw = planetData.getFloat("yaw"),
@@ -185,21 +186,40 @@ public class VSCHUtils {
 		final Vec3 cubepos = new Vec3(planetData.getDouble("x"), planetData.getDouble("y"), planetData.getDouble("z"));
 		final Vec3 distanceToPos = position.subtract(cubepos);
 
-		// I do NOT understand this, so I'm not gonna bother trying to change it...
-		// looks fine enough
-		final Vec3 rotatedXAxis = new Vec3(1, 0, 0).zRot(Mth.DEG_TO_RAD * roll).yRot(-Mth.DEG_TO_RAD * yaw);
-		final Vec3 rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch);
-		final Vec3 rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
+		final Vec3
+			rotatedXAxis = new Vec3(1, 0, 0).zRot(Mth.DEG_TO_RAD * roll).yRot(-Mth.DEG_TO_RAD * yaw),
+			rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch),
+			rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
+
+		final double
+			dx = distanceToPos.dot(rotatedXAxis),
+			dy = distanceToPos.dot(rotatedYAxis),
+			dz = distanceToPos.dot(rotatedZAxis);
+
+		double farthestDist = dy;
+		Direction.Axis farthestAxis = Direction.Axis.Y;
+		if (Math.abs(dx) > Math.abs(farthestDist)) {
+			farthestDist = dx;
+			farthestAxis = Direction.Axis.X;
+		}
+		if (Math.abs(dz) > Math.abs(farthestDist)) {
+			farthestDist = dz;
+			farthestAxis = Direction.Axis.Z;
+		}
+		final Vec3 farthestRotatedAxis = switch (farthestAxis) {
+			case X -> rotatedXAxis;
+			case Y -> rotatedYAxis;
+			case Z -> rotatedZAxis;
+		};
 
 		final double range = size / 2;
-		return Math.max(
-			Math.max(
-				rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).length() - range,
-				rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).length() - range
-			),
-			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).length() - range
+		return new DistanceInfo(
+			farthestRotatedAxis.scale(farthestDist).length() - range,
+			Direction.fromAxisAndDirection(farthestAxis, farthestDist >= 0 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE)
 		);
 	}
+
+	public record DistanceInfo(double distance, Direction direction) {}
 
 	/**
 	 * Gets a players Cosmos variables capability.
