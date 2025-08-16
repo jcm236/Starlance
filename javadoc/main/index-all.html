@@ -69,6 +69,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addGyro(net.minecraft.core.BlockPos,net.jcm.vsch.ship.gyro.GyroData)" class="member-name-link">addGyro(BlockPos, GyroData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#addShip(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc)" class="member-name-link">addShip(ServerShip, Vector3dc)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addThruster(net.minecraft.core.BlockPos,net.jcm.vsch.ship.thruster.ThrusterData)" class="member-name-link">addThruster(BlockPos, ThrusterData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html#afterMove(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos,java.lang.Object)" class="member-name-link">afterMove(ServerLevel, BlockPos, BlockPos, Object)</a> - Method in class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinBeltBlockEntity</a></dt>
@@ -455,6 +457,8 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#fill(net.minecraftforge.fluids.FluidStack,net.minecraftforge.fluids.capability.IFluidHandler.FluidAction)" class="member-name-link">fill(FluidStack, IFluidHandler.FluidAction)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#finalizeTeleport()" class="member-name-link">finalizeTeleport()</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html#FLUID_METHODS" class="member-name-link">FLUID_METHODS</a> - Static variable in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html" title="class in net.jcm.vsch.compat.cc.peripherals">CCGenerics</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#fromNonStandardSize(net.minecraft.resources.ResourceLocation,int,int,int)" class="member-name-link">fromNonStandardSize(ResourceLocation, int, int, int)</a> - Static method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
@@ -588,10 +592,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/VSCHUtils.html#getLoadedShipsInLevel(net.minecraft.server.level.ServerLevel)" class="member-name-link">getLoadedShipsInLevel(ServerLevel)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/VSCHUtils.html#getMax(org.joml.Vector3d)" class="member-name-link">getMax(Vector3d)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
-<dd>
-<div class="block">Vector3d returns the highest axis of a Vector3d</div>
-</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#getMaxEnergyStored()" class="member-name-link">getMaxEnergyStored()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/GravityInducerBlockEntity.html#getMaxForce()" class="member-name-link">getMaxForce()</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GravityInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GravityInducerBlockEntity</a></dt>
@@ -611,10 +611,6 @@ loadScripts(document, 'script');</script>
 <div class="block">getMover will check mover registered for class and subclass first,
  and then check the mover registered on the class implemented interfaces
  and subclasses implemented interfaces.</div>
-</dd>
-<dt><a href="net/jcm/vsch/util/VSCHUtils.html#getNearestEntityOfType(net.minecraft.server.level.ServerLevel,net.minecraft.world.entity.EntityType,net.minecraft.world.entity.Entity,double)" class="member-name-link">getNearestEntityOfType(ServerLevel, EntityType&lt;?&gt;, Entity, double)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
-<dd>
-<div class="block">Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>.</div>
 </dd>
 <dt><a href="net/jcm/vsch/util/VSCHUtils.html#getNearestPlanet(net.minecraft.world.level.LevelAccessor,net.minecraft.world.phys.Vec3,java.lang.String)" class="member-name-link">getNearestPlanet(LevelAccessor, Vec3, String)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
 <dd>
@@ -883,8 +879,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#handleTeleport(org.valkyrienskies.core.api.ships.Ship,org.joml.Vector3d)" class="member-name-link">handleTeleport(Ship, Vector3d)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/resource/ModelTextures.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/ModelTextures.html" title="class in net.jcm.vsch.api.resource">ModelTextures</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>

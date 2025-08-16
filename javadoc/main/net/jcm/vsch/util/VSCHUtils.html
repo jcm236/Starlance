@@ -125,19 +125,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.valkyrienskies.core.api.ships.LoadedServerShip&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getLoadedShipsInLevel(net.minecraft.server.level.ServerLevel)" class="member-name-link">getLoadedShipsInLevel</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getMax(org.joml.Vector3d)" class="member-name-link">getMax</a><wbr>(org.joml.Vector3d&nbsp;vec)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Vector3d returns the highest axis of a Vector3d</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.world.entity.Entity</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNearestEntityOfType(net.minecraft.server.level.ServerLevel,net.minecraft.world.entity.EntityType,net.minecraft.world.entity.Entity,double)" class="member-name-link">getNearestEntityOfType</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.world.entity.EntityType&lt;?&gt;&nbsp;entityType,
- net.minecraft.world.entity.Entity&nbsp;sourceEntity,
- double&nbsp;maxDistance)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.nbt.CompoundTag</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNearestPlanet(net.minecraft.world.level.LevelAccessor,net.minecraft.world.phys.Vec3,java.lang.String)" class="member-name-link">getNearestPlanet</a><wbr>(net.minecraft.world.level.LevelAccessor&nbsp;world,
  net.minecraft.world.phys.Vec3&nbsp;position,
@@ -361,33 +348,8 @@ loadScripts(document, 'script');</script>
 <dd><code>force</code> - the vector to clamp</dd>
 <dd><code>limit</code> - the limit to clamp all axis to</dd>
 <dt>Returns:</dt>
-<dd>the clamped vector</dd>
+<dd>clamped <code>force</code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getMax(org.joml.Vector3d)">
-<h3>getMax</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getMax</span><wbr><span class="parameters">(org.joml.Vector3d&nbsp;vec)</span></div>
-<div class="block">Vector3d returns the highest axis of a Vector3d</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>vec</code> - </dd>
-<dt>Returns:</dt>
-<dd>the value of the highest axis</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getNearestEntityOfType(net.minecraft.server.level.ServerLevel,net.minecraft.world.entity.EntityType,net.minecraft.world.entity.Entity,double)">
-<h3>getNearestEntityOfType</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.world.entity.Entity</span>&nbsp;<span class="element-name">getNearestEntityOfType</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.world.entity.EntityType&lt;?&gt;&nbsp;entityType,
- net.minecraft.world.entity.Entity&nbsp;sourceEntity,
- double&nbsp;maxDistance)</span></div>
-<div class="block">Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
- If no entities are found, returns null.  
- TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code></div>
 </section>
 </li>
 <li>
