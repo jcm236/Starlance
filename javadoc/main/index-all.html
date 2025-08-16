@@ -71,6 +71,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#addShip(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc)" class="member-name-link">addShip(ServerShip, Vector3dc)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#addShipWithVelocity(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Vector3dc,org.joml.Vector3dc)" class="member-name-link">addShipWithVelocity(ServerShip, Vector3dc, Vector3dc, Vector3dc)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addThruster(net.minecraft.core.BlockPos,net.jcm.vsch.ship.thruster.ThrusterData)" class="member-name-link">addThruster(BlockPos, ThrusterData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html#afterMove(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.core.BlockPos,java.lang.Object)" class="member-name-link">afterMove(ServerLevel, BlockPos, BlockPos, Object)</a> - Method in class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinBeltBlockEntity</a></dt>
@@ -259,6 +261,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html#clientTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">clientTick(Level, BlockPos, BlockState, BlockEntity)</a> - Static method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DockerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html#clientTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.block.entity.BlockEntity)" class="member-name-link">clientTick(Level, BlockPos, BlockState, BlockEntity)</a> - Static method in interface net.jcm.vsch.blocks.entity.template.<a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#commander" class="member-name-link">commander</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/CompatMods.html" class="type-name-link" title="enum class in net.jcm.vsch.compat">CompatMods</a> - Enum Class in <a href="net/jcm/vsch/compat/package-summary.html">net.jcm.vsch.compat</a></dt>
 <dd>&nbsp;</dd>
@@ -534,6 +538,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/custom/MagnetBootItem.html#getDirection(net.minecraft.world.item.ItemStack)" class="member-name-link">getDirection(ItemStack)</a> - Method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/VSCHUtils.html#getDistanceToPlanet(net.minecraft.nbt.CompoundTag,net.minecraft.world.phys.Vec3)" class="member-name-link">getDistanceToPlanet(CompoundTag, Vec3)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
+<dd>
+<div class="block">Determines if a Vec3 position is colliding with / inside a planet.</div>
+</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#getDraggerAtPos(net.minecraft.core.BlockPos)" class="member-name-link">getDraggerAtPos(BlockPos)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html#getEachMaxThrottle()" class="member-name-link">getEachMaxThrottle()</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/ThrusterPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">ThrusterPeripheral</a></dt>
@@ -924,10 +932,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html#isAssembling()" class="member-name-link">isAssembling()</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/VSCHUtils.html#isCollidingWithPlanet(net.minecraft.nbt.CompoundTag,net.minecraft.world.phys.Vec3)" class="member-name-link">isCollidingWithPlanet(CompoundTag, Vec3)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
-<dd>
-<div class="block">Determines if a Vec3 position is colliding with / inside a planet.</div>
-</dd>
 <dt><a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html#isController()" class="member-name-link">isController()</a> - Method in class net.jcm.vsch.mixin.create.<a href="net/jcm/vsch/mixin/create/MixinBeltBlockEntity.html" title="class in net.jcm.vsch.mixin.create">MixinBeltBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
@@ -972,6 +976,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#landing" class="member-name-link">landing</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#launching" class="member-name-link">launching</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlock.html#LED" class="member-name-link">LED</a> - Static variable in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlock.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerBlock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/Pair.html#left()" class="member-name-link">left()</a> - Method in record class net.jcm.vsch.util.<a href="net/jcm/vsch/util/Pair.html" title="class in net.jcm.vsch.util">Pair</a></dt>
@@ -1279,6 +1287,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of the <code>offsetY</code> record component.</div>
 </dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#omega" class="member-name-link">omega</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/dragger/DraggerData.html#on" class="member-name-link">on</a> - Variable in class net.jcm.vsch.ship.dragger.<a href="net/jcm/vsch/ship/dragger/DraggerData.html" title="class in net.jcm.vsch.ship.dragger">DraggerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHEvents.html#onBlockPlace(net.minecraftforge.event.level.BlockEvent.EntityPlaceEvent)" class="member-name-link">onBlockPlace(BlockEvent.EntityPlaceEvent)</a> - Static method in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHEvents.html" title="class in net.jcm.vsch">VSCHEvents</a></dt>
@@ -1619,6 +1629,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/event/GravityInducer.html#ship" class="member-name-link">ship</a> - Variable in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html" class="type-name-link" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a> - Class in <a href="net/jcm/vsch/ship/package-summary.html">net.jcm.vsch.ship</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#%3Cinit%3E()" class="member-name-link">ShipLandingAttachment()</a> - Constructor for class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#%3Cinit%3E(boolean)" class="member-name-link">ShipLandingAttachment(boolean)</a> - Constructor for class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/ShipUtils.html" class="type-name-link" title="class in net.jcm.vsch.util">ShipUtils</a> - Class in <a href="net/jcm/vsch/util/package-summary.html">net.jcm.vsch.util</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/ShipUtils.html#%3Cinit%3E()" class="member-name-link">ShipUtils()</a> - Constructor for class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
@@ -1921,6 +1937,8 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#velocity" class="member-name-link">velocity</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#VENT_BLOCK" class="member-name-link">VENT_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/VentBlock.html" class="type-name-link" title="class in net.jcm.vsch.blocks.custom">VentBlock</a> - Class in <a href="net/jcm/vsch/blocks/custom/package-summary.html">net.jcm.vsch.blocks.custom</a></dt>
