@@ -218,11 +218,11 @@ public class PipeLevelRenderer {
 	}
 
 	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final PipeNode node) {
-		final double size = node.getSize();
+		final int size = node.getSize();
 		final NodePos pos = node.getPos();
 		final Vec3 nodeCenter = pos.getCenter();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
-		final double r = size / 2;
+		final double r = size / 16.0 / 2;
 		lightMap.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y + r)));
 		lightMap.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y + r, nodeCenter.y + r)));
 		lightMap.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y - r)));
@@ -266,7 +266,7 @@ public class PipeLevelRenderer {
 			poseStack, vertexBuilder,
 			lightMap,
 			node.getModel(), new Vector3f(node.getColor().getTextureDiffuseColors()),
-			ZERO_VEC3F, rotation, new Vector3f().set(size, size, size),
+			ZERO_VEC3F, rotation, new Vector3i(size, size, size),
 			1f
 		);
 
@@ -293,7 +293,7 @@ public class PipeLevelRenderer {
 			poseStack, vertexBuilder,
 			lightMap,
 			HINT_MODEL, color,
-			ZERO_VEC3F, rotation, new Vector3f(size, size, size).div(16),
+			ZERO_VEC3F, rotation, new Vector3i(size, size, size),
 			scale
 		);
 

@@ -56,8 +56,8 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 		this.color = color;
 	}
 
-	public double getSize() {
-		return 4.0 / 16;
+	public int getSize() {
+		return 4;
 	}
 
 	public abstract ItemStack asItemStack();
