@@ -55,7 +55,7 @@ public class TeleportationHandler {
 	private static Map<Long, Set<Integer>> SHIP2CONSTRAINTS;
 	private static Map<Integer, VSConstraint> ID2CONSTRAINT;
 
-	private final Long2ObjectOpenHashMap<Vector3d> shipToPos = new Long2ObjectOpenHashMap<>();
+	private final Long2ObjectOpenHashMap<TeleportData> ships = new Long2ObjectOpenHashMap<>();
 	private final Map<Entity, Vec3> entityToPos = new HashMap<>();
 	private final ServerShipWorldCore shipWorld;
 	private double greatestOffset;
@@ -80,20 +80,28 @@ public class TeleportationHandler {
 	}
 
 	public void addShip(final ServerShip ship, final Vector3dc newPos) {
+		this.addShipWithVelocity(ship, newPos, null, null);
+	}
+
+	public void addShipWithVelocity(final ServerShip ship, final Vector3dc newPos, final Vector3dc velocity, final Vector3dc omega) {
 		final long shipId = ship.getId();
-		if (this.shipToPos.containsKey(shipId)) {
+		if (this.ships.containsKey(shipId)) {
 			return;
 		}
 		this.greatestOffset = 0;
 		final List<ServerShip> collected = new ArrayList<>();
 		final Vector3dc origin = ship.getTransform().getPositionInWorld();
-		this.collectShipAndConnected(shipId, origin, newPos, collected);
+		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, velocity, omega, collected);
 		this.collectNearbyShips(collected, origin, newPos);
 		this.finalizeCollect(collected);
 	}
 
 	private void collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final List<ServerShip> collected) {
-		if (this.shipToPos.containsKey(shipId)) {
+		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, null, null, collected);
+	}
+
+	private void collectShipAndConnectedWithVelocity(final long shipId, final Vector3dc origin, final Vector3dc newPos, Vector3dc velocity, Vector3dc omega, final List<ServerShip> collected) {
+		if (this.ships.containsKey(shipId)) {
 			return;
 		}
 		final ServerShip ship = this.getShip(shipId);
@@ -102,6 +110,12 @@ public class TeleportationHandler {
 		}
 		collected.add(ship);
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
+		if (velocity == null) {
+			velocity = new Vector3d(ship.getVelocity());
+		}
+		if (omega == null) {
+			omega = new Vector3d(ship.getOmega());
+		}
 
 		// TODO: if planet collision position matters for reentry angle THIS SHOULD BE FIXED!! Currently a fix is not needed.
 		final double offset = pos.y() - origin.y();
@@ -109,7 +123,7 @@ public class TeleportationHandler {
 			this.greatestOffset = offset;
 		}
 
-		this.shipToPos.put(shipId, pos.sub(origin, new Vector3d()).add(newPos));
+		this.ships.put(shipId, new TeleportData(pos.sub(origin, new Vector3d()).add(newPos), velocity, omega));
 
 		final Set<Integer> constraints = SHIP2CONSTRAINTS.get(shipId);
 		if (constraints != null) {
@@ -139,15 +153,15 @@ public class TeleportationHandler {
 		final double greatestOffset = -this.greatestOffset;
 		for (final ServerShip ship : collected) {
 			final long id = ship.getId();
-			final Vector3d newPos = this.shipToPos.get(id);
+			final Vector3d newPos = this.ships.get(id).newPos();
 			newPos.y += greatestOffset;
 			this.collectEntities(id, newPos);
 		}
 	}
 
 	public void finalizeTeleport() {
-		this.shipToPos.forEach(this::handleShipTeleport);
-		this.shipToPos.clear();
+		this.ships.forEach(this::handleShipTeleport);
+		this.ships.clear();
 		this.teleportEntities();
 	}
 
@@ -214,8 +228,11 @@ public class TeleportationHandler {
 		this.entityToPos.clear();
 	}
 
-	private void handleShipTeleport(final long id, final Vector3dc newPos) {
+	private void handleShipTeleport(final long id, final TeleportData data) {
 		final String vsDimName = VSGameUtilsKt.getDimensionId(this.newDim);
+		final Vector3dc newPos = data.newPos();
+		final Vector3dc velocity = data.velocity();
+		final Vector3dc omega = data.omega();
 
 		final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
 		if (ship == null) {
@@ -231,11 +248,9 @@ public class TeleportationHandler {
 		}
 
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
-		final Vector3dc veloctiy = new Vector3d(ship.getVelocity());
-		final Vector3dc omega = new Vector3d(ship.getOmega());
-		final ShipTeleportData teleportData = new ShipTeleportDataImpl(newPos, ship.getTransform().getShipToWorldRotation(), veloctiy, omega, vsDimName, null);
+		final ShipTeleportData teleportData = new ShipTeleportDataImpl(newPos, ship.getTransform().getShipToWorldRotation(), velocity, omega, vsDimName, null);
 		this.shipWorld.teleportShip(ship, teleportData);
-		if (veloctiy.lengthSquared() != 0 || omega.lengthSquared() != 0) {
+		if (velocity.lengthSquared() != 0 || omega.lengthSquared() != 0) {
 			ship.setTransformProvider(new ServerShipTransformProvider() {
 				@Override
 				public NextTransformAndVelocityData provideNextTransformAndVelocity(final ShipTransform transform, final ShipTransform nextTransform) {
@@ -245,7 +260,7 @@ public class TeleportationHandler {
 						return null;
 					}
 					if (ship2.getVelocity().lengthSquared() == 0 && ship2.getOmega().lengthSquared() == 0) {
-						return new NextTransformAndVelocityData(nextTransform, veloctiy, omega);
+						return new NextTransformAndVelocityData(nextTransform, velocity, omega);
 					}
 					return null;
 				}
@@ -300,4 +315,6 @@ public class TeleportationHandler {
 		}
 		return this.shipWorld.getAllShips().getById(shipId);
 	}
+
+	private record TeleportData(Vector3d newPos, Vector3dc velocity, Vector3dc omega) {}
 }

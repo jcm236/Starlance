@@ -170,11 +170,11 @@ public class VSCHUtils {
 	 * 
 	 * @param planetData A CompoundTag (nbt) of the planets data.
 	 * @param position   The position to check
-	 * @return A boolean, true if the position is inside the planet, false otherwise.
+	 * @return Distance to the planet's surface
 	 * @author DEA__TH, Brickyboy
 	 * @see #getNearestPlanet(LevelAccessor, Vec3, String)
 	 */
-	public static boolean isCollidingWithPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
+	public static double getDistanceToPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
 		// getDouble returns 0.0D if not found, which is fine
 		final float
 			yaw = planetData.getFloat("yaw"),
@@ -191,11 +191,14 @@ public class VSCHUtils {
 		final Vec3 rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch);
 		final Vec3 rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
 
-		final double rangeSqr = (size * size) / 4;
-		return
-			rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).lengthSqr() <= rangeSqr &&
-			rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).lengthSqr() <= rangeSqr &&
-			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).lengthSqr() <= rangeSqr;
+		final double range = size / 2;
+		return Math.max(
+			Math.max(
+				rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).length() - range,
+				rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).length() - range
+			),
+			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).length() - range
+		);
 	}
 
 	/**
