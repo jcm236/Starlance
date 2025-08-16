@@ -7,6 +7,7 @@
 	"vsch.message.strength": "力度: ",
 	"vsch.message.toggle": "将模式设置为",
 	"vsch.position": "§e位置",
+	"vsch.tooltip.may_need_fuel_or_energy": "警告: 未来将使用燃料",
 
 	"block.vsch.air_thruster_block": "空气推进器",
 	"block.vsch.drag_inducer_block": "阻力发生器",

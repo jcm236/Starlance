@@ -95,7 +95,7 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
 
     private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
         assert ValkyrienSkiesMod.getCurrentServer() != null;
-        double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
+        double deltaTime = 1.0 / (20 * 3);
         double mass = physShip.getInertia().getShipMass();
 
         //Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly

@@ -15,6 +15,7 @@
     "create.MixinKineticBlockEntity",
     "create.MixinLinearActuatorBlockEntity",
     "create.MixinMechanicalBearingBlockEntity",
+    "create.MixinOrientedContraptionEntity",
     "minecraft.MixinChunkMap",
     "minecraft.MixinChunkSerializer",
     "minecraft.MixinClientboundLevelChunkWithLightPacket",

@@ -200,13 +200,18 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 			return InteractionResult.PASS;
 		}
 
-		final int newPower = (this.getPercentPower() % 10) + 1;
-		this.setPercentPower(newPower * 10);
+		int newPower = ((this.getPercentPower() / 10) + 1) * 10;
+		if (newPower > 100) {
+			newPower = 10;
+		}
+		this.setPercentPower(newPower);
 
 		final Player player = ctx.getPlayer();
 		if (player != null) {
 			player.displayClientMessage(Component.translatable("vsch.message.gyro", this.getPercentPower()), true);
 		}
+
+		this.updatePowerByRedstone();
 
 		return InteractionResult.SUCCESS;
 	}

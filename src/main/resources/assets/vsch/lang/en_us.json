@@ -5,8 +5,9 @@
 	"vsch.message.gyro": "Strength set to §6%s%%",
 	"vsch.message.mode": "Mode: ",
 	"vsch.message.strength": "Strength: ",
-	"vsch.message.toggle": "Mode set to",
+	"vsch.message.toggle": "Mode set to ",
 	"vsch.position": "§ePOSITION",
+	"vsch.tooltip.may_need_fuel_or_energy": "Warning: May need fuel or energy in a future update",
 
 	"block.vsch.air_thruster_block": "Air thruster",
 	"block.vsch.drag_inducer_block": "Drag inducer",

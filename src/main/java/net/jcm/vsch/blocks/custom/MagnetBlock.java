@@ -58,7 +58,7 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
 		Direction dir = ctx.getNearestLookingDirection();
-		if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) {
+		if (ctx.isSecondaryUseActive()) {
 			dir = dir.getOpposite();
 		}
 		return defaultBlockState()
