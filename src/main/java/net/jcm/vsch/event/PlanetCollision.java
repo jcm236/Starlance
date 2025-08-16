@@ -25,9 +25,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
-
 import org.apache.logging.log4j.Logger;
+
 import org.joml.Vector3d;
+import org.joml.primitives.AABBdc;
+import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
@@ -37,10 +39,22 @@ import java.util.List;
 
 public class PlanetCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+	private static final EntityTypeTest<Entity, ServerPlayer> PLAYER_TESTER = new EntityTypeTest<>() {
+		@Override
+		public ServerPlayer tryCast(final Entity entity) {
+			// We do not want FakePlayer (aka ServerPlayer's subclasses) being involved here
+			return entity.getClass() == ServerPlayer.class ? (ServerPlayer)(entity) : null;
+		}
+
+		@Override
+		public Class<ServerPlayer> getBaseClass() {
+			return ServerPlayer.class;
+		}
+	};
 
 	public static void planetCollisionTick(ServerLevel level) {
 		final String dimension = level.dimension().location().toString();
-		for (Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+		for (final ServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			final Vec3 shipCenter = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB().center(new Vector3d()));
 
 			final CompoundTag nearestPlanet = VSCHUtils.getNearestPlanet(level, shipCenter, dimension);
@@ -51,8 +65,9 @@ public class PlanetCollision {
 				continue;
 			}
 
-			final Player nearestPlayer = getShipPlayer(ship, level);
+			final ServerPlayer nearestPlayer = getShipNearestPlayer(ship, level);
 			if (nearestPlayer == null) {
+				LOGGER.info("[starlance]: ship does not have a nearby player");
 				// TODO: let ships go through on their own
 				continue;
 			}
@@ -68,8 +83,8 @@ public class PlanetCollision {
 				// Open the menu and disable normal CH collision for them:
 				LOGGER.info("[starlance]: opened menu instead of CH");
 
-				final BlockPos bpos = BlockPos.containing(nearestPlayer.getX(), nearestPlayer.getY(), nearestPlayer.getZ());
-				NetworkHooks.openScreen((ServerPlayer) nearestPlayer, new MenuProvider() {
+				final BlockPos bpos = nearestPlayer.blockPosition();
+				NetworkHooks.openScreen(nearestPlayer, new MenuProvider() {
 					@Override
 					public Component getDisplayName() {
 						return Component.literal("LandingSelector");
@@ -80,14 +95,13 @@ public class PlanetCollision {
 						return new LandingSelectorMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(bpos));
 					}
 				}, bpos);
-
 			}
 			// Otherwise, we just skip them since the playerMenuTick will take care of them.
 			playerMenuTick(nearestPlayer, ship, level, nearestPlanet);
 		}
 	}
 
-	private static void playerMenuTick(Player player, Ship ship, ServerLevel level, CompoundTag planet) {
+	private static void playerMenuTick(Player player, ServerShip ship, ServerLevel level, CompoundTag planet) {
 		if (!(player.containerMenu instanceof LandingSelectorMenu)) {
 			return;
 		}
@@ -98,19 +112,20 @@ public class PlanetCollision {
 
 		final String targetDim = planet.getString("travel_to");
 		if (targetDim.isEmpty()) {
-			LOGGER.error("[starlance]: Planet has no travel_to dimension. Please report this");
+			LOGGER.error("[starlance]: Planet in {} has no travel_to dimension. Please report this! Planet data: {}", level.dimension().location(), planet);
 			// We should in theory never get here if I've done my null checks correctly when getting the antennas in the first place
 			return;
 		}
 
 		final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
-		double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
-		double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
-		double posY = atmoY - 10;
+		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
+		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
+		final double posY = atmoY - 10;
 
 		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
 		final TeleportationHandler handler = new TeleportationHandler(VSCHUtils.dimToLevel(targetDim), level, true);
-		handler.handleTeleport(ship, new Vector3d(posX, posY, posZ));
+		handler.addShip(ship, new Vector3d(posX, posY, posZ));
+		handler.finalizeTeleport();
 
 		vars.landing_coords = "^";
 		vars.check_collision = true;
@@ -124,21 +139,22 @@ public class PlanetCollision {
 	 * @param level
 	 * @return the nearest player found, or null
 	 */
-	private static Player getShipPlayer(Ship ship, ServerLevel level) {
+	private static ServerPlayer getShipNearestPlayer(final Ship ship, final ServerLevel level) {
 		// Get the AABB of the last tick and the AABB of the current tick
+		final AABBdc shipBox = ship.getWorldAABB();
 		final AABB prevWorldAABB = VectorConversionsMCKt.toMinecraft(VSCHUtils.transformToAABBd(ship.getPrevTickTransform(), ship.getShipAABB())).inflate(10);
-		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB()).inflate(10);
-		final Vec3 center = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB().center(new Vector3d()));
+		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
+		final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
 
 		// Combine the AABB's into one big one
 		final AABB totalAABB = currentWorldAABB.minmax(prevWorldAABB);
 
-		final List<Player> players = level.getEntities(EntityTypeTest.forClass(Player.class), totalAABB, EntitySelector.NO_SPECTATORS);
+		final List<ServerPlayer> players = level.getEntities(PLAYER_TESTER, totalAABB, EntitySelector.NO_SPECTATORS);
 
-		Player nearestPlayer = null;
+		ServerPlayer nearestPlayer = null;
 		double nearestDistance = Double.MAX_VALUE;
-		for (Player player : players) {
-			double distance = player.distanceToSqr(center);
+		for (final ServerPlayer player : players) {
+			final double distance = player.distanceToSqr(center);
 			if (distance < nearestDistance) {
 				nearestPlayer = player;
 				nearestDistance = distance;

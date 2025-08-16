@@ -180,7 +180,7 @@ public class VSCHUtils {
 			yaw = planetData.getFloat("yaw"),
 			pitch = planetData.getFloat("pitch"),
 			roll = planetData.getFloat("roll");
-		final double scale = planetData.getFloat("scale");
+		final double size = planetData.getFloat("scale");
 
 		final Vec3 cubepos = new Vec3(planetData.getDouble("x"), planetData.getDouble("y"), planetData.getDouble("z"));
 		final Vec3 distanceToPos = position.subtract(cubepos);
@@ -191,11 +191,11 @@ public class VSCHUtils {
 		final Vec3 rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch);
 		final Vec3 rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
 
-		final double range = (scale * scale) / 4;
+		final double rangeSqr = (size * size) / 4;
 		return
-			rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).lengthSqr() <= range &&
-			rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).lengthSqr() <= range &&
-			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).lengthSqr() <= range;
+			rotatedXAxis.scale(distanceToPos.dot(rotatedXAxis)).lengthSqr() <= rangeSqr &&
+			rotatedYAxis.scale(distanceToPos.dot(rotatedYAxis)).lengthSqr() <= rangeSqr &&
+			rotatedZAxis.scale(distanceToPos.dot(rotatedZAxis)).lengthSqr() <= rangeSqr;
 	}
 
 	/**
@@ -211,49 +211,14 @@ public class VSCHUtils {
 	 * Clamps all axis of a Vector3d between -limit and +limit (not abs).
 	 * @param force the vector to clamp
 	 * @param limit the limit to clamp all axis to
-	 * @return the clamped vector
+	 * @return clamped {@code force}
 	 */
 	public static Vector3d clampVector(Vector3d force, double limit) {
 		// Clamp each component of the force vector within the range -limit, +limit
-		final double clampedX = Math.max(-limit, Math.min(limit, force.x));
-		final double clampedY = Math.max(-limit, Math.min(limit, force.y));
-		final double clampedZ = Math.max(-limit, Math.min(limit, force.z));
-
-		// Return a new Vector3d with the clamped values
-		return new Vector3d(clampedX, clampedY, clampedZ);
-	}
-
-	/**
-	 * Vector3d returns the highest axis of a Vector3d
-	 * @param vec
-	 * @return the value of the highest axis
-	 */
-	public static double getMax(Vector3d vec) {
-		return vec.get(vec.maxComponent());
-	}
-
-	/**
-	 * Using the ServerLevel, returns the nearest entity of <code>entityType</code> from the <code>sourceEntity</code> in the <code>maxDistance</code>. 
-	 * If no entities are found, returns null.  
-	 * TODO change this to use a <code>Vec3</code> instead of <code>sourceEntity</code>
-	 */
-	public static Entity getNearestEntityOfType(ServerLevel level, EntityType<?> entityType, Entity sourceEntity, double maxDistance) {
-		// Define the search bounding box
-		final AABB searchBox = sourceEntity.getBoundingBox().inflate(maxDistance);
-		final List<Entity> entities = level.getEntities((Entity) null, searchBox, entity -> entity.getType() == entityType);
-
-		Entity nearestEntity = null;
-		double nearestDistance = Double.MAX_VALUE;
-
-		for (Entity entity : entities) {
-			double distance = entity.distanceToSqr(sourceEntity);
-			if (distance < nearestDistance) {
-				nearestEntity = entity;
-				nearestDistance = distance;
-			}
-		}
-
-		return nearestEntity;
+		force.x = Math.max(-limit, Math.min(limit, force.x));
+		force.y = Math.max(-limit, Math.min(limit, force.y));
+		force.z = Math.max(-limit, Math.min(limit, force.z));
+		return force;
 	}
 
 	public static List<LoadedServerShip> getLoadedShipsInLevel(ServerLevel level) {

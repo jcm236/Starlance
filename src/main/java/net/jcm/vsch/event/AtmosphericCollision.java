@@ -11,7 +11,7 @@ import net.minecraft.world.level.LevelAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
@@ -51,7 +51,7 @@ public class AtmosphericCollision {
 
 		final TeleportationHandler teleportHandler = new TeleportationHandler(targetLevel, level, false);
 
-		for (final Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+		for (final ServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			if (ship.getTransform().getPositionInWorld().y() <= atmoHeight) {
 				continue;
 			}
@@ -63,7 +63,8 @@ public class AtmosphericCollision {
 			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-			teleportHandler.handleTeleport(ship, new Vector3d(posX, posY, posZ));
+			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ));
 		}
+		teleportHandler.finalizeTeleport();
 	}
 }
