@@ -29,12 +29,16 @@ import org.joml.Vector4f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.phys.AABB;
 
 public final class RenderUtil {
 	private RenderUtil() {}
@@ -45,7 +49,6 @@ public final class RenderUtil {
 		Vector3f offset = new Vector3f(offseti).div(16);
 		Vector3f size = new Vector3f(sizei).div(16);
 
-		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.mulPose(rot);
 
 		drawPlane(poseStack, buffer, lightMap, rgba, Direction.UP, offset, size);
@@ -119,7 +122,6 @@ public final class RenderUtil {
 	public static void drawBoxWithTexture(PoseStack poseStack, VertexConsumer buffer, BoxLightMap lightMap, ModelTextures model, Vector4f rgba, Vector3f offset, Quaternionf rot, Vector3i size, float scale) {
 		poseStack.pushPose();
 
-		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.mulPose(rot);
 
 		for (final Direction dir : Direction.values()) {
@@ -157,16 +159,16 @@ public final class RenderUtil {
 
 		switch (perspective) {
 			case UP -> {
-				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
-				final float v2 = stillTexture.getV(pVOffset + size.x * textureScale);
+				final float u2 = stillTexture.getU(pUOffset + size.x * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
 				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.unw).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.usw).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.use).normal(0f, 1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.une).normal(0f, 1f, 0f).endVertex();
 			}
 			case DOWN -> {
-				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
-				final float v2 = stillTexture.getV(pVOffset + size.x * textureScale);
+				final float u2 = stillTexture.getU(pUOffset + size.x * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dnw).normal(0f, -1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dne).normal(0f, -1f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.dse).normal(0f, -1f, 0f).endVertex();
@@ -189,20 +191,20 @@ public final class RenderUtil {
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.nde).normal(0f, 0f, -1f).endVertex();
 			}
 			case EAST -> {
-				final float u2 = stillTexture.getU(pUOffset + size.y * textureScale);
-				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
+				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.y * textureScale);
 				buffer.vertex(matrix4f, sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.edn).normal(1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eun).normal(1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, sX, sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eds).normal(1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eus).normal(1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eds).normal(1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, sX, -sY, sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.eun).normal(1f, 0f, 0f).endVertex();
 			}
 			case WEST -> {
-				final float u2 = stillTexture.getU(pUOffset + size.y * textureScale);
-				final float v2 = stillTexture.getV(pVOffset + size.z * textureScale);
+				final float u2 = stillTexture.getU(pUOffset + size.z * textureScale);
+				final float v2 = stillTexture.getV(pVOffset + size.y * textureScale);
 				buffer.vertex(matrix4f, -sX, -sY, -sZ).color(r, g, b, a).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wdn).normal(-1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wds).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, -sY, sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wun).normal(-1f, 0f, 0f).endVertex();
 				buffer.vertex(matrix4f, -sX, sY, sZ).color(r, g, b, a).uv(u2, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wus).normal(-1f, 0f, 0f).endVertex();
-				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u2, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wun).normal(-1f, 0f, 0f).endVertex();
+				buffer.vertex(matrix4f, -sX, sY, -sZ).color(r, g, b, a).uv(u1, v2).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lightMap.wds).normal(-1f, 0f, 0f).endVertex();
 			}
 		}
 		poseStack.popPose();
@@ -379,6 +381,35 @@ public final class RenderUtil {
 			sky.edn = LightTexture.sky(this.edn);
 			sky.wdn = LightTexture.sky(this.wdn);
 			return sky;
+		}
+
+		public BoxLightMap fillFromLevel(final BlockAndTintGetter level, final AABB box) {
+			this.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(box.maxX, box.maxY, box.maxY)));
+			this.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(box.minX, box.maxY, box.maxY)));
+			this.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(box.maxX, box.maxY, box.minY)));
+			this.setUNW(LevelRenderer.getLightColor(level, BlockPos.containing(box.minX, box.maxY, box.minY)));
+			this.setDSE(LevelRenderer.getLightColor(level, BlockPos.containing(box.maxX, box.minY, box.maxY)));
+			this.setDSW(LevelRenderer.getLightColor(level, BlockPos.containing(box.minX, box.minY, box.maxY)));
+			this.setDNE(LevelRenderer.getLightColor(level, BlockPos.containing(box.maxX, box.minY, box.minY)));
+			this.setDNW(LevelRenderer.getLightColor(level, BlockPos.containing(box.minX, box.minY, box.minY)));
+
+			final BoxLightMap blockLightMap = this.getBlockLightMap();
+			final BoxLightMap skyLightMap = this.getSkyLightMap();
+
+			for (final BoxLightMap lights : new BoxLightMap[]{blockLightMap, skyLightMap}) {
+				for (int i = 0; i < 2; i++) {
+					lights.setUSE(Math.max(lights.use, Math.max(Math.max(lights.usw, lights.une), lights.dse) - 2));
+					lights.setUSW(Math.max(lights.usw, Math.max(Math.max(lights.use, lights.unw), lights.dsw) - 2));
+					lights.setUNE(Math.max(lights.une, Math.max(Math.max(lights.unw, lights.use), lights.dne) - 2));
+					lights.setUNW(Math.max(lights.unw, Math.max(Math.max(lights.une, lights.usw), lights.dnw) - 2));
+					lights.setDSE(Math.max(lights.dse, Math.max(Math.max(lights.dsw, lights.dne), lights.use) - 2));
+					lights.setDSW(Math.max(lights.dsw, Math.max(Math.max(lights.dse, lights.dnw), lights.usw) - 2));
+					lights.setDNE(Math.max(lights.dne, Math.max(Math.max(lights.dnw, lights.dse), lights.une) - 2));
+					lights.setDNW(Math.max(lights.dnw, Math.max(Math.max(lights.dne, lights.dsw), lights.unw) - 2));
+				}
+			}
+
+			return this.packLightMaps(blockLightMap, skyLightMap);
 		}
 	}
 }

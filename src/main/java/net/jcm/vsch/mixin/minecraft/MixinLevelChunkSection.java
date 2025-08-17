@@ -30,6 +30,11 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
+	public PipeNode[][] vsch$getAllNodes() {
+		return this.nodes;
+	}
+
+	@Override
 	public PipeNode vsch$getNode(final int x, final int y, final int z, final int index) {
 		if (this.nodes == null) {
 			return null;

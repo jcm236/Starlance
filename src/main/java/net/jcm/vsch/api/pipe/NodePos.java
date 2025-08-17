@@ -25,7 +25,7 @@ public record NodePos(
 	Direction.Axis axis,
 	// The index (aka distance) from the origin, in range of [0, 7]
 	int index
-) {
+) implements Comparable<NodePos> {
 	public static final int INDEX_BOUND = 8;
 	public static final int UNIQUE_INDEX_BOUND = 1 + 3 * (INDEX_BOUND - 1);
 	private static final double NODE_SIZE = 1.0 / INDEX_BOUND;
@@ -102,6 +102,16 @@ public record NodePos(
 				this.isOrigin() && other.isOrigin() ||
 				this.axis == other.axis && this.index == other.index
 			);
+	}
+
+	@Override
+	public int compareTo(final NodePos other) {
+		final int blockPosOrder = this.blockPos.compareTo(other.blockPos);
+		if (blockPosOrder != 0) {
+			return blockPosOrder;
+		}
+		final int indexDiff = this.uniqueIndex() - other.uniqueIndex();
+		return indexDiff < 0 ? -1 : indexDiff == 0 ? 0 : 1;
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -55,10 +56,12 @@ public class PipeNetworkOperator {
 	}
 
 	public void onNodeJoin(final PipeNode node) {
+		final DyeColor color = node.getColor();
 		final NodePos pos = node.getPos();
 		pos.streamPossibleToConnect()
 			.map(this.level::getNode)
 			.filter(Objects::nonNull)
+			.filter((other) -> other.getColor() == color)
 			.forEach((other) -> {
 				final NodePos otherPos = other.getPos();
 				final Direction[] connectPath = pos.connectPathTo(otherPos);

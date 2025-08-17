@@ -77,30 +77,13 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 
 	@Override
 	public Stream<PipeNode> streamNodes() {
-		final LevelChunkSection[] sections = this.getSections();
-		return IntStream.range(0, sections.length)
-			.mapToObj((sectionIndex) -> {
-				final LevelChunkSection section = sections[sectionIndex];
-				if (!(section instanceof INodeLevelChunkSection nodeSection)) {
-					return null;
-				}
-				if (!nodeSection.vsch$hasAnyNode()) {
-					return null;
-				}
-				return IntStream.range(0, 16 * 16 * 16)
-					.mapToObj((index) -> {
-						final int x = index & 0xf, y = (index >> 8) & 0xf, z = (index >> 4) & 0xf;
-						PipeNode[] nodes = nodeSection.vsch$getNodes(x, y, z);
-						if (nodes == null) {
-							return null;
-						}
-						return Arrays.stream(nodes).filter(Objects::nonNull);
-					})
-					.filter(Objects::nonNull)
-					.flatMap(Function.identity());
-			})
-			.filter(Objects::nonNull)
-			.flatMap(Function.identity());
+		return Arrays.stream(this.getSections())
+			.filter(INodeLevelChunkSection.class::isInstance)
+			.map(INodeLevelChunkSection.class::cast)
+			.filter(INodeLevelChunkSection::vsch$hasAnyNode)
+			.flatMap((section) -> Arrays.stream(section.vsch$getAllNodes())
+				.filter(Objects::nonNull)
+				.flatMap((nodes) -> Arrays.stream(nodes).filter(Objects::nonNull)));
 	}
 
 	@Override

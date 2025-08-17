@@ -7,6 +7,11 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
 
 public interface INodeLevelChunkSection {
+	/**
+	 * Do NOT modify the returned array.
+	 */
+	PipeNode[][] vsch$getAllNodes();
+
 	PipeNode vsch$getNode(int x, int y, int z, int index);
 
 	/**

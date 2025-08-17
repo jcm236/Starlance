@@ -25,8 +25,8 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class GyroRenderer implements BlockEntityRenderer<GyroBlockEntity> {
+	private static final Vector3f ZERO3 = new Vector3f();
 	private static final Vector4f ONE4 = new Vector4f(1, 1, 1, 1);
-	private static final Vector3f HALF3 = new Vector3f(0.5f, 0.5f, 0.5f);
 	private static final Vector3i CORE_SIZE = new Vector3i(6, 6, 6);
 	private static final ModelTextures CORE_MODEL;
 
@@ -66,6 +66,9 @@ public class GyroRenderer implements BlockEntityRenderer<GyroBlockEntity> {
 		}
 
 		final VertexConsumer buffer = bufferSource.getBuffer(RenderType.translucent());
-		RenderUtil.drawBoxWithTexture(poseStack, buffer, lightMap, CORE_MODEL, ONE4, new Vector3f(), rot, CORE_SIZE, 1f);
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.5f, 0.5f);
+		RenderUtil.drawBoxWithTexture(poseStack, buffer, lightMap, CORE_MODEL, ONE4, ZERO3, rot, CORE_SIZE, 1f);
+		poseStack.popPose();
 	}
 }

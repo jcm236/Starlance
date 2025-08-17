@@ -8,9 +8,11 @@ import net.jcm.vsch.api.resource.ModelTextures;
 import net.jcm.vsch.api.resource.TextureLocation;
 import net.jcm.vsch.client.RenderUtil;
 import net.jcm.vsch.items.custom.WrenchItem;
+import net.jcm.vsch.pipe.PipeNetworkOperator;
 import net.jcm.vsch.pipe.level.NodeGetter;
 import net.jcm.vsch.pipe.level.NodeLevel;
 
+import org.joml.Matrix4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -28,7 +30,6 @@ import net.minecraft.client.multiplayer.ClientChunkCache;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -66,8 +68,8 @@ import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = VSCHMod.MODID, value = Dist.CLIENT)
 public class PipeLevelRenderer {
-	private static final Vector3f ZERO_VEC3F = new Vector3f();
 	private static final int PIPE_VIEW_RANGE = 8;
+	private static final Vector3f ZERO_VEC3F = new Vector3f();
 
 	private static final Vector4f HINT_COLOR = new Vector4f(0.25f, 0.70f, 0.25f, 0.6f);
 	private static final float HINT_SCALE = 0.7f;
@@ -77,8 +79,8 @@ public class PipeLevelRenderer {
 
 	static {
 		final ResourceLocation resource = new ResourceLocation(VSCHMod.MODID, "block/pipe/omni_node");
-		final TextureLocation texture1 = new TextureLocation(resource, 0, 1);
-		final TextureLocation texture2 = new TextureLocation(resource, 0, 0);
+		final TextureLocation texture1 = new TextureLocation(resource, 8, 4);
+		final TextureLocation texture2 = new TextureLocation(resource, 8, 8);
 		HINT_MODEL = new ModelTextures(texture1, texture2, texture1, texture2, texture1, texture2);
 	}
 
@@ -108,9 +110,10 @@ public class PipeLevelRenderer {
 		final VertexConsumer vertexBuilder = bufferSource.getBuffer(RenderType.translucent());
 
 		poseStack.pushPose();
+		poseStack.translate(-view.x, -view.y, -view.z);
 
-		renderPlaceHint(level, poseStack, vertexBuilder, view, partialTick);
-		renderNodes(level, poseStack, vertexBuilder, view);
+		renderPlaceHint(level, poseStack, vertexBuilder, partialTick);
+		renderNodes(level, poseStack, vertexBuilder, partialTick, view);
 
 		bufferSource.endBatch();
 		poseStack.popPose();
@@ -139,7 +142,7 @@ public class PipeLevelRenderer {
 				continue;
 			}
 			final int minX = SectionPos.blockToSectionCoord(viewBoxOut.minX), minZ = SectionPos.blockToSectionCoord(viewBoxOut.minZ);
-			final int maxX = SectionPos.blockToSectionCoord(viewBoxOut.maxX), maxZ = SectionPos.blockToSectionCoord(viewBoxOut.maxZ);
+			final int maxX = SectionPos.blockToSectionCoord(viewBoxOut.maxX) + 1, maxZ = SectionPos.blockToSectionCoord(viewBoxOut.maxZ) + 1;
 			chunkPosStreams.add(StreamSupport.stream(
 				new Spliterators.AbstractSpliterator<>(
 					(maxX - minX) * (maxZ - minZ),
@@ -179,7 +182,7 @@ public class PipeLevelRenderer {
 			.filter(Objects::nonNull);
 	}
 
-	private static void renderPlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final float partialTick) {
+	private static void renderPlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final float partialTick) {
 		final Minecraft minecraft = Minecraft.getInstance();
 		final LocalPlayer player = minecraft.player;
 		if (player == null || player.isSpectator()) {
@@ -196,99 +199,141 @@ public class PipeLevelRenderer {
 		final NodePos lookingPos = NodePos.fromHitResult(level, blockHit.getBlockPos(), blockHit.getLocation(), 4.0 / 16);
 		NodePos.streamPlaceHint(NodeLevel.get(level), blockHit.getBlockPos()).forEach((pos) -> {
 			renderNodePlaceHint(
-				level, poseStack, vertexBuilder, view, pos,
+				level, poseStack, vertexBuilder, partialTick, pos,
 				pos.equals(lookingPos) ? HINT_SELECTING_COLOR : HINT_COLOR,
 				pos.equals(lookingPos) ? HINT_SELECTING_SCALE : HINT_SCALE
 			);
 		});
 	}
 
-	private static void renderNodes(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
-		streamRenderingChunks(level, view).forEach((chunk) -> renderNodesInChunk(level, chunk, poseStack, vertexBuilder, view));
+	private static void renderNodes(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final float partialTick, final Vec3 view) {
+		streamRenderingChunks(level, view).forEach((chunk) -> renderNodesInChunk(level, chunk, poseStack, vertexBuilder, partialTick));
 	}
 
-	private static void renderNodesInChunk(final ClientLevel level, final ChunkAccess chunk, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view) {
+	private static void renderNodesInChunk(final ClientLevel level, final ChunkAccess chunk, final PoseStack poseStack, final VertexConsumer vertexBuilder, final float partialTick) {
 		if (!(chunk instanceof NodeGetter nodeGetter)) {
 			return;
 		}
 		if (!nodeGetter.hasAnyNode()) {
 			return;
 		}
-		nodeGetter.streamNodes().forEach((node) -> renderNode(level, poseStack, vertexBuilder, view, node));
+		nodeGetter.streamNodes().forEach((node) -> renderNode(level, poseStack, vertexBuilder, partialTick, node));
 	}
 
-	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final PipeNode node) {
+	private static void renderNode(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final float partialTick, final PipeNode node) {
+		final NodeLevel nodeLevel = NodeLevel.get(level);
+		final PipeNetworkOperator network = nodeLevel.getNetwork();
 		final int size = node.getSize();
 		final NodePos pos = node.getPos();
 		final Vec3 nodeCenter = pos.getCenter();
+		final Vector3f color = new Vector3f(node.getColor().getTextureDiffuseColors());
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
 		final double r = size / 16.0 / 2;
-		lightMap.setUSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y + r)));
-		lightMap.setUSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y + r, nodeCenter.y + r)));
-		lightMap.setUNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y - r)));
-		lightMap.setUNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y + r, nodeCenter.y - r)));
-		lightMap.setDSE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y - r, nodeCenter.y + r)));
-		lightMap.setDSW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y - r, nodeCenter.y + r)));
-		lightMap.setDNE(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x + r, nodeCenter.y - r, nodeCenter.y - r)));
-		lightMap.setDNW(LevelRenderer.getLightColor(level, BlockPos.containing(nodeCenter.x - r, nodeCenter.y - r, nodeCenter.y - r)));
+		final double l = 1 - r * 2;
+		lightMap.fillFromLevel(
+			level,
+			new AABB(
+				nodeCenter.x - r, nodeCenter.y - r, nodeCenter.y - r,
+				nodeCenter.x + r, nodeCenter.y + r, nodeCenter.y + r
+			)
+		);
 
-		final RenderUtil.BoxLightMap blockLightMap = lightMap.getBlockLightMap();
-		final RenderUtil.BoxLightMap skyLightMap = lightMap.getSkyLightMap();
-
-		for (final RenderUtil.BoxLightMap lights : new RenderUtil.BoxLightMap[]{blockLightMap, skyLightMap}) {
-			for (int i = 0; i < 2; i++) {
-				lights.setUSE(Math.max(lights.use, Math.max(Math.max(lights.usw, lights.une), lights.dse) - 2));
-				lights.setUSW(Math.max(lights.usw, Math.max(Math.max(lights.use, lights.unw), lights.dsw) - 2));
-				lights.setUNE(Math.max(lights.une, Math.max(Math.max(lights.unw, lights.use), lights.dne) - 2));
-				lights.setUNW(Math.max(lights.unw, Math.max(Math.max(lights.une, lights.usw), lights.dnw) - 2));
-				lights.setDSE(Math.max(lights.dse, Math.max(Math.max(lights.dsw, lights.dne), lights.use) - 2));
-				lights.setDSW(Math.max(lights.dsw, Math.max(Math.max(lights.dse, lights.dnw), lights.usw) - 2));
-				lights.setDNE(Math.max(lights.dne, Math.max(Math.max(lights.dnw, lights.dse), lights.une) - 2));
-				lights.setDNW(Math.max(lights.dnw, Math.max(Math.max(lights.dne, lights.dsw), lights.unw) - 2));
-			}
-		}
-
-		lightMap.packLightMaps(blockLightMap, skyLightMap);
-
-		Vec3 nodeCenterRender = nodeCenter.subtract(0.5, 0.5, 0.5);
+		final Vec3 nodeCenterRender = toWorldCoordinatesLerp(level, partialTick, nodeCenter);
 		final Quaternionf rotation = new Quaternionf();
 		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos.blockPos());
 		if (ship != null) {
-			final Vector3d worldNodeCenter = ship.getShipToWorld().transformPosition(new Vector3d(nodeCenterRender.x, nodeCenterRender.y, nodeCenterRender.z));
-			nodeCenterRender = new Vec3(worldNodeCenter.x, worldNodeCenter.y, worldNodeCenter.z);
-			rotation.setFromNormalized(ship.getShipToWorld());
+			rotation.setFromNormalized(ship.getPrevTickTransform().getShipToWorld().lerp(ship.getTransform().getShipToWorld(), partialTick, new Matrix4d()));
 		}
 
 		poseStack.pushPose();
+		poseStack.translate(nodeCenterRender.x, nodeCenterRender.y, nodeCenterRender.z);
 
-		poseStack.translate(nodeCenterRender.x - view.x, nodeCenterRender.y - view.y, nodeCenterRender.z - view.z);
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
-			node.getModel(), new Vector3f(node.getColor().getTextureDiffuseColors()),
+			node.getModel(), color,
 			ZERO_VEC3F, rotation, new Vector3i(size, size, size),
 			1f
 		);
 
 		poseStack.popPose();
+
+		for (final NodePos otherPos : network.getConnections(node)) {
+			if (pos.compareTo(otherPos) >= 0) {
+				continue;
+			}
+			final PipeNode other = nodeLevel.getNode(otherPos);
+			final Direction[] path = pos.connectPathTo(otherPos);
+			final Direction path0 = path[0];
+			final Direction.Axis pathAxis0 = path0.getAxis();
+			switch (path.length) {
+				case 1:
+					final Vec3 center1 = nodeCenter.add(path0.getStepX() * r, path0.getStepY() * r, path0.getStepZ() * r);
+					final Vec3 center3 = center1.add(path0.getStepX() * l, path0.getStepY() * l, path0.getStepZ() * l);
+					final Vec3 center2 = center1.add(center3).scale(0.5);
+					final double
+						x2 = center2.x + pathAxis0.choose(0, r, r),
+						y2 = center2.y + pathAxis0.choose(r, 0, r),
+						z2 = center2.z + pathAxis0.choose(r, r, 0);
+					final AABB box1 = new AABB(
+						x2, y2, z2,
+						center1.x - pathAxis0.choose(0, r, r), center1.y - pathAxis0.choose(r, 0, r), center1.z - pathAxis0.choose(r, r, 0)
+					);
+					final AABB box2 = new AABB(
+						x2, y2, z2,
+						center3.x - pathAxis0.choose(0, r, r), center3.y - pathAxis0.choose(r, 0, r), center3.z - pathAxis0.choose(r, r, 0)
+					);
+
+					poseStack.pushPose();
+					final Vec3 box1Center = toWorldCoordinatesLerp(level, partialTick, box1.getCenter());
+					poseStack.translate(box1Center.x, box1Center.y, box1Center.z);
+					RenderUtil.drawBoxWithTexture(
+						poseStack, vertexBuilder,
+						lightMap.fillFromLevel(level, box1),
+						node.getPipeModel(path0.getOpposite()), color,
+						ZERO_VEC3F, rotation,
+						new Vector3i((int) (Math.round(box1.getXsize() * 16)), (int) (Math.round(box1.getYsize() * 16)), (int) (Math.round(box1.getZsize() * 16))),
+						1f
+					);
+					poseStack.popPose();
+
+					poseStack.pushPose();
+					final Vec3 box2Center = toWorldCoordinatesLerp(level, partialTick, box2.getCenter());
+					poseStack.translate(box2Center.x, box2Center.y, box2Center.z);
+					RenderUtil.drawBoxWithTexture(
+						poseStack, vertexBuilder,
+						lightMap.fillFromLevel(level, box2),
+						other.getPipeModel(path0), color,
+						ZERO_VEC3F,
+						rotation.rotateXYZ(
+							(float) (pathAxis0.choose(Math.PI, Math.PI, 0)),
+							(float) (pathAxis0.choose(0, Math.PI, Math.PI)),
+							(float) (pathAxis0.choose(Math.PI, 0, Math.PI)),
+							new Quaternionf()
+						),
+						new Vector3i((int) (Math.round(box2.getXsize() * 16)), (int) (Math.round(box2.getYsize() * 16)), (int) (Math.round(box2.getZsize() * 16))),
+						1f
+					);
+					poseStack.popPose();
+					break;
+			}
+		}
 	}
 
-	private static void renderNodePlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final Vec3 view, final NodePos pos, final Vector4f color, final float scale) {
+	private static void renderNodePlaceHint(final ClientLevel level, final PoseStack poseStack, final VertexConsumer vertexBuilder, final float partialTick, final NodePos pos, final Vector4f color, final float scale) {
 		final int size = 4;
-		Vec3 nodeCenter = pos.getCenter().subtract(0.5, 0.5, 0.5);
+		final Vec3 nodeCenter = toWorldCoordinatesLerp(level, partialTick, pos.getCenter());
 		final Quaternionf rotation = new Quaternionf();
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap().setAll(0xf000f0);
 
 		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos.blockPos());
 		if (ship != null) {
-			final Vector3d worldNodeCenter = ship.getShipToWorld().transformPosition(new Vector3d(nodeCenter.x, nodeCenter.y, nodeCenter.z));
-			nodeCenter = new Vec3(worldNodeCenter.x, worldNodeCenter.y, worldNodeCenter.z);
-			rotation.setFromNormalized(ship.getShipToWorld());
+			rotation.setFromNormalized(ship.getPrevTickTransform().getShipToWorld().lerp(ship.getTransform().getShipToWorld(), partialTick, new Matrix4d()));
 		}
 
 		poseStack.pushPose();
 
-		poseStack.translate(nodeCenter.x - view.x, nodeCenter.y - view.y, nodeCenter.z - view.z);
+		poseStack.translate(nodeCenter.x, nodeCenter.y, nodeCenter.z);
 		RenderUtil.drawBoxWithTexture(
 			poseStack, vertexBuilder,
 			lightMap,
@@ -298,5 +343,19 @@ public class PipeLevelRenderer {
 		);
 
 		poseStack.popPose();
+	}
+
+	private static Vec3 toWorldCoordinatesLerp(final Level level, final float partialTick, final Vec3 pos) {
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, pos);
+		if (ship == null) {
+			return pos;
+		}
+		final Vector3d worldPos = ship.getPrevTickTransform().getShipToWorld().lerp(
+			ship.getTransform().getShipToWorld(),
+			partialTick,
+			new Matrix4d()
+		)
+			.transformPosition(pos.x, pos.y, pos.z, new Vector3d());
+		return new Vec3(worldPos.x, worldPos.y, worldPos.z);
 	}
 }

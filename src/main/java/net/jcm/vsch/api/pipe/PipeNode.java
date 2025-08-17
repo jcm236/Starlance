@@ -64,6 +64,8 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 
 	public abstract ModelTextures getModel();
 
+	public abstract ModelTextures getPipeModel(final Direction direction);
+
 	/**
 	 * @param dir Direction of another pipe node
 	 * @return if pipes can connect from the direction
