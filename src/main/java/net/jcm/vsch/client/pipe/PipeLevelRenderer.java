@@ -229,7 +229,6 @@ public class PipeLevelRenderer {
 		final Vector3f color = new Vector3f(node.getColor().getTextureDiffuseColors());
 		final RenderUtil.BoxLightMap lightMap = new RenderUtil.BoxLightMap();
 		final double r = size / 16.0 / 2;
-		final double l = 1 - r * 2;
 		lightMap.fillFromLevel(
 			level,
 			new AABB(
@@ -262,14 +261,15 @@ public class PipeLevelRenderer {
 			if (pos.compareTo(otherPos) >= 0) {
 				continue;
 			}
+			final Vec3 otherCenter = otherPos.getCenter();
 			final PipeNode other = nodeLevel.getNode(otherPos);
 			final Direction[] path = pos.connectPathTo(otherPos);
 			final Direction path0 = path[0];
 			final Direction.Axis pathAxis0 = path0.getAxis();
 			switch (path.length) {
-				case 1:
+				case 1 -> {
 					final Vec3 center1 = nodeCenter.add(path0.getStepX() * r, path0.getStepY() * r, path0.getStepZ() * r);
-					final Vec3 center3 = center1.add(path0.getStepX() * l, path0.getStepY() * l, path0.getStepZ() * l);
+					final Vec3 center3 = otherCenter.add(path0.getStepX() * -r, path0.getStepY() * -r, path0.getStepZ() * -r);
 					final Vec3 center2 = center1.add(center3).scale(0.5);
 					final double
 						x2 = center2.x + pathAxis0.choose(0, r, r),
@@ -315,7 +315,60 @@ public class PipeLevelRenderer {
 						1f
 					);
 					poseStack.popPose();
-					break;
+				}
+				case 2 -> {
+					final Direction path1 = path[1].getOpposite();
+					final Direction.Axis pathAxis1 = path1.getAxis();
+					final Vec3 center1 = nodeCenter.add(path0.getStepX() * r, path0.getStepY() * r, path0.getStepZ() * r);
+					final Vec3 center3 = otherCenter.add(path1.getStepX() * r, path1.getStepY() * r, path1.getStepZ() * r);
+					final Vec3 edge2 = new Vec3(
+						pathAxis0.choose(center3.x, center1.x, center1.x) + (path0.getStepX() + path1.getStepX()) * r,
+						pathAxis0.choose(center1.y, center3.y, center1.y) + (path0.getStepY() + path1.getStepY()) * r,
+						pathAxis0.choose(center1.z, center1.z, center3.z) + (path0.getStepZ() + path1.getStepZ()) * r
+					);
+					final AABB box1 = new AABB(
+						Math.min(center1.x - pathAxis0.choose(0, r, r), edge2.x) - 1e-6,
+						Math.min(center1.y - pathAxis0.choose(r, 0, r), edge2.y) - 1e-6,
+						Math.min(center1.z - pathAxis0.choose(r, r, 0), edge2.z) - 1e-6,
+						Math.max(center1.x + pathAxis0.choose(0, r, r), edge2.x) + 1e-6,
+						Math.max(center1.y + pathAxis0.choose(r, 0, r), edge2.y) + 1e-6,
+						Math.max(center1.z + pathAxis0.choose(r, r, 0), edge2.z) + 1e-6
+					);
+					final AABB box2 = new AABB(
+						Math.min(center3.x - pathAxis1.choose(0, r, r), edge2.x),
+						Math.min(center3.y - pathAxis1.choose(r, 0, r), edge2.y),
+						Math.min(center3.z - pathAxis1.choose(r, r, 0), edge2.z),
+						Math.max(center3.x + pathAxis1.choose(0, r, r), edge2.x),
+						Math.max(center3.y + pathAxis1.choose(r, 0, r), edge2.y),
+						Math.max(center3.z + pathAxis1.choose(r, r, 0), edge2.z)
+					);
+
+					poseStack.pushPose();
+					final Vec3 box1Center = toWorldCoordinatesLerp(level, partialTick, box1.getCenter());
+					poseStack.translate(box1Center.x, box1Center.y, box1Center.z);
+					RenderUtil.drawBoxWithTexture(
+						poseStack, vertexBuilder,
+						lightMap.fillFromLevel(level, box1),
+						node.getPipeModel(path0.getOpposite()), color,
+						ZERO_VEC3F, rotation,
+						new Vector3i((int) (Math.round(box1.getXsize() * 16)), (int) (Math.round(box1.getYsize() * 16)), (int) (Math.round(box1.getZsize() * 16))),
+						1f
+					);
+					poseStack.popPose();
+
+					poseStack.pushPose();
+					final Vec3 box2Center = toWorldCoordinatesLerp(level, partialTick, box2.getCenter());
+					poseStack.translate(box2Center.x, box2Center.y, box2Center.z);
+					RenderUtil.drawBoxWithTexture(
+						poseStack, vertexBuilder,
+						lightMap.fillFromLevel(level, box2),
+						other.getPipeModel(path1), color,
+						ZERO_VEC3F, rotation,
+						new Vector3i((int) (Math.round(box2.getXsize() * 16)), (int) (Math.round(box2.getYsize() * 16)), (int) (Math.round(box2.getZsize() * 16))),
+						1f
+					);
+					poseStack.popPose();
+				}
 			}
 		}
 	}

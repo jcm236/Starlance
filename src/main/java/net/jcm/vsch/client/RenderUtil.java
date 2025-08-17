@@ -51,12 +51,10 @@ public final class RenderUtil {
 
 		poseStack.mulPose(rot);
 
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.UP, offset, size);
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.DOWN, offset, size);
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.EAST, offset, size);
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.WEST, offset, size);
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.NORTH, offset, size);
-		drawPlane(poseStack, buffer, lightMap, rgba, Direction.SOUTH, offset, size);
+		for (final Direction dir : Direction.values()) {
+			drawPlane(poseStack, buffer, lightMap, rgba, dir, offset, size);
+		}
+
 		poseStack.popPose();
 	}
 
