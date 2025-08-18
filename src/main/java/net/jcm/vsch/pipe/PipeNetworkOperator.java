@@ -56,18 +56,16 @@ public class PipeNetworkOperator {
 	}
 
 	public void onNodeJoin(final PipeNode node) {
-		final DyeColor color = node.getColor();
 		final NodePos pos = node.getPos();
 		pos.streamPossibleToConnect()
 			.map(this.level::getNode)
 			.filter(Objects::nonNull)
-			.filter((other) -> other.getColor() == color)
 			.forEach((other) -> {
 				final NodePos otherPos = other.getPos();
 				final Direction[] connectPath = pos.connectPathTo(otherPos);
 				final Direction nodeOutDir = connectPath[0];
 				final Direction otherOutDir = connectPath[connectPath.length - 1].getOpposite();
-				if (!node.canConnect(nodeOutDir) || !other.canConnect(otherOutDir)) {
+				if (!node.canConnect(nodeOutDir, other) || !other.canConnect(otherOutDir, node)) {
 					return;
 				}
 				this.connectNodes(node, nodeOutDir, other, otherOutDir);

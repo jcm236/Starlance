@@ -72,6 +72,10 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	 */
 	public abstract boolean canConnect(Direction dir);
 
+	public boolean canConnect(final Direction dir, final PipeNode other) {
+		return this.getColor() == other.getColor() && this.canConnect(dir);
+	}
+
 	/**
 	 * @param dir Block direction contents tring to interact with
 	 * @return {@link FlowDirection}
@@ -156,7 +160,7 @@ public abstract class PipeNode<T extends PipeNode<T>> {
 	}
 
 	public boolean canAnchor() {
-		return this.pos.canAnchoredIn(this.level.getLevel(), this.getSize());
+		return this.pos.canAnchoredIn(this.level.getLevel(), this.getSize() / 16.0);
 	}
 
 	public enum Type {

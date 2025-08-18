@@ -363,7 +363,13 @@ public class PipeLevelRenderer {
 						poseStack, vertexBuilder,
 						lightMap.fillFromLevel(level, box2),
 						other.getPipeModel(path1), color,
-						ZERO_VEC3F, rotation,
+						ZERO_VEC3F,
+						rotation.rotateXYZ(
+							(float) (pathAxis0.choose(Math.PI, Math.PI, 0)),
+							(float) (pathAxis0.choose(0, Math.PI, Math.PI)),
+							(float) (pathAxis0.choose(Math.PI, 0, Math.PI)),
+							new Quaternionf()
+						),
 						new Vector3i((int) (Math.round(box2.getXsize() * 16)), (int) (Math.round(box2.getYsize() * 16)), (int) (Math.round(box2.getZsize() * 16))),
 						1f
 					);

@@ -211,26 +211,36 @@ public record NodePos(
 		}
 
 		final Direction.Axis thisAxis = this.axis;
+		final BlockPos posRel = this.blockPos.relative(thisAxis, 1);
 
-		return Direction.stream()
-			.flatMap((dir) -> {
-				final BlockPos relative = this.blockPos.relative(dir);
-				final Direction.Axis dirAxis = dir.getAxis();
-				if (dirAxis == thisAxis) {
-					return streamAxisesExclude(thisAxis)
-						.flatMap((axis) -> {
-							final BlockPos rel2 = relative.relative(axis, -1);
-							return IntStream.range(1, INDEX_BOUND)
-								.mapToObj((i) -> Stream.of(new NodePos(relative, axis, i), new NodePos(rel2, axis, i)))
-								.flatMap(Function.identity());
-						});
-				}
-				final BlockPos relative2 = relative.relative(thisAxis, 1);
-				return Stream.concat(
-					Stream.of(new NodePos(relative, thisAxis, 0)),
-					IntStream.range(0, INDEX_BOUND).mapToObj((i) -> new NodePos(relative, thisAxis, i))
-				);
-			});
+		return Stream.concat(
+			streamAxisesExclude(thisAxis)
+				.flatMap((axis) -> Stream.concat(
+					IntStream.range(1, INDEX_BOUND).mapToObj((i) -> new NodePos(this.blockPos, axis, i)),
+					IntStream.range(1, INDEX_BOUND).mapToObj((i) -> new NodePos(posRel, axis, i))
+				)),
+			Direction.stream()
+				.filter((dir) -> dir.getAxis() != thisAxis)
+				.flatMap((dir) -> {
+					final Direction.Axis dirAxis = dir.getAxis();
+					final BlockPos relative = this.blockPos.relative(dir);
+					final BlockPos rel2 = relative.relative(thisAxis, 1);
+					final Stream stream = Stream.concat(
+						Stream.of(NodePos.originOf(relative), NodePos.originOf(rel2)),
+						IntStream.range(1, INDEX_BOUND).mapToObj((i) -> new NodePos(relative, thisAxis, i))
+					);
+					if (dir.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+						return stream;
+					}
+					return Stream.concat(
+						stream,
+						Stream.concat(
+							IntStream.range(1, INDEX_BOUND).mapToObj((i) -> new NodePos(relative, dirAxis, i)),
+							IntStream.range(1, INDEX_BOUND).mapToObj((i) -> new NodePos(rel2, dirAxis, i))
+						)
+					);
+				})
+		);
 	}
 
 	public Direction[] connectPathTo(final NodePos other) {
