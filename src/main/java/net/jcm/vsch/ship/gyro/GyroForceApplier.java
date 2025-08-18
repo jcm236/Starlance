@@ -1,7 +1,7 @@
 package net.jcm.vsch.ship.gyro;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;

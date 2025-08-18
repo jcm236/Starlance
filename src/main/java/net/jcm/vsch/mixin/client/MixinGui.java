@@ -23,7 +23,7 @@ public abstract class MixinGui implements IGuiAccessor {
 	public abstract void setChatDisabledByPlayerShown(boolean value);
 
 	@Override
-	public void vsch$setOverlayMessageIfNotExist(final Component component, final int duration) {
+	public void starlance$setOverlayMessageIfNotExist(final Component component, final int duration) {
 		if (this.overlayMessageString != null && this.overlayMessageTime > 21) {
 			return;
 		}

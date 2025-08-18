@@ -95,7 +95,7 @@ public class EmptyChunkAccess extends LevelChunk {
 
 	@Override
 	public ChunkStatus getStatus() {
-		return ChunkStatus.EMPTY;
+		return ChunkStatus.FULL;
 	}
 
 	@Override

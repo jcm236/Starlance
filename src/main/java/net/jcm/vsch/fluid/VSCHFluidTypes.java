@@ -1,4 +1,4 @@
-package net.jcm.vsch.fluids;
+package net.jcm.vsch.fluid;
 
 import net.jcm.vsch.VSCHMod;
 import net.minecraft.resources.ResourceLocation;
@@ -9,10 +9,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHFluidTypes {
-	public static final ResourceLocation WATER_STILL_RL = new ResourceLocation("minecraft", "block/water_still");
-	public static final ResourceLocation WATER_FLOW_RL = new ResourceLocation("minecraft", "block/water_flow");
+	private static final ResourceLocation WATER_STILL_RL = new ResourceLocation("minecraft", "block/water_still");
+	private static final ResourceLocation WATER_FLOW_RL = new ResourceLocation("minecraft", "block/water_flow");
 
-	public static final DeferredRegister<FluidType> REGISTERY = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, VSCHMod.MODID);
+	private static final DeferredRegister<FluidType> REGISTERY = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, VSCHMod.MODID);
 
 	public static final RegistryObject<FluidType> HYDROGEN_FLUID_TYPE = REGISTERY.register(
 		"hydrogen",

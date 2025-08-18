@@ -23,8 +23,11 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
+	/* Thrusters */
+
 	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
 	public static final ForgeConfigSpec.ConfigValue<ThrusterMode> THRUSTER_MODE;
+	public static final ForgeConfigSpec.BooleanValue THRUSTER_FLAME_IMPACT;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> THRUSTER_STRENGTH;
 	public static final ForgeConfigSpec.ConfigValue<Integer> THRUSTER_ENERGY_CONSUME_RATE;
@@ -38,6 +41,8 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
+	/* Gyro */
+
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
 	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
@@ -48,10 +53,12 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
 	private static Set<ResourceLocation> ASSEMBLE_BLACKLIST_SET = null;
 
-	// Optimize
+	/* Optimize */
+
 	public static final ForgeConfigSpec.BooleanValue ENABLE_EMPTY_SPACE_CHUNK;
 
-	// Misc
+	/* Misc */
+
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
@@ -77,6 +84,7 @@ public class VSCHConfig {
 
 		THRUSTER_TOGGLE = BUILDER.comment("Thruster Mode Toggling").define("thruster_mode_toggle", true);
 		THRUSTER_MODE = BUILDER.comment("Default Thruster Mode").defineEnum("thruster_default_mode", ThrusterMode.POSITION);
+		THRUSTER_FLAME_IMPACT = BUILDER.comment("This setting will allow thruster flame to push and to burn entities in its area, and set the first block it hits on fire.").define("thruster_flame_impact", true);
 
 		THRUSTER_STRENGTH = BUILDER.comment("Thruster max force. (Newtons)").define("thruster_strength", 120000);
 		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").define("thruster_energy_consume_rate", 0);
@@ -95,7 +103,7 @@ public class VSCHConfig {
 		BUILDER.push("Gyro");
 
 		GYRO_STRENGTH = BUILDER.comment("Max force gyro will apply to the ship on any axis. (N)").define("gyro_strength", 350000);
-		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 10000);
+		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 0); //10000 default for next update
 		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
 		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
 
@@ -103,7 +111,7 @@ public class VSCHConfig {
 
 		BUILDER.push("RocketAssembler");
 
-		ASSEMBLER_ENERGY_CONSUMPTION = BUILDER.comment("Assemble Energy Consumption").defineInRange("energy_consumption", 100, 0, Integer.MAX_VALUE);
+		ASSEMBLER_ENERGY_CONSUMPTION = BUILDER.comment("Assemble Energy Consumption").defineInRange("energy_consumption", 0, 0, Integer.MAX_VALUE); // 100 default for next update
 		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max assemble blocks for rocket assembler").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
 		ASSEMBLE_BLACKLIST = BUILDER.comment("Prevent assemble if contatins any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
 
@@ -123,9 +131,9 @@ public class VSCHConfig {
 		CANCEL_ASSEMBLY = BUILDER.comment("Cancel multi-block assemblies when above world height. This is a temporary fix, but for now ships made above world height have issues with starlance.").define("cancel_assembly", true);
 
 		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
-		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.09);
+		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);
 		GRAVITY_DISTANCE = BUILDER.comment("Distance (in blocks) at which gravity generator will pull you in").define("gravity_gen_distance", 6);
-		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.09);
+		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.08);
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
 

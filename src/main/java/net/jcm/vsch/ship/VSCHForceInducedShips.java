@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
 import net.jcm.vsch.ship.thruster.ThrusterData;

@@ -1,0 +1,57 @@
+
+// Determine release type
+// alpha, beta, or release
+def versionType = "release"
+
+def fileDisplayName = "Starlance ${mod_version}"
+
+// Publish to CurseForge
+curseforge {
+    if (curse_api_token) {
+        apiKey = curse_api_token
+        project {
+            id = curse_project_id
+
+            addGameVersion '1.20.1'
+
+            releaseType = versionType
+
+            mainArtifact(jar) {
+                relations {
+                        requiredDependency 'kotlin-for-forge'
+                        requiredDependency 'valkyrien-skies'
+                        requiredDependency 'cosmic-horizons'
+                }
+
+                changelogType = "markdown"
+
+                changelog = file('changelog.md')
+
+                displayName = fileDisplayName
+            }
+        }
+    }
+}
+
+
+// Publish to modrinth
+modrinth {
+    token = modrinth_api_token
+    projectId = modrinth_project_id
+    versionNumber = mod_version
+    archivesBaseName = fileDisplayName
+    versionType = versionType
+    changelog = file('changelog.md').text
+    uploadFile = jar
+    gameVersions = ["1.20.1"] // Must be an array, even with only one version
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "valkyrien-skies"
+        required.project "kotlin-for-forge"
+        // Why cosmic horizons is a different id on modrinth, I have no idea
+        required.project "cosmic-horizons-cosmos"
+        optional.version "create", "1.20.1-0.5.1.j"
+    }
+}

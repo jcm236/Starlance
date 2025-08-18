@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -79,12 +80,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		return this.brain;
 	}
 
-	public void setBrain(ThrusterBrain brain) {
+	public void setBrain(final ThrusterBrain brain) {
 		this.brain = brain;
 		this.capsCache.forEach((k, v) -> {
 			v.invalidate();
 		});
 		this.capsCache.clear();
+		this.sendUpdate();
 	}
 
 	public ThrusterData.ThrusterMode getThrusterMode() {
@@ -109,34 +111,38 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	}
 
 	@Override
-	public void load(CompoundTag data) {
+	public void load(final CompoundTag data) {
 		super.load(data);
-		BlockPos pos = this.getBlockPos();
-		if (data.contains(BRAIN_POS_TAG_NAME, 7)) {
+		final BlockPos pos = this.getBlockPos();
+		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_BYTE_ARRAY)) {
 			byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
 			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
 			if (this.getLevel() != null) {
 				this.resolveBrain();
 			}
-		} else if (data.contains(BRAIN_DATA_TAG_NAME, 10)) {
+		} else if (data.contains(BRAIN_DATA_TAG_NAME, Tag.TAG_COMPOUND)) {
 			CompoundTag brainData = data.getCompound(BRAIN_DATA_TAG_NAME);
 			this.brain.readFromNBT(brainData);
 		}
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag data) {
+	public void saveAdditional(final CompoundTag data) {
 		super.saveAdditional(data);
-		AbstractThrusterBlockEntity dataBlock = this.brain.getDataBlock();
+		final BlockPos selfPos = this.getBlockPos();
+		final AbstractThrusterBlockEntity dataBlock = this.brain.getDataBlock();
 		if (this.brainPos != null) {
-			BlockPos offset = this.brainPos.subtract(this.getBlockPos());
+			final BlockPos offset = this.brainPos.subtract(selfPos);
 			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(offset.getX()), (byte)(offset.getY()), (byte)(offset.getZ())});
 		} else if (dataBlock == this) {
-			CompoundTag brainData = new CompoundTag();
-			this.brain.writeToNBT(brainData);
-			data.put(BRAIN_DATA_TAG_NAME, brainData);
+			data.put(BRAIN_DATA_TAG_NAME, this.brain.writeToNBT(new CompoundTag()));
 		} else {
-			BlockPos offset = dataBlock.getBlockPos().subtract(this.getBlockPos());
+			final BlockPos dataPos = dataBlock.getBlockPos();
+			if (dataPos.equals(selfPos)) {
+				LOGGER.error("[starlance]: duplicated thruster block entity at {}", selfPos);
+				return;
+			}
+			final BlockPos offset = dataPos.subtract(selfPos);
 			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(offset.getX()), (byte)(offset.getY()), (byte)(offset.getZ())});
 		}
 	}
@@ -172,9 +178,9 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	}
 
 	private void resolveBrain() {
-		BlockEntity be = this.getLevel().getBlockEntity(this.brainPos);
+		final BlockEntity be = this.getLevel().getBlockEntity(this.brainPos);
 		if (be instanceof AbstractThrusterBlockEntity thruster) {
-			ThrusterBrain newBrain = thruster.getBrain();
+			final ThrusterBrain newBrain = thruster.getBrain();
 			if (this.brain != newBrain) {
 				newBrain.addThruster(this);
 				this.setBrain(newBrain);
@@ -183,6 +189,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		} else if (this.getLevel() instanceof ServerLevel) {
 			LOGGER.warn("[starlance]: Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
 			this.brainPos = null;
+			this.setChanged();
 		}
 	}
 
@@ -252,7 +259,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		if (!level.isClientSide) {
 			return;
 		}
-		((IGuiAccessor) (Minecraft.getInstance().gui)).vsch$setOverlayMessageIfNotExist(
+		((IGuiAccessor) (Minecraft.getInstance().gui)).starlance$setOverlayMessageIfNotExist(
 			Component.translatable("vsch.message.mode")
 				.append(Component.translatable("vsch." + this.getThrusterMode().toString().toLowerCase())),
 			25

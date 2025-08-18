@@ -20,6 +20,10 @@ plugins {
     id 'idea'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+
+    // For auto-publishing
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -27,6 +31,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
+apply from: './gradle-scripts/publish-mod.gradle'
 
 //group = mod_version
 
@@ -37,6 +42,8 @@ base {
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
+
+
 
 minecraft {
 
@@ -174,19 +181,17 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    // cri
-    //annotationProcessor(implementation("com.github.LlamaLad7:MixinExtras:0.1.1"))
+
+    compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+        jarJar.ranged(it, "[0.4.1,)")
+    }
 
     implementation         ("org.valkyrienskies.core:api:${vs_core_version}")
     implementation         ("org.valkyrienskies.core:impl:${vs_core_version}")
     implementation         ("org.valkyrienskies.core:api-game:${vs_core_version}")
     implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
     implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
-
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
-        jarJar.ranged(it, "[0.4.1,)")
-    }
 
     //implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
     //runtimeOnly    fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
@@ -276,7 +281,7 @@ tasks.named('jar', Jar).configure {
     }
 
     // This is the preferred method to reobfuscate your jar file
-    //finalizedBy 'reobfJar'
+    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,8 +1,10 @@
 package net.jcm.vsch.blocks.custom;
 
+import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
+import net.jcm.vsch.util.VSCHUtils;
 import net.jcm.vsch.util.rot.DirectionalShape;
 
 import net.minecraft.core.BlockPos;
@@ -10,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,6 +32,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends DirectionalBlock implements EntityBlock {
 
@@ -70,6 +77,12 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 		return shape.get(state.getValue(BlockStateProperties.FACING));
 	}
 
+	@Override
+	public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+		pTooltip.add(VSCHUtils.getWarningComponent());
+		super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -90,7 +103,7 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
 		Direction dir = ctx.getNearestLookingDirection();
-		if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) {
+		if (ctx.isSecondaryUseActive()) {
 			dir = dir.getOpposite();
 		}
 		return defaultBlockState()
@@ -113,4 +126,6 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 	public <U extends BlockEntity> BlockEntityTicker<U> getTicker(Level level, BlockState state, BlockEntityType<U> type) {
 		return level.isClientSide() ? (ParticleBlockEntity::clientTick) : ParticleBlockEntity::serverTick;
 	}
+
+
 }

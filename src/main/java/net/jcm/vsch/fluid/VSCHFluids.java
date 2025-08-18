@@ -1,4 +1,4 @@
-package net.jcm.vsch.fluids;
+package net.jcm.vsch.fluid;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.VSCHBlocks;

@@ -11,22 +11,18 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 public class VSCHTab {
-	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, VSCHMod.MODID);
+	private static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, VSCHMod.MODID);
 
-	public static final RegistryObject<CreativeModeTab> TAB = REGISTRY.register("starlance",
-			() -> CreativeModeTab.builder().title(Component.translatable("vsch.itemtab")).icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get())).displayItems((parameters, tabData) -> {
-
-				tabData.accept(VSCHBlocks.THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.AIR_THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.POWERFUL_THRUSTER_BLOCK.get());
-				tabData.accept(VSCHBlocks.DRAG_INDUCER_BLOCK.get());
-				tabData.accept(VSCHBlocks.ROCKET_ASSEMBLER_BLOCK.get());
-
-				tabData.accept(VSCHItems.MAGNET_BOOT.get());
-
-				tabData.accept(VSCHItems.WRENCH.get());
-
-			}).build());
+	public static final RegistryObject<CreativeModeTab> TAB = REGISTRY.register(
+		VSCHMod.MODID,
+		() -> CreativeModeTab.builder()
+			.title(Component.translatable("vsch.itemtab"))
+			.icon(() -> new ItemStack(VSCHBlocks.THRUSTER_BLOCK.get()))
+			.displayItems((parameters, tabData) -> {
+				VSCHItems.registerTab(tabData::accept);
+			})
+			.build()
+	);
 
 	public static void register(IEventBus eventBus) {
 		REGISTRY.register(eventBus);
