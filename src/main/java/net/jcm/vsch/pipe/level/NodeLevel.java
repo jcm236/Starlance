@@ -25,6 +25,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -158,6 +159,13 @@ public class NodeLevel {
 			fluidCap.addListener((fluidCapAccess) -> lazyPort.invalidate());
 			return lazyPort.cast();
 		}
+		final LazyOptional<IEnergyStorage> energyCap = be.getCapability(ForgeCapabilities.ENERGY);
+		final IEnergyStorage energyStorage = energyCap.orElse(null);
+		if (energyStorage != null) {
+			final LazyOptional<NodeEnergyPort> lazyPort = energyCap.lazyMap(NodeEnergyPortImpl::new);
+			energyCap.addListener((energyCapAccess) -> lazyPort.invalidate());
+			return lazyPort.cast();
+		}
 		return LazyOptional.empty();
 	}
 
@@ -199,6 +207,39 @@ public class NodeLevel {
 		@Override
 		public FluidStack pullFluid(final int amount, final boolean simulate) {
 			return this.fluidHandler.drain(amount, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+		}
+	}
+
+	private final class NodeEnergyPortImpl implements NodeEnergyPort {
+		private final IEnergyStorage energyStorage;
+
+		private NodeEnergyPortImpl(final IEnergyStorage energyStorage) {
+			this.energyStorage = energyStorage;
+		}
+
+		@Override
+		public double getPressure() {
+			final double energy = this.energyStorage.getEnergyStored();
+			if (energy == 0) {
+				return 0;
+			}
+			final double maxEnergy = this.energyStorage.getMaxEnergyStored();
+			return energy * energy / maxEnergy;
+		}
+
+		@Override
+		public FlowDirection getFlowDirection() {
+			return this.energyStorage.getEnergyStored() < this.energyStorage.getMaxEnergyStored() ? FlowDirection.BOTH : FlowDirection.OUT;
+		}
+
+		@Override
+		public int pushEnergy(int amount, boolean simulate) {
+			return this.energyStorage.receiveEnergy(amount, simulate);
+		}
+
+		@Override
+		public int pullEnergy(int amount, boolean simulate) {
+			return this.energyStorage.extractEnergy(amount, simulate);
 		}
 	}
 }

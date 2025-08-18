@@ -108,7 +108,7 @@ public class PipeNetworkOperator {
 				if (port instanceof NodeFluidPort fluidPort) {
 					this.streamFluidFrom(nodePos, fluidPort, freezedPressures, freezedFluids);
 				} else if (port instanceof NodeEnergyPort energyPort) {
-					// TODO
+					this.streamEnergyFrom(nodePos, energyPort, freezedPressures);
 				}
 			}
 		}
@@ -221,6 +221,79 @@ public class PipeNetworkOperator {
 			final FluidStack pulled = fromPort.pullFluid(flowRate, true);
 			final int pushed = fluidPort.pushFluid(pulled, false);
 			fromPort.pullFluid(pushed, false);
+		}
+	}
+
+	private void streamEnergyFrom(
+		final NodePos from,
+		final NodeEnergyPort fromPort,
+		final Object2DoubleOpenHashMap<NodePort> freezedPressures
+	) {
+		final double constQ = 100;
+		final double fromPressure = freezedPressures.getDouble(fromPort);
+		if (fromPressure <= 0) {
+			return;
+		}
+		final double rateLimit = 1e8;
+
+		double totalFlowRate = 0;
+		final List<Pair.RefDouble<NodeEnergyPort>> pendingOut = new ArrayList<>();
+		final Set<NodePos> streamed = new HashSet<>();
+		final Queue<Pair.RefDouble<NodePos>> queue = new ArrayDeque<>();
+		streamed.add(from);
+		queue.add(new Pair.RefDouble<>(from, 0));
+		while (true) {
+			final Pair.RefDouble<NodePos> posDist = queue.poll();
+			if (posDist == null) {
+				break;
+			}
+			final NodePos pos = posDist.left();
+			final double dist = posDist.right();
+			final PipeNode node = this.level.getNode(pos);
+			if (!node.relation.setStreaming(ENERGY_FLOW_ID)) {
+				this.conflicted.add(pos);
+				continue;
+			}
+
+			for (final NodePort port : node.relation.getPorts(this.level, pos)) {
+				if (!(port instanceof NodeEnergyPort energyPort)) {
+					continue;
+				}
+				if (!energyPort.getFlowDirection().canFlowIn() || energyPort.pushEnergy(1, true) <= 0) {
+					continue;
+				}
+				final double pressureDiff = fromPressure - freezedPressures.getDouble(energyPort);
+				if (pressureDiff <= 0) {
+					continue;
+				}
+				final double flowRate = dist == 0 ? rateLimit : Math.min(rateLimit, constQ * pressureDiff / dist);
+				totalFlowRate += flowRate;
+				pendingOut.add(new Pair.RefDouble<>(energyPort, flowRate));
+			}
+
+			for (final Map.Entry<NodePos, Direction> entry : node.relation.connections.entrySet()) {
+				final NodePos flowing = entry.getKey();
+				if (streamed.contains(flowing)) {
+					continue;
+				}
+				final PipeNode flowingNode = this.level.getNode(flowing);
+				final Direction outDir = entry.getValue();
+				if (flowingNode == null || !flowingNode.getFlowDirection(outDir).canFlowOut()) {
+					continue;
+				}
+				streamed.add(flowing);
+				queue.add(new Pair.RefDouble<>(flowing, dist + from.manhattanDistTo(flowing)));
+			}
+		}
+
+		final double flowRateScale = (totalFlowRate > rateLimit ? rateLimit / totalFlowRate : 1) * 0.1;
+
+		for (final Pair.RefDouble<NodeEnergyPort> portRate : pendingOut) {
+			final NodeEnergyPort energyPort = portRate.left();
+			final int flowRate = (int) (portRate.right() * flowRateScale);
+			final int pulled = fromPort.pullEnergy(flowRate, true);
+			final int pushed = energyPort.pushEnergy(pulled, false);
+			fromPort.pullEnergy(pushed, false);
 		}
 	}
 
