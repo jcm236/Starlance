@@ -10,21 +10,21 @@ public interface INodeLevelChunkSection {
 	/**
 	 * Do NOT modify the returned array.
 	 */
-	PipeNode[][] vsch$getAllNodes();
+	PipeNode[][] starlance$getAllNodes();
 
-	PipeNode vsch$getNode(int x, int y, int z, int index);
+	PipeNode starlance$getNode(int x, int y, int z, int index);
 
 	/**
 	 * Do NOT modify the returned array.
 	 */
-	PipeNode[] vsch$getNodes(int x, int y, int z);
+	PipeNode[] starlance$getNodes(int x, int y, int z);
 
-	PipeNode vsch$setNode(int x, int y, int z, int index, PipeNode node);
+	PipeNode starlance$setNode(int x, int y, int z, int index, PipeNode node);
 
-	boolean vsch$hasAnyNode();
+	boolean starlance$hasAnyNode();
 
-	void vsch$writeNodes(FriendlyByteBuf buf);
+	void starlance$writeNodes(FriendlyByteBuf buf);
 
-	void vsch$readNodes(NodeLevel level, SectionPos sectionPos, FriendlyByteBuf buf);
+	void starlance$readNodes(NodeLevel level, SectionPos sectionPos, FriendlyByteBuf buf);
 }
 

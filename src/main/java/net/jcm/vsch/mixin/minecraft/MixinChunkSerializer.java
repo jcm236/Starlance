@@ -66,7 +66,7 @@ public abstract class MixinChunkSerializer {
 		final byte[] sectionNodesData = sectionData.getByteArray(SECTION_NODES_KEY);
 		final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(sectionNodesData));
 		try {
-			nodeSection.vsch$readNodes(NodeLevel.get(level), sectionPos, buf);
+			nodeSection.starlance$readNodes(NodeLevel.get(level), sectionPos, buf);
 		} catch (RuntimeException	e) {
 			LOGGER.error("[starlance]: Error when parsing pipe nodes", e);
 			throw e;
@@ -99,13 +99,13 @@ public abstract class MixinChunkSerializer {
 		}
 		final Tag oldTag = operation.call(sectionData, key, value);
 
-		if (!(section instanceof INodeLevelChunkSection nodeSection) || !nodeSection.vsch$hasAnyNode()) {
+		if (!(section instanceof INodeLevelChunkSection nodeSection) || !nodeSection.starlance$hasAnyNode()) {
 			return oldTag;
 		}
 		// TODO: investigate if Pooled buffer can give more performance
 		final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(128));
 		try {
-			nodeSection.vsch$writeNodes(buf);
+			nodeSection.starlance$writeNodes(buf);
 		} catch (RuntimeException	e) {
 			LOGGER.error("[starlance]: Error when encoding pipe nodes", e);
 			throw e;

@@ -26,7 +26,7 @@ public abstract class MixinLevel implements ILevelAccessor {
 	}
 
 	@Override
-	public NodeLevel vsch$getNodeLevel() {
+	public NodeLevel starlance$getNodeLevel() {
 		return this.nodeLevel;
 	}
 

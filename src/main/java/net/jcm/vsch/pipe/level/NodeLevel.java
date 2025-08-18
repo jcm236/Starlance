@@ -47,7 +47,7 @@ public class NodeLevel {
 	}
 
 	public static NodeLevel get(final Level level) {
-		return ((ILevelAccessor)(level)).vsch$getNodeLevel();
+		return ((ILevelAccessor)(level)).starlance$getNodeLevel();
 	}
 
 	public final Level getLevel() {
@@ -183,7 +183,7 @@ public class NodeLevel {
 				return 0;
 			}
 			final FluidType fluid = stack.getFluid().getFluidType();
-			final int amount = stack.getAmount();
+			final double amount = stack.getAmount();
 			final double cap = this.fluidHandler.getTankCapacity(0);
 			// TODO: more realistic pressure
 			return amount / 2.0;

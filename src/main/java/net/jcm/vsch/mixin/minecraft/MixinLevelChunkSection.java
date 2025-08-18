@@ -30,12 +30,12 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public PipeNode[][] vsch$getAllNodes() {
+	public PipeNode[][] starlance$getAllNodes() {
 		return this.nodes;
 	}
 
 	@Override
-	public PipeNode vsch$getNode(final int x, final int y, final int z, final int index) {
+	public PipeNode starlance$getNode(final int x, final int y, final int z, final int index) {
 		if (this.nodes == null) {
 			return null;
 		}
@@ -44,7 +44,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public PipeNode[] vsch$getNodes(final int x, final int y, final int z) {
+	public PipeNode[] starlance$getNodes(final int x, final int y, final int z) {
 		if (this.nodes == null) {
 			return null;
 		}
@@ -53,7 +53,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public PipeNode vsch$setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
+	public PipeNode starlance$setNode(final int x, final int y, final int z, final int index, final PipeNode node) {
 		if (this.nodes == null) {
 			this.nodes = new PipeNode[LevelChunkSection.SECTION_SIZE][];
 		}
@@ -78,12 +78,12 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public boolean vsch$hasAnyNode() {
+	public boolean starlance$hasAnyNode() {
 		return this.nodeCount > 0;
 	}
 
 	@Override
-	public void vsch$writeNodes(final FriendlyByteBuf buf) {
+	public void starlance$writeNodes(final FriendlyByteBuf buf) {
 		final int maxWritten = this.nodeCount;
 		buf.writeVarInt(maxWritten);
 		if (maxWritten == 0) {
@@ -120,7 +120,7 @@ public class MixinLevelChunkSection implements INodeLevelChunkSection {
 	}
 
 	@Override
-	public void vsch$readNodes(final NodeLevel level, final SectionPos sectionPos, final FriendlyByteBuf buf) {
+	public void starlance$readNodes(final NodeLevel level, final SectionPos sectionPos, final FriendlyByteBuf buf) {
 		if (this.nodeCount > 0) {
 			final int maxCount = this.nodeCount;
 			int count = 0;

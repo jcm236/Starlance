@@ -28,7 +28,7 @@ public class MixinServerPlayer {
 		if (!(packet instanceof IClientboundLevelChunkWithLightPacketAccessor chunkPacket)) {
 			return;
 		}
-		final PipeNodeSyncChunkS2C pipePacket = chunkPacket.vsch$getPipeNodeSyncChunkS2C();
+		final PipeNodeSyncChunkS2C pipePacket = chunkPacket.starlance$getPipeNodeSyncChunkS2C();
 		VSCHNetwork.sendToPlayer(pipePacket, (ServerPlayer)((Object)(this)));
 	}
 }

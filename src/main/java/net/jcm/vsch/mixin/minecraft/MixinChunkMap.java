@@ -30,7 +30,7 @@ public abstract class MixinChunkMap implements IChunkMapAccessor {
 	protected abstract Iterable<ChunkHolder> getChunks();
 
 	@Override
-	public Iterable<ChunkHolder> vsch$getChunks() {
+	public Iterable<ChunkHolder> starlance$getChunks() {
 		return this.getChunks();
 	}
 

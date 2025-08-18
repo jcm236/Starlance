@@ -120,7 +120,7 @@ public class PipeNetworkOperator {
 		if (!(this.level.getLevel() instanceof ServerLevel serverLevel)) {
 			return Stream.empty();
 		}
-		return StreamSupport.stream(((IChunkMapAccessor)(serverLevel.getChunkSource().chunkMap)).vsch$getChunks().spliterator(), false)
+		return StreamSupport.stream(((IChunkMapAccessor)(serverLevel.getChunkSource().chunkMap)).starlance$getChunks().spliterator(), false)
 			.map(ChunkHolder::getTickingChunk)
 			.filter(Objects::nonNull)
 			.map(NodeGetter.class::cast)

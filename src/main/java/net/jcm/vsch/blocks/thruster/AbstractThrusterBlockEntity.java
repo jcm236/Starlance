@@ -259,7 +259,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		if (!level.isClientSide) {
 			return;
 		}
-		((IGuiAccessor) (Minecraft.getInstance().gui)).vsch$setOverlayMessageIfNotExist(
+		((IGuiAccessor) (Minecraft.getInstance().gui)).starlance$setOverlayMessageIfNotExist(
 			Component.translatable("vsch.message.mode")
 				.append(Component.translatable("vsch." + this.getThrusterMode().toString().toLowerCase())),
 			25

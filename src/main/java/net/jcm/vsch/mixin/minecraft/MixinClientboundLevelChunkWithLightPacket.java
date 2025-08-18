@@ -42,7 +42,7 @@ public class MixinClientboundLevelChunkWithLightPacket implements IClientboundLe
 	}
 
 	@Override
-	public PipeNodeSyncChunkS2C vsch$getPipeNodeSyncChunkS2C() {
+	public PipeNodeSyncChunkS2C starlance$getPipeNodeSyncChunkS2C() {
 		final LevelChunk levelChunk = this.levelChunk;
 		if (this.pipeNodeSyncChunkPacket == null && levelChunk != null) {
 			this.pipeNodeSyncChunkPacket = PipeNodeSyncChunkS2C.fromChunk(levelChunk);

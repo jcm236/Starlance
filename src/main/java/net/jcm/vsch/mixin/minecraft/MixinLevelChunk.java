@@ -51,7 +51,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		if (nodeSection == null) {
 			return null;
 		}
-		return nodeSection.vsch$getNode(x, SectionPos.sectionRelative(y), z, index);
+		return nodeSection.starlance$getNode(x, SectionPos.sectionRelative(y), z, index);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		if (nodeSection == null) {
 			return null;
 		}
-		final PipeNode[] nodes = nodeSection.vsch$getNodes(x, SectionPos.sectionRelative(y), z);
+		final PipeNode[] nodes = nodeSection.starlance$getNodes(x, SectionPos.sectionRelative(y), z);
 		return nodes == null ? EMPTY_NODES : nodes;
 	}
 
@@ -70,7 +70,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		if (nodeSection == null) {
 			return null;
 		}
-		final PipeNode oldNode = nodeSection.vsch$setNode(x, SectionPos.sectionRelative(y), z, index, node);
+		final PipeNode oldNode = nodeSection.starlance$setNode(x, SectionPos.sectionRelative(y), z, index, node);
 		this.setNodesUnsaved();
 		return oldNode;
 	}
@@ -80,8 +80,8 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		return Arrays.stream(this.getSections())
 			.filter(INodeLevelChunkSection.class::isInstance)
 			.map(INodeLevelChunkSection.class::cast)
-			.filter(INodeLevelChunkSection::vsch$hasAnyNode)
-			.flatMap((section) -> Arrays.stream(section.vsch$getAllNodes())
+			.filter(INodeLevelChunkSection::starlance$hasAnyNode)
+			.flatMap((section) -> Arrays.stream(section.starlance$getAllNodes())
 				.filter(Objects::nonNull)
 				.flatMap((nodes) -> Arrays.stream(nodes).filter(Objects::nonNull)));
 	}
@@ -89,7 +89,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 	@Override
 	public boolean hasAnyNode() {
 		for (final LevelChunkSection section : this.getSections()) {
-			if (section instanceof INodeLevelChunkSection nodeSection && nodeSection.vsch$hasAnyNode()) {
+			if (section instanceof INodeLevelChunkSection nodeSection && nodeSection.starlance$hasAnyNode()) {
 				return true;
 			}
 		}
@@ -99,7 +99,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 	@Override
 	public void writeNodes(final FriendlyByteBuf buf) {
 		for (final LevelChunkSection section : this.getSections()) {
-			((INodeLevelChunkSection) (section)).vsch$writeNodes(buf);
+			((INodeLevelChunkSection) (section)).starlance$writeNodes(buf);
 		}
 	}
 
@@ -109,7 +109,7 @@ public abstract class MixinLevelChunk extends ChunkAccess implements BlockGetter
 		final ChunkPos chunkPos = this.getPos();
 		int i = 0;
 		for (final LevelChunkSection section : this.getSections()) {
-			((INodeLevelChunkSection) (section)).vsch$readNodes(level, SectionPos.of(chunkPos, this.getSectionYFromSectionIndex(i)), buf);
+			((INodeLevelChunkSection) (section)).starlance$readNodes(level, SectionPos.of(chunkPos, this.getSectionYFromSectionIndex(i)), buf);
 			i++;
 		}
 	}
