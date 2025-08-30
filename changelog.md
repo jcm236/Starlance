@@ -1,23 +1,15 @@
-## Thrusters
-- Thrusters now connect when directly adjacent, and can be controlled as one
-- They can now set entities on fire, blocks on fire, push entities, evaporate water
-- They can now consume fuel (can be set in config). Default is still no fuel for now
+# Features
+- Added `THRUSTER_FLAME_IMPACT` config option to disable thrusters setting fire and pushing entities 
 
-## New blocks 
-- Added "Rocket Assembler", which provides a better way of assembling multiple block ships. Benefits include:
-  - Can be used in space
-  - Can assemble active create contraptions
-  - Can be automated
-- Added Gyro, which can rotate your ship when powered with redstone
-- Added vent block, which simply prevents thrusters from setting fire past it
+# Bug fixes
+- Fixed thruster particles getting stuck active when ship goes out of loading distance and comes back
+- Fixed a crash from thrusters if the game was paused (in single player) or a tick took too long on server
+- Fixed thruster flame having a 0.5 block offset in some directions
+- Fixed thruster data sometimes not saving
+- Fixed minecart contraptions and CBC cannons crashing the game when entering space or a planet
+- Fixed Ship gravity sometimes being removed by other mods, leading to normal gravity in space
 
-## Bug fixes:
-- Fixed Cosmic Horizons crashing on rclick when a custom datapack is enabled
-- Fixed thruster particles sometimes persisting after thruster destroyed (maybe)
-- Fixed thruster force when at small scales
-- Fixed log spam about "Found cosmos dimension, changing world height"
-
-## Misc:
-- Config option to disable chunk saving in space. Increases performance, but forces builds to be ships in space.
-- Config option to place the "platform" in space from a nodule as a ship instead of blocks
-- Probably some other stuff I don't remember
+# Tweaks
+- Increased planet teleport collision range
+- Ships will now freeze when touching a planet to avoid passing through them
+- Ships will now have correct orientation when entering from different faces of a planet
