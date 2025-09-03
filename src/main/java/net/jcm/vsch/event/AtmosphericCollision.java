@@ -74,9 +74,11 @@ public class AtmosphericCollision {
 			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
 			// TODO: map ship loaction around the planet instead of always spawn at same location
 			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ), new Quaterniond());
+		}
+		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
+			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
 		}
 		teleportHandler.finalizeTeleport();
 	}

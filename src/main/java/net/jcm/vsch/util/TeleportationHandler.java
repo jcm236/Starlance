@@ -100,6 +100,17 @@ public class TeleportationHandler {
 		this.finalizeCollect(collected);
 	}
 
+	public List<LoadedServerShip> getPendingShips() {
+		final List<LoadedServerShip> ships = new ArrayList<>(this.ships.size());
+		for (long id : this.ships.keySet()) {
+			final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
+			if (ship != null) {
+				ships.add(ship);
+			}
+		}
+		return ships;
+	}
+
 	private void collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation, final List<ServerShip> collected) {
 		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, null, null, collected);
 	}

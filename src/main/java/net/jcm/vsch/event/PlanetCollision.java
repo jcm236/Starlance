@@ -141,7 +141,18 @@ public class PlanetCollision {
 			// Otherwise, we just skip them since the playerMenuTick will take care of them.
 			playerMenuTick(commander, ship, level, nearestPlanet, distanceInfo.direction(), handlers);
 		}
-		handlers.values().forEach(TeleportationHandler::finalizeTeleport);
+
+		for (final TeleportationHandler handler : handlers.values()) {
+			for (final LoadedServerShip ship : handler.getPendingShips()) {
+				ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+				if (landingAttachment == null) {
+					landingAttachment = new ShipLandingAttachment();
+					ship.saveAttachment(ShipLandingAttachment.class, landingAttachment);
+				}
+				landingAttachment.landing = true;
+			}
+			handler.finalizeTeleport();
+		}
 	}
 
 	private static void playerMenuTick(
@@ -179,7 +190,6 @@ public class PlanetCollision {
 		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
 		ship.setStatic(false);
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-		landingAttachment.landing = true;
 		final TeleportationHandler handler = handlers.computeIfAbsent(targetDim, (dimStr) -> new TeleportationHandler(VSCHUtils.dimToLevel(dimStr), level, true));
 		handler.addShipWithVelocity(ship, new Vector3d(posX, posY, posZ), rotation, landingAttachment.velocity, landingAttachment.omega);
 
