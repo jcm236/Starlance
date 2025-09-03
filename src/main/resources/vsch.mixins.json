@@ -5,8 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.vsch.refmap.json",
   "mixins": [
+    "cosmos.MixinEgraphicProcedure",
     "cosmos.MixinLightRenderer",
     "cosmos.MixinPlaceplatformOnKeyPressedProcedure",
+    "cosmos.MixinProjectionRendererProcedure",
+    "cosmos.MixinRayrendererProcedure",
     "cosmos.MixinShipspawnspaceProcedure",
     "cosmos.MixinSpacesuitwornLogicProcedure",
     "create.MixinBeltBlockEntity",
