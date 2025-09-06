@@ -7,9 +7,11 @@ import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -181,7 +183,9 @@ public class TeleportationHandler {
 		final Vector3d velocity0 = new Vector3d(velocity);
 		final Vector3d omega0 = new Vector3d(omega);
 
-		MinecraftForge.EVENT_BUS.post(new PreShipTravelEvent(ship, oldLevel.dimension(), newLevel.dimension(), relPos, newRotataion, velocity0, omega0));
+		MinecraftForge.EVENT_BUS.post(this.createPreShipTravelEvent(
+			ship, oldLevel.dimension(), newLevel.dimension(), relPos, newRotataion, velocity0, omega0
+		));
 
 		this.ships.put(
 			shipId,
@@ -390,6 +394,20 @@ public class TeleportationHandler {
 			return ship;
 		}
 		return this.shipWorld.getAllShips().getById(shipId);
+	}
+
+	private PreShipTravelEvent createPreShipTravelEvent(
+		final ServerShip ship,
+		final ResourceKey<Level> oldLevel,
+		final ResourceKey<Level> newLevel,
+		final Vector3dc position,
+		final Quaterniondc rotation,
+		final Vector3d velocity,
+		final Vector3d omega
+	) {
+		return this.isReturning
+			? new PreShipTravelEvent.SpaceToPlanet(ship, oldLevel, newLevel, position, rotation, velocity, omega)
+			: new PreShipTravelEvent.PlanetToSpace(ship, oldLevel, newLevel, position, rotation, velocity, omega);
 	}
 
 	private record TeleportData(Vector3d newPos, Quaterniond rotation, Vector3dc velocity, Vector3dc omega) {}

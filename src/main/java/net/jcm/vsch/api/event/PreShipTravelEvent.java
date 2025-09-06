@@ -71,4 +71,54 @@ public class PreShipTravelEvent extends Event {
 	public final void setOmega(final Vector3dc omega) {
 		this.omega.set(omega);
 	}
+
+	/**
+	 * This event will only fire when ship is moving from planet to space
+	 */
+	public static class PlanetToSpace extends PreShipTravelEvent {
+		public PlanetToSpace(
+			final ServerShip ship,
+			final ResourceKey<Level> oldLevel,
+			final ResourceKey<Level> newLevel,
+			final Vector3dc position,
+			final Quaterniondc rotation,
+			final Vector3d velocity,
+			final Vector3d omega
+		) {
+			super(ship, oldLevel, newLevel, position, rotation, velocity, omega);
+		}
+
+		public final ResourceKey<Level> getPlanet() {
+			return this.getOldLevel();
+		}
+
+		public final ResourceKey<Level> getSpace() {
+			return this.getNewLevel();
+		}
+	}
+
+	/**
+	 * This event will only fire when ship is moving from space to planet
+	 */
+	public static class SpaceToPlanet extends PreShipTravelEvent {
+		public SpaceToPlanet(
+			final ServerShip ship,
+			final ResourceKey<Level> oldLevel,
+			final ResourceKey<Level> newLevel,
+			final Vector3dc position,
+			final Quaterniondc rotation,
+			final Vector3d velocity,
+			final Vector3d omega
+		) {
+			super(ship, oldLevel, newLevel, position, rotation, velocity, omega);
+		}
+
+		public final ResourceKey<Level> getPlanet() {
+			return this.getNewLevel();
+		}
+
+		public final ResourceKey<Level> getSpace() {
+			return this.getOldLevel();
+		}
+	}
 }

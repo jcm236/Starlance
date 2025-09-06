@@ -80,7 +80,7 @@ public class PreTravelEvent extends Event {
 	}
 
 	/**
-	 * This event will only fire when ship is moving from planet to space
+	 * This event will only fire when ships are moving from planet to space
 	 */
 	public static class PlanetToSpace extends PreTravelEvent {
 		public PlanetToSpace(
@@ -103,7 +103,7 @@ public class PreTravelEvent extends Event {
 	}
 
 	/**
-	 * This event will only fire when ship is moving from space to planet
+	 * This event will only fire when ships are moving from space to planet
 	 */
 	public static class SpaceToPlanet extends PreTravelEvent {
 		public SpaceToPlanet(
