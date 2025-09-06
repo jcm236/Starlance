@@ -138,7 +138,6 @@ public class TeleportationHandler {
 		if (ship == null) {
 			return;
 		}
-		collected.add(ship);
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
 		if (ship.isStatic()) {
@@ -155,6 +154,7 @@ public class TeleportationHandler {
 				omega = new Vector3d(ship.getOmega());
 			}
 		}
+		collected.add(ship);
 
 		final Vector3d relPos = pos.sub(origin, new Vector3d());
 		final Quaterniond newRotataion = new Quaterniond(ship.getTransform().getShipToWorldRotation());

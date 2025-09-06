@@ -58,7 +58,7 @@ public class AtmosphericCollision {
 		final TeleportationHandler teleportHandler = new TeleportationHandler(level, targetLevel, false);
 
 		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
-			if (teleportHandler.hasShip(ship)) {
+			if (ship.isStatic() || teleportHandler.hasShip(ship)) {
 				continue;
 			}
 			final Vector3dc shipPos = ship.getTransform().getPositionInWorld();
@@ -85,7 +85,7 @@ public class AtmosphericCollision {
 			teleportHandler.addShip(ship, targetPos, rotation);
 		}
 		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
-			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
+			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true, false));
 		}
 		teleportHandler.finalizeTeleport();
 	}

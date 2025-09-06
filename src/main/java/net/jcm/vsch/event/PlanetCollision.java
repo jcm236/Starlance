@@ -146,12 +146,7 @@ public class PlanetCollision {
 
 		for (final TeleportationHandler handler : handlers.values()) {
 			for (final LoadedServerShip ship : handler.getPendingShips()) {
-				ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-				if (landingAttachment == null) {
-					landingAttachment = new ShipLandingAttachment();
-					ship.saveAttachment(ShipLandingAttachment.class, landingAttachment);
-				}
-				landingAttachment.landing = true;
+				ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(false, true));
 			}
 			handler.finalizeTeleport();
 		}
