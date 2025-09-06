@@ -1,6 +1,7 @@
 package net.jcm.vsch.event;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.api.event.PreTravelEvent;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.network.NetworkHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -181,17 +183,25 @@ public class PlanetCollision {
 			return;
 		}
 
+		final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
+		if (targetLevel == null) {
+			return;
+		}
+
 		final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
 		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
 		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
-		final double posY = atmoY;
+		final Vector3d newPos = new Vector3d(posX, atmoY, posZ);
 		final Quaterniond rotation = new Quaterniond(direction.getRotation());
 
-		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-		ship.setStatic(false);
-		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-		final TeleportationHandler handler = handlers.computeIfAbsent(targetDim, (dimStr) -> new TeleportationHandler(VSCHUtils.dimToLevel(dimStr), level, true));
-		handler.addShipWithVelocity(ship, new Vector3d(posX, posY, posZ), rotation, landingAttachment.velocity, landingAttachment.omega);
+		MinecraftForge.EVENT_BUS.post(new PreTravelEvent.SpaceToPlanet(level.dimension(), ship.getTransform().getPositionInWorld(), targetLevel.dimension(), newPos, rotation));
+
+		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, newPos.x, newPos.y, newPos.z);
+		final TeleportationHandler handler = handlers.computeIfAbsent(
+			targetDim,
+			(dimStr) -> new TeleportationHandler(level, VSCHUtils.dimToLevel(dimStr), true)
+		);
+		handler.addShip(ship, newPos, rotation);
 
 		vars.landing_coords = "^";
 		vars.check_collision = true;
