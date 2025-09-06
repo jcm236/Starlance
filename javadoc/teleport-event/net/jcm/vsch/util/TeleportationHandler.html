@@ -89,8 +89,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;newDim,
- net.minecraft.server.level.ServerLevel&nbsp;originalDim,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel,
  boolean&nbsp;isReturning)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -125,9 +125,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.valkyrienskies.core.api.ships.LoadedServerShip&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPendingShips()" class="member-name-link">getPendingShips</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStart(net.minecraftforge.event.server.ServerStartedEvent)" class="member-name-link">onServerStart</a><wbr>(net.minecraftforge.event.server.ServerStartedEvent&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasShip(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">hasShip</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStart(net.minecraftforge.event.server.ServerStartedEvent)" class="member-name-link">onServerStart</a><wbr>(net.minecraftforge.event.server.ServerStartedEvent&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -148,8 +151,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)">
 <h3>TeleportationHandler</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TeleportationHandler</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;newDim,
- net.minecraft.server.level.ServerLevel&nbsp;originalDim,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TeleportationHandler</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel,
  boolean&nbsp;isReturning)</span></div>
 </section>
 </li>
@@ -165,6 +168,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onServerStart(net.minecraftforge.event.server.ServerStartedEvent)">
 <h3>onServerStart</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onServerStart</span><wbr><span class="parameters">(net.minecraftforge.event.server.ServerStartedEvent&nbsp;event)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasShip(org.valkyrienskies.core.api.ships.ServerShip)">
+<h3>hasShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasShip</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</span></div>
 </section>
 </li>
 <li>
