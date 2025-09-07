@@ -17,16 +17,17 @@ public final class ShipLandingAttachment {
 	@JsonProperty
 	public boolean launching;
 	@JsonProperty
-	public boolean landing = false;
+	public boolean landing;
 	public ServerPlayer commander = null;
 	public Vector3dc velocity = null;
 	public Vector3dc omega = null;
 
 	public ShipLandingAttachment() {
-		this(false);
+		this(false, false);
 	}
 
-	public ShipLandingAttachment(final boolean launching) {
+	public ShipLandingAttachment(final boolean launching, final boolean landing) {
 		this.launching = launching;
+		this.landing = landing;
 	}
 }

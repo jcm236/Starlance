@@ -2,14 +2,19 @@ package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.entity.ISpecialTeleportLogicEntity;
+import net.jcm.vsch.api.event.PreShipTravelEvent;
 import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
+import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -60,16 +65,16 @@ public class TeleportationHandler {
 
 	private final Long2ObjectOpenHashMap<TeleportData> ships = new Long2ObjectOpenHashMap<>();
 	private final Map<Entity, Vec3> entityToPos = new HashMap<>();
-	private final ServerShipWorldCore shipWorld;
+	private ServerShipWorldCore shipWorld;
 	private double greatestOffset;
-	private final ServerLevel newDim;
-	private final ServerLevel originalDim;
+	private ServerLevel oldLevel;
+	private ServerLevel newLevel;
 	private final boolean isReturning;
 
-	public TeleportationHandler(final ServerLevel newDim, final ServerLevel originalDim, final boolean isReturning) {
-		this.shipWorld = VSGameUtilsKt.getShipObjectWorld(newDim);
-		this.newDim = newDim;
-		this.originalDim = originalDim;
+	public TeleportationHandler(final ServerLevel oldLevel, final ServerLevel newLevel, final boolean isReturning) {
+		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
+		this.oldLevel = oldLevel;
+		this.newLevel = newLevel;
 		// Look for the lowest ship when escaping, in order to not collide with the planet.
 		// Look for the highest ship when reentering, in order to not collide with the atmosphere.
 		this.isReturning = isReturning;
@@ -80,6 +85,18 @@ public class TeleportationHandler {
 		final ServerShipObjectWorldAccessor server = (ServerShipObjectWorldAccessor) VSGameUtilsKt.getShipObjectWorld(event.getServer());
 		SHIP2CONSTRAINTS = server.getShipIdToConstraints();
 		ID2CONSTRAINT = server.getConstraints();
+	}
+
+	public void reset(final ServerLevel oldLevel, final ServerLevel newLevel) {
+		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
+		this.oldLevel = oldLevel;
+		this.newLevel = newLevel;
+		this.ships.clear();
+		this.entityToPos.clear();
+	}
+
+	public boolean hasShip(final ServerShip ship) {
+		return this.ships.containsKey(ship.getId());
 	}
 
 	public void addShip(final ServerShip ship, final Vector3dc newPos, final Quaterniondc rotation) {
@@ -97,7 +114,7 @@ public class TeleportationHandler {
 		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected);
 		this.collectNearbyShips(collected, origin, newPos, rotation);
 		this.collectNearbyEntities(collected, origin, newPos, rotation);
-		this.finalizeCollect(collected);
+		this.finalizeCollect(collected, rotation);
 	}
 
 	public List<LoadedServerShip> getPendingShips() {
@@ -131,35 +148,60 @@ public class TeleportationHandler {
 		if (ship == null) {
 			return;
 		}
-		collected.add(ship);
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
-		if (velocity == null) {
-			velocity = new Vector3d(ship.getVelocity());
+		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+		if (ship.isStatic()) {
+			if (landingAttachment == null) {
+				return;
+			}
+			velocity = landingAttachment.velocity;
+			omega = landingAttachment.omega;
+		} else {
+			if (velocity == null) {
+				velocity = new Vector3d(ship.getVelocity());
+			}
+			if (omega == null) {
+				omega = new Vector3d(ship.getOmega());
+			}
 		}
-		if (omega == null) {
-			omega = new Vector3d(ship.getOmega());
-		}
-
-		// TODO: if planet collision position matters for reentry angle THIS SHOULD BE FIXED!! Currently a fix is not needed.
-		final double offset = pos.y() - origin.y();
-		if ((this.isReturning && offset > this.greatestOffset) || (!this.isReturning && offset < this.greatestOffset)) {
-			this.greatestOffset = offset;
-		}
+		collected.add(ship);
 
 		final Vector3d relPos = pos.sub(origin, new Vector3d());
 		final Quaterniond newRotataion = new Quaterniond(ship.getTransform().getShipToWorldRotation());
+
+		if (!this.isReturning) {
+			final double offset = relPos.y;
+			if (offset < this.greatestOffset) {
+				this.greatestOffset = offset;
+			}
+		}
 
 		rotation.transform(relPos);
 		velocity = rotation.transform(velocity, new Vector3d());
 		newRotataion.mul(rotation).normalize();
 
+		if (this.isReturning) {
+			final double offset = relPos.y;
+			if (offset > this.greatestOffset) {
+				this.greatestOffset = offset;
+			}
+		}
+
+		relPos.add(newPos);
+		final Vector3d velocity0 = new Vector3d(velocity);
+		final Vector3d omega0 = new Vector3d(omega);
+
+		MinecraftForge.EVENT_BUS.post(this.createPreShipTravelEvent(
+			ship, oldLevel.dimension(), newLevel.dimension(), relPos, newRotataion, velocity0, omega0
+		));
+
 		this.ships.put(
 			shipId,
 			new TeleportData(
-				relPos.add(newPos),
+				relPos,
 				newRotataion,
-				velocity,
-				omega
+				velocity0,
+				omega0
 			)
 		);
 
@@ -193,18 +235,28 @@ public class TeleportationHandler {
 		}
 	}
 
-	private void finalizeCollect(final List<ServerShip> collected) {
-		final double greatestOffset = -this.greatestOffset;
+	private void finalizeCollect(final List<ServerShip> collected, final Quaterniondc rotation) {
+		final Vector3d offset = new Vector3d(0, -this.greatestOffset, 0);
+		if (!this.isReturning) {
+			rotation.transform(offset);
+		}
 		for (final ServerShip ship : collected) {
 			final long id = ship.getId();
 			final Vector3d newPos = this.ships.get(id).newPos();
-			newPos.y += greatestOffset;
+			newPos.add(offset);
 		}
 	}
 
 	public void finalizeTeleport() {
+		final int size = this.ships.size();
+		if (size == 0) {
+			return;
+		}
 		this.ships.forEach(this::handleShipTeleport);
 		this.ships.clear();
+		if (size >= 256) {
+			this.ships.trim(32);
+		}
 		this.teleportEntities();
 	}
 
@@ -217,7 +269,7 @@ public class TeleportationHandler {
 				shipBoxi.minX(), shipBoxi.minY(), shipBoxi.minZ(),
 				shipBoxi.maxX(), shipBoxi.maxY(), shipBoxi.maxZ()
 			);
-			for (final Entity entity : this.originalDim.getEntities(
+			for (final Entity entity : this.oldLevel.getEntities(
 				((Entity)(null)),
 				new AABB(
 					shipYardBox.minX - 16 * 4, shipYardBox.minY - 16 * 4, shipYardBox.minZ - 16 * 4,
@@ -233,7 +285,7 @@ public class TeleportationHandler {
 			shipBoxd.minX - ENTITY_COLLECT_RANGE, shipBoxd.minY - ENTITY_COLLECT_RANGE, shipBoxd.minZ - ENTITY_COLLECT_RANGE,
 			shipBoxd.maxX + ENTITY_COLLECT_RANGE, shipBoxd.maxY + ENTITY_COLLECT_RANGE, shipBoxd.maxZ + ENTITY_COLLECT_RANGE
 		);
-		for (final Entity entity : this.originalDim.getEntities(
+		for (final Entity entity : this.oldLevel.getEntities(
 			((Entity)(null)),
 			inflatedBox,
 			(entity) -> !this.entityToPos.containsKey(entity)
@@ -248,7 +300,7 @@ public class TeleportationHandler {
 			return;
 		}
 		Vec3 pos = root.position();
-		if (!VSGameUtilsKt.isBlockInShipyard(this.originalDim, pos)) {
+		if (!VSGameUtilsKt.isBlockInShipyard(this.oldLevel, pos)) {
 			final Vector3d relPos = new Vector3d(pos.x, pos.y, pos.z).sub(origin);
 			rotation.transform(relPos);
 			relPos.add(newPos);
@@ -264,13 +316,13 @@ public class TeleportationHandler {
 			}
 		});
 		this.entityToPos.forEach((entity, newPos) -> {
-			teleportToWithPassengers(entity, this.newDim, newPos);
+			teleportToWithPassengers(entity, this.newLevel, newPos);
 		});
 		this.entityToPos.clear();
 	}
 
 	private void handleShipTeleport(final long id, final TeleportData data) {
-		final String vsDimName = VSGameUtilsKt.getDimensionId(this.newDim);
+		final String vsDimName = VSGameUtilsKt.getDimensionId(this.newLevel);
 		final Vector3dc newPos = data.newPos();
 		final Quaterniondc rotation = data.rotation();
 		final Vector3dc velocity = data.velocity();
@@ -290,6 +342,7 @@ public class TeleportationHandler {
 		}
 
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
+		ship.setStatic(false);
 		final ShipTeleportData teleportData = new ShipTeleportDataImpl(newPos, rotation, velocity, omega, vsDimName, null);
 		this.shipWorld.teleportShip(ship, teleportData);
 		if (velocity.lengthSquared() != 0 || omega.lengthSquared() != 0) {
@@ -356,6 +409,20 @@ public class TeleportationHandler {
 			return ship;
 		}
 		return this.shipWorld.getAllShips().getById(shipId);
+	}
+
+	private PreShipTravelEvent createPreShipTravelEvent(
+		final ServerShip ship,
+		final ResourceKey<Level> oldLevel,
+		final ResourceKey<Level> newLevel,
+		final Vector3dc position,
+		final Quaterniondc rotation,
+		final Vector3d velocity,
+		final Vector3d omega
+	) {
+		return this.isReturning
+			? new PreShipTravelEvent.SpaceToPlanet(ship, oldLevel, newLevel, position, rotation, velocity, omega)
+			: new PreShipTravelEvent.PlanetToSpace(ship, oldLevel, newLevel, position, rotation, velocity, omega);
 	}
 
 	private record TeleportData(Vector3d newPos, Quaterniond rotation, Vector3dc velocity, Vector3dc omega) {}
