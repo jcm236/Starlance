@@ -8,7 +8,9 @@ import net.jcm.vsch.util.VSCHUtils;
 import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,8 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+
+	private static final TeleportationHandler TELEPORT_HANDLER = new TeleportationHandler(null, null, false);
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
@@ -55,7 +59,8 @@ public class AtmosphericCollision {
 			return;
 		}
 
-		final TeleportationHandler teleportHandler = new TeleportationHandler(level, targetLevel, false);
+		final TeleportationHandler teleportHandler = TELEPORT_HANDLER;
+		teleportHandler.reset(level, targetLevel);
 
 		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			if (ship.isStatic() || teleportHandler.hasShip(ship)) {

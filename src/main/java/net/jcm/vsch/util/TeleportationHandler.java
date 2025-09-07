@@ -65,14 +65,14 @@ public class TeleportationHandler {
 
 	private final Long2ObjectOpenHashMap<TeleportData> ships = new Long2ObjectOpenHashMap<>();
 	private final Map<Entity, Vec3> entityToPos = new HashMap<>();
-	private final ServerShipWorldCore shipWorld;
+	private ServerShipWorldCore shipWorld;
 	private double greatestOffset;
-	private final ServerLevel oldLevel;
-	private final ServerLevel newLevel;
+	private ServerLevel oldLevel;
+	private ServerLevel newLevel;
 	private final boolean isReturning;
 
 	public TeleportationHandler(final ServerLevel oldLevel, final ServerLevel newLevel, final boolean isReturning) {
-		this.shipWorld = VSGameUtilsKt.getShipObjectWorld(newLevel);
+		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
 		this.oldLevel = oldLevel;
 		this.newLevel = newLevel;
 		// Look for the lowest ship when escaping, in order to not collide with the planet.
@@ -85,6 +85,14 @@ public class TeleportationHandler {
 		final ServerShipObjectWorldAccessor server = (ServerShipObjectWorldAccessor) VSGameUtilsKt.getShipObjectWorld(event.getServer());
 		SHIP2CONSTRAINTS = server.getShipIdToConstraints();
 		ID2CONSTRAINT = server.getConstraints();
+	}
+
+	public void reset(final ServerLevel oldLevel, final ServerLevel newLevel) {
+		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
+		this.oldLevel = oldLevel;
+		this.newLevel = newLevel;
+		this.ships.clear();
+		this.entityToPos.clear();
 	}
 
 	public boolean hasShip(final ServerShip ship) {
@@ -240,8 +248,15 @@ public class TeleportationHandler {
 	}
 
 	public void finalizeTeleport() {
+		final int size = this.ships.size();
+		if (size == 0) {
+			return;
+		}
 		this.ships.forEach(this::handleShipTeleport);
 		this.ships.clear();
+		if (size >= 256) {
+			this.ships.trim(32);
+		}
 		this.teleportEntities();
 	}
 
