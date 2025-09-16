@@ -7,9 +7,11 @@ import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
 import net.lointain.cosmos.network.CosmosModVariables;
 
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,6 +61,9 @@ public class AtmosphericCollision {
 			return;
 		}
 
+		final ResourceKey<Level> dimension = level.dimension();
+		final ResourceKey<Level> targetDimension = targetLevel.dimension();
+
 		final TeleportationHandler teleportHandler = TELEPORT_HANDLER;
 		teleportHandler.reset(level, targetLevel);
 
@@ -68,14 +73,12 @@ public class AtmosphericCollision {
 			}
 			final Vector3dc shipPos = ship.getTransform().getPositionInWorld();
 			final double shipY = shipPos.y();
-			final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
 			if (shipY < atmoHeight - 10) {
-				if (landingAttachment != null) {
-					ship.saveAttachment(ShipLandingAttachment.class, null);
-				}
+				landingAttachment.clearTpFlags();
 				continue;
 			}
-			if (landingAttachment != null && landingAttachment.landing && shipY < atmoHeight + 128) {
+			if (landingAttachment.landing && shipY < atmoHeight + 128) {
 				continue;
 			}
 
@@ -84,13 +87,15 @@ public class AtmosphericCollision {
 			final Vector3d targetPos = new Vector3d(targetX, targetY, targetZ);
 			final Quaterniond rotation = new Quaterniond();
 
-			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.PlanetToSpace(level.dimension(), shipPos, targetLevel.dimension(), targetPos, rotation));
+			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.PlanetToSpace(dimension, shipPos, targetDimension, targetPos, rotation));
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, targetPos.x, targetPos.y, targetPos.z);
 			teleportHandler.addShip(ship, targetPos, rotation);
 		}
 		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
-			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true, false));
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+			final Vector3dc pos = ship.getTransform().getPositionInWorld();
+			landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
 		}
 		teleportHandler.finalizeTeleport();
 	}
