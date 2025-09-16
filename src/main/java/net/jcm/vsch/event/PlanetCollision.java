@@ -2,6 +2,8 @@ package net.jcm.vsch.event;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.event.PreTravelEvent;
+import net.jcm.vsch.config.ShipLandingMode;
+import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
@@ -11,9 +13,11 @@ import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -22,6 +26,8 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
@@ -42,11 +48,14 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PlanetCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+	private static final Set<String> LOGGED_ERR_PLANET = new HashSet<>();
 	private static final EntityTypeTest<Entity, ServerPlayer> PLAYER_TESTER = new EntityTypeTest<>() {
 		@Override
 		public ServerPlayer tryCast(final Entity entity) {
@@ -63,7 +72,9 @@ public class PlanetCollision {
 	private static final double CLOSE_RANGE = 16;
 
 	public static void planetCollisionTick(final ServerLevel level) {
-		final Map<String, TeleportationHandler> handlers = new HashMap<>();
+		final ShipLandingMode landingMode = VSCHConfig.SHIP_LANDING_MODE.get();
+		final int accuracy = VSCHConfig.SHIP_LANDING_ACCURACY.get();
+		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
 		final String dimension = level.dimension().location().toString();
 		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			final Vec3 shipCenter = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB().center(new Vector3d()));
@@ -72,135 +83,153 @@ public class PlanetCollision {
 			if (nearestPlanet == null) {
 				return;
 			}
-			ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-			final VSCHUtils.DistanceInfo distanceInfo = VSCHUtils.getDistanceToPlanet(nearestPlanet, shipCenter);
-			final double distance = distanceInfo.distance();
-			if (distance > OUTER_RANGE) {
-				if (landingAttachment != null) {
-					if (landingAttachment.commander != null && landingAttachment.commander.containerMenu instanceof ShipLandingSelectorMenu) {
-						landingAttachment.commander.doCloseContainer();
-					}
-					ship.saveAttachment(ShipLandingAttachment.class, null);
+			final String targetDim = nearestPlanet.getString("travel_to");
+			if (targetDim.isEmpty()) {
+				final String name = nearestPlanet.getString("object_name");
+				if (LOGGED_ERR_PLANET.add(name)) {
+					LOGGER.error("[starlance]: Planet {} in {} has no travel_to dimension. Please report this! Planet data: {}", name, level.dimension().location(), nearestPlanet);
 				}
+				// We should in theory never get here if I've done my null checks correctly when getting the antennas in the first place
+				continue;
+			}
+			final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
+			if (targetLevel == null) {
 				continue;
 			}
 
-			if (landingAttachment != null) {
-				if (landingAttachment.launching && distance > 0) {
+			{
+				final TeleportationHandler handler = handlers.get(targetLevel.dimension());
+				if (handler != null && handler.hasShip(ship)) {
 					continue;
 				}
-			} else {
-				if (ship.isStatic()) {
-					// Ignore static ships to allow build ring around planets? (why will people do that)
-					continue;
-				}
-				landingAttachment = new ShipLandingAttachment();
-				ship.saveAttachment(ShipLandingAttachment.class, landingAttachment);
 			}
 
-			if (landingAttachment.commander == null || !landingAttachment.commander.isAlive()) {
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+			final VSCHUtils.DistanceInfo distanceInfo = VSCHUtils.getDistanceToPlanet(nearestPlanet, shipCenter);
+			final double distance = distanceInfo.distance();
+			if (distance > OUTER_RANGE) {
+				final ServerPlayer commander = landingAttachment.commander;
+				if (commander != null && commander.containerMenu instanceof ShipLandingSelectorMenu) {
+					final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(commander);
+					if (playerVars != null) {
+						playerVars.check_collision = true;
+						playerVars.syncPlayerVariables(commander);
+					}
+					commander.doCloseContainer();
+				}
+				landingAttachment.clearTpFlags();
+				continue;
+			}
+
+			if (landingAttachment.launching && distance > 0) {
+				continue;
+			}
+			if (!landingAttachment.freezed && ship.isStatic()) {
+				// Ignore static ships to allow build ring around planets? (why will people do that)
+				continue;
+			}
+
+			if (landingMode.canOpenMenu() && (landingAttachment.commander == null || !landingAttachment.commander.isAlive())) {
 				final ServerPlayer nearestPlayer = getShipNearestPlayer(ship, level);
 				if (nearestPlayer == null) {
-					// TODO: let ships go through on their own
-					continue;
+					landingAttachment.commander = null;
+					if (!landingMode.canUseHistory()) {
+						continue;
+					}
+				} else {
+					final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(nearestPlayer);
+					if (playerVars != null) {
+						playerVars.check_collision = false;
+						playerVars.syncPlayerVariables(nearestPlayer);
+					}
+					landingAttachment.commander = nearestPlayer;
 				}
-				final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(nearestPlayer);
-				if (playerVars != null) {
-					playerVars.check_collision = false;
-					playerVars.syncPlayerVariables(nearestPlayer);
-				}
-				landingAttachment.commander = nearestPlayer;
 			}
 			final ServerPlayer commander = landingAttachment.commander;
 
-			if (!ship.isStatic()) {
-				landingAttachment.velocity = new Vector3d(ship.getVelocity());
-				landingAttachment.omega = new Vector3d(ship.getOmega());
-				if (distance <= CLOSE_RANGE) {
-					ship.setStatic(true);
+			final ChunkPos newChunkPos;
+
+			if (commander != null) {
+				if (!ship.isStatic() && distance <= CLOSE_RANGE) {
+					landingAttachment.freezeShip(ship);
 				}
+
+				// If they don't have the menu already open,
+				if (!(commander.containerMenu instanceof ShipLandingSelectorMenu)) {
+					// Open the menu and disable normal CH collision for them:
+					LOGGER.info("[starlance]: opened menu instead of CH");
+
+					final BlockPos bpos = commander.blockPosition();
+					NetworkHooks.openScreen(commander, new MenuProvider() {
+						@Override
+						public Component getDisplayName() {
+							return Component.literal("LandingSelector");
+						}
+
+						@Override
+						public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+							return new ShipLandingSelectorMenu(id, inventory, ship, bpos);
+						}
+					}, bpos);
+				}
+				// Otherwise, we just skip them since the playerMenuTick will take care of them.
+				newChunkPos = playerMenuTick(commander, ship, level);
+				if (newChunkPos == null) {
+					continue;
+				}
+			} else {
+				newChunkPos = landingAttachment.getLaunchPosition(targetLevel.dimension());
 			}
 
-			// If they don't have the menu already open,
-			if (!(commander.containerMenu instanceof ShipLandingSelectorMenu)) {
-				// Open the menu and disable normal CH collision for them:
-				LOGGER.info("[starlance]: opened menu instead of CH");
+			final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
 
-				final BlockPos bpos = commander.blockPosition();
-				NetworkHooks.openScreen(commander, new MenuProvider() {
-					@Override
-					public Component getDisplayName() {
-						return Component.literal("LandingSelector");
-					}
+			final Vector3d newPos = new Vector3d(
+				SectionPos.sectionToBlockCoord(newChunkPos.x + level.random.nextInt(accuracy * 2 + 1) - accuracy),
+				atmoY,
+				SectionPos.sectionToBlockCoord(newChunkPos.z + level.random.nextInt(accuracy * 2 + 1) - accuracy)
+			);
+			final Quaterniond rotation = new Quaterniond(distanceInfo.direction().getRotation());
 
-					@Override
-					public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-						return new ShipLandingSelectorMenu(id, inventory, ship, bpos);
-					}
-				}, bpos);
-			}
+			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.SpaceToPlanet(level.dimension(), ship.getTransform().getPositionInWorld(), targetLevel.dimension(), newPos, rotation));
 
-			// Otherwise, we just skip them since the playerMenuTick will take care of them.
-			playerMenuTick(commander, ship, level, nearestPlanet, distanceInfo.direction(), handlers);
+			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, newPos.x, newPos.y, newPos.z);
+			final TeleportationHandler handler = handlers.computeIfAbsent(
+				targetLevel.dimension(),
+				(targetDim1) -> new TeleportationHandler(level, targetLevel, true)
+			);
+			handler.addShip(ship, newPos, rotation);
 		}
 
 		for (final TeleportationHandler handler : handlers.values()) {
 			for (final LoadedServerShip ship : handler.getPendingShips()) {
-				ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(false, true));
+				ShipLandingAttachment.get(ship).setLanding();
 			}
 			handler.finalizeTeleport();
 		}
 	}
 
-	private static void playerMenuTick(
+	private static ChunkPos playerMenuTick(
 		final ServerPlayer player,
 		final ServerShip ship,
-		final ServerLevel level,
-		final CompoundTag planet,
-		final Direction direction,
-		final Map<String, TeleportationHandler> handlers
+		final ServerLevel level
 	) {
 		if (!(player.containerMenu instanceof ShipLandingSelectorMenu shipMenu)) {
-			return;
+			return null;
 		}
 		if (shipMenu.shipId != ship.getId()) {
-			return;
+			return null;
 		}
 		final CosmosModVariables.PlayerVariables vars = VSCHUtils.getPlayerCap(player);
 		if (vars == null || vars.landing_coords.equals("^") || vars.landing_coords.equals("=")) {
-			return;
+			return null;
 		}
-
-		final String targetDim = planet.getString("travel_to");
-		if (targetDim.isEmpty()) {
-			LOGGER.error("[starlance]: Planet in {} has no travel_to dimension. Please report this! Planet data: {}", level.dimension().location(), planet);
-			// We should in theory never get here if I've done my null checks correctly when getting the antennas in the first place
-			return;
-		}
-
-		final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
-		if (targetLevel == null) {
-			return;
-		}
-
-		final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
 		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
 		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
-		final Vector3d newPos = new Vector3d(posX, atmoY, posZ);
-		final Quaterniond rotation = new Quaterniond(direction.getRotation());
-
-		MinecraftForge.EVENT_BUS.post(new PreTravelEvent.SpaceToPlanet(level.dimension(), ship.getTransform().getPositionInWorld(), targetLevel.dimension(), newPos, rotation));
-
-		LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, newPos.x, newPos.y, newPos.z);
-		final TeleportationHandler handler = handlers.computeIfAbsent(
-			targetDim,
-			(dimStr) -> new TeleportationHandler(level, VSCHUtils.dimToLevel(dimStr), true)
-		);
-		handler.addShip(ship, newPos, rotation);
-
 		vars.landing_coords = "^";
 		vars.check_collision = true;
 		vars.syncPlayerVariables(player);
+
+		return new ChunkPos(SectionPos.blockToSectionCoord(posX), SectionPos.blockToSectionCoord(posZ));
 	}
 
 	/**
@@ -225,6 +254,11 @@ public class PlanetCollision {
 		ServerPlayer nearestPlayer = null;
 		double nearestDistance = Double.MAX_VALUE;
 		for (final ServerPlayer player : players) {
+			final Entity root = player.getRootVehicle();
+			final Ship rootShip = VSGameUtilsKt.getShipManagingPos(level, root.blockPosition());
+			if (rootShip != null && rootShip.getId() != ship.getId()) {
+				continue;
+			}
 			final double distance = player.distanceToSqr(center);
 			if (distance < nearestDistance) {
 				nearestPlayer = player;

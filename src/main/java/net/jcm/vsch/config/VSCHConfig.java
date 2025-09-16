@@ -23,6 +23,11 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
+	/* Landing */
+
+	public static final ForgeConfigSpec.EnumValue<ShipLandingMode> SHIP_LANDING_MODE;
+	public static final ForgeConfigSpec.IntValue SHIP_LANDING_ACCURACY;
+
 	/* Thrusters */
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
@@ -66,11 +71,10 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> CANCEL_ASSEMBLY;
 
-    public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_DETONATOR_RENDER;
-    public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_PROJECTOR_RENDER;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_DETONATOR_RENDER;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_PROJECTOR_RENDER;
 
-
-    public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
+	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
@@ -84,6 +88,13 @@ public class VSCHConfig {
 	);
 
 	static {
+		BUILDER.push("Landing");
+
+		SHIP_LANDING_MODE = BUILDER.comment("Define how will the ship land to a planet.\nPLAYER_MENU: Always use the player menu to make ship land on a planet.\nHISTORY: the history launch position or origin will be used for the ship to land.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
+		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accuracy the ship will land to a position, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
+
+		BUILDER.pop();
+
 		BUILDER.push("Thrusters");
 
 		THRUSTER_TOGGLE = BUILDER.comment("Thruster Mode Toggling").define("thruster_mode_toggle", true);
@@ -124,8 +135,8 @@ public class VSCHConfig {
 		BUILDER.push("Optimize");
 
 		ENABLE_EMPTY_SPACE_CHUNK = BUILDER.comment("Do not load or save space chunks.\nThis option will significantly reduce memory allocation and disk usage\nwhen travelling at high speed.\nHowever then you can only build blocks on ships.\nIt is highly recommended to turn on Misc.enable_place_ship_platform at same time.").define("enable_empty_space_chunk", false);
-        DISABLE_DETONATOR_RENDER = BUILDER.comment("Disable the beam rendering from the detonator item. Can significantly improve FPS").define("disable_detonator_render", true);
-        DISABLE_PROJECTOR_RENDER = BUILDER.comment("Disables the rendering of the projector block. Enable this for more FPS if you don't need the projector").define("disable_projector_render", false);
+		DISABLE_DETONATOR_RENDER = BUILDER.comment("Disable the beam rendering from the detonator item. Can significantly improve FPS").define("disable_detonator_render", true);
+		DISABLE_PROJECTOR_RENDER = BUILDER.comment("Disables the rendering of the projector block. Enable this for more FPS if you don't need the projector").define("disable_projector_render", false);
 
 		BUILDER.pop();
 
@@ -137,7 +148,7 @@ public class VSCHConfig {
 		CANCEL_ASSEMBLY = BUILDER.comment("Cancel multi-block assemblies when above world height. This is a temporary fix, but for now ships made above world height have issues with starlance.").define("cancel_assembly", true);
 
 
-        MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
+		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
 		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);
 		GRAVITY_DISTANCE = BUILDER.comment("Distance (in blocks) at which gravity generator will pull you in").define("gravity_gen_distance", 6);
 		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.08);
