@@ -26,6 +26,7 @@ net.jcm.vsch.event
 net.jcm.vsch.items
 net.jcm.vsch.items.custom
 net.jcm.vsch.mixin.client
+net.jcm.vsch.mixin.client.cosmos
 net.jcm.vsch.mixin.cosmos
 net.jcm.vsch.mixin.create
 net.jcm.vsch.mixin.minecraft
