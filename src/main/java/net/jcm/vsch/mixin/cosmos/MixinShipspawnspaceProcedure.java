@@ -13,18 +13,16 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ShipspawnspaceProcedure.class)
 public class MixinShipspawnspaceProcedure {
-
-    // This does mean we now depend on mixin extras
-    @WrapMethod(
-            method = "execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;DDDLnet/minecraft/world/entity/Entity;)V",
-            remap = false
-    )
-    private static void wrapExecute(Event event, LevelAccessor world, double x, double y, double z, Entity entity, Operation<Void> original) {
-        try {
-            original.call(event, world, x, y, z, entity);
-        } catch (Exception cancel) {
-            // Seems goofy but it really does stop a crash
-            return;
-        }
-    }
+	@WrapMethod(
+		method = "execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;DDDLnet/minecraft/world/entity/Entity;)V",
+		remap = false
+	)
+	private static void wrapExecute(Event event, LevelAccessor world, double x, double y, double z, Entity entity, Operation<Void> original) {
+		try {
+			original.call(event, world, x, y, z, entity);
+		} catch (Exception cancel) {
+			// Seems goofy but it really does stop a crash
+			return;
+		}
+	}
 }

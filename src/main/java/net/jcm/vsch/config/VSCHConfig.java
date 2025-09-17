@@ -30,28 +30,28 @@ public class VSCHConfig {
 
 	/* Thrusters */
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
+	public static final ForgeConfigSpec.BooleanValue THRUSTER_TOGGLE;
 	public static final ForgeConfigSpec.ConfigValue<ThrusterMode> THRUSTER_MODE;
 	public static final ForgeConfigSpec.BooleanValue THRUSTER_FLAME_IMPACT;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<String> THRUSTER_FUEL_CONSUME_RATES;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> AIR_THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_ENERGY_CONSUME_RATE;
-	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_MAX_WATER_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue AIR_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue AIR_THRUSTER_MAX_WATER_CONSUME_RATE;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> POWERFUL_THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
-	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
 	/* Gyro */
 
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue GYRO_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> GYRO_LIMIT_SPEED;
+	public static final ForgeConfigSpec.BooleanValue GYRO_LIMIT_SPEED;
 
 	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
 	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
@@ -66,13 +66,10 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
+	public static final ForgeConfigSpec.BooleanValue LIMIT_SPEED;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_SPEED;
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> CANCEL_ASSEMBLY;
-
-	public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_DETONATOR_RENDER;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_PROJECTOR_RENDER;
+	public static final ForgeConfigSpec.BooleanValue CANCEL_ASSEMBLY;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
@@ -102,23 +99,23 @@ public class VSCHConfig {
 		THRUSTER_FLAME_IMPACT = BUILDER.comment("This setting will allow thruster flame to push and to burn entities in its area, and set the first block it hits on fire.").define("thruster_flame_impact", true);
 
 		THRUSTER_STRENGTH = BUILDER.comment("Thruster max force. (Newtons)").define("thruster_strength", 120000);
-		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").define("thruster_energy_consume_rate", 0);
+		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").defineInRange("thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
 		THRUSTER_FUEL_CONSUME_RATES = BUILDER.comment("Thruster fuel consume rates. (mB/t)").define("thruster_fuel_consume_rates", getDefaultThrusterFuelConsumeRates());
 
 		AIR_THRUSTER_STRENGTH = BUILDER.comment("Air thruster max force. (Newtons)").define("air_thruster_strength", 7500);
-		AIR_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Air thruster energy consume rate. (FE/t)").define("air_thruster_energy_consume_rate", 0);
-		AIR_THRUSTER_MAX_WATER_CONSUME_RATE = BUILDER.comment("Air thruster water consume rate when in a dimension that has less air density. (mB/t)").define("air_thruster_max_water_consume_rate", 0);
+		AIR_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Air thruster energy consume rate. (FE/t)").defineInRange("air_thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
+		AIR_THRUSTER_MAX_WATER_CONSUME_RATE = BUILDER.comment("Air thruster water consume rate when in a dimension that has less air density. (mB/t)").defineInRange("air_thruster_max_water_consume_rate", 0, 0, Integer.MAX_VALUE);
 
 		POWERFUL_THRUSTER_STRENGTH = BUILDER.comment("Powerful thruster max force. (Newtons)").define("powerful_thruster_strength", 450000);
-		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").define("powerful_thruster_energy_consume_rate", 0);
-		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").define("powerful_thruster_fuel_consume_rate", 0);
+		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").defineInRange("powerful_thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
+		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").defineInRange("powerful_thruster_fuel_consume_rate", 0, 0, Integer.MAX_VALUE);
 
 		BUILDER.pop();
 
 		BUILDER.push("Gyro");
 
 		GYRO_STRENGTH = BUILDER.comment("Max force gyro will apply to the ship on any axis. (N)").define("gyro_strength", 350000);
-		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 0); //10000 default for next update
+		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").defineInRange("gyro_energy_consume_rate", 0, 0, Integer.MAX_VALUE); //10000 default for next update
 		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
 		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
 
@@ -135,8 +132,6 @@ public class VSCHConfig {
 		BUILDER.push("Optimize");
 
 		ENABLE_EMPTY_SPACE_CHUNK = BUILDER.comment("Do not load or save space chunks.\nThis option will significantly reduce memory allocation and disk usage\nwhen travelling at high speed.\nHowever then you can only build blocks on ships.\nIt is highly recommended to turn on Misc.enable_place_ship_platform at same time.").define("enable_empty_space_chunk", false);
-		DISABLE_DETONATOR_RENDER = BUILDER.comment("Disable the beam rendering from the detonator item. Can significantly improve FPS").define("disable_detonator_render", true);
-		DISABLE_PROJECTOR_RENDER = BUILDER.comment("Disables the rendering of the projector block. Enable this for more FPS if you don't need the projector").define("disable_projector_render", false);
 
 		BUILDER.pop();
 
