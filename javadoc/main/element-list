@@ -39,3 +39,4 @@ net.jcm.vsch.ship.thruster
 net.jcm.vsch.util
 net.jcm.vsch.util.assemble
 net.jcm.vsch.util.rot
+net.jcm.vsch.util.wapi
