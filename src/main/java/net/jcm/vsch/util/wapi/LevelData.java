@@ -94,7 +94,9 @@ public class LevelData {
 				LOGGER.error("[starlance]: Dimension {} has two planets! Only one is allowed.", planetDim.location());
 				continue;
 			}
-			final PlanetData planet = PlanetData.create(get1(worldVars, planetDim, parsing), (id, updater) -> {}, collisionData);
+			final PlanetData planet = PlanetData.create(get1(worldVars, planetDim, parsing), (id, updater) -> {
+				// TODO: use an efficent way to sync changed data to client, and save the changed data on server side.
+			}, collisionData);
 			data.lowerDimensions.put(planetDim, planet);
 		}
 
