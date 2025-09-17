@@ -96,6 +96,7 @@ public class LevelData {
 			}
 			final PlanetData planet = PlanetData.create(get1(worldVars, planetDim, parsing), (id, updater) -> {
 				// TODO: use an efficent way to sync changed data to client, and save the changed data on server side.
+				// Currently unused.
 			}, collisionData);
 			data.lowerDimensions.put(planetDim, planet);
 		}

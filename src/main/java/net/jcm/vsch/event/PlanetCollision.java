@@ -116,7 +116,6 @@ public class PlanetCollision {
 
 			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
 			final double distance = nearestPlanetData.distance();
-			System.out.println("nearest planet in " + level.dimension() + " is " + nearestPlanetData.planet().getLevelData().getDimension() + " dist: " + distance);
 			if (distance > OUTER_RANGE) {
 				final ServerPlayer commander = landingAttachment.commander;
 				if (commander != null && commander.containerMenu instanceof ShipLandingSelectorMenu) {
