@@ -7,6 +7,7 @@ import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
+import net.jcm.vsch.util.wapi.LevelData;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
 
@@ -48,14 +49,11 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class PlanetCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
-	private static final Set<String> LOGGED_ERR_PLANET = new HashSet<>();
 	private static final EntityTypeTest<Entity, ServerPlayer> PLAYER_TESTER = new EntityTypeTest<>() {
 		@Override
 		public ServerPlayer tryCast(final Entity entity) {
@@ -74,39 +72,50 @@ public class PlanetCollision {
 	public static void planetCollisionTick(final ServerLevel level) {
 		final ShipLandingMode landingMode = VSCHConfig.SHIP_LANDING_MODE.get();
 		final int accuracy = VSCHConfig.SHIP_LANDING_ACCURACY.get();
+
 		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
+		final LevelData levelData = LevelData.get(level);
 		final String dimension = level.dimension().location().toString();
-		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+
+		if (!levelData.hasPlanets()) {
+			return;
+		}
+
+		final List<LoadedServerShip> ships = VSCHUtils.getLoadedShipsInLevel(level);
+		ships.sort((a, b) -> {
+			final AABBdc aBox = a.getWorldAABB();
+			final AABBdc bBox = b.getWorldAABB();
+			final double n =
+				(aBox.maxX() - aBox.minX()) * (aBox.maxY() - aBox.minY()) * (aBox.maxZ() - aBox.minZ())
+				- (bBox.maxX() - bBox.minX()) * (bBox.maxY() - bBox.minY()) * (bBox.maxZ() - bBox.minZ());
+			if (n < 0) {
+				return 1;
+			}
+			if (n > 0) {
+				return -1;
+			}
+			return Long.compare(a.getId(), b.getId());
+		});
+
+		for (final LoadedServerShip ship : ships) {
 			final Vec3 shipCenter = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB().center(new Vector3d()));
 
-			final CompoundTag nearestPlanet = VSCHUtils.getNearestPlanet(level, shipCenter, dimension);
-			if (nearestPlanet == null) {
-				return;
-			}
-			final String targetDim = nearestPlanet.getString("travel_to");
-			if (targetDim.isEmpty()) {
-				final String name = nearestPlanet.getString("object_name");
-				if (LOGGED_ERR_PLANET.add(name)) {
-					LOGGER.error("[starlance]: Planet {} in {} has no travel_to dimension. Please report this! Planet data: {}", name, level.dimension().location(), nearestPlanet);
-				}
-				// We should in theory never get here if I've done my null checks correctly when getting the antennas in the first place
-				continue;
-			}
-			final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
+			final LevelData.ClosestPlanetData nearestPlanetData = levelData.getNearestPlanet(shipCenter);
+			final ResourceKey<Level> targetDimension = nearestPlanetData.planet().getLevelData().getDimension();
+			final ServerLevel targetLevel = level.getServer().getLevel(targetDimension);
 			if (targetLevel == null) {
 				continue;
 			}
 
 			{
-				final TeleportationHandler handler = handlers.get(targetLevel.dimension());
+				final TeleportationHandler handler = handlers.get(targetDimension);
 				if (handler != null && handler.hasShip(ship)) {
 					continue;
 				}
 			}
 
 			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
-			final VSCHUtils.DistanceInfo distanceInfo = VSCHUtils.getDistanceToPlanet(nearestPlanet, shipCenter);
-			final double distance = distanceInfo.distance();
+			final double distance = nearestPlanetData.distance();
 			if (distance > OUTER_RANGE) {
 				final ServerPlayer commander = landingAttachment.commander;
 				if (commander != null && commander.containerMenu instanceof ShipLandingSelectorMenu) {
@@ -117,7 +126,7 @@ public class PlanetCollision {
 					}
 					commander.doCloseContainer();
 				}
-				landingAttachment.clearTpFlags();
+				landingAttachment.launching = false;
 				continue;
 			}
 
@@ -157,7 +166,7 @@ public class PlanetCollision {
 				// If they don't have the menu already open,
 				if (!(commander.containerMenu instanceof ShipLandingSelectorMenu)) {
 					// Open the menu and disable normal CH collision for them:
-					LOGGER.info("[starlance]: opened menu instead of CH");
+					LOGGER.debug("[starlance]: opened menu instead of CH");
 
 					final BlockPos bpos = commander.blockPosition();
 					NetworkHooks.openScreen(commander, new MenuProvider() {
@@ -178,23 +187,22 @@ public class PlanetCollision {
 					continue;
 				}
 			} else {
-				newChunkPos = landingAttachment.getLaunchPosition(targetLevel.dimension());
+				newChunkPos = landingAttachment.getLaunchPosition(targetDimension);
 			}
-
-			final double atmoY = CosmosModVariables.WorldVariables.get(level).atmospheric_collision_data_map.getCompound(targetDim).getDouble("atmosphere_y");
 
 			final Vector3d newPos = new Vector3d(
 				SectionPos.sectionToBlockCoord(newChunkPos.x + level.random.nextInt(accuracy * 2 + 1) - accuracy),
-				atmoY,
+				nearestPlanetData.planet().getLevelData().getAtmosphereY(),
 				SectionPos.sectionToBlockCoord(newChunkPos.z + level.random.nextInt(accuracy * 2 + 1) - accuracy)
 			);
-			final Quaterniond rotation = new Quaterniond(distanceInfo.direction().getRotation());
+			final Quaterniond rotation = new Quaterniond(nearestPlanetData.direction().getRotation());
+			nearestPlanetData.planet().getRotation().mul(rotation, rotation).conjugate();
 
-			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.SpaceToPlanet(level.dimension(), ship.getTransform().getPositionInWorld(), targetLevel.dimension(), newPos, rotation));
+			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.SpaceToPlanet(level.dimension(), ship.getTransform().getPositionInWorld(), targetDimension, newPos, rotation));
 
-			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, newPos.x, newPos.y, newPos.z);
+			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDimension.location(), newPos.x, newPos.y, newPos.z);
 			final TeleportationHandler handler = handlers.computeIfAbsent(
-				targetLevel.dimension(),
+				targetDimension,
 				(targetDim1) -> new TeleportationHandler(level, targetLevel, true)
 			);
 			handler.addShip(ship, newPos, rotation);

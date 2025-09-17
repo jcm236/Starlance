@@ -2,7 +2,6 @@ package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
 import net.lointain.cosmos.network.CosmosModVariables;
-import net.lointain.cosmos.network.CosmosModVariables.WorldVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -142,84 +141,6 @@ public class VSCHUtils {
 	public static ServerLevel dimToLevel(final String dimensionString) {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
 	}
-
-	/**
-	 * Gets the nearest (if available) planet to the position in the dimensionId.
-	 * 
-	 * @param world       A LevelAccessor for getting Cosmos world variables
-	 * @param position    The position to get the nearest planet from
-	 * @param dimensionId The (normal format) dimension id to get planets from
-	 * @return A CompoundTag of the nearest planets data, or null if it couldn't be found
-	 */
-	@Nullable
-	public static CompoundTag getNearestPlanet(final LevelAccessor world, final Vec3 position, final String dimensionId) {
-		final WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-		final ListTag collisionDatas = worldVars.collision_data_map.getList(dimensionId, Tag.TAG_COMPOUND);
-		// No collidable planets, skip it
-		if (collisionDatas.isEmpty()) {
-			return null;
-		}
-
-		final List<Object> targetList = DistanceOrderProviderProcedure.execute(worldVars.global_collision_position_map, 1, dimensionId, position);
-		final int firstTargetIndex = ((Number) (targetList.get(0))).intValue();
-		return collisionDatas.getCompound(firstTargetIndex);
-	}
-
-	/**
-	 * Determines if a Vec3 position is colliding with / inside a planet. If the
-	 * needed data from planetData is missing, that data will default to 0.0
-	 * 
-	 * @param planetData A CompoundTag (nbt) of the planets data.
-	 * @param position   The position to check
-	 * @return Distance to the planet's surface
-	 * @author DEA__TH, Brickyboy
-	 * @see #getNearestPlanet(LevelAccessor, Vec3, String)
-	 */
-	public static DistanceInfo getDistanceToPlanet(final @Nonnull CompoundTag planetData, final Vec3 position) {
-		// getDouble returns 0.0D if not found, which is fine
-		final float
-			yaw = planetData.getFloat("yaw"),
-			pitch = planetData.getFloat("pitch"),
-			roll = planetData.getFloat("roll");
-		final double size = planetData.getFloat("scale");
-
-		final Vec3 cubepos = new Vec3(planetData.getDouble("x"), planetData.getDouble("y"), planetData.getDouble("z"));
-		final Vec3 distanceToPos = position.subtract(cubepos);
-
-		final Vec3
-			rotatedXAxis = new Vec3(1, 0, 0).zRot(Mth.DEG_TO_RAD * roll).yRot(-Mth.DEG_TO_RAD * yaw),
-			rotatedYAxis = new Vec3(0, 1, 0).zRot(Mth.DEG_TO_RAD * roll).xRot(-Mth.DEG_TO_RAD * pitch),
-			rotatedZAxis = new Vec3(0, 0, 1).xRot(-Mth.DEG_TO_RAD * pitch).yRot(-Mth.DEG_TO_RAD * yaw);
-
-		final double
-			dx = distanceToPos.dot(rotatedXAxis),
-			dy = distanceToPos.dot(rotatedYAxis),
-			dz = distanceToPos.dot(rotatedZAxis);
-
-		double farthestDist = dy;
-		Direction.Axis farthestAxis = Direction.Axis.Y;
-		if (Math.abs(dx) > Math.abs(farthestDist)) {
-			farthestDist = dx;
-			farthestAxis = Direction.Axis.X;
-		}
-		if (Math.abs(dz) > Math.abs(farthestDist)) {
-			farthestDist = dz;
-			farthestAxis = Direction.Axis.Z;
-		}
-		final Vec3 farthestRotatedAxis = switch (farthestAxis) {
-			case X -> rotatedXAxis;
-			case Y -> rotatedYAxis;
-			case Z -> rotatedZAxis;
-		};
-
-		final double range = size / 2;
-		return new DistanceInfo(
-			farthestRotatedAxis.scale(farthestDist).length() - range,
-			Direction.fromAxisAndDirection(farthestAxis, farthestDist >= 0 ? Direction.AxisDirection.POSITIVE : Direction.AxisDirection.NEGATIVE)
-		);
-	}
-
-	public record DistanceInfo(double distance, Direction direction) {}
 
 	/**
 	 * Gets a players Cosmos variables capability.
