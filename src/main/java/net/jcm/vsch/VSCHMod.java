@@ -42,10 +42,6 @@ public class VSCHMod {
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
 
-		VSEvents.ShipLoadEvent.Companion.on((shipLoadEvent) -> {
-			GravityInducer.getOrCreate(shipLoadEvent.getShip());
-		});
-
 		modBus.addListener(this::onClientSetup);
 		modBus.addListener(this::registerRenderers);
 

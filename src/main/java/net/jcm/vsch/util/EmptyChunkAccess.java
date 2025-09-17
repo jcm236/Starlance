@@ -1,6 +1,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.util.wapi.LevelData;
 import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
@@ -128,7 +129,6 @@ public class EmptyChunkAccess extends LevelChunk {
 		if (VSGameUtilsKt.isChunkInShipyard(level, x, z)) {
 			return false;
 		}
-		final CosmosModVariables.WorldVariables worldVars = CosmosModVariables.WorldVariables.get(level);
-		return worldVars.dimension_type.getString(level.dimension().location().toString()).equals("space");
+		return LevelData.get(level).isSpace();
 	}
 }

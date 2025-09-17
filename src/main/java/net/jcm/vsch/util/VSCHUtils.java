@@ -2,7 +2,6 @@ package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
 import net.lointain.cosmos.network.CosmosModVariables;
-import net.lointain.cosmos.network.CosmosModVariables.WorldVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -141,28 +140,6 @@ public class VSCHUtils {
 
 	public static ServerLevel dimToLevel(final String dimensionString) {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
-	}
-
-	/**
-	 * Gets the nearest (if available) planet to the position in the dimensionId.
-	 * 
-	 * @param world       A LevelAccessor for getting Cosmos world variables
-	 * @param position    The position to get the nearest planet from
-	 * @param dimensionId The (normal format) dimension id to get planets from
-	 * @return A CompoundTag of the nearest planets data, or null if it couldn't be found
-	 */
-	@Nullable
-	public static CompoundTag getNearestPlanet(final LevelAccessor world, final Vec3 position, final String dimensionId) {
-		final WorldVariables worldVars = CosmosModVariables.WorldVariables.get(world);
-		final ListTag collisionDatas = worldVars.collision_data_map.getList(dimensionId, Tag.TAG_COMPOUND);
-		// No collidable planets, skip it
-		if (collisionDatas.isEmpty()) {
-			return null;
-		}
-
-		final List<Object> targetList = DistanceOrderProviderProcedure.execute(worldVars.global_collision_position_map, 1, dimensionId, position);
-		final int firstTargetIndex = ((Number) (targetList.get(0))).intValue();
-		return collisionDatas.getCompound(firstTargetIndex);
 	}
 
 	/**

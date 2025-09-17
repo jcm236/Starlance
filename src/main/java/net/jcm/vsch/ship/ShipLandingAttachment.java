@@ -65,11 +65,6 @@ public final class ShipLandingAttachment {
 		);
 	}
 
-	public void clearTpFlags() {
-		this.landing = false;
-		this.launching = false;
-	}
-
 	public void setLaunching(final ResourceKey<Level> level, final ChunkPos pos) {
 		this.landing = false;
 		this.launching = true;
