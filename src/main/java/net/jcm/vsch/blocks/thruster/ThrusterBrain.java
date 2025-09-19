@@ -47,7 +47,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	private static final String ENERGY_TAG_NAME = "Energy";
 	private static final String TANKS_TAG_NAME = "Tanks";
 	private static final int FLUID_TANK_CAPACITY = 10000;
-	private static final int THRUSTER_MAX_DIMENSION = 32;
 
 	private final ThrusterData thrusterData;
 	private final ThrusterEngine engine;
@@ -282,7 +281,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			// TODO: check if facing changed
 			final ThrusterBrain newBrain = newThruster.getBrain();
 			if (newBrain != this) {
-				this.tryMergeBrain(thruster.getBlockPos(), newBrain, pos);
+				this.tryMergeBrain(newBrain);
 			}
 		} else {
 			for (int i = 0; i < this.connectedBlocks.size(); i++) {
@@ -300,17 +299,20 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	public boolean canMerge(final ThrusterBrain other) {
-		return this.facing == other.facing &&
-			this.peripheralType.equals(other.peripheralType) &&
-			this.getThrusterMode() == other.getThrusterMode();
+		if (this.facing != other.facing) {
+			return false;
+		}
+		final BlockPos selfPos = this.getDataBlock().getBlockPos();
+		final BlockPos otherPos = other.getDataBlock().getBlockPos();
+		if (this.facing.getAxis().choose(otherPos.getX() - selfPos.getX(), otherPos.getY() - selfPos.getY(), otherPos.getZ() - selfPos.getZ()) != 0) {
+			return false;
+		}
+		return this.peripheralType.equals(other.peripheralType) && this.getThrusterMode() == other.getThrusterMode();
 	}
 
-	private void tryMergeBrain(final BlockPos atPos, final ThrusterBrain other, final BlockPos otherPos) {
+	boolean tryMergeBrain(final ThrusterBrain other) {
 		if (!this.canMerge(other)) {
-			return;
-		}
-		if (this.facing.getAxis().choose(otherPos.getX() - atPos.getX(), otherPos.getY() - atPos.getY(), otherPos.getZ() - atPos.getZ()) != 0) {
-			return;
+			return false;
 		}
 		int minX, minY, minZ, maxX, maxY, maxZ;
 		{
@@ -319,27 +321,26 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			minY = maxY = dataPos.getY();
 			minZ = maxZ = dataPos.getZ();
 		}
-		for (final AbstractThrusterBlockEntity be : this.connectedBlocks) {
-			final BlockPos pos = be.getBlockPos();
-			int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-			if (x < minX) {
-				minX = x;
-			} else if (x > maxX) {
-				maxX = x;
+		for (final List<AbstractThrusterBlockEntity> connectedBlocks : new List[]{this.connectedBlocks, other.connectedBlocks}) {
+			for (final AbstractThrusterBlockEntity be : connectedBlocks) {
+				final BlockPos pos = be.getBlockPos();
+				int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+				if (x < minX) {
+					minX = x;
+				} else if (x > maxX) {
+					maxX = x;
+				}
+				if (y < minY) {
+					minY = y;
+				} else if (y > maxY) {
+					maxY = y;
+				}
+				if (z < minZ) {
+					minZ = z;
+				} else if (z > maxZ) {
+					maxZ = z;
+				}
 			}
-			if (y < minY) {
-				minY = y;
-			} else if (y > maxY) {
-				maxY = y;
-			}
-			if (z < minZ) {
-				minZ = z;
-			} else if (z > maxZ) {
-				maxZ = z;
-			}
-		}
-		if (maxX - minX > THRUSTER_MAX_DIMENSION || maxY - minY > THRUSTER_MAX_DIMENSION || maxZ - minZ > THRUSTER_MAX_DIMENSION) {
-			return;
 		}
 
 		this.connectedBlocks.addAll(other.connectedBlocks);
@@ -355,10 +356,16 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			tank.fill(other.tanks[i].getFluid(), IFluidHandler.FluidAction.EXECUTE);
 		}
 		this.getDataBlock().sendUpdate();
+		return true;
 	}
 
 	private void removeFromBrain(final Level level, final int index) {
 		final AbstractThrusterBlockEntity removed = this.connectedBlocks.remove(index);
+		if (this.connectedBlocks.isEmpty()) {
+			this.maxEnergy = 0;
+			this.storedEnergy = 0;
+			return;
+		}
 		if (index == 0) {
 			this.broadcastDataBlockUpdate();
 		}

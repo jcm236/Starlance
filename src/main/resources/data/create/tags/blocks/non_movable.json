@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"vsch:air_thruster_block",
+		"vsch:powerful_thruster_block",
+		"vsch:thruster_block"
+	]
+}
