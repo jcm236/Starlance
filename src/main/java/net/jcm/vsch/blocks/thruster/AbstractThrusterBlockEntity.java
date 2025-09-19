@@ -47,8 +47,13 @@ import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 
@@ -57,6 +62,8 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	private static final String BRAIN_POS_TAG_NAME = "BrainPos";
 	private static final String BRAIN_DATA_TAG_NAME = "BrainData";
+
+	private final Direction facing;
 	private ThrusterBrain brain;
 	/**
 	 * brainPos holds temporary brain thruster position before it's resolved.
@@ -64,12 +71,14 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	 * @see resolveBrain
 	 */
 	private BlockPos brainPos = null;
+	private boolean brainNeedInit = false;
 	private final Map<Capability<?>, LazyOptional<?>> capsCache = new HashMap<>();
 
 	protected AbstractThrusterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 
-		this.brain = new ThrusterBrain(this, this.getPeripheralType(), state.getValue(DirectionalBlock.FACING), this.createThrusterEngine());
+		this.facing = state.getValue(DirectionalBlock.FACING);
+		this.brain = new ThrusterBrain(this, this.getPeripheralType(), this.facing, this.createThrusterEngine());
 	}
 
 	protected abstract String getPeripheralType();
@@ -115,14 +124,15 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		super.load(data);
 		final BlockPos pos = this.getBlockPos();
 		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_BYTE_ARRAY)) {
-			byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
+			// TODO: remove in the next version
+			final byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
 			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
-			if (this.getLevel() != null) {
-				this.resolveBrain();
-			}
+		} else if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_INT_ARRAY)) {
+			final int[] offset = data.getIntArray(BRAIN_POS_TAG_NAME);
+			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
 		} else if (data.contains(BRAIN_DATA_TAG_NAME, Tag.TAG_COMPOUND)) {
-			CompoundTag brainData = data.getCompound(BRAIN_DATA_TAG_NAME);
-			this.brain.readFromNBT(brainData);
+			this.brain.readFromNBT(data.getCompound(BRAIN_DATA_TAG_NAME));
+			this.brainNeedInit = true;
 		}
 	}
 
@@ -131,11 +141,11 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		super.saveAdditional(data);
 		final BlockPos selfPos = this.getBlockPos();
 		final AbstractThrusterBlockEntity dataBlock = this.brain.getDataBlock();
-		if (this.brainPos != null) {
-			final BlockPos offset = this.brainPos.subtract(selfPos);
-			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(offset.getX()), (byte)(offset.getY()), (byte)(offset.getZ())});
-		} else if (dataBlock == this) {
+		if (dataBlock == this) {
 			data.put(BRAIN_DATA_TAG_NAME, this.brain.writeToNBT(new CompoundTag()));
+		} else if (this.brainPos != null) {
+			final BlockPos offset = this.brainPos.subtract(selfPos);
+			data.putIntArray(BRAIN_POS_TAG_NAME, new int[]{offset.getX(), offset.getY(), offset.getZ()});
 		} else {
 			final BlockPos dataPos = dataBlock.getBlockPos();
 			if (dataPos.equals(selfPos)) {
@@ -143,7 +153,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 				return;
 			}
 			final BlockPos offset = dataPos.subtract(selfPos);
-			data.putByteArray(BRAIN_POS_TAG_NAME, new byte[]{(byte)(offset.getX()), (byte)(offset.getY()), (byte)(offset.getZ())});
+			data.putIntArray(BRAIN_POS_TAG_NAME, new int[]{offset.getX(), offset.getY(), offset.getZ()});
 		}
 	}
 
@@ -177,25 +187,69 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		this.brain.neighborChanged(this, block, pos, moving);
 	}
 
+	private boolean canMerge(final AbstractThrusterBlockEntity other) {
+		if (this.facing != other.facing) {
+			return false;
+		}
+		final BlockPos selfPos = this.getBlockPos();
+		final BlockPos otherPos = other.getBlockPos();
+		if (this.facing.getAxis().choose(otherPos.getX() - selfPos.getX(), otherPos.getY() - selfPos.getY(), otherPos.getZ() - selfPos.getZ()) != 0) {
+			return false;
+		}
+		return this.getPeripheralType().equals(other.getPeripheralType());
+	}
+
 	private void resolveBrain() {
-		final BlockEntity be = this.getLevel().getBlockEntity(this.brainPos);
+		final Level level = this.getLevel();
+		final BlockEntity be = level.getBlockEntity(this.brainPos);
 		if (be instanceof AbstractThrusterBlockEntity thruster) {
-			final ThrusterBrain newBrain = thruster.getBrain();
-			if (this.brain != newBrain) {
-				newBrain.addThruster(this);
-				this.setBrain(newBrain);
+			if (thruster.brainNeedInit) {
+				thruster.searchThrusters();
 			}
-			this.brainPos = null;
+			if (this.brainPos != null) {
+				if (level.isClientSide) {
+					return;
+				}
+				this.brainPos = null;
+				this.searchThrusters();
+			}
 		} else if (this.getLevel() instanceof ServerLevel) {
-			LOGGER.warn("[starlance]: Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
+			LOGGER.debug("[starlance]: Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
 			this.brainPos = null;
 			this.setChanged();
 		}
 	}
 
+	private void searchThrusters() {
+		this.brainNeedInit = false;
+		final Level level = this.getLevel();
+		bfs(this.getBlockPos(), (otherPos) -> {
+			if (!(level.getBlockEntity(otherPos) instanceof final AbstractThrusterBlockEntity other) || other.brainPos == null || !this.canMerge(other)) {
+				return false;
+			}
+			if (other.brainPos.equals(this.brainPos)) {
+				this.brain.addThruster(other);
+				other.setBrain(this.brain);
+				other.brainPos = null;
+				return true;
+			}
+			if (this.brain == other.getBrain()) {
+				other.brainPos = null;
+				return false;
+			}
+			final boolean ok = this.brain.tryMergeBrain(other.getBrain());
+			if (ok) {
+				other.brainPos = null;
+			}
+			return ok;
+		});
+	}
+
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
-		if (this.brainPos != null) {
+		if (this.brainNeedInit) {
+			this.searchThrusters();
+		} else if (this.brainPos != null) {
 			this.resolveBrain();
 		}
 		if (this.brain.getDataBlock() == this) {
@@ -208,12 +262,12 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			level.setBlockAndUpdate(pos, state.setValue(BaseThrusterBlock.LIT, powered));
 		}
 
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+		final VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
 		if (ships == null) {
 			return;
 		}
 
-		ThrusterData thrusterData = this.brain.getThrusterData();
+		final ThrusterData thrusterData = this.brain.getThrusterData();
 		if (ships.getThrusterAtPos(pos) != thrusterData) {
 			ships.addThruster(pos, thrusterData);
 		}
@@ -278,8 +332,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	@Override
 	public void tickParticles(final Level level, final BlockPos pos, final BlockState state) {
-		if (this.brainPos != null) {
+		if (this.brainNeedInit) {
+			this.searchThrusters();
+		} else if (this.brainPos != null) {
 			this.resolveBrain();
+			if (this.brainPos == null) {
+				return;
+			}
 		}
 
 		// If we are unpowered, do no particles
@@ -359,7 +418,23 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		}
 	}
 
-	private static float getPowerByRedstone(Level level, BlockPos pos) {
+	private static float getPowerByRedstone(final Level level, final BlockPos pos) {
 		return (float)(level.getBestNeighborSignal(pos)) / 15;
+	}
+
+	private static void bfs(final BlockPos startPos, final Predicate<BlockPos> consumer) {
+		final Set<BlockPos> visited = new HashSet<>();
+		final Queue<BlockPos> queue = new ArrayDeque<>();
+		visited.add(startPos);
+		queue.add(startPos);
+		while (!queue.isEmpty()) {
+			final BlockPos pos = queue.remove();
+			for (final Direction dir : Direction.values()) {
+				final BlockPos pos2 = pos.relative(dir);
+				if (visited.add(pos2) && consumer.test(pos2)) {
+					queue.add(pos2);
+				}
+			}
+		}
 	}
 }
