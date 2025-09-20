@@ -144,6 +144,19 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		return !this.firstTick && this.entityData.get(FREE_ROTATION_ID);
 	}
 
+	@Unique
+	private Vec3 getFreeHeadCenter() {
+		return this.position().add(0, SPACE_ENTITY_SIZE / 2, 0);
+	}
+
+	@Override
+	public Vec3 vsch$getFeetPosition() {
+		if (!this.vsch$isFreeRotating()) {
+			return this.position();
+		}
+		return this.getFreeHeadCenter().add(this.vsch$getDownVector().scale(SPACE_ENTITY_SIZE * 2));
+	}
+
 	@Override
 	public Quaternionf vsch$getBodyRotation() {
 		return this.rotation;
