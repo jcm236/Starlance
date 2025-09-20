@@ -1,6 +1,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.util.wapi.LevelData;
 import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
@@ -95,7 +96,7 @@ public class EmptyChunkAccess extends LevelChunk {
 
 	@Override
 	public ChunkStatus getStatus() {
-		return ChunkStatus.EMPTY;
+		return ChunkStatus.FULL;
 	}
 
 	@Override
@@ -128,6 +129,6 @@ public class EmptyChunkAccess extends LevelChunk {
 		if (VSGameUtilsKt.isChunkInShipyard(level, x, z)) {
 			return false;
 		}
-		return VSCHUtils.isSpaceLevel(level);
+		return LevelData.get(level).isSpace();
 	}
 }

@@ -23,30 +23,35 @@ public final class VSCHConfig {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
+	/* Landing */
+
+	public static final ForgeConfigSpec.EnumValue<ShipLandingMode> SHIP_LANDING_MODE;
+	public static final ForgeConfigSpec.IntValue SHIP_LANDING_ACCURACY;
+
 	/* Thrusters */
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> THRUSTER_TOGGLE;
+	public static final ForgeConfigSpec.BooleanValue THRUSTER_TOGGLE;
 	public static final ForgeConfigSpec.ConfigValue<ThrusterMode> THRUSTER_MODE;
 	public static final ForgeConfigSpec.BooleanValue THRUSTER_FLAME_IMPACT;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue THRUSTER_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<String> THRUSTER_FUEL_CONSUME_RATES;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> AIR_THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_ENERGY_CONSUME_RATE;
-	public static final ForgeConfigSpec.ConfigValue<Integer> AIR_THRUSTER_MAX_WATER_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue AIR_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue AIR_THRUSTER_MAX_WATER_CONSUME_RATE;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> POWERFUL_THRUSTER_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
-	public static final ForgeConfigSpec.ConfigValue<Integer> POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue POWERFUL_THRUSTER_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue POWERFUL_THRUSTER_FUEL_CONSUME_RATE;
 
 	/* Gyro */
 
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_STRENGTH;
-	public static final ForgeConfigSpec.ConfigValue<Integer> GYRO_ENERGY_CONSUME_RATE;
+	public static final ForgeConfigSpec.IntValue GYRO_ENERGY_CONSUME_RATE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> GYRO_LIMIT_SPEED;
+	public static final ForgeConfigSpec.BooleanValue GYRO_LIMIT_SPEED;
 
 	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
 	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
@@ -61,10 +66,10 @@ public final class VSCHConfig {
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_DRAG;
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> LIMIT_SPEED;
+	public static final ForgeConfigSpec.BooleanValue LIMIT_SPEED;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAX_SPEED;
 
-	public static final ForgeConfigSpec.ConfigValue<Boolean> CANCEL_ASSEMBLY;
+	public static final ForgeConfigSpec.BooleanValue CANCEL_ASSEMBLY;
 
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
@@ -84,6 +89,13 @@ public final class VSCHConfig {
 	);
 
 	static {
+		BUILDER.push("Landing");
+
+		SHIP_LANDING_MODE = BUILDER.comment("Define how will the ship land to a planet.\nPLAYER_MENU: Always use the player menu to make ship land on a planet.\nHISTORY: the history launch position or origin will be used for the ship to land.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
+		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accuracy the ship will land to a position, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
+
+		BUILDER.pop();
+
 		BUILDER.push("Thrusters");
 
 		THRUSTER_TOGGLE = BUILDER.comment("Thruster Mode Toggling").define("thruster_mode_toggle", true);
@@ -91,23 +103,23 @@ public final class VSCHConfig {
 		THRUSTER_FLAME_IMPACT = BUILDER.comment("This setting will allow thruster flame to push and to burn entities in its area, and set the first block it hits on fire.").define("thruster_flame_impact", true);
 
 		THRUSTER_STRENGTH = BUILDER.comment("Thruster max force. (Newtons)").define("thruster_strength", 120000);
-		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").define("thruster_energy_consume_rate", 0);
+		THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Thruster energy consume rate. (FE/t)").defineInRange("thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
 		THRUSTER_FUEL_CONSUME_RATES = BUILDER.comment("Thruster fuel consume rates. (mB/t)").define("thruster_fuel_consume_rates", getDefaultThrusterFuelConsumeRates());
 
 		AIR_THRUSTER_STRENGTH = BUILDER.comment("Air thruster max force. (Newtons)").define("air_thruster_strength", 7500);
-		AIR_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Air thruster energy consume rate. (FE/t)").define("air_thruster_energy_consume_rate", 0);
-		AIR_THRUSTER_MAX_WATER_CONSUME_RATE = BUILDER.comment("Air thruster water consume rate when in a dimension that has less air density. (mB/t)").define("air_thruster_max_water_consume_rate", 0);
+		AIR_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Air thruster energy consume rate. (FE/t)").defineInRange("air_thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
+		AIR_THRUSTER_MAX_WATER_CONSUME_RATE = BUILDER.comment("Air thruster water consume rate when in a dimension that has less air density. (mB/t)").defineInRange("air_thruster_max_water_consume_rate", 0, 0, Integer.MAX_VALUE);
 
 		POWERFUL_THRUSTER_STRENGTH = BUILDER.comment("Powerful thruster max force. (Newtons)").define("powerful_thruster_strength", 450000);
-		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").define("powerful_thruster_energy_consume_rate", 0);
-		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").define("powerful_thruster_fuel_consume_rate", 0);
+		POWERFUL_THRUSTER_ENERGY_CONSUME_RATE = BUILDER.comment("Powerful thruster energy consume rate. (FE/t)").defineInRange("powerful_thruster_energy_consume_rate", 0, 0, Integer.MAX_VALUE);
+		POWERFUL_THRUSTER_FUEL_CONSUME_RATE = BUILDER.comment("Powerful thruster oxygen consume rate. (mB/t) which hydrogen will consume twice as much.").defineInRange("powerful_thruster_fuel_consume_rate", 0, 0, Integer.MAX_VALUE);
 
 		BUILDER.pop();
 
 		BUILDER.push("Gyro");
 
 		GYRO_STRENGTH = BUILDER.comment("Max force gyro will apply to the ship on any axis. (N)").define("gyro_strength", 350000);
-		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").define("gyro_energy_consume_rate", 0); //10000 default for next update
+		GYRO_ENERGY_CONSUME_RATE = BUILDER.comment("Gyro energy consume rate. (FE/t)").defineInRange("gyro_energy_consume_rate", 0, 0, Integer.MAX_VALUE); //10000 default for next update
 		GYRO_LIMIT_SPEED = BUILDER.comment("Should the gyro have its rotational speed limited").define("gyro_limit_speed", true);
 		GYRO_MAX_SPEED = BUILDER.comment("Max rotation the gyro will accelerate to (RPM?)").define("gyro_max_speed", 80);
 
@@ -133,6 +145,7 @@ public final class VSCHConfig {
 		LIMIT_SPEED = BUILDER.comment("Limit speed thrusters can accelerate to. Recommended, as VS ships get funky at high speeds").define("limit_speed", true);
 		MAX_SPEED = BUILDER.comment("Max speed to limit to. Blocks/tick I think. Default is highly recommended").define("max_speed", 150);
 		CANCEL_ASSEMBLY = BUILDER.comment("Cancel multi-block assemblies when above world height. This is a temporary fix, but for now ships made above world height have issues with starlance.").define("cancel_assembly", true);
+
 
 		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
 		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);

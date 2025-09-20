@@ -5,7 +5,8 @@
 	"compatibilityLevel": "JAVA_17",
 	"refmap": "mixins.vsch.refmap.json",
 	"mixins": [
-		"cosmos.MixinLightRenderer",
+		"cosmos.MixinCollisionDetectorProcedure",
+		"cosmos.MixinEgraphicProcedure",
 		"cosmos.MixinPlaceplatformOnKeyPressedProcedure",
 		"cosmos.MixinShipspawnspaceProcedure",
 		"cosmos.MixinSpacesuitwornLogicProcedure",
@@ -23,6 +24,7 @@
 		"minecraft.MixinEntityRotationPackets",
 		"minecraft.MixinEntityRotationPackets_initRead",
 		"minecraft.MixinEntityRotationPackets_write",
+		"minecraft.MixinLevel",
 		"minecraft.MixinLivingEntity",
 		"minecraft.MixinMob",
 		"minecraft.MixinPlayer",
@@ -39,10 +41,14 @@
 		"client.MixinCamera",
 		"client.MixinClientPacketListener",
 		"client.MixinGui",
+		"client.MixinGui",
 		"client.MixinLivingEntityRenderer",
 		"client.MixinLocalPlayer",
 		"client.MixinMultiPlayerGameMode",
-		"client.MixinRemotePlayer"
+		"client.MixinRemotePlayer",
+		"client.cosmos.MixinDevFieldNameRenderers",
+		"client.cosmos.MixinProjectionRendererProcedure",
+		"client.cosmos.MixinRayrendererProcedure"
 	],
 	"injectors": {
 		"defaultRequire": 1

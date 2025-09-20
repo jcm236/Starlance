@@ -14,10 +14,10 @@ public abstract class MixinGui implements IGuiAccessor {
 	private Component overlayMessageString;
 
 	@Shadow
-    private int overlayMessageTime;
+	private int overlayMessageTime;
 
-    @Shadow
-    private boolean animateOverlayMessageColor;
+	@Shadow
+	private boolean animateOverlayMessageColor;
 
 	@Shadow
 	public abstract void setChatDisabledByPlayerShown(boolean value);

@@ -9,6 +9,7 @@ import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
 import net.jcm.vsch.util.BooleanRef;
 import net.jcm.vsch.util.VSCHUtils;
+import net.jcm.vsch.util.wapi.LevelData;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -227,7 +228,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (this.level().isClientSide) {
 			return;
 		}
-		final boolean freeRotation = VSCHConfig.PLAYER_FREE_ROTATION_IN_SPACE.get() && !this.isPassenger() && VSCHUtils.isSpaceLevel(this.level());
+		final boolean freeRotation = VSCHConfig.PLAYER_FREE_ROTATION_IN_SPACE.get() && !this.isPassenger() && LevelData.get(this.level()).isSpace();
 		this.entityData.set(FREE_ROTATION_ID, freeRotation);
 	}
 

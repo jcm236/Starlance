@@ -11,33 +11,46 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
+
 @Mod.EventBusSubscriber
 public class VSCHEvents {
-
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onServerTick(TickEvent.ServerTickEvent event) {
-		if (event.phase != TickEvent.Phase.END) {
-			return;
-		}
-		for (ServerLevel level : event.getServer().getAllLevels()) {
-			if (level.getPlayers(player -> true, 1).isEmpty()) {
-				// skip if the no player is in the world
-				// TODO: maybe we'll have automated ships in the future and this need to be removed?
-				continue;
+	public static void onServerTick(final TickEvent.ServerTickEvent event) {
+		switch (event.phase) {
+			case START -> {
+				for (final LoadedServerShip ship : VSGameUtilsKt.getShipObjectWorld(event.getServer()).getLoadedShips()) {
+					GravityInducer.tickOnShip(ship);
+				}
 			}
-			AtmosphericCollision.atmosphericCollisionTick(level);
-			PlanetCollision.planetCollisionTick(level);
+			case END -> {
+			}
 		}
 	}
 
-	@SubscribeEvent
-	public static void onServerStart(ServerStartedEvent event) {
-		GravityInducer.gravityDataTag = CosmosModVariables.WorldVariables.get(event.getServer().overworld()).gravity_data;
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
+		if (!(event.level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		switch (event.phase) {
+			case START -> {
+			}
+			case END -> {
+				if (serverLevel.getPlayers(player -> true, 1).isEmpty()) {
+					// skip if the no player is in the world
+					// TODO: maybe we'll have automated ships in the future and this need to be removed?
+					return;
+				}
+				AtmosphericCollision.atmosphericCollisionTick(serverLevel);
+				PlanetCollision.planetCollisionTick(serverLevel);
+			}
+		}
 	}
 
 	// For next vs update
