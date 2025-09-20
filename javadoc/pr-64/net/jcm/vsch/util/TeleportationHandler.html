@@ -89,8 +89,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;newDim,
- net.minecraft.server.level.ServerLevel&nbsp;originalDim,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)" class="member-name-link">TeleportationHandler</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel,
  boolean&nbsp;isReturning)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -108,12 +108,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleTeleport(org.valkyrienskies.core.api.ships.Ship,org.joml.Vector3d)" class="member-name-link">handleTeleport</a><wbr>(org.valkyrienskies.core.api.ships.Ship&nbsp;ship,
- org.joml.Vector3d&nbsp;newPos)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addShip(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Quaterniondc)" class="member-name-link">addShip</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship,
+ org.joml.Vector3dc&nbsp;newPos,
+ org.joml.Quaterniondc&nbsp;rotation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addShipWithVelocity(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Quaterniondc,org.joml.Vector3dc,org.joml.Vector3dc)" class="member-name-link">addShipWithVelocity</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship,
+ org.joml.Vector3dc&nbsp;newPos,
+ org.joml.Quaterniondc&nbsp;rotation,
+ org.joml.Vector3dc&nbsp;velocity,
+ org.joml.Vector3dc&nbsp;omega)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finalizeTeleport()" class="member-name-link">finalizeTeleport</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.valkyrienskies.core.api.ships.LoadedServerShip&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPendingShips()" class="member-name-link">getPendingShips</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasShip(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">hasShip</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#onServerStart(net.minecraftforge.event.server.ServerStartedEvent)" class="member-name-link">onServerStart</a><wbr>(net.minecraftforge.event.server.ServerStartedEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reset(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel)" class="member-name-link">reset</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -134,8 +155,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel,boolean)">
 <h3>TeleportationHandler</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TeleportationHandler</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;newDim,
- net.minecraft.server.level.ServerLevel&nbsp;originalDim,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TeleportationHandler</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel,
  boolean&nbsp;isReturning)</span></div>
 </section>
 </li>
@@ -154,10 +175,46 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="handleTeleport(org.valkyrienskies.core.api.ships.Ship,org.joml.Vector3d)">
-<h3>handleTeleport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleTeleport</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.Ship&nbsp;ship,
- org.joml.Vector3d&nbsp;newPos)</span></div>
+<section class="detail" id="reset(net.minecraft.server.level.ServerLevel,net.minecraft.server.level.ServerLevel)">
+<h3>reset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reset</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;oldLevel,
+ net.minecraft.server.level.ServerLevel&nbsp;newLevel)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasShip(org.valkyrienskies.core.api.ships.ServerShip)">
+<h3>hasShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasShip</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="addShip(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Quaterniondc)">
+<h3>addShip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addShip</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship,
+ org.joml.Vector3dc&nbsp;newPos,
+ org.joml.Quaterniondc&nbsp;rotation)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="addShipWithVelocity(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Quaterniondc,org.joml.Vector3dc,org.joml.Vector3dc)">
+<h3>addShipWithVelocity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addShipWithVelocity</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship,
+ org.joml.Vector3dc&nbsp;newPos,
+ org.joml.Quaterniondc&nbsp;rotation,
+ org.joml.Vector3dc&nbsp;velocity,
+ org.joml.Vector3dc&nbsp;omega)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPendingShips()">
+<h3>getPendingShips</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.valkyrienskies.core.api.ships.LoadedServerShip&gt;</span>&nbsp;<span class="element-name">getPendingShips</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="finalizeTeleport()">
+<h3>finalizeTeleport</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finalizeTeleport</span>()</div>
 </section>
 </li>
 </ul>

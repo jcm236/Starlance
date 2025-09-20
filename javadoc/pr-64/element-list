@@ -2,6 +2,7 @@ net.jcm.vsch
 net.jcm.vsch.accessor
 net.jcm.vsch.api.block
 net.jcm.vsch.api.entity
+net.jcm.vsch.api.event
 net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
 net.jcm.vsch.blocks.custom
@@ -26,6 +27,7 @@ net.jcm.vsch.event
 net.jcm.vsch.items
 net.jcm.vsch.items.custom
 net.jcm.vsch.mixin.client
+net.jcm.vsch.mixin.client.cosmos
 net.jcm.vsch.mixin.cosmos
 net.jcm.vsch.mixin.create
 net.jcm.vsch.mixin.minecraft
@@ -38,3 +40,4 @@ net.jcm.vsch.ship.thruster
 net.jcm.vsch.util
 net.jcm.vsch.util.assemble
 net.jcm.vsch.util.rot
+net.jcm.vsch.util.wapi
