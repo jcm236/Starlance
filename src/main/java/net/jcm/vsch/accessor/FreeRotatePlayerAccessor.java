@@ -10,19 +10,35 @@ public interface FreeRotatePlayerAccessor {
 
 	boolean vsch$isFreeRotating();
 
-	Quaternionf vsch$getRotation();
+	Quaternionf vsch$getBodyRotation();
 
-	void vsch$setRotation(Quaternionf rotation);
+	void vsch$setBodyRotation(Quaternionf rotation);
 
-	Quaternionf vsch$getRotationO();
+	Quaternionf vsch$getBodyRotationO();
 
-	void vsch$setRotationO(Quaternionf rotation);
+	void vsch$setBodyRotationO(Quaternionf rotation);
 
-	void vsch$setLerpRotation(Quaternionf rotation);
+	void vsch$setLerpBodyRotation(Quaternionf rotation);
+
+	Quaternionf vsch$getHeadRotation();
+
+	Quaternionf vsch$getHeadRotationO();
 
 	float vsch$getHeadPitch();
 
+	void vsch$setHeadPitch(float pitch);
+
+	float vsch$getHeadPitchO();
+
 	void vsch$setLerpHeadPitch(float pitch);
+
+	float vsch$getHeadYaw();
+
+	void vsch$setHeadYaw(float yaw);
+
+	float vsch$getHeadYawO();
+
+	void vsch$setLerpHeadYaw(float yaw);
 
 	boolean vsch$hasSupportingBlock();
 

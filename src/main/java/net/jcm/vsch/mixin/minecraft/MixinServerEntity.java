@@ -25,8 +25,11 @@ public abstract class MixinServerEntity {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ClientboundTeleportEntityPacket;")
 	)
 	public ClientboundTeleportEntityPacket new$ClientboundTeleportEntityPacket(final ClientboundTeleportEntityPacket packet) {
-		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+		if (this.entity instanceof final FreeRotatePlayerAccessor frp) {
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}
@@ -36,8 +39,11 @@ public abstract class MixinServerEntity {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ClientboundMoveEntityPacket$PosRot;")
 	)
 	public ClientboundMoveEntityPacket.PosRot new$ClientboundMoveEntityPacket$PosRot(final ClientboundMoveEntityPacket.PosRot packet) {
-		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+		if (this.entity instanceof final FreeRotatePlayerAccessor frp) {
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}
@@ -47,8 +53,11 @@ public abstract class MixinServerEntity {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ClientboundMoveEntityPacket$Rot;")
 	)
 	public ClientboundMoveEntityPacket.Rot new$ClientboundMoveEntityPacket$Rot(final ClientboundMoveEntityPacket.Rot packet) {
-		if (this.entity instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+		if (this.entity instanceof final FreeRotatePlayerAccessor frp) {
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}

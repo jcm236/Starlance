@@ -27,5 +27,7 @@ public abstract class MixinEntityRotationPackets_write implements EntityRotation
 	@Inject(method = "write", at = @At("RETURN"))
 	public void write(final FriendlyByteBuf buf, final CallbackInfo ci) {
 		buf.writeQuaternion(this.vsch$rotation());
+		buf.writeFloat(this.vsch$getHeadPitch());
+		buf.writeFloat(this.vsch$getHeadYaw());
 	}
 }

@@ -13,12 +13,16 @@ import org.joml.Vector3f;
 
 @Mod.EventBusSubscriber
 public final class ClientEvents {
+	private static final Vector3f CAMERA_ROT_VEC = new Vector3f();
+
 	@SubscribeEvent
 	public static void onComputeCamera(final ViewportEvent.ComputeCameraAngles event) {
 		final Camera camera = event.getCamera();
-		if (camera.getEntity() instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
-			event.setRoll(camera.rotation().getEulerAnglesYXZ(new Vector3f()).z * Mth.RAD_TO_DEG);
-			event.setPitch(event.getPitch() + frp.vsch$getHeadPitch());
+		if (camera.getEntity() instanceof final FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
+			camera.rotation().getEulerAnglesYXZ(CAMERA_ROT_VEC);
+			event.setPitch(CAMERA_ROT_VEC.x * Mth.RAD_TO_DEG);
+			event.setYaw(-CAMERA_ROT_VEC.y * Mth.RAD_TO_DEG);
+			event.setRoll(CAMERA_ROT_VEC.z * Mth.RAD_TO_DEG);
 		}
 	}
 

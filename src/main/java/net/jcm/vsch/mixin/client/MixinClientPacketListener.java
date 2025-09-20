@@ -30,18 +30,24 @@ public abstract class MixinClientPacketListener {
 		)
 	)
 	public void handleAddPlayer(final ClientboundAddPlayerPacket packet, final CallbackInfo ci, @Local final RemotePlayer player) {
-		if (!(player instanceof FreeRotatePlayerAccessor frp)) {
+		if (!(player instanceof final FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+		final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+		frp.vsch$setBodyRotation(packetAccessor.vsch$rotation());
+		frp.vsch$setHeadPitch(packetAccessor.vsch$getHeadPitch());
+		frp.vsch$setHeadYaw(packetAccessor.vsch$getHeadYaw());
 	}
 
 	@Inject(method = "handleTeleportEntity", at = @At("RETURN"))
 	public void handleTeleportEntity(final ClientboundTeleportEntityPacket packet, final CallbackInfo ci, @Local final Entity entity) {
-		if (!(entity instanceof FreeRotatePlayerAccessor frp)) {
+		if (!(entity instanceof final FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+		final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+		frp.vsch$setLerpBodyRotation(packetAccessor.vsch$rotation());
+		frp.vsch$setLerpHeadPitch(packetAccessor.vsch$getHeadPitch());
+		frp.vsch$setLerpHeadYaw(packetAccessor.vsch$getHeadYaw());
 	}
 
 	@Inject(method = "handleMoveEntity", at = @At("RETURN"))
@@ -49,11 +55,14 @@ public abstract class MixinClientPacketListener {
 		if (entity == null || entity.isControlledByLocalInstance()) {
 			return;
 		}
-		if (!(entity instanceof FreeRotatePlayerAccessor frp)) {
+		if (!(entity instanceof final FreeRotatePlayerAccessor frp)) {
 			return;
 		}
 		if (packet.hasRotation()) {
-			frp.vsch$setLerpRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			frp.vsch$setLerpBodyRotation(packetAccessor.vsch$rotation());
+			frp.vsch$setLerpHeadPitch(packetAccessor.vsch$getHeadPitch());
+			frp.vsch$setLerpHeadYaw(packetAccessor.vsch$getHeadYaw());
 		}
 	}
 
@@ -62,10 +71,13 @@ public abstract class MixinClientPacketListener {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundAcceptTeleportationPacket;")
 	)
 	public void handleMovePlayer$acceptTeleport$before(final ClientboundPlayerPositionPacket packet, final CallbackInfo ci, @Local final Player player) {
-		if (!(player instanceof FreeRotatePlayerAccessor frp)) {
+		if (!(player instanceof final FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+		final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+		frp.vsch$setBodyRotation(packetAccessor.vsch$rotation());
+		frp.vsch$setHeadPitch(packetAccessor.vsch$getHeadPitch());
+		frp.vsch$setHeadYaw(packetAccessor.vsch$getHeadYaw());
 	}
 
 	@ModifyExpressionValue(
@@ -73,8 +85,11 @@ public abstract class MixinClientPacketListener {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;")
 	)
 	public ServerboundMovePlayerPacket.PosRot handleMovePlayer$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet, @Local final Player player) {
-		if (player instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+		if (player instanceof final FreeRotatePlayerAccessor frp) {
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}

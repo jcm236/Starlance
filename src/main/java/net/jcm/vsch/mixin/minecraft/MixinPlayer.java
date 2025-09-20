@@ -71,6 +71,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	private static final double SUPPORT_CHECK_DISTANCE = 0.1;
 	@Unique
 	private static final EntityDataAccessor<Boolean> FREE_ROTATION_ID = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
+	@Unique
+	private static final float BODY_ROT_CLAMP = 50 * Mth.DEG_TO_RAD;
 
 	@Unique
 	private boolean wasFreeRotating = false;
@@ -81,11 +83,21 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Quaternionf rotationLerp = new Quaternionf();
 	@Unique
+	private Quaternionf headRotation = new Quaternionf();
+	@Unique
+	private Quaternionf headRotationO = new Quaternionf();
+	@Unique
 	private float headPitch = 0;
 	@Unique
 	private float headPitchO = 0;
 	@Unique
 	private float headPitchLerp = 0;
+	@Unique
+	private float headYaw = 0;
+	@Unique
+	private float headYawO = 0;
+	@Unique
+	private float headYawLerp = 0;
 	@Unique
 	private MultiPartPlayer[] parts;
 	@Unique
@@ -133,12 +145,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	public Quaternionf vsch$getRotation() {
+	public Quaternionf vsch$getBodyRotation() {
 		return this.rotation;
 	}
 
 	@Override
-	public void vsch$setRotation(final Quaternionf rotation) {
+	public void vsch$setBodyRotation(final Quaternionf rotation) {
 		if (this.rotation != rotation) {
 			this.rotation.set(rotation);
 		}
@@ -146,19 +158,16 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			return;
 		}
 		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
-		super.setXRot(angles.x * Mth.RAD_TO_DEG);
-		final float yRot = -angles.y * Mth.RAD_TO_DEG;
-		super.setYRot(yRot);
-		this.yBodyRot = yRot;
+		this.yBodyRot = -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG;
 	}
 
 	@Override
-	public Quaternionf vsch$getRotationO() {
+	public Quaternionf vsch$getBodyRotationO() {
 		return this.rotationO;
 	}
 
 	@Override
-	public void vsch$setRotationO(final Quaternionf rotation) {
+	public void vsch$setBodyRotationO(final Quaternionf rotation) {
 		if (this.rotationO != rotation) {
 			this.rotationO.set(rotation);
 		}
@@ -167,32 +176,46 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Vector3f angles = this.rotationO.getEulerAnglesYXZ(new Vector3f());
 		this.xRotO = angles.x * Mth.RAD_TO_DEG;
-		this.yBodyRotO = this.yRotO = -angles.y * Mth.RAD_TO_DEG;
+		this.yBodyRotO = -angles.y * Mth.RAD_TO_DEG;
 	}
 
 	@Override
-	public void vsch$setLerpRotation(final Quaternionf rotation) {
+	public void vsch$setLerpBodyRotation(final Quaternionf rotation) {
 		this.rotationLerp.set(rotation);
 	}
 
 	@Override
-	public float getYRot() {
-		return this.vsch$isFreeRotating()
-			? -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG
-			: super.getYRot();
+	public Quaternionf vsch$getHeadRotation() {
+		return this.headRotation;
 	}
 
 	@Override
-	public void setYRot(final float yRot) {
-		if (!this.vsch$isFreeRotating()) {
-			super.setYRot(yRot);
-		}
+	public Quaternionf vsch$getHeadRotationO() {
+		return this.headRotationO;
+	}
+
+	@Unique
+	private void reCalcHeadRotation() {
+		this.headRotation.set(this.rotation).rotateY(this.headYaw).rotateX(this.headPitch);
+		final Vector3f angles = this.headRotation.getEulerAnglesYXZ(new Vector3f());
+		super.setXRot(angles.x * Mth.RAD_TO_DEG);
+		final float yRot = -angles.y * Mth.RAD_TO_DEG;
+		super.setYRot(yRot);
+		this.yHeadRot = yRot;
+	}
+
+	@Unique
+	private void reCalcHeadRotationO() {
+		this.headRotationO.set(this.rotationO).rotateY(this.headYawO).rotateX(this.headPitchO);
+		final Vector3f angles = this.headRotationO.getEulerAnglesYXZ(new Vector3f());
+		this.xRotO = angles.x * Mth.RAD_TO_DEG;
+		this.yHeadRotO = this.yRotO = -angles.y * Mth.RAD_TO_DEG;
 	}
 
 	@Override
 	public float getXRot() {
 		return this.vsch$isFreeRotating()
-			? this.rotation.getEulerAnglesYXZ(new Vector3f()).x * Mth.RAD_TO_DEG
+			? this.vsch$getHeadRotation().getEulerAnglesYXZ(new Vector3f()).x * Mth.RAD_TO_DEG
 			: super.getXRot();
 	}
 
@@ -204,8 +227,48 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	public float getYRot() {
+		return this.vsch$isFreeRotating()
+			? -this.vsch$getHeadRotation().getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG
+			: super.getYRot();
+	}
+
+	@Override
+	public void setYRot(final float yRot) {
+		if (!this.vsch$isFreeRotating()) {
+			super.setYRot(yRot);
+		}
+	}
+
+	@Override
+	public float getViewXRot(final float partialTick) {
+		final Vector3f angles = new Vector3f();
+		final float xRot = this.vsch$getHeadRotation().getEulerAnglesYXZ(angles).x * Mth.RAD_TO_DEG;
+		final float xRotO = this.vsch$getHeadRotationO().getEulerAnglesYXZ(angles).x * Mth.RAD_TO_DEG;
+		return Mth.lerp(partialTick, xRotO, xRot);
+	}
+
+	@Override
+	public float getViewYRot(final float partialTick) {
+		final Vector3f angles = new Vector3f();
+		final float yRot = -this.vsch$getHeadRotation().getEulerAnglesYXZ(angles).y * Mth.RAD_TO_DEG;
+		final float yRotO = -this.vsch$getHeadRotationO().getEulerAnglesYXZ(angles).y * Mth.RAD_TO_DEG;
+		return Mth.lerp(partialTick, yRotO, yRot);
+	}
+
+	@Override
 	public float vsch$getHeadPitch() {
 		return this.headPitch;
+	}
+
+	@Override
+	public void vsch$setHeadPitch(final float pitch) {
+		this.headPitch = pitch;
+	}
+
+	@Override
+	public float vsch$getHeadPitchO() {
+		return this.headPitchO;
 	}
 
 	@Override
@@ -213,14 +276,37 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.headPitchLerp = pitch;
 	}
 
+	@Override
+	public float vsch$getHeadYaw() {
+		return this.headYaw;
+	}
+
+	@Override
+	public void vsch$setHeadYaw(final float yaw) {
+		this.headYaw = yaw;
+	}
+
+	@Override
+	public float vsch$getHeadYawO() {
+		return this.headYawO;
+	}
+
+	@Override
+	public void vsch$setLerpHeadYaw(final float yaw) {
+		this.headYawLerp = yaw;
+	}
+
 	@Unique
 	private void reCalcRotation() {
 		if (this.firstTick || !this.vsch$isFreeRotating()) {
 			return;
 		}
-		final Quaternionf rotation = this.vsch$getRotation();
+		final Quaternionf rotation = this.vsch$getBodyRotation();
 		final Vector3f oldAngles = rotation.getEulerAnglesYXZ(new Vector3f());
-		this.vsch$setRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * super.getXRot(), oldAngles.z));
+		this.vsch$setBodyRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * super.getXRot(), oldAngles.z));
+		this.headPitch = 0;
+		this.headYaw = 0;
+		this.reCalcHeadRotation();
 	}
 
 	@Unique
@@ -242,11 +328,17 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			}
 			this.rotationO.set(this.rotation);
 		}
+		this.headPitchO = this.headPitch = data.getFloat("HeadPitch");
+		this.headYawO = this.headYaw = data.getFloat("HeadYaw");
+		this.reCalcHeadRotation();
+		this.reCalcHeadRotationO();
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
 	public void addAdditionalSaveData(final CompoundTag data, final CallbackInfo ci) {
 		data.put("RotationQuat", this.newFloatList(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w));
+		data.putFloat("HeadPitch", this.headPitch);
+		data.putFloat("HeadYaw", this.headYaw);
 	}
 
 	@Override
@@ -307,8 +399,15 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 		final boolean isClientSide = this.level().isClientSide;
 
-		final float roll;
+		float roll = 0;
+		boolean lockHeadRotate = false;
 		if (isClientSide) {
+			if (VSCHKeyBindings.UNLOCK_HEAD_ROTATION.consumeDoubleClick()) {
+				this.headPitch = 0;
+				this.reCalcHeadRotation();
+				return;
+			}
+			lockHeadRotate = !VSCHKeyBindings.UNLOCK_HEAD_ROTATION.isDown();
 			int rollDir = 0;
 			if (VSCHKeyBindings.ROLL_CLOCKWISE.isDown()) {
 				rollDir++;
@@ -317,8 +416,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 				rollDir--;
 			}
 			roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * ClientEvents.getSpf() * Mth.DEG_TO_RAD;
-		} else {
-			roll = 0;
 		}
 
 		if (x == 0 && y == 0 && roll == 0) {
@@ -327,10 +424,37 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final float yaw = -(float)(x) * 0.15f * Mth.DEG_TO_RAD;
 		final float pitch = (float)(y) * 0.15f * Mth.DEG_TO_RAD;
 
-		final Quaternionf rotation = new Quaternionf().rotateYXZ(yaw, pitch, roll);
+		final Quaternionf relRotation = new Quaternionf();
+		float newHeadYaw = this.headYaw + yaw;
+		if (newHeadYaw > BODY_ROT_CLAMP) {
+			relRotation.rotationY(newHeadYaw - BODY_ROT_CLAMP);
+			newHeadYaw = BODY_ROT_CLAMP;
+		} else if (newHeadYaw < -BODY_ROT_CLAMP) {
+			relRotation.rotationY(newHeadYaw + BODY_ROT_CLAMP);
+			newHeadYaw = -BODY_ROT_CLAMP;
+		}
+		this.headYawO += newHeadYaw - this.headYaw;
+		this.headYaw = newHeadYaw;
+		if (lockHeadRotate) {
+			relRotation.rotateX(pitch);
+		} else {
+			float newHeadPitch = this.headPitch + pitch;
+			if (newHeadPitch > Mth.HALF_PI) {
+				relRotation.rotateX(newHeadPitch - Mth.HALF_PI);
+				newHeadPitch = Mth.HALF_PI;
+			} else if (newHeadPitch < -Mth.HALF_PI) {
+				relRotation.rotateX(newHeadPitch + Mth.HALF_PI);
+				newHeadPitch = -Mth.HALF_PI;
+			}
+			this.headPitchO += newHeadPitch - this.headPitch;
+			this.headPitch = newHeadPitch;
+		}
+		relRotation.rotateZ(roll);
 
-		this.vsch$setRotation(this.vsch$getRotation().mul(rotation).normalize());
-		this.vsch$setRotationO(this.rotationO.mul(rotation).normalize());
+		this.vsch$setBodyRotation(this.vsch$getBodyRotation().mul(relRotation).normalize());
+		this.vsch$setBodyRotationO(this.rotationO.mul(relRotation).normalize());
+		this.reCalcHeadRotation();
+		this.reCalcHeadRotationO();
 	}
 
 	@Override
@@ -340,10 +464,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			return;
 		}
 		this.absMoveTo(x, y, z);
-		super.setYRot(yRot % 360f);
-		super.setXRot(xRot % 360f);
+		// super.setYRot(yRot % 360f);
+		// super.setXRot(xRot % 360f);
 		// this.reCalcRotation();
-		this.vsch$setRotationO(this.vsch$getRotation());
+		this.vsch$setBodyRotationO(this.vsch$getBodyRotation());
+		this.reCalcHeadRotation();
+		this.reCalcHeadRotationO();
 	}
 
 	@Override
@@ -362,14 +488,18 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public void vsch$setOldPosAndRot() {
-		this.vsch$setRotationO(this.vsch$getRotation());
+		this.vsch$setBodyRotationO(this.vsch$getBodyRotation());
 		this.headPitchO = this.headPitch;
+		this.headYawO = this.headYaw;
+		this.reCalcHeadRotationO();
 	}
 
 	@Override
 	public void vsch$stepLerp(final int steps) {
-		this.vsch$setRotation(this.vsch$getRotation().nlerp(this.rotationLerp, 1.0f / steps).normalize());
+		this.vsch$setBodyRotation(this.vsch$getBodyRotation().nlerp(this.rotationLerp, 1.0f / steps).normalize());
 		this.headPitch += (this.headPitchLerp - this.headPitch) / steps;
+		this.headYaw += (this.headYawLerp - this.headYaw) / steps;
+		this.reCalcHeadRotation();
 	}
 
 	@Override
@@ -445,7 +575,15 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (speed > 1) {
 			move.normalize();
 		}
-		this.vsch$getRotation().transform(move.mul(power));
+		this.vsch$getHeadRotation().transform(move.mul(power));
+		final float yawSpeed = this.headYaw * 0.3f;
+		if (Math.abs(yawSpeed) < 1e-6) {
+			this.headYaw = 0;
+		} else {
+			this.headYaw -= yawSpeed;
+			this.vsch$setBodyRotation(this.vsch$getBodyRotation().rotateY(yawSpeed));
+			this.reCalcHeadRotation();
+		}
 		this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
 	}
 
@@ -615,7 +753,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.setYBodyRot(this.getYHeadRot());
 		final float height = this.vsch$getVanillaDimensions(this.getPose()).height;
 		final Vector3f feetPos = new Vector3f(0, SPACE_ENTITY_SIZE - height, 0);
-		feetPos.rotate(this.vsch$getRotation());
+		feetPos.rotate(this.vsch$getBodyRotation());
 		this.updatePartPos(this.feetPart, feetPos.x, feetPos.y, feetPos.z);
 		this.updatePartPos(this.chestPart, feetPos.x / 2, feetPos.y / 2, feetPos.z / 2);
 	}
@@ -643,7 +781,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			e1.getZ() - e2.getZ()
 		);
 		final double lengthSqr = movement.lengthSquared();
-		if (lengthSqr < 0.0001) {
+		if (lengthSqr < 1e-4) {
 			return;
 		}
 		movement.normalize(Math.min(1 / Math.sqrt(lengthSqr), 0.2)).mul(1.0 / 20);

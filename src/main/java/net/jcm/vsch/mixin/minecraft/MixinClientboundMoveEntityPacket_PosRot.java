@@ -16,5 +16,7 @@ public abstract class MixinClientboundMoveEntityPacket_PosRot {
 	private static void read(final FriendlyByteBuf buf, final CallbackInfoReturnable<ClientboundMoveEntityPacket.PosRot> cir) {
 		final EntityRotationPacketAccessor packet = (EntityRotationPacketAccessor)(cir.getReturnValue());
 		packet.vsch$rotation().set(buf.readQuaternion()).normalize();
+		packet.vsch$setHeadPitch(buf.readFloat());
+		packet.vsch$setHeadYaw(buf.readFloat());
 	}
 }

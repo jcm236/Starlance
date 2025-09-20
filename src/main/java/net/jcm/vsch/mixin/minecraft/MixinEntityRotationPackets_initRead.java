@@ -21,5 +21,7 @@ public abstract class MixinEntityRotationPackets_initRead implements EntityRotat
 	@Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("RETURN"))
 	public void init$read(final FriendlyByteBuf buf, final CallbackInfo ci) {
 		this.vsch$rotation().set(buf.readQuaternion()).normalize();
+		this.vsch$setHeadPitch(buf.readFloat());
+		this.vsch$setHeadYaw(buf.readFloat());
 	}
 }

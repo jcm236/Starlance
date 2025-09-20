@@ -44,7 +44,10 @@ public abstract class MixinServerGamePacketListenerImpl {
 		if (!packet.hasRotation()) {
 			return false;
 		}
-		return !((EntityRotationPacketAccessor)(packet)).vsch$rotation().isFinite();
+		final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+		return !packetAccessor.vsch$rotation().isFinite() ||
+			!Double.isFinite(packetAccessor.vsch$getHeadPitch()) ||
+			!Double.isFinite(packetAccessor.vsch$getHeadYaw());
 	}
 
 	@Inject(method = "handleMovePlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;wrapDegrees(F)F", ordinal = 0))
@@ -52,7 +55,10 @@ public abstract class MixinServerGamePacketListenerImpl {
 		if (!packet.hasRotation() || !(this.player instanceof FreeRotatePlayerAccessor frp)) {
 			return;
 		}
-		frp.vsch$setRotation(((EntityRotationPacketAccessor)(packet)).vsch$rotation());
+		final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+		frp.vsch$setBodyRotation(packetAccessor.vsch$rotation());
+		frp.vsch$setHeadPitch(packetAccessor.vsch$getHeadPitch());
+		frp.vsch$setHeadYaw(packetAccessor.vsch$getHeadYaw());
 	}
 
 	@ModifyExpressionValue(
@@ -61,7 +67,10 @@ public abstract class MixinServerGamePacketListenerImpl {
 	)
 	public ClientboundPlayerPositionPacket teleport$new$ClientboundPlayerPositionPacket(final ClientboundPlayerPositionPacket packet) {
 		if (this.player instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}

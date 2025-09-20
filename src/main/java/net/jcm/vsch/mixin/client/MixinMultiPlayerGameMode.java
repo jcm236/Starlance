@@ -19,8 +19,11 @@ public abstract class MixinMultiPlayerGameMode {
 		at = @At(value = "NEW", target = "Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;")
 	)
 	public ServerboundMovePlayerPacket.PosRot useItem$new$ServerboundMovePlayerPacket$PosRot(final ServerboundMovePlayerPacket.PosRot packet, @Local final Player player) {
-		if (player instanceof FreeRotatePlayerAccessor frp) {
-			((EntityRotationPacketAccessor)(packet)).vsch$rotation().set(frp.vsch$getRotation());
+		if (player instanceof final FreeRotatePlayerAccessor frp) {
+			final EntityRotationPacketAccessor packetAccessor = ((EntityRotationPacketAccessor)(packet));
+			packetAccessor.vsch$rotation().set(frp.vsch$getBodyRotation());
+			packetAccessor.vsch$setHeadPitch(frp.vsch$getHeadPitch());
+			packetAccessor.vsch$setHeadYaw(frp.vsch$getHeadYaw());
 		}
 		return packet;
 	}

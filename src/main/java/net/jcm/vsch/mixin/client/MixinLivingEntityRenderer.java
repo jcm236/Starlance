@@ -5,6 +5,7 @@ import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +15,7 @@ import org.joml.Quaternionf;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -40,7 +42,7 @@ public abstract class MixinLivingEntityRenderer {
 			return;
 		}
 
-		final Quaternionf rotation = frp.vsch$getRotationO().slerp(frp.vsch$getRotation(), partialTick, new Quaternionf());
+		final Quaternionf rotation = frp.vsch$getBodyRotationO().slerp(frp.vsch$getBodyRotation(), partialTick, new Quaternionf());
 
 		final EntityDimensions vanillaDim = frp.vsch$getVanillaDimensions(player.getPose());
 		poseStack.translate(0, 0.6f / 2, 0);
@@ -65,11 +67,12 @@ public abstract class MixinLivingEntityRenderer {
 		final float age,
 		float headYaw,
 		float headPitch,
-		final Operation<Void> operation
+		final Operation<Void> operation,
+		@Local(argsOnly = true, ordinal = 1) final float partialTick
 	) {
-		if ((entity instanceof Player player) && (player instanceof FreeRotatePlayerAccessor frp) && frp.vsch$isFreeRotating()) {
-			headYaw = 0;
-			headPitch = frp.vsch$getHeadPitch();
+		if ((entity instanceof final Player player) && (player instanceof final FreeRotatePlayerAccessor frp) && frp.vsch$isFreeRotating()) {
+			headYaw = Mth.rotLerp(partialTick, -frp.vsch$getHeadYawO() * Mth.RAD_TO_DEG, -frp.vsch$getHeadYaw() * Mth.RAD_TO_DEG);
+			headPitch = Mth.rotLerp(partialTick, frp.vsch$getHeadPitchO() * Mth.RAD_TO_DEG, frp.vsch$getHeadPitch() * Mth.RAD_TO_DEG);
 		}
 		operation.call(model, entity, limbSwing, limbSwingAmount, age, headYaw, headPitch);
 	}

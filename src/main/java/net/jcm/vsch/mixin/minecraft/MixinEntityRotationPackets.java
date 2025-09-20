@@ -23,9 +23,33 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class MixinEntityRotationPackets implements EntityRotationPacketAccessor {
 	@Unique
 	private Quaternionf rotation = new Quaternionf();
+	@Unique
+	private float headPitch = 0;
+	@Unique
+	private float headYaw = 0;
 
 	@Override
 	public Quaternionf vsch$rotation() {
 		return this.rotation;
+	}
+
+	@Override
+	public float vsch$getHeadPitch() {
+		return this.headPitch;
+	}
+
+	@Override
+	public void vsch$setHeadPitch(final float pitch) {
+		this.headPitch = pitch;
+	}
+
+	@Override
+	public float vsch$getHeadYaw() {
+		return this.headYaw;
+	}
+
+	@Override
+	public void vsch$setHeadYaw(final float yaw) {
+		this.headYaw = yaw;
 	}
 }
