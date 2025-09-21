@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraftforge.entity.PartEntity;
 public class MultiPartPlayer extends PartEntity<Player> {
 	private final EntityDimensions size;
 	private final boolean isFeet;
+	public boolean testing = false;
 
 	public MultiPartPlayer(final Player parent, final float size, final boolean isFeet) {
 		super(parent);
@@ -162,6 +164,13 @@ public class MultiPartPlayer extends PartEntity<Player> {
 	@Override
 	public float maxUpStep() {
 		return this.getParent().maxUpStep();
+	}
+
+	@Override
+	public void move(final MoverType moverType, final Vec3 movement) {
+		if (this.isAlive()) {
+			this.getParent().move(moverType, movement);
+		}
 	}
 
 	@Override

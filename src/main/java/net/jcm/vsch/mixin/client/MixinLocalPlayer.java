@@ -69,4 +69,11 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		}
 		this.yya = (this.input.jumping ? 1 : 0) + (this.input.shiftKeyDown ? -1 : 0);
 	}
+
+	@Inject(method = "moveTowardsClosestSpace", at = @At("HEAD"), cancellable = true)
+	private void moveTowardsClosestSpace(final double x, final double z, final CallbackInfo ci) {
+		if (this.vsch$isFreeRotating()) {
+			ci.cancel();
+		}
+	}
 }

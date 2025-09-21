@@ -7,7 +7,9 @@ import net.jcm.vsch.client.VSCHKeyBindings;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
+import net.jcm.vsch.items.custom.MagnetBootItem;
 import net.jcm.vsch.util.BooleanRef;
+import net.jcm.vsch.util.CollisionUtil;
 import net.jcm.vsch.util.VSCHUtils;
 import net.jcm.vsch.util.wapi.LevelData;
 
@@ -19,6 +21,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -29,16 +32,22 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.scores.Team;
 
+import org.joml.Matrix4d;
+import org.joml.Matrix4dc;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+import org.joml.primitives.AABBd;
+import org.valkyrienskies.core.api.ships.LoadedShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -55,6 +64,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
@@ -65,6 +75,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private static final float SPACE_ENTITY_SIZE = 0.6f;
+	@Unique
+	private static final float HALF_SPACE_ENTITY_SIZE = SPACE_ENTITY_SIZE / 2;
 	@Unique
 	private static final EntityDimensions SPACE_ENTITY_DIM = EntityDimensions.scalable(SPACE_ENTITY_SIZE, SPACE_ENTITY_SIZE);
 	@Unique
@@ -106,6 +118,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	private MultiPartPlayer feetPart;
 	@Unique
 	private Pose oldPose;
+	@Unique
+	private int jumpCD = 0;
+	@Unique
+	private float nextStep = 0;
 
 	protected MixinPlayer() {
 		super(null, null);
@@ -113,6 +129,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Shadow
 	public abstract Abilities getAbilities();
+
+	@Shadow
+	protected abstract boolean isStayingOnGroundSurface();
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void postInit(final Level level, final BlockPos pos, final float yRot, final GameProfile profile, final CallbackInfo ci) {
@@ -144,8 +163,11 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		return !this.firstTick && this.entityData.get(FREE_ROTATION_ID);
 	}
 
-	@Unique
-	private Vec3 getFreeHeadCenter() {
+	@Override
+	public Vec3 vsch$getHeadCenter() {
+		if (!this.vsch$isFreeRotating()) {
+			return this.getEyePosition();
+		}
 		return this.position().add(0, SPACE_ENTITY_SIZE / 2, 0);
 	}
 
@@ -154,7 +176,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!this.vsch$isFreeRotating()) {
 			return this.position();
 		}
-		return this.getFreeHeadCenter().add(this.vsch$getDownVector().scale(SPACE_ENTITY_SIZE * 2));
+		return this.vsch$getHeadCenter().add(this.vsch$getDownVector().scale(SPACE_ENTITY_SIZE * 2));
 	}
 
 	@Override
@@ -172,6 +194,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Vector3f angles = this.rotation.getEulerAnglesYXZ(new Vector3f());
 		this.yBodyRot = -this.rotation.getEulerAnglesYXZ(new Vector3f()).y * Mth.RAD_TO_DEG;
+		this.reCalcHeadRotation();
 	}
 
 	@Override
@@ -190,6 +213,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Vector3f angles = this.rotationO.getEulerAnglesYXZ(new Vector3f());
 		this.xRotO = angles.x * Mth.RAD_TO_DEG;
 		this.yBodyRotO = -angles.y * Mth.RAD_TO_DEG;
+		this.reCalcHeadRotationO();
 	}
 
 	@Override
@@ -310,16 +334,21 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Unique
+	private Vector3d vsch$getRelativeDeltaMovement() {
+		final Vec3 movement = this.getDeltaMovement();
+		return this.vsch$getBodyRotation().transformInverse(new Vector3d(movement.x, movement.y, movement.z));
+	}
+
+	@Unique
 	private void reCalcRotation() {
 		if (this.firstTick || !this.vsch$isFreeRotating()) {
 			return;
 		}
 		final Quaternionf rotation = this.vsch$getBodyRotation();
 		final Vector3f oldAngles = rotation.getEulerAnglesYXZ(new Vector3f());
-		this.vsch$setBodyRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * super.getXRot(), oldAngles.z));
 		this.headPitch = 0;
 		this.headYaw = 0;
-		this.reCalcHeadRotation();
+		this.vsch$setBodyRotation(rotation.rotationYXZ(Mth.DEG_TO_RAD * -super.getYRot(), Mth.DEG_TO_RAD * super.getXRot(), oldAngles.z));
 	}
 
 	@Unique
@@ -341,7 +370,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			}
 			this.rotationO.set(this.rotation);
 		}
-		this.headPitchO = this.headPitch = data.getFloat("HeadPitch");
+		this.headPitchO = this.headPitch = 0;
 		this.headYawO = this.headYaw = data.getFloat("HeadYaw");
 		this.reCalcHeadRotation();
 		this.reCalcHeadRotationO();
@@ -350,7 +379,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
 	public void addAdditionalSaveData(final CompoundTag data, final CallbackInfo ci) {
 		data.put("RotationQuat", this.newFloatList(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w));
-		data.putFloat("HeadPitch", this.headPitch);
 		data.putFloat("HeadYaw", this.headYaw);
 	}
 
@@ -403,6 +431,11 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		return this.onGround();
 	}
 
+	@Unique
+	private boolean isBodyRotationLocked() {
+		return MagnetBootItem.isMagnetized(this);
+	}
+
 	@Override
 	public void turn(final double x, final double y) {
 		if (!this.vsch$isFreeRotating()) {
@@ -414,21 +447,24 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 		float roll = 0;
 		boolean lockHeadRotate = false;
+		final boolean lockBodyRotate = this.isBodyRotationLocked();
 		if (isClientSide) {
 			if (VSCHKeyBindings.UNLOCK_HEAD_ROTATION.consumeDoubleClick()) {
 				this.headPitch = 0;
 				this.reCalcHeadRotation();
 				return;
 			}
-			lockHeadRotate = !VSCHKeyBindings.UNLOCK_HEAD_ROTATION.isDown();
-			int rollDir = 0;
-			if (VSCHKeyBindings.ROLL_CLOCKWISE.isDown()) {
-				rollDir++;
+			if (!lockBodyRotate) {
+				lockHeadRotate = !VSCHKeyBindings.UNLOCK_HEAD_ROTATION.isDown();
+				int rollDir = 0;
+				if (VSCHKeyBindings.ROLL_CLOCKWISE.isDown()) {
+					rollDir++;
+				}
+				if (VSCHKeyBindings.ROLL_COUNTER_CLOCKWISE.isDown()) {
+					rollDir--;
+				}
+				roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * ClientEvents.getSpf() * Mth.DEG_TO_RAD;
 			}
-			if (VSCHKeyBindings.ROLL_COUNTER_CLOCKWISE.isDown()) {
-				rollDir--;
-			}
-			roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * ClientEvents.getSpf() * Mth.DEG_TO_RAD;
 		}
 
 		if (x == 0 && y == 0 && roll == 0) {
@@ -449,25 +485,31 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.headYawO += newHeadYaw - this.headYaw;
 		this.headYaw = newHeadYaw;
 		if (lockHeadRotate) {
-			relRotation.rotateX(pitch);
+			if (!lockBodyRotate) {
+				relRotation.rotateX(pitch);
+			}
 		} else {
 			float newHeadPitch = this.headPitch + pitch;
 			if (newHeadPitch > Mth.HALF_PI) {
-				relRotation.rotateX(newHeadPitch - Mth.HALF_PI);
+				if (!lockBodyRotate) {
+					relRotation.rotateX(newHeadPitch - Mth.HALF_PI);
+				}
 				newHeadPitch = Mth.HALF_PI;
 			} else if (newHeadPitch < -Mth.HALF_PI) {
-				relRotation.rotateX(newHeadPitch + Mth.HALF_PI);
+				if (!lockBodyRotate) {
+					relRotation.rotateX(newHeadPitch + Mth.HALF_PI);
+				}
 				newHeadPitch = -Mth.HALF_PI;
 			}
 			this.headPitchO += newHeadPitch - this.headPitch;
 			this.headPitch = newHeadPitch;
 		}
-		relRotation.rotateZ(roll);
+		if (!lockBodyRotate) {
+			relRotation.rotateZ(roll);
+		}
 
 		this.vsch$setBodyRotation(this.vsch$getBodyRotation().mul(relRotation).normalize());
 		this.vsch$setBodyRotationO(this.rotationO.mul(relRotation).normalize());
-		this.reCalcHeadRotation();
-		this.reCalcHeadRotationO();
 	}
 
 	@Override
@@ -481,8 +523,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		// super.setXRot(xRot % 360f);
 		// this.reCalcRotation();
 		this.vsch$setBodyRotationO(this.vsch$getBodyRotation());
-		this.reCalcHeadRotation();
-		this.reCalcHeadRotationO();
 	}
 
 	@Override
@@ -501,18 +541,16 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public void vsch$setOldPosAndRot() {
-		this.vsch$setBodyRotationO(this.vsch$getBodyRotation());
 		this.headPitchO = this.headPitch;
 		this.headYawO = this.headYaw;
-		this.reCalcHeadRotationO();
+		this.vsch$setBodyRotationO(this.vsch$getBodyRotation());
 	}
 
 	@Override
 	public void vsch$stepLerp(final int steps) {
-		this.vsch$setBodyRotation(this.vsch$getBodyRotation().nlerp(this.rotationLerp, 1.0f / steps).normalize());
 		this.headPitch += (this.headPitchLerp - this.headPitch) / steps;
 		this.headYaw += (this.headYawLerp - this.headYaw) / steps;
-		this.reCalcHeadRotation();
+		this.vsch$setBodyRotation(this.vsch$getBodyRotation().nlerp(this.rotationLerp, 1.0f / steps).normalize());
 	}
 
 	@Override
@@ -549,9 +587,37 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	protected void checkInsideBlocks() {
-		super.checkInsideBlocks();
-		((EntityAccessor)(this.chestPart)).vsch$checkInsideBlocks();
-		((EntityAccessor)(this.feetPart)).vsch$checkInsideBlocks();
+		if (!this.vsch$isFreeRotating()) {
+			super.checkInsideBlocks();
+			return;
+		}
+	}
+
+	@Override
+	protected void checkSupportingBlock(final boolean onGround, final Vec3 movement) {
+		if (!onGround) {
+			super.checkSupportingBlock(onGround, movement);
+			return;
+		}
+		final AABB bb = this.getBoundingBox();
+		final AABB movedBB = movement == null
+			? bb
+			: bb.expandTowards(Math.signum(movement.x) * 1e-6, Math.signum(movement.y) * 1e-6, Math.signum(movement.z) * 1e-6);
+		Optional<BlockPos> supportingBlockPos = this.level().findSupportingBlock(this, movedBB);
+		if (!supportingBlockPos.isPresent() && movement != null) {
+			supportingBlockPos = this.level().findSupportingBlock(this, movedBB.move(-movement.x, -movement.y, -movement.z));
+		}
+		this.mainSupportingBlockPos = supportingBlockPos;
+	}
+
+	@Override
+	protected BlockPos getOnPos(final float dist) {
+		final BlockPos mainSupportingBlockPos = this.mainSupportingBlockPos.orElse(null);
+		if (mainSupportingBlockPos != null) {
+			return mainSupportingBlockPos;
+		}
+		final Vector3d rel = this.vsch$getBodyRotation().transform(new Vector3d(0, -HALF_SPACE_ENTITY_SIZE / 2 - dist, 0));
+		return BlockPos.containing(this.vsch$getFeetPosition().add(rel.x, rel.y, rel.z));
 	}
 
 	@Override
@@ -575,30 +641,240 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	public void moveRelative(final float power, final Vec3 movement) {
-		if (!this.vsch$isFreeRotating()) {
-			super.moveRelative(power, movement);
-			return;
-		}
-		final double speed = movement.lengthSqr();
-		if (speed < 1.0e-7) {
-			return;
-		}
-		final Vector3d move = new Vector3d(movement.x, movement.y, movement.z);
-		if (speed > 1) {
-			move.normalize();
-		}
-		this.vsch$getHeadRotation().transform(move.mul(power));
-		final float yawSpeed = this.headYaw * 0.3f;
-		if (Math.abs(yawSpeed) < 1e-6) {
-			this.headYaw = 0;
-		} else {
-			this.headYaw -= yawSpeed;
-			this.vsch$setBodyRotation(this.vsch$getBodyRotation().rotateY(yawSpeed));
-			this.reCalcHeadRotation();
-		}
-		this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
+	public boolean isFallFlying() {
+		return this.vsch$isFreeRotating() ? false : super.isFallFlying();
 	}
+
+	@Override
+	public Vec3 handleRelativeFrictionAndCalculateMovement(final Vec3 movement, final float friction) {
+		if (!this.vsch$isFreeRotating()) {
+			return super.handleRelativeFrictionAndCalculateMovement(movement, friction);
+		}
+		final float power = this.getFlyingSpeed();
+		final double speed = movement.lengthSqr();
+		if (speed > 1e-8) {
+			final Vector3d move = new Vector3d(movement.x, movement.y, movement.z);
+			if (speed > 1) {
+				move.normalize();
+			}
+			final float yawSpeed = this.headYaw * 0.3f;
+			if (Math.abs(yawSpeed) < 1e-6) {
+				this.headYaw = 0;
+			} else {
+				this.headYaw -= yawSpeed;
+				this.vsch$setBodyRotation(this.vsch$getBodyRotation().rotateY(yawSpeed));
+			}
+			final boolean bodyLocked = this.isBodyRotationLocked();
+			final Quaternionf rotation = bodyLocked
+				? (this.headYaw == 0 ? this.vsch$getBodyRotation() : this.vsch$getBodyRotation().rotateY(this.headYaw, new Quaternionf()))
+				: this.vsch$getHeadRotation();
+			move.mul(power);
+			rotation.transform(move);
+			this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
+			if (bodyLocked && this.jumping && !this.isStayingOnGroundSurface() /*&& this.onGround()*/ && this.jumpCD == 0) {
+				final Vec3 dm0 = this.getDeltaMovement();
+				final Vector3d dm = rotation.transformInverse(new Vector3d(dm0.x, dm0.y, dm0.z));
+				dm.y = this.getJumpPower();
+				rotation.transform(dm);
+				this.setDeltaMovement(new Vec3(dm.x, dm.y, dm.z));
+				this.jumpCD = 10;
+			}
+		}
+		// this.setDeltaMovement(this.handleOnClimbable(this.getDeltaMovement()));
+		this.move(MoverType.SELF, this.getDeltaMovement());
+		return this.getDeltaMovement();
+	}
+
+	@Override
+	public void move(final MoverType moverType, Vec3 movement) {
+		if (!this.vsch$isFreeRotating()) {
+			super.move(moverType, movement);
+			return;
+		}
+		if (this.noPhysics) {
+			this.setPos(this.getX() + movement.x, this.getY() + movement.y, this.getZ() + movement.z);
+			return;
+		}
+
+		this.wasOnFire = this.isOnFire();
+
+		if (moverType == MoverType.PISTON) {
+			movement = this.limitPistonMovement(movement);
+			if (movement.equals(Vec3.ZERO)) {
+				return;
+			}
+		}
+
+		System.out.println("moving: " + moverType + " : " + movement);
+		if (this.stuckSpeedMultiplier.lengthSqr() > 1e-7) {
+			movement = movement.multiply(this.stuckSpeedMultiplier);
+			this.stuckSpeedMultiplier = Vec3.ZERO;
+			this.setDeltaMovement(Vec3.ZERO);
+		}
+		movement = this.maybeBackOffFromEdge(movement, moverType);
+
+		final Quaternionf rotation = this.vsch$getBodyRotation();
+		final Vector3d movementWill = rotation.transformInverse(new Vector3d(movement.x, movement.y, movement.z));
+		final Vec3 movementWillVec = new Vec3(movementWill.x, movementWill.y, movementWill.z);
+		movement = this.collide(movement);
+		final Vector3d movementActual = rotation.transformInverse(new Vector3d(movement.x, movement.y, movement.z));
+		final double movedDist = movement.length();
+		if (movedDist > 1e-4) {
+			// TODO: reset fallDistance
+			this.setPos(this.getX() + movement.x, this.getY() + movement.y, this.getZ() + movement.z);
+		}
+		final boolean collideX = Math.abs(movementWill.x - movementActual.x) > 1e-5;
+		final boolean collideZ = Math.abs(movementWill.z - movementActual.z) > 1e-5;
+		final boolean collideY = Math.abs(movementWill.y - movementActual.y) > 1e-6;
+		this.horizontalCollision = collideX || collideZ;
+		this.verticalCollision = collideY;
+		this.verticalCollisionBelow = collideY && movementWill.y < 0;
+		// TODO: detect minorHorizontalCollision
+		this.minorHorizontalCollision = this.horizontalCollision && false;
+		this.setOnGroundWithKnownMovement(this.verticalCollisionBelow, movement);
+		final BlockPos groundPos = this.getOnPosLegacy();
+		final BlockState groundState = this.level().getBlockState(groundPos);
+		this.checkFallDamage(movementActual.y, this.onGround(), groundState, groundPos);
+		if (this.isRemoved()) {
+			return;
+		}
+		if (this.horizontalCollision) {
+			final Vector3d dm = this.vsch$getRelativeDeltaMovement();
+			if (collideX) {
+				dm.x = 0;
+			}
+			if (collideZ) {
+				dm.z = 0;
+			}
+			rotation.transform(dm);
+			this.setDeltaMovement(dm.x, dm.y, dm.z);
+		}
+		if (collideY) {
+			// TODO: Block.updateEntityAfterFallOn
+		}
+		if (this.onGround()) {
+			// TODO: Block.stepOn
+		}
+		final Entity.MovementEmission movementEmission = this.getMovementEmission();
+		if (movementEmission.emitsAnything() && !this.isPassenger()) {
+			// TODO
+			final float scaledMoveDist = (float) (movedDist * 0.6);
+			this.flyDist += scaledMoveDist;
+			this.walkDist += scaledMoveDist;
+			this.moveDist += scaledMoveDist;
+			final BlockPos steppingPos = this.getOnPos();
+			final BlockState stepping = this.level().getBlockState(steppingPos);
+			if (!stepping.isAir() && this.moveDist > this.nextStep) {
+				final boolean steppingOnGround = steppingPos.equals(groundPos);
+				boolean stepped = this.vibrationAndSoundEffectsFromBlock(groundPos, groundState, movementEmission.emitsSounds(), steppingOnGround, movementWillVec);
+				if (!steppingOnGround) {
+					stepped |= this.vibrationAndSoundEffectsFromBlock(steppingPos, stepping, false, movementEmission.emitsEvents(), movementWillVec);
+				}
+				if (stepped) {
+					this.nextStep = this.moveDist + 1;
+				} else if (this.isInWater()) {
+					this.nextStep = this.moveDist + 1;
+					if (movementEmission.emitsSounds()) {
+						this.waterSwimSound();
+					}
+					if (movementEmission.emitsEvents()) {
+						this.gameEvent(GameEvent.SWIM);
+					}
+				}
+			}
+		}
+		this.tryCheckInsideBlocks();
+		if (
+			this.level().getBlockStatesIfLoaded(this.getBoundingBox().deflate(1e-6))
+				.noneMatch((state) -> state.is(BlockTags.FIRE) || state.is(Blocks.LAVA))
+		) {
+			if (this.getRemainingFireTicks() <= 0) {
+				this.setRemainingFireTicks(-this.getFireImmuneTicks());
+			}
+			if (this.wasOnFire && (this.isInPowderSnow || this.isInWaterRainOrBubble())) {
+				this.playEntityOnFireExtinguishedSound();
+			}
+		}
+		if (this.isOnFire() && (this.isInPowderSnow || this.isInWaterRainOrBubble())) {
+			this.setRemainingFireTicks(-this.getFireImmuneTicks());
+		}
+	}
+
+	@Unique
+	private Vec3 collide(Vec3 movement) {
+		final Level level = this.level();
+		System.out.println("colliding: " + movement);
+		final Vec3 position = this.vsch$getHeadCenter();
+		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
+		final AABBd box = new AABBd(
+			-dimensions.width / 2, 0.6 / 2 - dimensions.height, -dimensions.width / 2,
+			dimensions.width / 2, 0.6 / 2, dimensions.width / 2
+		);
+		final Matrix4dc entityToWorld = new Matrix4d()
+			.translation(position.x, position.y, position.z)
+			.rotate(this.vsch$getBodyRotation());
+		final Matrix4dc worldToEntity = entityToWorld.invert(new Matrix4d());
+		final Vector3d newMovement = new Vector3d(movement.x, movement.y, movement.z);
+		worldToEntity.transformDirection(newMovement);
+		if (newMovement.x < 0) {
+			box.minX += newMovement.x;
+		} else {
+			box.maxX += newMovement.x;
+		}
+		if (newMovement.y < 0) {
+			box.minY += newMovement.y;
+		} else {
+			box.maxY += newMovement.y;
+		}
+		if (newMovement.z < 0) {
+			box.minZ += newMovement.z;
+		} else {
+			box.maxZ += newMovement.z;
+		}
+		final AABBd worldBox = box.transform(entityToWorld, new AABBd());
+		System.out.println("box: " + box + " -> " + worldBox);
+
+		CollisionUtil.checkCollision(newMovement, level, this, box, worldToEntity, entityToWorld);
+
+		final Matrix4d entityToShip = new Matrix4d();
+		final Matrix4d shipToEntity = new Matrix4d();
+		final String dimId = VSGameUtilsKt.getDimensionId(level);
+		for (final LoadedShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
+			if (!ship.getChunkClaimDimension().equals(dimId)) {
+				continue;
+			}
+			if (!ship.getWorldAABB().intersectsAABB(worldBox)) {
+				continue;
+			}
+			entityToShip.set(ship.getWorldToShip()).mul(entityToWorld);
+			shipToEntity.set(worldToEntity).mul(ship.getShipToWorld());
+			CollisionUtil.checkCollision(newMovement, level, this, box, shipToEntity, entityToShip);
+		}
+
+		if (Math.abs(newMovement.x) < 1e-7) {
+			newMovement.x = 0;
+		}
+		if (Math.abs(newMovement.y) < 1e-7) {
+			newMovement.y = 0;
+		}
+		if (Math.abs(newMovement.z) < 1e-7) {
+			newMovement.z = 0;
+		}
+		entityToWorld.transformDirection(newMovement);
+		if (Math.abs(newMovement.x) < 1e-7) {
+			newMovement.x = 0;
+		}
+		if (Math.abs(newMovement.y) < 1e-7) {
+			newMovement.y = 0;
+		}
+		if (Math.abs(newMovement.z) < 1e-7) {
+			newMovement.z = 0;
+		}
+		movement = new Vec3(newMovement.x, newMovement.y, newMovement.z);
+		System.out.println("final movement: " + movement);
+		return movement;
+	}
+
 
 	@Override
 	protected void checkFallDamage(final double dy, final boolean onGround, final BlockState block, final BlockPos pos) {
@@ -701,7 +977,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 				return selfTeamRule != Team.CollisionRule.PUSH_OTHER_TEAMS && teamRule != Team.CollisionRule.PUSH_OTHER_TEAMS;
 			});
 		// if (level.isClientSide()) {
-		// 	selector.and((e) -> e instanceof Player || e instanceof MultiPartPlayer);
+		// 	selector = selector.and((e) -> e instanceof Player || e instanceof MultiPartPlayer);
 		// }
 		for (final Entity part : new Entity[]{this, this.chestPart, this.feetPart}) {
 			level.getEntities(
@@ -717,6 +993,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	public void baseTick() {
 		if (this.firstTick) {
 			this.updateDefaultFreeRotation();
+		}
+		if (this.jumpCD > 0) {
+			this.jumpCD--;
 		}
 		super.baseTick();
 		final boolean freeRotation = this.vsch$isFreeRotating();
@@ -763,7 +1042,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private void updateParts() {
-		this.setYBodyRot(this.getYHeadRot());
 		final float height = this.vsch$getVanillaDimensions(this.getPose()).height;
 		final Vector3f feetPos = new Vector3f(0, SPACE_ENTITY_SIZE - height, 0);
 		feetPos.rotate(this.vsch$getBodyRotation());
@@ -804,5 +1082,31 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!e2.isVehicle() && e2.isPushable()) {
 			e2.push(-movement.x, -movement.y, -movement.z);
 		}
+	}
+
+	@Unique
+	private static boolean isStateClimbable(final BlockState state) {
+		return state.is(BlockTags.CLIMBABLE) || state.is(Blocks.POWDER_SNOW);
+	}
+
+	@Unique
+	private boolean vibrationAndSoundEffectsFromBlock(
+		final BlockPos pos, final BlockState state,
+		final boolean playSound, final boolean emitEvent,
+		final Vec3 movement
+	) {
+		if (state.isAir()) {
+			return false;
+		}
+		if (this.onGround() || isStateClimbable(state) || this.isCrouching() && Math.abs(movement.y) < 1e-6 || this.isOnRails()) {
+			if (playSound) {
+				this.playStepSound(pos, state);
+			}
+			if (emitEvent) {
+				this.level().gameEvent(GameEvent.STEP, this.position(), GameEvent.Context.of(this, state));
+			}
+			return true;
+		}
+		return false;
 	}
 }

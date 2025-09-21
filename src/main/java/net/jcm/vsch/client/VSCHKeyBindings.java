@@ -34,7 +34,7 @@ public final class VSCHKeyBindings {
 		"key." + VSCHMod.MODID + ".unlock_head_rotation",
 		KeyConflictContext.IN_GAME,
 		InputConstants.Type.KEYSYM,
-		GLFW.GLFW_KEY_LEFT_SUPER,
+		GLFW.GLFW_KEY_LEFT_ALT,
 		"key.categories.movement"
 	);
 

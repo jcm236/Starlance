@@ -12,6 +12,8 @@ public interface FreeRotatePlayerAccessor {
 
 	boolean vsch$isFreeRotating();
 
+	Vec3 vsch$getHeadCenter();
+
 	Vec3 vsch$getFeetPosition();
 
 	default Vec3 vsch$getDownVector() {

@@ -33,6 +33,7 @@
 		"minecraft.MixinServerPlayer",
 		"minecraft.MixinServerboundMovePlayerPacket_PosRot",
 		"minecraft.MixinServerboundMovePlayerPacket_Rot",
+		"valkyrienskies.MixinEntityShipCollisionUtils",
 		"valkyrienskies.MixinShipAssemblyKt",
 		"valkyrienskies.MixinVSGameUtilsKt",
 		"valkyrienskies.accessor.ServerShipObjectWorldAccessor"

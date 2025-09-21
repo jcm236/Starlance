@@ -10,7 +10,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -18,11 +20,14 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import org.joml.Matrix3f;
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
+import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -44,27 +49,40 @@ public class MagnetBootItem extends ArmorItem {
 		return VSCHConfig.MAGNET_BOOT_MAX_FORCE.get().doubleValue();
 	}
 
-	public boolean getEnabled(ItemStack stack) {
+	public boolean getEnabled(final ItemStack stack) {
 		if (!(stack.getItem() instanceof MagnetBootItem)) {
 			return false;
 		}
-		CompoundTag tag = stack.getTag();
+		final CompoundTag tag = stack.getTag();
 		return tag == null || !tag.getBoolean(TAG_DISABLED);
 	}
 
-	public boolean getReady(ItemStack stack) {
+	public boolean getReady(final ItemStack stack) {
 		if (!(stack.getItem() instanceof MagnetBootItem)) {
 			return false;
 		}
-		CompoundTag tag = stack.getTag();
+		final CompoundTag tag = stack.getTag();
 		return tag != null && tag.getBoolean(TAG_READY);
 	}
 
-	public Vec3 getDirection(ItemStack stack) {
+	public boolean isWorking(final ItemStack stack) {
+		if (!(stack.getItem() instanceof MagnetBootItem)) {
+			return false;
+		}
+		final CompoundTag tag = stack.getTag();
+		return tag != null && !tag.getBoolean(TAG_DISABLED) && tag.getBoolean(TAG_READY);
+	}
+
+	public static boolean isMagnetized(final LivingEntity entity) {
+		final ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
+		return !stack.isEmpty() && stack.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack);
+	}
+
+	public Vec3 getDirection(final ItemStack stack) {
 		if (!(stack.getItem() instanceof MagnetBootItem)) {
 			return null;
 		}
-		CompoundTag tag = stack.getTag();
+		final CompoundTag tag = stack.getTag();
 		if (tag == null) {
 			return null;
 		}
@@ -88,15 +106,14 @@ public class MagnetBootItem extends ArmorItem {
 			return;
 		}
 
-		CompoundTag tag = stack.getOrCreateTag();
-		boolean disabled = tag.getBoolean(TAG_DISABLED);
-		boolean wasReady = tag.getBoolean(TAG_READY);
+		final CompoundTag tag = stack.getOrCreateTag();
+		final boolean disabled = tag.getBoolean(TAG_DISABLED);
+		final boolean wasReady = tag.getBoolean(TAG_READY);
 
-		double maxDistance = getAttractDistance();
+		final double maxDistance = this.getAttractDistance();
 
 		Vec3 startPos = entity.position(); // Starting position (player's feet position)
 		Vec3 direction = new Vec3(0, -1, 0);
-		// TODO: maybe we can change the direction to match the ship that player stands on?
 		if (entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
 			startPos = frp.vsch$getFeetPosition();
 			direction = frp.vsch$getDownVector();
@@ -107,8 +124,8 @@ public class MagnetBootItem extends ArmorItem {
 		final HitResult hitResult = level.clip(new ClipContext(
 			startPos,
 			endPos,
-			ClipContext.Block.COLLIDER, // Raycast considers block collision shapes, maybe we don't want this?
-			ClipContext.Fluid.NONE,     // Ignore fluids
+			ClipContext.Block.COLLIDER,
+			ClipContext.Fluid.NONE,
 			entity
 		));
 
@@ -140,15 +157,35 @@ public class MagnetBootItem extends ArmorItem {
 
 		if (entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
 			final BlockPos blockPos = blockHit.getBlockPos();
-			final Direction face = blockHit.getDirection();
-			final Quaternionf destRot = new Quaternionf().rotateTo(0, 1, 0, face.getStepX(), face.getStepY(), face.getStepZ());
+			final Quaternionf destRot = blockHit.getDirection().getRotation();
 			final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
 			if (ship != null) {
-				new Quaternionf().setFromNormalized(ship.getShipToWorld()).mul(destRot, destRot);
+				destRot.premul(new Quaternionf().setFromNormalized(ship.getShipToWorld()));
 			}
-			frp.vsch$setRotation(frp.vsch$getRotation().slerp(destRot, 0.2f));
+			final Quaternionf rotation = frp.vsch$getBodyRotation();
+			frp.vsch$setBodyRotation(rotateTowards(rotation, destRot));
 		}
 
 		//level.addParticle(ParticleTypes.HEART, player.getX(), player.getY(), player.getZ(), 0, 0, 0);
+	}
+
+	private static Quaternionf rotateTowards(final Quaternionf current, final Quaternionfc target) {
+		final Quaternionf proj = projectedRotation(current, target);
+		if (proj.conjugate(new Quaternionf()).mul(current).angle() < 0.025f) {
+			return current.set(proj);
+		}
+		return current.slerp(proj, 0.15f);
+	}
+
+	private static Quaternionf projectedRotation(final Quaternionfc current, final Quaternionfc target) {
+		final Vector3f up = target.transform(new Vector3f(0, 1, 0));
+		final Vector3f forward = current.transform(new Vector3f(0, 0, -1));
+		final Vector3f forwardProj = forward.fma(-forward.dot(up), up, new Vector3f());
+		if (forwardProj.lengthSquared() < 1e-6) {
+			forwardProj.set(up.x, up.y, 0);
+		}
+		forwardProj.normalize();
+		final Vector3f right = forwardProj.cross(up, new Vector3f()).normalize();
+		return new Quaternionf().setFromNormalized(new Matrix3f(right, up, forwardProj.negate()));
 	}
 }
