@@ -176,6 +176,13 @@ repositories {
             includeModule("org.squiddev", "Cobalt")
         }
     }
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
 }
 
 dependencies {
@@ -199,22 +206,22 @@ dependencies {
     //runtimeOnly    fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
     //runtimeOnly    fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
 
-    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:5876199")
 
     implementation "org.joml:joml:1.10.5"
     implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
     implementation "thedarkcolour:kotlinforforge:4.10.0"
     implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
     implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:all")
+    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:all")
 
-    //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
     //RUNTIME
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-//    runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
-//    runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
+    // runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
+    // runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
     runtimeOnly fg.deobf("maven.modrinth:jade-addons-forge:5.3.1+forge")
     //runtimeOnly fg.deobf("curse.maven:rubidium-574856:4494903")
     //runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")

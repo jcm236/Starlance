@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class CollisionUtil {
-	private static final double EPS = 1e-7;
-	private static final double EPS2 = 1e-2;
+	private static final double EPS = 1e-6;
+	private static final double EPS2 = 1.0 / 64;
 
 	private static final AxisSet AXES = new AxisSet(
 		new Vector3d(-1, 0, 0), new Vector3d(1, 0, 0),

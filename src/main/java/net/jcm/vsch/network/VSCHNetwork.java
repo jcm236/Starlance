@@ -21,6 +21,7 @@ public final class VSCHNetwork {
 	private VSCHNetwork() {}
 
 	private static final String PROTOCOL_VERSION = VSCHMod.VERSION;
+	@SuppressWarnings("removal")
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
 		new ResourceLocation(VSCHMod.MODID, "main"),
 		() -> PROTOCOL_VERSION,

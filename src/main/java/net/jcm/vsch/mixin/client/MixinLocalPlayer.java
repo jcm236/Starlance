@@ -6,6 +6,7 @@ import net.jcm.vsch.mixin.minecraft.MixinPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.util.Mth;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -20,6 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinLocalPlayer extends MixinPlayer {
 	@Shadow
 	public Input input;
+	@Shadow
+	public float yBob;
+	@Shadow
+	public float xBob;
+	@Shadow
+	public float yBobO;
+	@Shadow
+	public float xBobO;
 
 	@Shadow
 	protected abstract boolean isControlledCamera();
@@ -68,6 +77,17 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 			return;
 		}
 		this.yya = (this.input.jumping ? 1 : 0) + (this.input.shiftKeyDown ? -1 : 0);
+		// TODO: fix arm animation
+		this.xBob = this.xBobO + Mth.wrapDegrees(this.getViewXRot(1) - this.xBobO) * 0.5f;
+		this.yBob = this.yBobO + Mth.wrapDegrees(this.getViewYRot(1) - this.yBobO) * 0.5f;
+		while (this.yBob > 180) {
+			this.yBob -= 360;
+			this.yBobO -= 360;
+		}
+		while (this.yBob < -180) {
+			this.yBob += 360;
+			this.yBobO += 360;
+		}
 	}
 
 	@Inject(method = "moveTowardsClosestSpace", at = @At("HEAD"), cancellable = true)

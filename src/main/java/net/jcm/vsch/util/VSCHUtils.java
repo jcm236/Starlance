@@ -1,6 +1,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.compat.CompatMods;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -52,10 +54,16 @@ import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -129,6 +137,7 @@ public class VSCHUtils {
 	 * @param dimension The dimension ID string in format registry_namespace:registry_name:dimension_namespace:dimension_name
 	 * @return A {@link net.minecraft.server.level.ServerLevel ServerLevel} instance with the dimension ID given
 	 */
+	@SuppressWarnings("removal")
 	public static ServerLevel registeryDimToLevel(final String dimension) {
 		// Split 'minecraft:dimension:namespace:dimension_name' into [minecraft, dimension, namespace, dimension_name]
 		final String[] parts = dimension.split(":");
@@ -139,6 +148,7 @@ public class VSCHUtils {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(levelId);
 	}
 
+	@SuppressWarnings("removal")
 	public static ServerLevel dimToLevel(final String dimensionString) {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
 	}
@@ -179,5 +189,31 @@ public class VSCHUtils {
 
 	public static Component getWarningComponent() {
 		return Component.translatable(VSCHMod.MODID+".tooltip.may_need_fuel_or_energy").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
+	}
+
+
+	public static boolean testCuriosItems(final LivingEntity entity, final String id, final BiPredicate<ItemStack, Integer> tester) {
+		if (!CompatMods.CURIOS.isLoaded()) {
+			return false;
+		}
+		final ICuriosItemHandler curiosInv = CuriosApi.getCuriosInventory(entity).orElse(null);
+		if (curiosInv == null) {
+			return false;
+		}
+		final ICurioStacksHandler stacksHandler = curiosInv.getStacksHandler(id).orElse(null);
+		if (stacksHandler == null) {
+			return false;
+		}
+		final IDynamicStackHandler stacks = stacksHandler.getStacks();
+		for (int slot = 0; slot < stacks.getSlots(); slot++) {
+			final ItemStack stack = stacks.getStackInSlot(slot);
+			if (stack.isEmpty()) {
+				continue;
+			}
+			if (tester.test(stack, slot)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

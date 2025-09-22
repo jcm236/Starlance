@@ -18,7 +18,7 @@ public final class VSCHKeyBindings {
 		"key." + VSCHMod.MODID + ".roll_clockwise",
 		KeyConflictContext.IN_GAME,
 		InputConstants.Type.KEYSYM,
-		-1,
+		GLFW.GLFW_KEY_C,
 		"key.categories.movement"
 	);
 
@@ -26,7 +26,7 @@ public final class VSCHKeyBindings {
 		"key." + VSCHMod.MODID + ".roll_counter_clockwise",
 		KeyConflictContext.IN_GAME,
 		InputConstants.Type.KEYSYM,
-		-1,
+		GLFW.GLFW_KEY_Z,
 		"key.categories.movement"
 	);
 
@@ -42,7 +42,7 @@ public final class VSCHKeyBindings {
 		"key." + VSCHMod.MODID + ".toggle_magnet_boot",
 		KeyConflictContext.IN_GAME,
 		InputConstants.Type.KEYSYM,
-		GLFW.GLFW_KEY_GRAVE_ACCENT,
+		GLFW.GLFW_KEY_X,
 		"key.categories." + VSCHMod.MODID
 	);
 

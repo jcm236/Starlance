@@ -28,9 +28,11 @@ import org.valkyrienskies.core.impl.hooks.VSEvents;
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
+	@SuppressWarnings("removal")
 	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
 
 	public VSCHMod() {
+		@SuppressWarnings("removal")
 		final FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
 		final IEventBus modBus = context.getModEventBus();
 
@@ -68,8 +70,3 @@ public class VSCHMod {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
-
-
-
-
-

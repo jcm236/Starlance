@@ -183,6 +183,7 @@ public final class VSCHConfig {
 		return GSON.fromJson(fuels, STRING_INT_MAP_TYPE);
 	}
 
+	@SuppressWarnings("removal")
 	public static Set<ResourceLocation> getAssembleBlacklistSet() {
 		if (ASSEMBLE_BLACKLIST_SET == null) {
 			ASSEMBLE_BLACKLIST_SET = Set.copyOf(ASSEMBLE_BLACKLIST.get().stream().map(ResourceLocation::new).toList());

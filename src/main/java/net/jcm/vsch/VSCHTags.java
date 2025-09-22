@@ -19,6 +19,7 @@ public final class VSCHTags {
 		public static final TagKey<Fluid> HYDROGEN = tag("liquid_hydrogen");
 		public static final TagKey<Fluid> OXYGEN = tag("liquid_oxygen");
 
+		@SuppressWarnings("removal")
 		private static TagKey<Fluid> tag(String name) {
 			return TagKey.create(Registries.FLUID, new ResourceLocation(VSCHMod.MODID, name));
 		}

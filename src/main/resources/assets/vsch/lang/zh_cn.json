@@ -27,6 +27,7 @@
 
 	"config.jade.plugin_vsch.gyro_component_config": "陀螺仪配置信息",
 	"config.jade.plugin_vsch.thruster_component_config": "推进器配置信息",
+	"curios.identifier.boots": "靴子",
 
 	"vsch.ponder.drag_inducer.header": "阻力发生器",
 	"vsch.ponder.drag_inducer.text_1": "有时, 在太空中很难停下来",

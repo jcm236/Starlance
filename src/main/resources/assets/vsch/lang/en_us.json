@@ -27,6 +27,7 @@
 
 	"config.jade.plugin_vsch.gyro_component_config": "Gyro Mode Details",
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
+	"curios.identifier.boots": "Boots",
 
 	"vsch.ponder.drag_inducer.header": "Drag inducer",
 	"vsch.ponder.drag_inducer.text_1": "Sometimes, it can be hard to slow down in space",

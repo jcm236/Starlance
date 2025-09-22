@@ -405,18 +405,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.oldPose = newPose;
 		final float oldHeight = this.vsch$getVanillaDimensions(oldPose).height;
 		final float newHeight = this.vsch$getVanillaDimensions(newPose).height;
-		final Vec3 pos = this.position();
-		double dx = 0, dy = newHeight - oldHeight, dz = 0;
-		this.setPos(pos.x + dx, pos.y + dy, pos.z + dz);
-	}
-
-	@Override
-	public boolean onGround() {
-		if (!this.vsch$isFreeRotating()) {
-			return super.onGround();
+		if (oldHeight == newHeight) {
+			return;
 		}
-		// TODO: fix on ground check
-		return false;
+		this.setPos(this.position().add(this.vsch$getDownVector().scale(oldHeight - newHeight)));
 	}
 
 	@WrapOperation(
@@ -675,14 +667,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			move.mul(power);
 			rotation.transform(move);
 			this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
-			if (bodyLocked && this.jumping && !this.isStayingOnGroundSurface() /*&& this.onGround()*/ && this.jumpCD == 0) {
-				final Vec3 dm0 = this.getDeltaMovement();
-				final Vector3d dm = rotation.transformInverse(new Vector3d(dm0.x, dm0.y, dm0.z));
-				dm.y = this.getJumpPower();
-				rotation.transform(dm);
-				this.setDeltaMovement(new Vec3(dm.x, dm.y, dm.z));
-				this.jumpCD = 10;
-			}
 		}
 		// this.setDeltaMovement(this.handleOnClimbable(this.getDeltaMovement()));
 		this.move(MoverType.SELF, this.getDeltaMovement());

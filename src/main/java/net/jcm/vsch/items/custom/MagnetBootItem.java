@@ -1,8 +1,11 @@
 package net.jcm.vsch.items.custom;
 
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
+import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.compat.curios.MagnetBootCurio;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.items.IToggleableItem;
+import net.jcm.vsch.util.VSCHUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +27,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+
+import top.theillusivec4.curios.api.CuriosCapability;
 
 import org.joml.Matrix3f;
 import org.joml.Quaternionf;
@@ -76,7 +84,17 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 
 	public static boolean isMagnetized(final LivingEntity entity) {
 		final ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
-		return !stack.isEmpty() && stack.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack);
+		if (!stack.isEmpty() && stack.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack)) {
+			return true;
+		}
+		if (!CompatMods.CURIOS.isLoaded()) {
+			return false;
+		}
+		return VSCHUtils.testCuriosItems(
+			entity,
+			"boots",
+			(stack2, slot) -> stack2.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack2)
+		);
 	}
 
 	public Vec3 getDirection(final ItemStack stack) {
@@ -91,7 +109,7 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 	}
 
 	@Override
-	public void onToggle(final Player owner, final int slot, final ItemStack stack) {
+	public void onToggle(final Player owner, final ItemStack stack) {
 		final CompoundTag tag = stack.getOrCreateTag();
 		final boolean disable = !tag.getBoolean(TAG_DISABLED);
 		tag.putBoolean(TAG_DISABLED, disable);
@@ -106,10 +124,11 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 
 	@Override
 	public void inventoryTick(final ItemStack stack, final Level level, final Entity entity, final int slot, final boolean selected) {
+		this.onInventoryTick(stack, level, entity);
+	}
+
+	public void onInventoryTick(final ItemStack stack, final Level level, final Entity entity) {
 		if (!(entity instanceof final LivingEntity livingEntity)) {
-			return;
-		}
-		if (livingEntity.getItemBySlot(this.getEquipmentSlot()) != stack) {
 			return;
 		}
 
@@ -182,6 +201,24 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 		}
 
 		//level.addParticle(ParticleTypes.HEART, player.getX(), player.getY(), player.getZ(), 0, 0, 0);
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(final ItemStack stack, final CompoundTag nbt) {
+		return new ICapabilityProvider() {
+			private LazyOptional<Object> curiosCap = LazyOptional.empty();
+
+			@Override
+			public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction dir) {
+				if (CompatMods.CURIOS.isLoaded() && cap == CuriosCapability.ITEM) {
+					if (!this.curiosCap.isPresent()) {
+						this.curiosCap = LazyOptional.of(() -> new MagnetBootCurio(MagnetBootItem.this, stack));
+					}
+					return this.curiosCap.cast();
+				}
+				return LazyOptional.empty();
+			}
+		};
 	}
 
 	private static Quaternionf rotateTowards(final Quaternionf current, final Quaternionfc target) {

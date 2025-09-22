@@ -56,9 +56,10 @@ public final class ClientEvents {
 			if (inventory == null) {
 				continue;
 			}
-			if (inventory.getItem(bootSlot).getItem() instanceof MagnetBootItem) {
-				IToggleableItem.toggleSlot(player, bootSlot);
+			if (inventory.getItem(bootSlot).getItem() instanceof MagnetBootItem && IToggleableItem.toggleSlot(player, bootSlot)) {
+				continue;
 			}
+			IToggleableItem.toggleCuriosSlot(player, "boots", (stack) -> stack.getItem() instanceof MagnetBootItem);
 		}
 	}
 }
