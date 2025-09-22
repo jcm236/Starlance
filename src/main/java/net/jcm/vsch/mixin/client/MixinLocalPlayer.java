@@ -77,7 +77,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 		if (!this.vsch$isFreeRotating() || this.getAbilities().flying || !this.isControlledCamera()) {
 			return;
 		}
-		this.yya = (this.input.jumping ? 1 : 0) + (this.input.shiftKeyDown ? -1 : 0);
+		this.yya = this.isBodyRotationLocked() ? 0 : ((this.input.jumping ? 1 : 0) + (this.input.shiftKeyDown ? -1 : 0));
 		// TODO: fix arm animation
 		this.xBob = this.xBobO + Mth.wrapDegrees(this.getViewXRot(1) - this.xBobO) * 0.5f;
 		this.yBob = this.yBobO + Mth.wrapDegrees(this.getViewYRot(1) - this.yBobO) * 0.5f;

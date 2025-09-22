@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
-public interface FreeRotatePlayerAccessor {
+public interface FreeRotatePlayerAccessor extends LivingEntityAccessor {
 	EntityDimensions vsch$getVanillaDimensions(Pose pose);
 
 	boolean vsch$isFreeRotating();

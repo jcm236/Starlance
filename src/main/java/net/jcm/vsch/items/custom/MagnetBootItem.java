@@ -1,6 +1,7 @@
 package net.jcm.vsch.items.custom;
 
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
+import net.jcm.vsch.accessor.LivingEntityAccessor;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.curios.MagnetBootCurio;
 import net.jcm.vsch.config.VSCHConfig;
@@ -117,21 +118,20 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 			return;
 		}
 		owner.displayClientMessage(
-			Component.translatable(disable ? "vsch.message.magnet_boot.disabled" :  "vsch.message.magnet_boot.enabled"),
+			Component.translatable(disable ? "vsch.message.magnet_boot.disabled" : "vsch.message.magnet_boot.enabled"),
 			true
 		);
 	}
 
 	@Override
 	public void inventoryTick(final ItemStack stack, final Level level, final Entity entity, final int slot, final boolean selected) {
-		this.onInventoryTick(stack, level, entity);
-	}
-
-	public void onInventoryTick(final ItemStack stack, final Level level, final Entity entity) {
 		if (!(entity instanceof final LivingEntity livingEntity)) {
 			return;
 		}
+		this.onInventoryTick(stack, level, livingEntity);
+	}
 
+	public void onInventoryTick(final ItemStack stack, final Level level, final LivingEntity entity) {
 		// Ignore no physics entities
 		if (entity.noPhysics || entity.isPassenger()) {
 			return;
@@ -182,12 +182,16 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 
 		// mAtH
 		final double distance = startPos.distanceToSqr(hitResult.getLocation());
-		final double scaledForce = Math.min(maxDistance * maxDistance / distance * MIN_FORCE, getMaxForce());
+		if (((LivingEntityAccessor) (entity)).vsch$getTickSinceLastJump() > 15 || distance > 1.5) {
+			final double scaledForce = Math.min(maxDistance * maxDistance / distance * MIN_FORCE, getMaxForce());
 
-		final Vec3 force = direction.scale(scaledForce);
-		tag.putDouble("Force", scaledForce);
+			final Vec3 force = direction.scale(scaledForce);
+			tag.putDouble("Force", scaledForce);
 
-		entity.push(force.x, force.y, force.z);
+			entity.push(force.x, force.y, force.z);
+		} else {
+			tag.putDouble("Force", 0);
+		}
 
 		if (entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
 			final BlockPos blockPos = blockHit.getBlockPos();

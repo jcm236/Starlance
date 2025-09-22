@@ -1,6 +1,7 @@
 package net.jcm.vsch.mixin.minecraft;
 
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
+import net.jcm.vsch.accessor.LivingEntityAccessor;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,22 +15,30 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity extends Entity {
+public abstract class MixinLivingEntity extends Entity implements LivingEntityAccessor {
 	protected MixinLivingEntity() {
 		super(null, null);
 	}
 
 	@Shadow
 	protected int lerpSteps;
+	@Unique
+	private int tickSinceLastJump = Integer.MAX_VALUE;
 
 	@Shadow
 	protected abstract float getJumpPower();
+
+	@Override
+	public int vsch$getTickSinceLastJump() {
+		return this.tickSinceLastJump;
+	}
 
 	@WrapOperation(
 		method = "travel",
@@ -45,6 +54,15 @@ public abstract class MixinLivingEntity extends Entity {
 			z *= 0.91;
 		}
 		operation.call(self, x, y, z);
+	}
+
+	@Inject(method = "aiStep", at = @At("HEAD"))
+	public void aiStep(final CallbackInfo ci) {
+		if (this.tickSinceLastJump < 100) {
+			this.tickSinceLastJump++;
+		} else {
+			this.tickSinceLastJump = Integer.MAX_VALUE;
+		}
 	}
 
 	@Inject(
@@ -73,5 +91,7 @@ public abstract class MixinLivingEntity extends Entity {
 		rotation.transform(dm);
 		this.setDeltaMovement(new Vec3(dm.x, dm.y, dm.z));
 		this.hasImpulse = true;
+		this.tickSinceLastJump = 0;
+		ci.cancel();
 	}
 }

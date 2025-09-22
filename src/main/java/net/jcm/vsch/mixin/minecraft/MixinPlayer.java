@@ -122,8 +122,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private long lastRollTime;
 	@Unique
-	private int jumpCD = 0;
-	@Unique
 	private float nextStep = 0;
 
 	protected MixinPlayer() {
@@ -427,7 +425,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Unique
-	private boolean isBodyRotationLocked() {
+	protected boolean isBodyRotationLocked() {
 		return MagnetBootItem.isMagnetized(this);
 	}
 
@@ -606,8 +604,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	protected void checkSupportingBlock(final boolean onGround, final Vec3 movement) {
-		if (!onGround) {
+		if (!this.vsch$isFreeRotating()) {
 			super.checkSupportingBlock(onGround, movement);
+			return;
+		}
+		if (!onGround) {
+			this.mainSupportingBlockPos = Optional.empty();
 			return;
 		}
 		final AABB bb = this.getBoundingBox();
@@ -817,13 +819,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Matrix4dc worldToEntity = entityToWorld.invert(new Matrix4d());
 		final Vector3d newMovement = new Vector3d(movement.x, movement.y, movement.z);
 		worldToEntity.transformDirection(newMovement);
-		final AABBd checkBox = CollisionUtil.expandTowards(new AABBd(box), newMovement).transform(entityToWorld);
 
 		CollisionUtil.checkCollision(newMovement, level, this, box, worldToEntity, entityToWorld);
 
 		final Matrix4d entityToShip = new Matrix4d();
 		final Matrix4d shipToEntity = new Matrix4d();
 		final String dimId = VSGameUtilsKt.getDimensionId(level);
+		final AABBd checkBox = CollisionUtil.expandTowards(new AABBd(box), newMovement).transform(entityToWorld);
 		for (final LoadedShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
 			if (!ship.getChunkClaimDimension().equals(dimId)) {
 				continue;
@@ -984,9 +986,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	public void baseTick() {
 		if (this.firstTick) {
 			this.updateDefaultFreeRotation();
-		}
-		if (this.jumpCD > 0) {
-			this.jumpCD--;
 		}
 		super.baseTick();
 		final boolean freeRotation = this.vsch$isFreeRotating();
