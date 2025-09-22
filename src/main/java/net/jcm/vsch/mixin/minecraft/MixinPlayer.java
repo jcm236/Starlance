@@ -807,7 +807,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Vec3 betterCollide(Vec3 movement) {
 		final Level level = this.level();
-		System.out.println("colliding: " + movement);
 		final Vec3 position = this.vsch$getHeadCenter();
 		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
 		final AABBd box = new AABBd(
@@ -821,7 +820,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Vector3d newMovement = new Vector3d(movement.x, movement.y, movement.z);
 		worldToEntity.transformDirection(newMovement);
 		final AABBd checkBox = CollisionUtil.expandTowards(new AABBd(box), newMovement).transform(entityToWorld);
-		System.out.println("box: " + box + " -> " + checkBox);
 
 		CollisionUtil.checkCollision(newMovement, level, this, box, worldToEntity, entityToWorld);
 
