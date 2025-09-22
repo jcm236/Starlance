@@ -5,7 +5,6 @@ import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -35,24 +34,6 @@ public final class ClientEvents {
 		} else {
 			event.setYaw(-CAMERA_ROT_VEC.y * Mth.RAD_TO_DEG);
 			event.setRoll(CAMERA_ROT_VEC.z * Mth.RAD_TO_DEG);
-		}
-	}
-
-	private static long lastFrameTime = System.nanoTime();
-	private static volatile float spf = 0;
-
-	public static float getSpf() {
-		return spf;
-	}
-
-	@SubscribeEvent
-	public static void onRenderTick(final TickEvent.RenderTickEvent event) {
-		switch (event.phase) {
-			case START -> {
-				final long now = System.nanoTime();
-				spf = Math.min((float)((now - lastFrameTime) / 1.0e9), 0.1f);
-				lastFrameTime = now;
-			}
 		}
 	}
 }

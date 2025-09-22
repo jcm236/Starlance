@@ -42,7 +42,6 @@
 		"client.MixinCamera",
 		"client.MixinClientPacketListener",
 		"client.MixinGui",
-		"client.MixinGui",
 		"client.MixinLivingEntityRenderer",
 		"client.MixinLocalPlayer",
 		"client.MixinMultiPlayerGameMode",

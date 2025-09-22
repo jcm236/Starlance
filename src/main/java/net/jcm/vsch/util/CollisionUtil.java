@@ -7,6 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.joml.Matrix4dc;
 import org.joml.primitives.AABBd;
 
@@ -24,29 +25,40 @@ public final class CollisionUtil {
 		final Matrix4dc voxel2box,
 		final Matrix4dc box2voxel
 	) {
-		final AABBd box1 = box;
-		final AABBd box2 = box1.transform(box2voxel, new AABBd());
-		for (final VoxelShape shape : level.getBlockCollisions(entity, toAABB(box2))) {
+		final Vector3d movementInVoxel = box2voxel.transformDirection(movement, new Vector3d());
+		final AABBd box1A = box;
+		final AABBd box1B = expandTowards(new AABBd(box1A), movement);
+		final AABBd box2A = box.transform(box2voxel, new AABBd());
+		final AABBd box2B = expandTowards(new AABBd(box2A), movementInVoxel);
+		final Vector3d correction = new Vector3d();
+		for (final VoxelShape shape : level.getBlockCollisions(entity, toAABB(box2B))) {
 			if (shape.isEmpty()) {
 				continue;
 			}
-			checkShapeCollision(movement, box1, box2, shape, voxel2box);
+			checkShapeCollision(movement, movementInVoxel, box1A, box1B, box2A, box2B, shape, voxel2box, correction);
+		}
+		if (correction.lengthSquared() > 1e-7) {
+			movement.add(correction);
 		}
 		return movement;
 	}
 
 	private static void checkShapeCollision(
 		final Vector3d movement,
-		final AABBd box,
-		final AABBd boxInVoxel,
+		final Vector3d movementInVoxel,
+		final AABBd boxA,
+		final AABBd boxB,
+		final AABBd boxInVoxelA,
+		final AABBd boxInVoxelB,
 		final VoxelShape shape,
-		final Matrix4dc voxel2box
+		final Matrix4dc voxel2box,
+		final Vector3d correction
 	) {
 		final AABBd voxel = toAABBd(shape.bounds());
-		if (!boxInVoxel.intersectsAABB(voxel)) {
+		if (!boxInVoxelB.intersectsAABB(voxel)) {
 			return;
 		}
-		if (!voxel.transform(voxel2box).intersectsAABB(box)) {
+		if (!voxel.transform(voxel2box).intersectsAABB(boxB)) {
 			return;
 		}
 		final AABBd voxelInBox = new AABBd();
@@ -54,92 +66,136 @@ public final class CollisionUtil {
 			voxel
 				.setMin(minX, minY, minZ)
 				.setMax(maxX, maxY, maxZ);
-			if (!boxInVoxel.intersectsAABB(voxel)) {
+			if (!boxInVoxelB.intersectsAABB(voxel)) {
 				return;
 			}
 			voxel.transform(voxel2box, voxelInBox);
-			if (!box.intersectsAABB(voxelInBox)) {
+			if (!boxB.intersectsAABB(voxelInBox)) {
 				return;
 			}
-			checkAABBCollision(movement, box, boxInVoxel, voxelInBox, voxel, voxel2box);
+			checkAABBCollision(movement, movementInVoxel, boxA, boxB, boxInVoxelA, boxInVoxelB, voxelInBox, voxel, voxel2box, correction);
 		});
 	}
 
 	private static void checkAABBCollision(
 		final Vector3d movement,
-		final AABBd box1,
-		final AABBd box2,
+		final Vector3d movementInVoxel,
+		final AABBd box1A,
+		final AABBd box1B,
+		final AABBd box2A,
+		final AABBd box2B,
 		final AABBd voxel1,
 		final AABBd voxel2,
-		final Matrix4dc voxel2box
+		final Matrix4dc voxel2box,
+		final Vector3d correction
 	) {
-		final List<Vector3d> vecs = new ArrayList<>(6);
-		if (box1.minX < voxel1.minX) {
-			if (box1.maxX < voxel1.maxX) {
-				vecs.add(new Vector3d(voxel1.minX - box1.maxX, 0, 0));
+		final List<TransformData> vecs = new ArrayList<>(6);
+		if (box1A.minX < voxel1.minX) {
+			if (box1A.maxX < voxel1.maxX) {
+				// ( box /// [ XXX ) \\\ voxel ]
+				vecs.add(new TransformData(new Vector3d(-1, 0, 0), box1A.maxX - voxel1.minX, box1B.maxX - voxel1.minX));
+			} else {
+				// ( box /// [ voxel XXX ] /// )
 			}
-		} else if (box1.maxX > voxel1.maxX) {
-			vecs.add(new Vector3d(voxel1.maxX - box1.minX, 0, 0));
+		} else if (box1A.maxX > voxel1.maxX) {
+			// [ voxel \\\ ( XXX ] /// box )
+			vecs.add(new TransformData(new Vector3d(1, 0, 0), voxel1.maxX - box1A.minX, voxel1.maxX - box1B.minX));
+		} else {
+			// [voxel \\\ ( box XXX ) \\\ )
 		}
-		if (box1.minY < voxel1.minY) {
-			if (box1.maxY < voxel1.maxY) {
-				vecs.add(new Vector3d(0, voxel1.minY - box1.maxY, 0));
+		if (box1A.minY < voxel1.minY) {
+			if (box1A.maxY < voxel1.maxY) {
+				vecs.add(new TransformData(new Vector3d(0, -1, 0), box1A.maxY - voxel1.minY, box1B.maxY - voxel1.minY));
 			}
-		} else if (box1.maxY > voxel1.maxY) {
-			vecs.add(new Vector3d(0, voxel1.maxY - box1.minY, 0));
+		} else if (box1A.maxY > voxel1.maxY) {
+			vecs.add(new TransformData(new Vector3d(0, 1, 0), voxel1.maxY - box1A.minY, voxel1.maxY - box1B.minY));
 		}
-		if (box1.minZ < voxel1.minZ) {
-			if (box1.maxZ < voxel1.maxZ) {
-				vecs.add(new Vector3d(0, 0, voxel1.minZ - box1.maxZ));
+		if (box1A.minZ < voxel1.minZ) {
+			if (box1A.maxZ < voxel1.maxZ) {
+				vecs.add(new TransformData(new Vector3d(0, 0, -1), box1A.maxZ - voxel1.minZ, box1B.maxZ - voxel1.minZ));
 			}
-		} else if (box1.maxZ > voxel1.maxZ) {
-			vecs.add(new Vector3d(0, 0, voxel1.maxZ - box1.minZ));
+		} else if (box1A.maxZ > voxel1.maxZ) {
+			vecs.add(new TransformData(new Vector3d(0, 0, 1), voxel1.maxZ - box1A.minZ, voxel1.maxZ - box1B.minZ));
 		}
-		if (box2.minX < voxel2.minX) {
-			if (box2.maxX < voxel2.maxX) {
-				vecs.add(voxel2box.transformDirection(new Vector3d(voxel2.minX - box2.maxX, 0, 0)));
+		if (box2A.minX < voxel2.minX) {
+			if (box2A.maxX < voxel2.maxX) {
+				vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(-1, 0, 0)), box2A.maxX - voxel2.minX, box2B.maxX - voxel2.minX));
 			}
-		} else if (box2.maxX > voxel2.maxX) {
-			vecs.add(voxel2box.transformDirection(new Vector3d(voxel2.maxX - box2.minX, 0, 0)));
+		} else if (box2A.maxX > voxel2.maxX) {
+			vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(1, 0, 0)), voxel2.maxX - box2A.minX, voxel2.maxX - box2B.minX));
 		}
-		if (box2.minY < voxel2.minY) {
-			if (box2.maxY < voxel2.maxY) {
-				vecs.add(voxel2box.transformDirection(new Vector3d(0, voxel2.minY - box2.maxY, 0)));
+		if (box2A.minY < voxel2.minY) {
+			if (box2A.maxY < voxel2.maxY) {
+				vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(0, -1, 0)), box2A.maxY - voxel2.minY, box2B.maxY - voxel2.minY));
 			}
-		} else if (box2.maxY > voxel2.maxY) {
-			vecs.add(voxel2box.transformDirection(new Vector3d(0, voxel2.maxY - box2.minY, 0)));
+		} else if (box2A.maxY > voxel2.maxY) {
+			vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(0, 1, 0)), voxel2.maxY - box2A.minY, voxel2.maxY - box2B.minY));
 		}
-		if (box2.minZ < voxel2.minZ) {
-			if (box2.maxZ < voxel2.maxZ) {
-				vecs.add(voxel2box.transformDirection(new Vector3d(0, 0, voxel2.minZ - box2.maxZ)));
+		if (box2A.minZ < voxel2.minZ) {
+			if (box2A.maxZ < voxel2.maxZ) {
+				vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(0, 0, -1)), box2A.maxZ - voxel2.minZ, box2B.maxZ - voxel2.minZ));
 			}
-		} else if (box2.maxZ > voxel2.maxZ) {
-			vecs.add(voxel2box.transformDirection(new Vector3d(0, 0, voxel2.maxZ - box2.minZ)));
+		} else if (box2A.maxZ > voxel2.maxZ) {
+			vecs.add(new TransformData(voxel2box.transformDirection(new Vector3d(0, 0, 1)), voxel2.maxZ - box2A.minZ, voxel2.maxZ - box2B.minZ));
 		}
 		if (vecs.isEmpty()) {
 			return;
 		}
-		Vector3d minVec = null;
-		double minLen = 0;
-		final Vector3d normal = new Vector3d();
-		for (final Vector3d v : vecs) {
-			final double l = v.length();
-			if (l < 1e-7) {
-				continue;
-			}
-			final double proj = movement.dot(v.div(l, normal));
+		double minDist = Double.POSITIVE_INFINITY;
+		Vector3d corrVec = new Vector3d();
+		for (final TransformData d : vecs) {
+			final double proj = movement.dot(d.normal());
 			if (proj > 0) {
 				continue;
 			}
-			final double corr = Math.min(l, -proj);
-			if (minVec == null || corr < minLen) {
-				minVec = normal;
-				minLen = corr;
+			if (d.embed() < minDist) {
+				minDist = d.embed();
+				d.normal().mul(Math.min(d.correction(), -proj), corrVec);
 			}
 		}
-		if (minVec != null) {
-			movement.add(minVec.mul(minLen));
+		if (corrVec.lengthSquared() > 1e-7) {
+			if (movement.x < -1e-7) {
+				correction.x = Math.max(correction.x, corrVec.x);
+			} else if (movement.x > 1e-7) {
+				correction.x = Math.min(correction.x, corrVec.x);
+			} else if (Math.abs(corrVec.x) > Math.abs(correction.x)) {
+				correction.x = corrVec.x;
+			}
+			if (movement.y < -1e-7) {
+				correction.y = Math.max(correction.y, corrVec.y);
+			} else if (movement.y > 1e-7) {
+				correction.y = Math.min(correction.y, corrVec.y);
+			} else if (Math.abs(corrVec.y) > Math.abs(correction.y)) {
+				correction.y = corrVec.y;
+			}
+			if (movement.z < -1e-7) {
+				correction.z = Math.max(correction.z, corrVec.z);
+			} else if (movement.z > 1e-7) {
+				correction.z = Math.min(correction.z, corrVec.z);
+			} else if (Math.abs(corrVec.z) > Math.abs(correction.z)) {
+				correction.z = corrVec.z;
+			}
 		}
+	}
+
+	public static AABBd expandTowards(final AABBd box, final Vector3dc vec) {
+		final double x = vec.x(), y = vec.y(), z = vec.z();
+		if (x < 0) {
+			box.minX += x;
+		} else {
+			box.maxX += x;
+		}
+		if (y < 0) {
+			box.minY += y;
+		} else {
+			box.maxY += y;
+		}
+		if (z < 0) {
+			box.minZ += z;
+		} else {
+			box.maxZ += z;
+		}
+		return box;
 	}
 
 	private static AABBd toAABBd(final AABB box) {
@@ -149,4 +205,6 @@ public final class CollisionUtil {
 	private static AABB toAABB(final AABBd box) {
 		return new AABB(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
 	}
+
+	private record TransformData(Vector3dc normal, double embed, double correction) {}
 }

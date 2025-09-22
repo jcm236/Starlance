@@ -119,6 +119,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Pose oldPose;
 	@Unique
+	private long lastRollTime;
+	@Unique
 	private int jumpCD = 0;
 	@Unique
 	private float nextStep = 0;
@@ -463,7 +465,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 				if (VSCHKeyBindings.ROLL_COUNTER_CLOCKWISE.isDown()) {
 					rollDir--;
 				}
-				roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * ClientEvents.getSpf() * Mth.DEG_TO_RAD;
+				long now = System.nanoTime();
+				roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * Math.min((float) ((now - this.lastRollTime) / 1.0e9), 0.1f) * Mth.DEG_TO_RAD;
+				this.lastRollTime = now;
 			}
 		}
 
@@ -705,7 +709,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			}
 		}
 
-		System.out.println("moving: " + moverType + " : " + movement);
+		System.out.println("moving: " + this + ": " + moverType + " : " + movement);
 		if (this.stuckSpeedMultiplier.lengthSqr() > 1e-7) {
 			movement = movement.multiply(this.stuckSpeedMultiplier);
 			this.stuckSpeedMultiplier = Vec3.ZERO;
@@ -716,7 +720,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Quaternionf rotation = this.vsch$getBodyRotation();
 		final Vector3d movementWill = rotation.transformInverse(new Vector3d(movement.x, movement.y, movement.z));
 		final Vec3 movementWillVec = new Vec3(movementWill.x, movementWill.y, movementWill.z);
-		movement = this.collide(movement);
+		movement = this.betterCollide(movement);
 		final Vector3d movementActual = rotation.transformInverse(new Vector3d(movement.x, movement.y, movement.z));
 		final double movedDist = movement.length();
 		if (movedDist > 1e-4) {
@@ -801,7 +805,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Unique
-	private Vec3 collide(Vec3 movement) {
+	private Vec3 betterCollide(Vec3 movement) {
 		final Level level = this.level();
 		System.out.println("colliding: " + movement);
 		final Vec3 position = this.vsch$getHeadCenter();
@@ -816,23 +820,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final Matrix4dc worldToEntity = entityToWorld.invert(new Matrix4d());
 		final Vector3d newMovement = new Vector3d(movement.x, movement.y, movement.z);
 		worldToEntity.transformDirection(newMovement);
-		if (newMovement.x < 0) {
-			box.minX += newMovement.x;
-		} else {
-			box.maxX += newMovement.x;
-		}
-		if (newMovement.y < 0) {
-			box.minY += newMovement.y;
-		} else {
-			box.maxY += newMovement.y;
-		}
-		if (newMovement.z < 0) {
-			box.minZ += newMovement.z;
-		} else {
-			box.maxZ += newMovement.z;
-		}
-		final AABBd worldBox = box.transform(entityToWorld, new AABBd());
-		System.out.println("box: " + box + " -> " + worldBox);
+		final AABBd checkBox = CollisionUtil.expandTowards(new AABBd(box), newMovement).transform(entityToWorld);
+		System.out.println("box: " + box + " -> " + checkBox);
 
 		CollisionUtil.checkCollision(newMovement, level, this, box, worldToEntity, entityToWorld);
 
@@ -843,7 +832,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			if (!ship.getChunkClaimDimension().equals(dimId)) {
 				continue;
 			}
-			if (!ship.getWorldAABB().intersectsAABB(worldBox)) {
+			if (!ship.getWorldAABB().intersectsAABB(checkBox)) {
 				continue;
 			}
 			entityToShip.set(ship.getWorldToShip()).mul(entityToWorld);
@@ -908,6 +897,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		final float oldHeight = this.vsch$getVanillaDimensions(this.getPose()).height;
 		final float newHeight = SPACE_ENTITY_SIZE;
 		super.dismountTo(x, y + oldHeight - newHeight, z);
+	}
+
+	@Override
+	protected void moveTowardsClosestSpace(final double x, final double y, final double z) {
+		if (!this.vsch$isFreeRotating()) {
+			super.moveTowardsClosestSpace(x, y, z);
+		}
 	}
 
 	@Override

@@ -74,6 +74,7 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 	private void moveTowardsClosestSpace(final double x, final double z, final CallbackInfo ci) {
 		if (this.vsch$isFreeRotating()) {
 			ci.cancel();
+			return;
 		}
 	}
 }
