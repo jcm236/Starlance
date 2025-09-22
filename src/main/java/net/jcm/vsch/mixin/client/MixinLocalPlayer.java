@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class MixinLocalPlayer extends MixinPlayer {
@@ -96,5 +97,13 @@ public abstract class MixinLocalPlayer extends MixinPlayer {
 			ci.cancel();
 			return;
 		}
+	}
+
+	@Inject(method = "canStartSprinting", at = @At("HEAD"), cancellable = true)
+	private void canStartSprinting(final CallbackInfoReturnable<Boolean> cir) {
+		if (!this.vsch$isFreeRotating()) {
+			return;
+		}
+		cir.setReturnValue(false);
 	}
 }

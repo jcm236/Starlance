@@ -14,6 +14,7 @@ import net.jcm.vsch.util.VSCHUtils;
 import net.jcm.vsch.util.wapi.LevelData;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -443,9 +444,11 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		boolean lockHeadRotate = false;
 		final boolean lockBodyRotate = this.isBodyRotationLocked();
 		if (isClientSide) {
+			final long now = System.nanoTime();
 			if (VSCHKeyBindings.UNLOCK_HEAD_ROTATION.consumeDoubleClick()) {
 				this.headPitch = 0;
 				this.reCalcHeadRotation();
+				this.lastRollTime = now;
 				return;
 			}
 			if (!lockBodyRotate) {
@@ -457,55 +460,67 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 				if (VSCHKeyBindings.ROLL_COUNTER_CLOCKWISE.isDown()) {
 					rollDir--;
 				}
-				long now = System.nanoTime();
 				roll = rollDir * VSCHClientConfig.PLAYER_ROLL_SPEED.get().floatValue() * Math.min((float) ((now - this.lastRollTime) / 1.0e9), 0.1f) * Mth.DEG_TO_RAD;
-				this.lastRollTime = now;
 			}
+			this.lastRollTime = now;
 		}
 
-		if (x == 0 && y == 0 && roll == 0) {
-			return;
-		}
-		final float yaw = -(float)(x) * 0.15f * Mth.DEG_TO_RAD;
-		final float pitch = (float)(y) * 0.15f * Mth.DEG_TO_RAD;
+		if (x != 0 || y != 0 || roll != 0) {
+			final float yaw = -(float)(x) * 0.15f * Mth.DEG_TO_RAD;
+			final float pitch = (float)(y) * 0.15f * Mth.DEG_TO_RAD;
 
-		final Quaternionf relRotation = new Quaternionf();
-		float newHeadYaw = this.headYaw + yaw;
-		if (newHeadYaw > BODY_ROT_CLAMP) {
-			relRotation.rotationY(newHeadYaw - BODY_ROT_CLAMP);
-			newHeadYaw = BODY_ROT_CLAMP;
-		} else if (newHeadYaw < -BODY_ROT_CLAMP) {
-			relRotation.rotationY(newHeadYaw + BODY_ROT_CLAMP);
-			newHeadYaw = -BODY_ROT_CLAMP;
-		}
-		this.headYawO += newHeadYaw - this.headYaw;
-		this.headYaw = newHeadYaw;
-		if (lockHeadRotate) {
+			final Quaternionf relRotation = new Quaternionf();
+			if (lockHeadRotate) {
+				relRotation.rotationY(yaw);
+				if (!lockBodyRotate) {
+					relRotation.rotateX(pitch);
+				}
+			} else {
+				float newHeadYaw = this.headYaw + yaw;
+				if (newHeadYaw > BODY_ROT_CLAMP) {
+					relRotation.rotationY(newHeadYaw - BODY_ROT_CLAMP);
+					newHeadYaw = BODY_ROT_CLAMP;
+				} else if (newHeadYaw < -BODY_ROT_CLAMP) {
+					relRotation.rotationY(newHeadYaw + BODY_ROT_CLAMP);
+					newHeadYaw = -BODY_ROT_CLAMP;
+				}
+				this.headYawO += newHeadYaw - this.headYaw;
+				this.headYaw = newHeadYaw;
+
+				float newHeadPitch = this.headPitch + pitch;
+				if (newHeadPitch > Mth.HALF_PI) {
+					if (!lockBodyRotate) {
+						relRotation.rotateX(newHeadPitch - Mth.HALF_PI);
+					}
+					newHeadPitch = Mth.HALF_PI;
+				} else if (newHeadPitch < -Mth.HALF_PI) {
+					if (!lockBodyRotate) {
+						relRotation.rotateX(newHeadPitch + Mth.HALF_PI);
+					}
+					newHeadPitch = -Mth.HALF_PI;
+				}
+				this.headPitchO += newHeadPitch - this.headPitch;
+				this.headPitch = newHeadPitch;
+			}
 			if (!lockBodyRotate) {
-				relRotation.rotateX(pitch);
-			}
-		} else {
-			float newHeadPitch = this.headPitch + pitch;
-			if (newHeadPitch > Mth.HALF_PI) {
-				if (!lockBodyRotate) {
-					relRotation.rotateX(newHeadPitch - Mth.HALF_PI);
+				relRotation.rotateZ(roll);
+				if (lockHeadRotate) {
+					final Quaternionf headLocal = new Quaternionf().rotationYXZ(this.headYaw, this.headPitch, 0);
+					relRotation.premul(headLocal);
+					relRotation.mul(headLocal.conjugate());
 				}
-				newHeadPitch = Mth.HALF_PI;
-			} else if (newHeadPitch < -Mth.HALF_PI) {
-				if (!lockBodyRotate) {
-					relRotation.rotateX(newHeadPitch + Mth.HALF_PI);
-				}
-				newHeadPitch = -Mth.HALF_PI;
 			}
-			this.headPitchO += newHeadPitch - this.headPitch;
-			this.headPitch = newHeadPitch;
-		}
-		if (!lockBodyRotate) {
-			relRotation.rotateZ(roll);
+
+			this.vsch$setBodyRotation(this.vsch$getBodyRotation().mul(relRotation).normalize());
+			this.vsch$setBodyRotationO(this.rotationO.mul(relRotation).normalize());
 		}
 
-		this.vsch$setBodyRotation(this.vsch$getBodyRotation().mul(relRotation).normalize());
-		this.vsch$setBodyRotationO(this.rotationO.mul(relRotation).normalize());
+		if (isClientSide && !lockBodyRotate && Minecraft.getInstance().options.keySprint.isDown()) {
+			final Quaternionf headRotation = this.vsch$getHeadRotation();
+			this.headPitch = -Mth.HALF_PI;
+			this.headYaw = 0;
+			this.vsch$setBodyRotation(this.vsch$getBodyRotation().set(headRotation).rotateX(Mth.HALF_PI));
+		}
 	}
 
 	@Override
