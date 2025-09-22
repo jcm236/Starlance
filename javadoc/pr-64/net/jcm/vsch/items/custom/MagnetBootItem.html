@@ -81,11 +81,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>net.minecraft.world.flag.FeatureElement</code>, <code>net.minecraft.world.item.Equipable</code>, <code>net.minecraft.world.item.Vanishable</code>, <code>net.minecraft.world.level.ItemLike</code>, <code>net.minecraftforge.common.extensions.IForgeItem</code></dd>
+<dd><code><a href="../IToggleableItem.html" title="interface in net.jcm.vsch.items">IToggleableItem</a></code>, <code>net.minecraft.world.flag.FeatureElement</code>, <code>net.minecraft.world.item.Equipable</code>, <code>net.minecraft.world.item.Vanishable</code>, <code>net.minecraft.world.level.ItemLike</code>, <code>net.minecraftforge.common.extensions.IForgeItem</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MagnetBootItem</span>
-<span class="extends-implements">extends net.minecraft.world.item.ArmorItem</span></div>
+<span class="extends-implements">extends net.minecraft.world.item.ArmorItem
+implements <a href="../IToggleableItem.html" title="interface in net.jcm.vsch.items">IToggleableItem</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -170,6 +171,11 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isWorking(net.minecraft.world.item.ItemStack)" class="member-name-link">isWorking</a><wbr>(net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onToggle(net.minecraft.world.entity.player.Player,int,net.minecraft.world.item.ItemStack)" class="member-name-link">onToggle</a><wbr>(net.minecraft.world.entity.player.Player&nbsp;owner,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -258,6 +264,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getDirection(net.minecraft.world.item.ItemStack)">
 <h3>getDirection</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.phys.Vec3</span>&nbsp;<span class="element-name">getDirection</span><wbr><span class="parameters">(net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="onToggle(net.minecraft.world.entity.player.Player,int,net.minecraft.world.item.ItemStack)">
+<h3>onToggle</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onToggle</span><wbr><span class="parameters">(net.minecraft.world.entity.player.Player&nbsp;owner,
+ int&nbsp;slot,
+ net.minecraft.world.item.ItemStack&nbsp;stack)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../IToggleableItem.html#onToggle(net.minecraft.world.entity.player.Player,int,net.minecraft.world.item.ItemStack)">onToggle</a></code>&nbsp;in interface&nbsp;<code><a href="../IToggleableItem.html" title="interface in net.jcm.vsch.items">IToggleableItem</a></code></dd>
+</dl>
 </section>
 </li>
 <li>

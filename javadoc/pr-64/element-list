@@ -34,6 +34,8 @@ net.jcm.vsch.mixin.create
 net.jcm.vsch.mixin.minecraft
 net.jcm.vsch.mixin.valkyrienskies
 net.jcm.vsch.mixin.valkyrienskies.accessor
+net.jcm.vsch.network
+net.jcm.vsch.network.c2s
 net.jcm.vsch.ship
 net.jcm.vsch.ship.dragger
 net.jcm.vsch.ship.gyro
