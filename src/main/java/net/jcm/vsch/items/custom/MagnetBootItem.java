@@ -2,13 +2,14 @@ package net.jcm.vsch.items.custom;
 
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.jcm.vsch.config.VSCHConfig;
-import net.lointain.cosmos.item.SteelarmourItem;
+import net.jcm.vsch.items.IToggleableItem;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +32,7 @@ import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
-public class MagnetBootItem extends ArmorItem {
+public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 	private static final String TAG_DISABLED = "Disabled";
 	private static final String TAG_READY = "Ready";
 	private static final String TAG_DIRECTION = "Direction";
@@ -90,8 +91,22 @@ public class MagnetBootItem extends ArmorItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-		if (!(entity instanceof LivingEntity livingEntity)) {
+	public void onToggle(final Player owner, final int slot, final ItemStack stack) {
+		final CompoundTag tag = stack.getOrCreateTag();
+		final boolean disable = !tag.getBoolean(TAG_DISABLED);
+		tag.putBoolean(TAG_DISABLED, disable);
+		if (owner.level().isClientSide) {
+			return;
+		}
+		owner.displayClientMessage(
+			Component.translatable(disable ? "vsch.message.magnet_boot.disabled" :  "vsch.message.magnet_boot.enabled"),
+			true
+		);
+	}
+
+	@Override
+	public void inventoryTick(final ItemStack stack, final Level level, final Entity entity, final int slot, final boolean selected) {
+		if (!(entity instanceof final LivingEntity livingEntity)) {
 			return;
 		}
 		if (livingEntity.getItemBySlot(this.getEquipmentSlot()) != stack) {
@@ -102,7 +117,7 @@ public class MagnetBootItem extends ArmorItem {
 		if (entity.noPhysics || entity.isPassenger()) {
 			return;
 		}
-		if (entity instanceof Player player && player.getAbilities().flying) {
+		if (entity instanceof final Player player && player.getAbilities().flying) {
 			return;
 		}
 

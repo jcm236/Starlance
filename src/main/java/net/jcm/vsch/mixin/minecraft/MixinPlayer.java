@@ -709,7 +709,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			}
 		}
 
-		System.out.println("moving: " + this + ": " + moverType + " : " + movement);
 		if (this.stuckSpeedMultiplier.lengthSqr() > 1e-7) {
 			movement = movement.multiply(this.stuckSpeedMultiplier);
 			this.stuckSpeedMultiplier = Vec3.ZERO;
@@ -858,7 +857,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			newMovement.z = 0;
 		}
 		movement = new Vec3(newMovement.x, newMovement.y, newMovement.z);
-		System.out.println("final movement: " + movement);
 		return movement;
 	}
 

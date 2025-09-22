@@ -1,10 +1,17 @@
 package net.jcm.vsch.client;
 
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
+import net.jcm.vsch.items.IToggleableItem;
+import net.jcm.vsch.items.custom.MagnetBootItem;
 
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -34,6 +41,24 @@ public final class ClientEvents {
 		} else {
 			event.setYaw(-CAMERA_ROT_VEC.y * Mth.RAD_TO_DEG);
 			event.setRoll(CAMERA_ROT_VEC.z * Mth.RAD_TO_DEG);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientTick(final TickEvent.ClientTickEvent event) {
+		if (event.phase != TickEvent.Phase.END) {
+			return;
+		}
+		final LocalPlayer player = Minecraft.getInstance().player;
+		final Inventory inventory = player == null ? null : player.getInventory();
+		final int bootSlot = EquipmentSlot.FEET.getIndex(Inventory.INVENTORY_SIZE);
+		while (VSCHKeyBindings.TOGGLE_MAGNET_BOOT.consumeClick()) {
+			if (inventory == null) {
+				continue;
+			}
+			if (inventory.getItem(bootSlot).getItem() instanceof MagnetBootItem) {
+				IToggleableItem.toggleSlot(player, bootSlot);
+			}
 		}
 	}
 }

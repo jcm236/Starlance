@@ -38,10 +38,19 @@ public final class VSCHKeyBindings {
 		"key.categories.movement"
 	);
 
+	public static final KeyMapping TOGGLE_MAGNET_BOOT = new KeyMapping(
+		"key." + VSCHMod.MODID + ".toggle_magnet_boot",
+		KeyConflictContext.IN_GAME,
+		InputConstants.Type.KEYSYM,
+		GLFW.GLFW_KEY_GRAVE_ACCENT,
+		"key.categories." + VSCHMod.MODID
+	);
+
 	@SubscribeEvent
 	public static void register(final RegisterKeyMappingsEvent event) {
 		event.register(ROLL_COUNTER_CLOCKWISE);
 		event.register(ROLL_CLOCKWISE);
 		event.register(UNLOCK_HEAD_ROTATION);
+		event.register(TOGGLE_MAGNET_BOOT);
 	}
 }
