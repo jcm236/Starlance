@@ -129,13 +129,19 @@ loadScripts(document, 'script');</script>
  com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;operation,
  net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMovePlayer$wrapDegrees(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">handleMovePlayer$wrapDegrees</a><wbr>(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet,
- org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMovePlayer$jumpFromGround(net.minecraft.server.level.ServerPlayer,com.llamalad7.mixinextras.injector.wrapoperation.Operation,net.minecraft.network.protocol.game.ServerboundMovePlayerPacket,com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef)" class="member-name-link">handleMovePlayer$jumpFromGround</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;operation,
+ net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet,
+ com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef&nbsp;jumped)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleport$new$ClientboundPlayerPositionPacket(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket)" class="member-name-link">teleport$new$ClientboundPlayerPositionPacket</a><wbr>(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket&nbsp;packet)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleMovePlayer$wrapDegrees(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket,org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">handleMovePlayer$wrapDegrees</a><wbr>(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet,
+ org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleport$new$ClientboundPlayerPositionPacket(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket)" class="member-name-link">teleport$new$ClientboundPlayerPositionPacket</a><wbr>(net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket&nbsp;packet)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -198,6 +204,15 @@ loadScripts(document, 'script');</script>
 <h3>handleMovePlayer$wrapDegrees</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleMovePlayer$wrapDegrees</span><wbr><span class="parameters">(net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet,
  org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleMovePlayer$jumpFromGround(net.minecraft.server.level.ServerPlayer,com.llamalad7.mixinextras.injector.wrapoperation.Operation,net.minecraft.network.protocol.game.ServerboundMovePlayerPacket,com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef)">
+<h3>handleMovePlayer$jumpFromGround</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handleMovePlayer$jumpFromGround</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;operation,
+ net.minecraft.network.protocol.game.ServerboundMovePlayerPacket&nbsp;packet,
+ com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef&nbsp;jumped)</span></div>
 </section>
 </li>
 <li>

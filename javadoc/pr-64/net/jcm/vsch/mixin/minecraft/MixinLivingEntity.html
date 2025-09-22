@@ -81,11 +81,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>net.minecraft.commands.CommandSource</code>, <code>net.minecraft.world.level.entity.EntityAccess</code>, <code>net.minecraft.world.Nameable</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.entity.Entity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
+<dd><code><a href="../../accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></code>, <code>net.minecraft.commands.CommandSource</code>, <code>net.minecraft.world.level.entity.EntityAccess</code>, <code>net.minecraft.world.Nameable</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.entity.Entity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">MixinLivingEntity</span>
-<span class="extends-implements">extends net.minecraft.world.entity.Entity</span></div>
+<span class="extends-implements">extends net.minecraft.world.entity.Entity
+implements <a href="../../accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -149,20 +150,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep$lerp</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getJumpPower()" class="member-name-link">getJumpPower</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jumpFromGround(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">jumpFromGround</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aiStep(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">travel</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;self,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep$lerp</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getJumpPower()" class="member-name-link">getJumpPower</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jumpFromGround(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">jumpFromGround</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">travel</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;self,
  double&nbsp;x,
  double&nbsp;y,
  double&nbsp;z,
  com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;operation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#vsch$getTickSinceLastJump()" class="member-name-link">vsch$getTickSinceLastJump</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -231,6 +238,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="vsch$getTickSinceLastJump()">
+<h3>vsch$getTickSinceLastJump</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">vsch$getTickSinceLastJump</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../accessor/LivingEntityAccessor.html#vsch$getTickSinceLastJump()">vsch$getTickSinceLastJump</a></code>&nbsp;in interface&nbsp;<code><a href="../../accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)">
 <h3>travel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">travel</span><wbr><span class="parameters">(net.minecraft.world.entity.LivingEntity&nbsp;self,
@@ -238,6 +255,12 @@ loadScripts(document, 'script');</script>
  double&nbsp;y,
  double&nbsp;z,
  com.llamalad7.mixinextras.injector.wrapoperation.Operation&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;operation)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="aiStep(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)">
+<h3>aiStep</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">aiStep</span><wbr><span class="parameters">(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</span></div>
 </section>
 </li>
 <li>
