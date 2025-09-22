@@ -12,6 +12,7 @@ net.jcm.vsch.blocks.entity.template
 net.jcm.vsch.blocks.rocketassembler
 net.jcm.vsch.blocks.thruster
 net.jcm.vsch.client
+net.jcm.vsch.client.key
 net.jcm.vsch.client.renderer
 net.jcm.vsch.commands
 net.jcm.vsch.compat
