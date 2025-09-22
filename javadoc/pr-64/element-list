@@ -19,6 +19,7 @@ net.jcm.vsch.compat
 net.jcm.vsch.compat.cc.peripherals
 net.jcm.vsch.compat.create.ponder
 net.jcm.vsch.compat.create.ponder.scenes
+net.jcm.vsch.compat.curios
 net.jcm.vsch.compat.jade
 net.jcm.vsch.compat.jade.componentproviders
 net.jcm.vsch.config

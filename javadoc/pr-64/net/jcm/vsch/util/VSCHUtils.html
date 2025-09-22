@@ -138,10 +138,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get <code>ServerLevel</code> from a VS dimension ID.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.joml.primitives.AABBd</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformToAABBd(org.valkyrienskies.core.api.ships.properties.ShipTransform,org.joml.primitives.AABBic)" class="member-name-link">transformToAABBd</a><wbr>(org.valkyrienskies.core.api.ships.properties.ShipTransform&nbsp;transform,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#testCuriosItems(net.minecraft.world.entity.LivingEntity,java.lang.String,java.util.function.BiPredicate)" class="member-name-link">testCuriosItems</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;net.minecraft.world.item.ItemStack,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;tester)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.joml.primitives.AABBd</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transformToAABBd(org.valkyrienskies.core.api.ships.properties.ShipTransform,org.joml.primitives.AABBic)" class="member-name-link">transformToAABBd</a><wbr>(org.valkyrienskies.core.api.ships.properties.ShipTransform&nbsp;transform,
  org.joml.primitives.AABBic&nbsp;shipAABB)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Takes in a
  <code>ShipTransform</code> and its ship <code>AABBic</code> (its
  <b>shipyard</b> <code>AABBic</code>) and returns a
@@ -150,9 +155,9 @@ loadScripts(document, 'script');</script>
  Basically the same as
  <code>Ship#getWorldAABB()</code> but can take in a specified transform and ship AABBic</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vsDimToDim(java.lang.String)" class="member-name-link">vsDimToDim</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#vsDimToDim(java.lang.String)" class="member-name-link">vsDimToDim</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a VS dimension id string of
  <code>'minecraft:dimension:namespace:dimension_name'</code> to a normal
  dimension id string of <code>'namespace:dimension_name'</code></div>
@@ -308,6 +313,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getWarningComponent()">
 <h3>getWarningComponent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.network.chat.Component</span>&nbsp;<span class="element-name">getWarningComponent</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="testCuriosItems(net.minecraft.world.entity.LivingEntity,java.lang.String,java.util.function.BiPredicate)">
+<h3>testCuriosItems</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">testCuriosItems</span><wbr><span class="parameters">(net.minecraft.world.entity.LivingEntity&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;net.minecraft.world.item.ItemStack,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;tester)</span></div>
 </section>
 </li>
 </ul>

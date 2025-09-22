@@ -142,7 +142,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -150,6 +150,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">aiStep$lerp</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getJumpPower()" class="member-name-link">getJumpPower</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#jumpFromGround(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)" class="member-name-link">jumpFromGround</a><wbr>(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)" class="member-name-link">travel</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;self,
@@ -219,6 +225,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getJumpPower()">
+<h3>getJumpPower</h3>
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getJumpPower</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="travel(net.minecraft.world.entity.LivingEntity,double,double,double,com.llamalad7.mixinextras.injector.wrapoperation.Operation)">
 <h3>travel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">travel</span><wbr><span class="parameters">(net.minecraft.world.entity.LivingEntity&nbsp;self,
@@ -232,6 +244,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="aiStep$lerp(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)">
 <h3>aiStep$lerp</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">aiStep$lerp</span><wbr><span class="parameters">(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="jumpFromGround(org.spongepowered.asm.mixin.injection.callback.CallbackInfo)">
+<h3>jumpFromGround</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">jumpFromGround</span><wbr><span class="parameters">(org.spongepowered.asm.mixin.injection.callback.CallbackInfo&nbsp;ci)</span></div>
 </section>
 </li>
 </ul>
