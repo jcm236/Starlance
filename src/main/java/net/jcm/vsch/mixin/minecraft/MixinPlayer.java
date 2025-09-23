@@ -66,6 +66,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
@@ -137,6 +138,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Shadow
 	protected abstract boolean isAboveGround();
 
+	@Shadow
+	protected abstract boolean isLocalPlayer();
+
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void postInit(final Level level, final BlockPos pos, final float yRot, final GameProfile profile, final CallbackInfo ci) {
 		final Player player = (Player)((Object)(this));
@@ -172,7 +176,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!this.vsch$isFreeRotating()) {
 			return this.getEyePosition();
 		}
-		return this.position().add(0, SPACE_ENTITY_SIZE / 2, 0);
+		return this.position().add(0, HALF_SPACE_ENTITY_SIZE, 0);
+	}
+
+	@Unique
+	private Vector3d getFeetRelativePos() {
+		final float height = this.vsch$getVanillaDimensions(this.getPose()).height;
+		return new Vector3d(0, HALF_SPACE_ENTITY_SIZE - height, 0);
 	}
 
 	@Override
@@ -180,7 +190,28 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!this.vsch$isFreeRotating()) {
 			return this.position();
 		}
-		return this.vsch$getHeadCenter().add(this.vsch$getDownVector().scale(SPACE_ENTITY_SIZE * 2));
+		final Vector3d feetRel = this.vsch$getBodyRotation().transform(this.getFeetRelativePos());
+		return this.vsch$getHeadCenter().add(feetRel.x, feetRel.y, feetRel.z);
+	}
+
+	@Unique
+	private AABBd createLocalBB() {
+		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
+		return new AABBd(
+			-dimensions.width / 2, HALF_SPACE_ENTITY_SIZE - dimensions.height, -dimensions.width / 2,
+			dimensions.width / 2, HALF_SPACE_ENTITY_SIZE, dimensions.width / 2
+		);
+	}
+
+	@Unique
+	private Matrix4dc getSelfToWorld() {
+		if (!this.vsch$isFreeRotating()) {
+			return new Matrix4d();
+		}
+		final Vec3 position = this.position();
+		return new Matrix4d()
+			.translation(position.x, position.y + HALF_SPACE_ENTITY_SIZE, position.z)
+			.rotate(this.vsch$getBodyRotation());
 	}
 
 	@Override
@@ -439,12 +470,14 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			return;
 		}
 
-		final boolean isClientSide = this.level().isClientSide;
+		// TODO: prevent / clamp turning when going to hit block
+
+		final boolean isLocalPlayer = this.isLocalPlayer();
 
 		float roll = 0;
 		boolean lockHeadRotate = false;
 		final boolean lockBodyRotate = this.isBodyRotationLocked();
-		if (isClientSide) {
+		if (isLocalPlayer) {
 			final long now = System.nanoTime();
 			if (VSCHKeyBindings.UNLOCK_HEAD_ROTATION.consumeDoubleClick()) {
 				this.headPitch = 0;
@@ -516,7 +549,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			this.vsch$setBodyRotationO(this.rotationO.mul(relRotation).normalize());
 		}
 
-		if (isClientSide && !lockBodyRotate && Minecraft.getInstance().options.keySprint.isDown()) {
+		if (isLocalPlayer && !lockBodyRotate && Minecraft.getInstance().options.keySprint.isDown()) {
 			final Quaternionf headRotation = this.vsch$getHeadRotation();
 			this.headPitch = -Mth.HALF_PI;
 			this.headYaw = 0;
@@ -598,11 +631,10 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	protected void checkInsideBlocks() {
-		if (!this.vsch$isFreeRotating()) {
-			super.checkInsideBlocks();
-			return;
-		}
+	public BlockPos vsch$findSupportingBlock(final Consumer<AABBd> boxModifier) {
+		final AABBd bb = this.createLocalBB();
+		boxModifier.accept(bb);
+		return CollisionUtil.findSupportingBlock(this.level(), this, bb, this.getFeetRelativePos(), this.getSelfToWorld());
 	}
 
 	@Override
@@ -615,15 +647,27 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			this.mainSupportingBlockPos = Optional.empty();
 			return;
 		}
-		final AABB bb = this.getBoundingBox();
-		final AABB movedBB = movement == null
-			? bb
-			: bb.expandTowards(Math.signum(movement.x) * 1e-6, Math.signum(movement.y) * 1e-6, Math.signum(movement.z) * 1e-6);
-		Optional<BlockPos> supportingBlockPos = this.level().findSupportingBlock(this, movedBB);
-		if (!supportingBlockPos.isPresent() && movement != null) {
-			supportingBlockPos = this.level().findSupportingBlock(this, movedBB.move(-movement.x, -movement.y, -movement.z));
+		final AABBd bb = this.createLocalBB();
+		final Vector3d move = movement == null
+			? null
+			: this.vsch$getBodyRotation().transformInverse(new Vector3d(movement.x, movement.y, movement.z));
+		if (move != null) {
+			CollisionUtil.expandTowards(bb, Math.signum(move.x) * 1e-6, Math.signum(move.y) * 1e-6, Math.signum(move.z) * 1e-6);
 		}
-		this.mainSupportingBlockPos = supportingBlockPos;
+		final Vector3d feetPos = this.getFeetRelativePos();
+		final Matrix4dc entityToWorld = this.getSelfToWorld();
+
+		BlockPos supportingBlockPos = CollisionUtil.findSupportingBlock(this.level(), this, bb, feetPos, entityToWorld);
+		if (supportingBlockPos == null && move != null) {
+			supportingBlockPos = CollisionUtil.findSupportingBlock(
+				this.level(),
+				this,
+				bb.translate(move.negate()),
+				feetPos,
+				entityToWorld
+			);
+		}
+		this.mainSupportingBlockPos = Optional.ofNullable(supportingBlockPos);
 	}
 
 	@Override
@@ -632,7 +676,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (mainSupportingBlockPos != null) {
 			return mainSupportingBlockPos;
 		}
-		final Vector3d rel = this.vsch$getBodyRotation().transform(new Vector3d(0, -HALF_SPACE_ENTITY_SIZE / 2 - dist, 0));
+		final Vector3d rel = this.vsch$getBodyRotation().transform(new Vector3d(0, -dist, 0));
 		return BlockPos.containing(this.vsch$getFeetPosition().add(rel.x, rel.y, rel.z));
 	}
 
@@ -764,7 +808,6 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Entity.MovementEmission movementEmission = this.getMovementEmission();
 		if (movementEmission.emitsAnything() && !this.isPassenger()) {
-			// TODO
 			final float scaledMoveDist = (float) (movedDist * 0.6);
 			this.flyDist += scaledMoveDist;
 			this.walkDist += scaledMoveDist;
@@ -810,15 +853,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private Vec3 betterCollide(Vec3 movement) {
 		final Level level = this.level();
-		final Vec3 position = this.vsch$getHeadCenter();
 		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
 		final AABBd box = new AABBd(
-			-dimensions.width / 2, 0.6 / 2 - dimensions.height, -dimensions.width / 2,
-			dimensions.width / 2, 0.6 / 2, dimensions.width / 2
+			-dimensions.width / 2, HALF_SPACE_ENTITY_SIZE - dimensions.height, -dimensions.width / 2,
+			dimensions.width / 2, HALF_SPACE_ENTITY_SIZE, dimensions.width / 2
 		);
-		final Matrix4dc entityToWorld = new Matrix4d()
-			.translation(position.x, position.y, position.z)
-			.rotate(this.vsch$getBodyRotation());
+		final Matrix4dc entityToWorld = this.getSelfToWorld();
 		final Matrix4dc worldToEntity = entityToWorld.invert(new Matrix4d());
 		final Vector3d newMovement = new Vector3d(movement.x, movement.y, movement.z);
 		worldToEntity.transformDirection(newMovement);
@@ -922,7 +962,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		if (!this.vsch$isFreeRotating()) {
 			return;
 		}
-		cir.setReturnValue(SPACE_ENTITY_SIZE / 2);
+		cir.setReturnValue(HALF_SPACE_ENTITY_SIZE);
 		// TODO: fix eye height after rotated
 		// final float height = this.vsch$getVanillaDimensions(pose).height;
 		// float eyeHeight = cir.getReturnValueF();
@@ -1001,18 +1041,13 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private boolean hasCollisionAfterMovement(final Vector3d movement) {
-		final Level level = this.level();
-		final Vec3 position = this.vsch$getHeadCenter();
 		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
 		final double deflate = 0.07;
 		final AABBd box = new AABBd(
-			-dimensions.width / 2 + deflate, 0.6 / 2 - dimensions.height, -dimensions.width / 2 + deflate,
-			dimensions.width / 2 - deflate, 0.6 / 2, dimensions.width / 2 - deflate
+			-dimensions.width / 2 + deflate, HALF_SPACE_ENTITY_SIZE - dimensions.height, -dimensions.width / 2 + deflate,
+			dimensions.width / 2 - deflate, HALF_SPACE_ENTITY_SIZE, dimensions.width / 2 - deflate
 		);
-		final Matrix4dc entityToWorld = new Matrix4d()
-			.translation(position.x, position.y, position.z)
-			.rotate(this.vsch$getBodyRotation());
-		return CollisionUtil.willCollideAny(level, this, box, entityToWorld, movement);
+		return CollisionUtil.willCollideAny(this.level(), this, box, this.getSelfToWorld(), movement);
 	}
 
 	@Override

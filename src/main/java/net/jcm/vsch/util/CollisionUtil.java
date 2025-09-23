@@ -1,6 +1,8 @@
 package net.jcm.vsch.util;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -292,8 +294,71 @@ public final class CollisionUtil {
 		}
 	}
 
+	public static BlockPos findSupportingBlockNoOrientation(final Entity entity, final double downExtend) {
+		final Vec3 position = entity.position();
+		final EntityDimensions dimensions = entity.getDimensions(entity.getPose());
+		final AABBd box = new AABBd(
+			-dimensions.width / 2, -downExtend, -dimensions.width / 2,
+			dimensions.width / 2, dimensions.height, dimensions.width / 2
+		);
+		final Matrix4dc box2world = new Matrix4d().translation(position.x, position.y, position.z);
+		return findSupportingBlock(entity.level(), entity, box, new Vector3d(), box2world);
+	}
+
+	public static BlockPos findSupportingBlock(
+		final Level level,
+		final Entity entity,
+		final AABBd box,
+		final Vector3dc feetPos,
+		final Matrix4dc box2world
+	) {
+		BlockPos closestBlock = null;
+		double closestDistance = Double.POSITIVE_INFINITY;
+
+		final AABBd worldBox = box.transform(box2world, new AABBd());
+		final Vector3d feetPos2 = new Vector3d();
+		{
+			final BlockPos block = level.findSupportingBlock(entity, toAABB(worldBox)).orElse(null);
+			if (block != null) {
+				box2world.transformPosition(feetPos, feetPos2);
+				final double dist = block.distToCenterSqr(feetPos2.x, feetPos2.y, feetPos2.z);
+				// TODO: maybe check the actual face to face distance instead?
+				closestDistance = dist;
+				closestBlock = block;
+			}
+		}
+
+		final Matrix4d entityToShip = new Matrix4d();
+		final AABBd box2 = new AABBd();
+		final String dimId = VSGameUtilsKt.getDimensionId(level);
+		for (final LoadedShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
+			if (!ship.getChunkClaimDimension().equals(dimId)) {
+				continue;
+			}
+			if (!ship.getWorldAABB().intersectsAABB(worldBox)) {
+				continue;
+			}
+			entityToShip.set(ship.getWorldToShip()).mul(box2world);
+			final BlockPos block = level.findSupportingBlock(entity, toAABB(box.transform(entityToShip, box2))).orElse(null);
+			if (block == null) {
+				continue;
+			}
+			entityToShip.transformPosition(feetPos, feetPos2);
+			final double dist = block.distToCenterSqr(feetPos2.x, feetPos2.y, feetPos2.z);
+			if (dist >= closestDistance) {
+				continue;
+			}
+			closestDistance = dist;
+			closestBlock = block;
+		}
+		return closestBlock;
+	}
+
 	public static AABBd expandTowards(final AABBd box, final Vector3dc vec) {
-		final double x = vec.x(), y = vec.y(), z = vec.z();
+		return expandTowards(box, vec.x(), vec.y(), vec.z());
+	}
+
+	public static AABBd expandTowards(final AABBd box, final double x, final double y, final double z) {
 		if (x < 0) {
 			box.minX += x;
 		} else {

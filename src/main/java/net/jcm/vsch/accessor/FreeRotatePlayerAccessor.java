@@ -1,11 +1,15 @@
 package net.jcm.vsch.accessor;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
+import org.joml.primitives.AABBd;
+
+import java.util.function.Consumer;
 
 public interface FreeRotatePlayerAccessor extends LivingEntityAccessor {
 	EntityDimensions vsch$getVanillaDimensions(Pose pose);
@@ -55,6 +59,8 @@ public interface FreeRotatePlayerAccessor extends LivingEntityAccessor {
 	void vsch$setLerpHeadYaw(float yaw);
 
 	boolean vsch$hasSupportingBlock();
+
+	BlockPos vsch$findSupportingBlock(Consumer<AABBd> boxModifier);
 
 	void vsch$setOldPosAndRot();
 

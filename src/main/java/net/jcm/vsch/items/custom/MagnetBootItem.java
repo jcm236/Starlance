@@ -6,6 +6,7 @@ import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.curios.MagnetBootCurio;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.items.IToggleableItem;
+import net.jcm.vsch.util.CollisionUtil;
 import net.jcm.vsch.util.VSCHUtils;
 
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,7 @@ import top.theillusivec4.curios.api.CuriosCapability;
 import org.joml.Matrix3f;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -45,6 +47,7 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 	private static final String TAG_DISABLED = "Disabled";
 	private static final String TAG_READY = "Ready";
 	private static final String TAG_DIRECTION = "Direction";
+	private static final String TAG_ATTACHING = "Attaching";
 	private static final double MIN_FORCE = 0.01;
 
 	public MagnetBootItem(ArmorMaterial pMaterial, Type pType, Properties pProperties) {
@@ -83,13 +86,21 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 		return tag != null && !tag.getBoolean(TAG_DISABLED) && tag.getBoolean(TAG_READY);
 	}
 
+	public Long getWorkingShip(final ItemStack stack) {
+		if (!(stack.getItem() instanceof MagnetBootItem)) {
+			return null;
+		}
+		final CompoundTag tag = stack.getTag();
+		if (tag == null || tag.getBoolean(TAG_DISABLED) || !tag.getBoolean(TAG_READY)) {
+			return null;
+		}
+		return tag.contains(TAG_ATTACHING) ? tag.getLong(TAG_ATTACHING) : null;
+	}
+
 	public static boolean isMagnetized(final LivingEntity entity) {
 		final ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
 		if (!stack.isEmpty() && stack.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack)) {
 			return true;
-		}
-		if (!CompatMods.CURIOS.isLoaded()) {
-			return false;
 		}
 		return VSCHUtils.testCuriosItems(
 			entity,
@@ -146,43 +157,48 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 
 		final double maxDistance = this.getAttractDistance();
 
-		Vec3 startPos = entity.position(); // Starting position (player's feet position)
-		Vec3 direction = new Vec3(0, -1, 0);
-		if (entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
-			startPos = frp.vsch$getFeetPosition();
-			direction = frp.vsch$getDownVector();
-		}
+		final FreeRotatePlayerAccessor frp = entity instanceof final FreeRotatePlayerAccessor frp0 && frp0.vsch$isFreeRotating() ? frp0 : null;
+		final Vec3 startPos = frp != null ? frp.vsch$getFeetPosition() : entity.position();
+		final Vec3 direction = frp != null ? frp.vsch$getDownVector() : new Vec3(0, -1, 0);
 
-		final Vec3 endPos = startPos.add(direction.scale(maxDistance)); // End position (straight down)
+		final BlockPos blockPos = frp != null
+			? frp.vsch$findSupportingBlock((detectBox) -> {
+					detectBox.maxY = detectBox.minY + 0.1;
+					detectBox.minY -= maxDistance;
+				})
+			: CollisionUtil.findSupportingBlockNoOrientation(entity, maxDistance);
 
-		final HitResult hitResult = level.clip(new ClipContext(
-			startPos,
-			endPos,
-			ClipContext.Block.COLLIDER,
-			ClipContext.Fluid.NONE,
-			entity
-		));
-
-		if (hitResult.getType() != HitResult.Type.BLOCK) {
+		if (blockPos == null) {
 			if (wasReady) {
 				tag.putBoolean(TAG_READY, false);
 				tag.remove(TAG_DIRECTION);
 			}
 			return;
 		}
+
 		if (!wasReady) {
 			tag.putBoolean(TAG_READY, true);
-			Vec3.CODEC.encodeStart(NbtOps.INSTANCE, direction).result().ifPresent(pos -> tag.put(TAG_DIRECTION, pos));
+			tag.put(TAG_DIRECTION, Vec3.CODEC.encodeStart(NbtOps.INSTANCE, direction).result().orElse(null));
 		}
 		if (disabled) {
 			return;
 		}
 
-		final BlockHitResult blockHit = ((BlockHitResult)(hitResult));
-
-		// mAtH
-		final double distance = startPos.distanceToSqr(hitResult.getLocation());
-		if (((LivingEntityAccessor) (entity)).vsch$getTickSinceLastJump() > 15 || distance > 1.5) {
+		final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
+		// TODO: get the accurate distance that repect block shape
+		final Vector3d blockCenter = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+		if (ship != null) {
+			tag.putLong(TAG_ATTACHING, ship.getId());
+			ship.getShipToWorld().transformPosition(blockCenter);
+		} else {
+			tag.remove(TAG_ATTACHING);
+		}
+		final Vector3d displacment = new Vector3d(startPos.x, startPos.y, startPos.z).sub(blockCenter);
+		if (frp != null) {
+			frp.vsch$getBodyRotation().transformInverse(displacment);
+		}
+		final double distance = Math.max(displacment.y, 0);
+		if (((LivingEntityAccessor) (entity)).vsch$getTickSinceLastJump() > 15 || distance > 1) {
 			final double scaledForce = Math.min(maxDistance * maxDistance / distance * MIN_FORCE, getMaxForce());
 
 			final Vec3 force = direction.scale(scaledForce);
@@ -193,18 +209,66 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 			tag.putDouble("Force", 0);
 		}
 
-		if (entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
-			final BlockPos blockPos = blockHit.getBlockPos();
-			final Quaternionf destRot = blockHit.getDirection().getRotation();
-			final Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
+		//level.addParticle(ParticleTypes.HEART, player.getX(), player.getY(), player.getZ(), 0, 0, 0);
+
+		if (frp == null) {
+			return;
+		}
+		final Vector3d scaledDir = new Vector3d(direction.x, direction.y, direction.z).mul(distance);
+		if (ship != null) {
+			ship.getWorldToShip().transformDirection(scaledDir);
+		}
+
+		final Quaternionf rotation = frp.vsch$getBodyRotation();
+
+		final int[] dirCounts = new int[Direction.values().length];
+		Direction mostDir = null;
+		int mostDirCount = 0;
+
+		final double halfWidth = frp.vsch$getVanillaDimensions(entity.getPose()).width / 2.0 + 1e-3;
+		final Vector3d[] checkPoints = new Vector3d[]{
+			new Vector3d(0, 0, 0),
+			new Vector3d(-halfWidth, 0, -halfWidth),
+			new Vector3d(-halfWidth, 0, halfWidth),
+			new Vector3d(halfWidth, 0, -halfWidth),
+			new Vector3d(halfWidth, 0, halfWidth),
+		};
+		for (final Vector3d checkPoint : checkPoints) {
+			rotation.transform(checkPoint);
+			checkPoint.add(startPos.x, startPos.y, startPos.z);
+			if (ship != null) {
+				ship.getWorldToShip().transformPosition(checkPoint);
+			}
+			final Vec3 checkPos = new Vec3(checkPoint.x, checkPoint.y, checkPoint.z);
+			final BlockHitResult hitResult = level.clip(
+				new ClipContext(
+					checkPos,
+					checkPos.add(scaledDir.x, scaledDir.y, scaledDir.z),
+					ClipContext.Block.COLLIDER,
+					ClipContext.Fluid.NONE,
+					entity
+				)
+			);
+			if (hitResult.getType() != HitResult.Type.BLOCK) {
+				continue;
+			}
+			final Direction dir = hitResult.getDirection();
+			final int count = ++dirCounts[dir.ordinal()];
+			if (count > mostDirCount) {
+				mostDir = dir;
+				mostDirCount = count;
+			} else if (count == mostDirCount) {
+				mostDir = null;
+			}
+		}
+
+		if (mostDir != null) {
+			final Quaternionf destRot = mostDir.getRotation();
 			if (ship != null) {
 				destRot.premul(new Quaternionf().setFromNormalized(ship.getShipToWorld()));
 			}
-			final Quaternionf rotation = frp.vsch$getBodyRotation();
 			frp.vsch$setBodyRotation(rotateTowards(rotation, destRot));
 		}
-
-		//level.addParticle(ParticleTypes.HEART, player.getX(), player.getY(), player.getZ(), 0, 0, 0);
 	}
 
 	@Override
