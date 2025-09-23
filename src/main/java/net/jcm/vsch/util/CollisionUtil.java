@@ -2,14 +2,18 @@ package net.jcm.vsch.util;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.CollisionGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.joml.Matrix4d;
 import org.joml.Matrix4dc;
 import org.joml.primitives.AABBd;
+import org.valkyrienskies.core.api.ships.LoadedShip;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,85 @@ public final class CollisionUtil {
 	);
 
 	private CollisionUtil() {}
+
+	public static boolean willCollide(
+		final CollisionGetter level,
+		final Entity entity,
+		final AABBd box,
+		final Matrix4dc box2voxel,
+		final Matrix4dc voxel2box,
+		final Vector3d movement
+	) {
+		final Vector3d movementInVoxel = box2voxel.transformDirection(movement, new Vector3d());
+		final AABBd box1 = box.translate(movement, new AABBd());
+		final AABBd box2 = box.transform(box2voxel, new AABBd()).translate(movementInVoxel);
+		final boolean[] intersect = new boolean[1];
+		for (final VoxelShape shape : level.getBlockCollisions(entity, toAABB(box2))) {
+			if (shape.isEmpty()) {
+				continue;
+			}
+			final AABBd voxel = toAABBd(shape.bounds());
+			if (!box2.intersectsAABB(voxel)) {
+				continue;
+			}
+			if (!voxel.transform(voxel2box).intersectsAABB(box1)) {
+				continue;
+			}
+			final AABBd voxelInBox = new AABBd();
+			shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
+				if (intersect[0]) {
+					return;
+				}
+				voxel
+					.setMin(minX, minY, minZ)
+					.setMax(maxX, maxY, maxZ);
+				if (!box2.intersectsAABB(voxel)) {
+					return;
+				}
+				voxel.transform(voxel2box, voxelInBox);
+				if (!box1.intersectsAABB(voxelInBox)) {
+					return;
+				}
+				intersect[0] = true;
+			});
+			if (intersect[0]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean willCollideAny(
+		final Level level,
+		final Entity entity,
+		final AABBd box,
+		final Matrix4dc box2world,
+		final Vector3d movement
+	) {
+		final Matrix4dc world2box = box2world.invert(new Matrix4d());
+		if (willCollide(level, entity, box, box2world, world2box, movement)) {
+			return true;
+		}
+
+		final Matrix4d entityToShip = new Matrix4d();
+		final Matrix4d shipToEntity = new Matrix4d();
+		final AABBd checkBox = box.transform(box2world, new AABBd());
+		final String dimId = VSGameUtilsKt.getDimensionId(level);
+		for (final LoadedShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
+			if (!ship.getChunkClaimDimension().equals(dimId)) {
+				continue;
+			}
+			if (!ship.getWorldAABB().intersectsAABB(checkBox)) {
+				continue;
+			}
+			entityToShip.set(ship.getWorldToShip()).mul(box2world);
+			shipToEntity.set(world2box).mul(ship.getShipToWorld());
+			if (willCollide(level, entity, box, entityToShip, shipToEntity, movement)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static Vector3d checkCollision(
 		final Vector3d movement,

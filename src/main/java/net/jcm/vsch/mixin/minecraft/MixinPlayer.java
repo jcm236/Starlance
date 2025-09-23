@@ -134,6 +134,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Shadow
 	protected abstract boolean isStayingOnGroundSurface();
 
+	@Shadow
+	protected abstract boolean isAboveGround();
+
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void postInit(final Level level, final BlockPos pos, final float yRot, final GameProfile profile, final CallbackInfo ci) {
 		final Player player = (Player)((Object)(this));
@@ -824,8 +827,8 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 		final Matrix4d entityToShip = new Matrix4d();
 		final Matrix4d shipToEntity = new Matrix4d();
-		final String dimId = VSGameUtilsKt.getDimensionId(level);
 		final AABBd checkBox = CollisionUtil.expandTowards(new AABBd(box), newMovement).transform(entityToWorld);
+		final String dimId = VSGameUtilsKt.getDimensionId(level);
 		for (final LoadedShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
 			if (!ship.getChunkClaimDimension().equals(dimId)) {
 				continue;
@@ -897,6 +900,12 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
+	protected void setLevel(final Level level) {
+		super.setLevel(level);
+		this.updateDefaultFreeRotation();
+	}
+
+	@Override
 	protected void moveTowardsClosestSpace(final double x, final double y, final double z) {
 		if (!this.vsch$isFreeRotating()) {
 			super.moveTowardsClosestSpace(x, y, z);
@@ -929,18 +938,81 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Inject(method = "maybeBackOffFromEdge", at = @At("HEAD"), cancellable = true)
-	protected void maybeBackOffFromEdge(final Vec3 movement, final MoverType moveType, final CallbackInfoReturnable<Vec3> cir) {
+	protected void maybeBackOffFromEdge(final Vec3 movement, final MoverType moverType, final CallbackInfoReturnable<Vec3> cir) {
 		if (!this.vsch$isFreeRotating()) {
 			return;
 		}
-		// TODO: implement edge backoff in space, may respect to delta movement
-		cir.setReturnValue(movement);
+		cir.setReturnValue(this.maybeBackOffFromEdgeImpl(movement, moverType));
 	}
 
-	@Override
-	protected void setLevel(final Level level) {
-		super.setLevel(level);
-		this.updateDefaultFreeRotation();
+	@Unique
+	private Vec3 maybeBackOffFromEdgeImpl(final Vec3 movement, final MoverType moverType) {
+		if (movement.y > 0) {
+			return movement;
+		}
+		if (moverType != MoverType.SELF && moverType != MoverType.PLAYER) {
+			return movement;
+		}
+		if (!this.isStayingOnGroundSurface() || !this.isAboveGround()) {
+			return movement;
+		}
+		if (!this.isBodyRotationLocked()) {
+			return movement;
+		}
+		final Quaternionf rotation = this.vsch$getBodyRotation();
+		final Vector3d relMove = rotation.transformInverse(new Vector3d(movement.x, movement.y, movement.z));
+		final double maxDownStep = -this.maxUpStep();
+		final double step = 0.05;
+		final double moveY = relMove.y;
+		double moveX = relMove.x;
+		double moveZ = relMove.z;
+		while (moveX != 0 && !this.hasCollisionAfterMovement(relMove.set(moveX, maxDownStep, 0))) {
+			if (Math.abs(moveX) < step) {
+				moveX = 0;
+				break;
+			}
+			moveX -= step * Math.signum(moveX);
+		}
+
+		while (moveZ != 0 && !this.hasCollisionAfterMovement(relMove.set(0, maxDownStep, moveZ))) {
+			if (Math.abs(moveZ) < step) {
+				moveZ = 0;
+				break;
+			}
+			moveZ -= step * Math.signum(moveZ);
+		}
+
+		while (moveX != 0 && moveZ != 0 && !this.hasCollisionAfterMovement(relMove.set(moveX, maxDownStep, moveZ))) {
+			if (Math.abs(moveX) < step) {
+				moveX = 0;
+				break;
+			}
+			moveX -= step * Math.signum(moveX);
+
+			if (Math.abs(moveZ) < step) {
+				moveZ = 0;
+				break;
+			}
+			moveZ -= step * Math.signum(moveZ);
+		}
+		rotation.transform(relMove.set(moveX, moveY, moveZ));
+		return new Vec3(relMove.x, relMove.y, relMove.z);
+	}
+
+	@Unique
+	private boolean hasCollisionAfterMovement(final Vector3d movement) {
+		final Level level = this.level();
+		final Vec3 position = this.vsch$getHeadCenter();
+		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
+		final double deflate = 0.07;
+		final AABBd box = new AABBd(
+			-dimensions.width / 2 + deflate, 0.6 / 2 - dimensions.height, -dimensions.width / 2 + deflate,
+			dimensions.width / 2 - deflate, 0.6 / 2, dimensions.width / 2 - deflate
+		);
+		final Matrix4dc entityToWorld = new Matrix4d()
+			.translation(position.x, position.y, position.z)
+			.rotate(this.vsch$getBodyRotation());
+		return CollisionUtil.willCollideAny(level, this, box, entityToWorld, movement);
 	}
 
 	@Override
