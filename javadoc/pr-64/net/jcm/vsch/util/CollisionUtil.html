@@ -104,6 +104,21 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#expandTowards(org.joml.primitives.AABBd,org.joml.Vector3dc)" class="member-name-link">expandTowards</a><wbr>(org.joml.primitives.AABBd&nbsp;box,
  org.joml.Vector3dc&nbsp;vec)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#willCollide(net.minecraft.world.level.CollisionGetter,net.minecraft.world.entity.Entity,org.joml.primitives.AABBd,org.joml.Matrix4dc,org.joml.Matrix4dc,org.joml.Vector3d)" class="member-name-link">willCollide</a><wbr>(net.minecraft.world.level.CollisionGetter&nbsp;level,
+ net.minecraft.world.entity.Entity&nbsp;entity,
+ org.joml.primitives.AABBd&nbsp;box,
+ org.joml.Matrix4dc&nbsp;box2voxel,
+ org.joml.Matrix4dc&nbsp;voxel2box,
+ org.joml.Vector3d&nbsp;movement)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#willCollideAny(net.minecraft.world.level.Level,net.minecraft.world.entity.Entity,org.joml.primitives.AABBd,org.joml.Matrix4dc,org.joml.Vector3d)" class="member-name-link">willCollideAny</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.world.entity.Entity&nbsp;entity,
+ org.joml.primitives.AABBd&nbsp;box,
+ org.joml.Matrix4dc&nbsp;box2world,
+ org.joml.Vector3d&nbsp;movement)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -121,6 +136,27 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="willCollide(net.minecraft.world.level.CollisionGetter,net.minecraft.world.entity.Entity,org.joml.primitives.AABBd,org.joml.Matrix4dc,org.joml.Matrix4dc,org.joml.Vector3d)">
+<h3>willCollide</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">willCollide</span><wbr><span class="parameters">(net.minecraft.world.level.CollisionGetter&nbsp;level,
+ net.minecraft.world.entity.Entity&nbsp;entity,
+ org.joml.primitives.AABBd&nbsp;box,
+ org.joml.Matrix4dc&nbsp;box2voxel,
+ org.joml.Matrix4dc&nbsp;voxel2box,
+ org.joml.Vector3d&nbsp;movement)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="willCollideAny(net.minecraft.world.level.Level,net.minecraft.world.entity.Entity,org.joml.primitives.AABBd,org.joml.Matrix4dc,org.joml.Vector3d)">
+<h3>willCollideAny</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">willCollideAny</span><wbr><span class="parameters">(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.world.entity.Entity&nbsp;entity,
+ org.joml.primitives.AABBd&nbsp;box,
+ org.joml.Matrix4dc&nbsp;box2world,
+ org.joml.Vector3d&nbsp;movement)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="checkCollision(org.joml.Vector3d,net.minecraft.world.level.CollisionGetter,net.minecraft.world.entity.Entity,org.joml.primitives.AABBd,org.joml.Matrix4dc,org.joml.Matrix4dc)">
 <h3>checkCollision</h3>
