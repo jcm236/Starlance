@@ -706,14 +706,14 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	public Vec3 handleRelativeFrictionAndCalculateMovement(final Vec3 movement, final float friction) {
+	public Vec3 handleRelativeFrictionAndCalculateMovement(final Vec3 relMove, final float friction) {
 		if (!this.vsch$isFreeRotating()) {
-			return super.handleRelativeFrictionAndCalculateMovement(movement, friction);
+			return super.handleRelativeFrictionAndCalculateMovement(relMove, friction);
 		}
 		final float power = this.getFlyingSpeed();
-		final double speed = movement.lengthSqr();
+		final double speed = relMove.lengthSqr();
 		if (speed > 1e-8) {
-			final Vector3d move = new Vector3d(movement.x, movement.y, movement.z);
+			final Vector3d move = new Vector3d(relMove.x, relMove.y, relMove.z);
 			if (speed > 1) {
 				move.normalize();
 			}
@@ -732,8 +732,21 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			rotation.transform(move);
 			this.setDeltaMovement(this.getDeltaMovement().add(move.x, move.y, move.z));
 		}
+		final double movementBefore = this.getDeltaMovement().length();
 		// this.setDeltaMovement(this.handleOnClimbable(this.getDeltaMovement()));
+		this.setDeltaMovement(this.getDeltaMovement());
 		this.move(MoverType.SELF, this.getDeltaMovement());
+
+		// Fall damage check
+		if (!this.level().isClientSide) {
+			final double movementAfter = this.getDeltaMovement().length();
+			final double movementDiff = movementBefore - movementAfter;
+			final double fallDamage = movementDiff * 10 - 6;
+			if (fallDamage > 0) {
+				this.playSound(fallDamage > 4 ? this.getFallSounds().big() : this.getFallSounds().small(), 1, 1);
+				this.hurt(this.damageSources().flyIntoWall(), (float) (fallDamage));
+			}
+		}
 		return this.getDeltaMovement();
 	}
 
@@ -785,7 +798,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		this.setOnGroundWithKnownMovement(this.verticalCollisionBelow, movement);
 		final BlockPos groundPos = this.getOnPosLegacy();
 		final BlockState groundState = this.level().getBlockState(groundPos);
-		this.checkFallDamage(movementActual.y, this.onGround(), groundState, groundPos);
+		// this.checkFallDamage(movementActual.y, this.onGround(), groundState, groundPos);
 		if (this.isRemoved()) {
 			return;
 		}
@@ -834,6 +847,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			}
 		}
 		this.tryCheckInsideBlocks();
+		this.setDeltaMovement(movement);
 		if (
 			this.level().getBlockStatesIfLoaded(this.getBoundingBox().deflate(1e-6))
 				.noneMatch((state) -> state.is(BlockTags.FIRE) || state.is(Blocks.LAVA))
@@ -911,7 +925,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 			super.checkFallDamage(dy, onGround, block, pos);
 			return;
 		}
-		// TODO: implement fall damage / collision damage in space
+		// fall damage is implemented in handleRelativeFrictionAndCalculateMovement
 	}
 
 	@Override
