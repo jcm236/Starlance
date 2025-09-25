@@ -38,7 +38,7 @@ public abstract class MixinCamera {
 		final float partialTick,
 		final CallbackInfo ci
 	) {
-		if (!(entity instanceof FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
+		if (!(entity instanceof final FreeRotatePlayerAccessor frp) || !frp.vsch$isFreeRotating()) {
 			return;
 		}
 		frp.vsch$getHeadRotationO().slerp(frp.vsch$getHeadRotation(), partialTick, this.rotation);
@@ -52,7 +52,7 @@ public abstract class MixinCamera {
 		at = @At(value = "INVOKE", target = "Lorg/joml/Quaternionf;rotationYXZ(FFF)Lorg/joml/Quaternionf;", remap = false)
 	)
 	private Quaternionf setRotation$rotationYXZ(final Quaternionf rotation, final float y, final float x, final float z, final Operation<Quaternionf> operation) {
-		if (this.entity instanceof FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
+		if (this.entity instanceof final FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
 			return rotation;
 		}
 		return operation.call(rotation, y, x, z);

@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBd;
+import org.valkyrienskies.core.api.ships.Ship;
 
 import java.util.function.Consumer;
 
@@ -19,6 +20,8 @@ public interface FreeRotatePlayerAccessor extends LivingEntityAccessor {
 	Vec3 vsch$getHeadCenter();
 
 	Vec3 vsch$getFeetPosition();
+
+	void vsch$setFeetPosition(double x, double y, double z);
 
 	default Vec3 vsch$getDownVector() {
 		if (!this.vsch$isFreeRotating()) {
@@ -60,7 +63,13 @@ public interface FreeRotatePlayerAccessor extends LivingEntityAccessor {
 
 	boolean vsch$hasSupportingBlock();
 
+	default BlockPos vsch$findSupportingBlock() {
+		return this.vsch$findSupportingBlock((box) -> {});
+	}
+
 	BlockPos vsch$findSupportingBlock(Consumer<AABBd> boxModifier);
+
+	Ship vsch$getSupportingShip();
 
 	void vsch$setOldPosAndRot();
 

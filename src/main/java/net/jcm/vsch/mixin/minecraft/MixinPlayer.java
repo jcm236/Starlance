@@ -8,7 +8,6 @@ import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.player.MultiPartPlayer;
 import net.jcm.vsch.items.custom.MagnetBootItem;
-import net.jcm.vsch.util.BooleanRef;
 import net.jcm.vsch.util.CollisionUtil;
 import net.jcm.vsch.util.VSCHUtils;
 import net.jcm.vsch.util.wapi.LevelData;
@@ -27,11 +26,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,6 +50,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.primitives.AABBd;
 import org.valkyrienskies.core.api.ships.LoadedShip;
+import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -168,7 +170,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public boolean vsch$isFreeRotating() {
-		return !this.firstTick && this.entityData.get(FREE_ROTATION_ID);
+		return !this.firstTick && this.entityData.get(FREE_ROTATION_ID) && !this.isPassenger();
 	}
 
 	@Override
@@ -192,6 +194,16 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 		}
 		final Vector3d feetRel = this.vsch$getBodyRotation().transform(this.getFeetRelativePos());
 		return this.vsch$getHeadCenter().add(feetRel.x, feetRel.y, feetRel.z);
+	}
+
+	@Override
+	public void vsch$setFeetPosition(final double x, final double y, final double z) {
+		if (!this.vsch$isFreeRotating()) {
+			this.setPos(x, y, z);
+			return;
+		}
+		final Vector3d feetRel = this.vsch$getBodyRotation().transform(this.getFeetRelativePos());
+		this.setPos(x - feetRel.x, y - feetRel.y - HALF_SPACE_ENTITY_SIZE, z - feetRel.z);
 	}
 
 	@Unique
@@ -314,6 +326,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public float getViewXRot(final float partialTick) {
+		if (!this.vsch$isFreeRotating()) {
+			return super.getViewXRot(partialTick);
+		}
 		final Vector3f angles = new Vector3f();
 		final float xRot = this.vsch$getHeadRotation().getEulerAnglesYXZ(angles).x * Mth.RAD_TO_DEG;
 		final float xRotO = this.vsch$getHeadRotationO().getEulerAnglesYXZ(angles).x * Mth.RAD_TO_DEG;
@@ -322,6 +337,9 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Override
 	public float getViewYRot(final float partialTick) {
+		if (!this.vsch$isFreeRotating()) {
+			return super.getViewYRot(partialTick);
+		}
 		final Vector3f angles = new Vector3f();
 		final float yRot = -this.vsch$getHeadRotation().getEulerAnglesYXZ(angles).y * Mth.RAD_TO_DEG;
 		final float yRotO = -this.vsch$getHeadRotationO().getEulerAnglesYXZ(angles).y * Mth.RAD_TO_DEG;
@@ -376,7 +394,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 
 	@Unique
 	private void reCalcRotation() {
-		if (this.firstTick || !this.vsch$isFreeRotating()) {
+		if (!this.vsch$isFreeRotating()) {
 			return;
 		}
 		final Quaternionf rotation = this.vsch$getBodyRotation();
@@ -604,37 +622,32 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	}
 
 	@Override
-	public boolean vsch$hasSupportingBlock() {
-		if (!this.vsch$isFreeRotating()) {
-			return false;
-		}
-		final Level level = this.level();
-		final BooleanRef hasSupport = new BooleanRef(false);
-		final Entity[] parts = new Entity[]{this, this.chestPart, this.feetPart};
-		for (final Entity part : parts) {
-			VSGameUtilsKt.transformFromWorldToNearbyShipsAndWorld(level, part.getBoundingBox(), (box) -> {
-				if (hasSupport.value) {
-					return;
-				}
-				for (final VoxelShape shape : level.getBlockCollisions(part, box.inflate(SUPPORT_CHECK_DISTANCE))) {
-					if (!shape.isEmpty()) {
-						hasSupport.value = true;
-						return;
-					}
-				}
-			});
-			if (hasSupport.value) {
-				break;
-			}
-		}
-		return hasSupport.value;
-	}
-
-	@Override
 	public BlockPos vsch$findSupportingBlock(final Consumer<AABBd> boxModifier) {
 		final AABBd bb = this.createLocalBB();
 		boxModifier.accept(bb);
 		return CollisionUtil.findSupportingBlock(this.level(), this, bb, this.getFeetRelativePos(), this.getSelfToWorld());
+	}
+
+	@Override
+	public Ship vsch$getSupportingShip() {
+		final ItemStack boots = this.getItemBySlot(EquipmentSlot.FEET);
+		final Long shipId = MagnetBootItem.getMagnetizedShip(boots);
+		if (shipId != null) {
+			return VSGameUtilsKt.getShipObjectWorld(this.level()).getAllShips().getById(shipId);
+		}
+		final double inflate = 2.0 / 16;
+		final BlockPos pos = this.vsch$findSupportingBlock((box) -> {
+			box.minX -= inflate;
+			box.minY -= inflate;
+			box.minZ -= inflate;
+			box.maxX += inflate;
+			box.maxY += inflate;
+			box.maxZ += inflate;
+		});
+		if (pos == null) {
+			return null;
+		}
+		return VSGameUtilsKt.getShipManagingPos(this.level(), pos);
 	}
 
 	@Override
@@ -1056,7 +1069,7 @@ public abstract class MixinPlayer extends LivingEntity implements FreeRotatePlay
 	@Unique
 	private boolean hasCollisionAfterMovement(final Vector3d movement) {
 		final EntityDimensions dimensions = this.vsch$getVanillaDimensions(this.getPose());
-		final double deflate = 0.07;
+		final double deflate = 0.1;
 		final AABBd box = new AABBd(
 			-dimensions.width / 2 + deflate, HALF_SPACE_ENTITY_SIZE - dimensions.height, -dimensions.width / 2 + deflate,
 			dimensions.width / 2 - deflate, HALF_SPACE_ENTITY_SIZE, dimensions.width / 2 - deflate

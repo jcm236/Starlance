@@ -97,6 +97,10 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 		return tag.contains(TAG_ATTACHING) ? tag.getLong(TAG_ATTACHING) : null;
 	}
 
+	public static Long getMagnetizedShip(final ItemStack stack) {
+		return stack.getItem() instanceof final MagnetBootItem boot ? boot.getWorkingShip(stack) : null;
+	}
+
 	public static boolean isMagnetized(final LivingEntity entity) {
 		final ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
 		if (!stack.isEmpty() && stack.getItem() instanceof final MagnetBootItem boot && boot.isWorking(stack)) {
@@ -267,7 +271,9 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 			if (ship != null) {
 				destRot.premul(new Quaternionf().setFromNormalized(ship.getShipToWorld()));
 			}
+			final Vec3 feetPos = startPos;
 			frp.vsch$setBodyRotation(rotateTowards(rotation, destRot));
+			frp.vsch$setFeetPosition(feetPos.x, feetPos.y, feetPos.z);
 		}
 	}
 

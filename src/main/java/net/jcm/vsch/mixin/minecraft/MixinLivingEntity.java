@@ -3,11 +3,13 @@ package net.jcm.vsch.mixin.minecraft;
 import net.jcm.vsch.accessor.FreeRotatePlayerAccessor;
 import net.jcm.vsch.accessor.LivingEntityAccessor;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.joml.Quaternionf;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -23,6 +25,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements LivingEntityAccessor {
+	@Unique
+	private static final Vector3dc ZERO_VEC3 = new Vector3d();
+
 	protected MixinLivingEntity() {
 		super(null, null);
 	}
@@ -48,10 +53,37 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityAc
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V", ordinal = 0)
 	)
 	public void travel(final LivingEntity self, double x, double y, double z, final Operation<Void> operation) {
-		if (self instanceof FreeRotatePlayerAccessor frp && frp.vsch$hasSupportingBlock()) {
-			x *= 0.91;
-			y *= 0.91;
-			z *= 0.91;
+		if (self instanceof final FreeRotatePlayerAccessor frp && frp.vsch$isFreeRotating()) {
+			final Vec3 movement = self.getDeltaMovement();
+			x = movement.x;
+			y = movement.y;
+			z = movement.z;
+			final double inflate = 1.0 / 16;
+			final BlockPos pos = frp.vsch$findSupportingBlock((box) -> {
+				box.minX -= inflate;
+				box.minY -= inflate;
+				box.minZ -= inflate;
+				box.maxX += inflate;
+				box.maxY += inflate;
+				box.maxZ += inflate;
+			});
+			if (pos != null) {
+				// TODO: maybe check the block's friction
+				final double friction = 0.1;
+				final double inertia = 1 - friction;
+				x *= inertia;
+				if (Math.abs(x) < 1e-6) {
+					x = 0;
+				}
+				y *= inertia;
+				if (Math.abs(y) < 1e-6) {
+					y = 0;
+				}
+				z *= inertia;
+				if (Math.abs(z) < 1e-6) {
+					z = 0;
+				}
+			}
 		}
 		operation.call(self, x, y, z);
 	}
