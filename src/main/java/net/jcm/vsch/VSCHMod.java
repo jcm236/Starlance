@@ -12,6 +12,7 @@ import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -27,20 +28,24 @@ import org.valkyrienskies.core.impl.hooks.VSEvents;
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
+	@SuppressWarnings("removal")
+	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
 
 	public VSCHMod() {
+		@SuppressWarnings("removal")
 		final FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
 		final IEventBus modBus = context.getModEventBus();
 
-		VSCHItems.register(modBus);
-		VSCHBlocks.register(modBus);
+		MoveUtil.registerDefaultMovers();
 		VSCHBlockEntities.register(modBus);
+		VSCHBlocks.register(modBus);
 		VSCHClientConfig.register(context);
 		VSCHConfig.register(context);
-		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
+		VSCHItems.register(modBus);
+		VSCHNetwork.register();
+		VSCHTab.register(modBus);
 		VSCHTags.register();
-		MoveUtil.registerDefaultMovers();
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
@@ -65,8 +70,3 @@ public class VSCHMod {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
-
-
-
-
-

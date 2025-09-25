@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class VSCHConfig {
+public final class VSCHConfig {
 	private static final Gson GSON = new GsonBuilder().create();
 	private static final TypeToken<Map<String, Integer>> STRING_INT_MAP_TYPE = new TypeToken<Map<String, Integer>>(){};
 
@@ -77,6 +77,10 @@ public class VSCHConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
+
+	/* Experimental */
+
+	public static final ForgeConfigSpec.BooleanValue PLAYER_FREE_ROTATION_IN_SPACE;
 
 	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
 		"minecraft:barrier",
@@ -152,11 +156,17 @@ public class VSCHConfig {
 
 		BUILDER.pop();
 
+		BUILDER.push("Experimental");
+
+		PLAYER_FREE_ROTATION_IN_SPACE = BUILDER.comment("Allow player to free rotate in space.").define("player_free_rotation_in_space", false);
+
+		BUILDER.pop();
+
 		SPEC = BUILDER.build();
 	}
 
 	public static void register(ModLoadingContext context){
-		context.registerConfig(ModConfig.Type.SERVER, VSCHConfig.SPEC, "vsch-config.toml");
+		context.registerConfig(ModConfig.Type.SERVER, SPEC, "vsch-config.toml");
 	}
 
 	private static String getDefaultThrusterFuelConsumeRates() {
@@ -173,6 +183,7 @@ public class VSCHConfig {
 		return GSON.fromJson(fuels, STRING_INT_MAP_TYPE);
 	}
 
+	@SuppressWarnings("removal")
 	public static Set<ResourceLocation> getAssembleBlacklistSet() {
 		if (ASSEMBLE_BLACKLIST_SET == null) {
 			ASSEMBLE_BLACKLIST_SET = Set.copyOf(ASSEMBLE_BLACKLIST.get().stream().map(ResourceLocation::new).toList());

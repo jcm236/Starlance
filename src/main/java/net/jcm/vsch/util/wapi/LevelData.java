@@ -53,6 +53,7 @@ public class LevelData {
 		return get1(CosmosModVariables.WorldVariables.get(level), level.dimension(), new HashMap<>());
 	}
 
+	@SuppressWarnings("removal")
 	private static LevelData get1(
 		final CosmosModVariables.WorldVariables worldVars,
 		final ResourceKey<Level> dimension,
