@@ -1,6 +1,6 @@
 package net.jcm.vsch.mixin.cosmos;
 
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.lointain.cosmos.procedures.PlaceplatformOnKeyPressedProcedure;
 
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,14 +25,11 @@ import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.function.Predicate;
 
 @Mixin(PlaceplatformOnKeyPressedProcedure.class)
 public class MixinPlaceplatformOnKeyPressedProcedure {
@@ -44,8 +40,8 @@ public class MixinPlaceplatformOnKeyPressedProcedure {
 			return;
 		}
 
-		if (!VSCHConfig.ENABLE_PLACE_SHIP_PLATFORM.get()) {
-			if (VSCHConfig.ENABLE_EMPTY_SPACE_CHUNK.get()) {
+		if (!VSCHServerConfig.ENABLE_PLACE_SHIP_PLATFORM.get()) {
+			if (VSCHServerConfig.ENABLE_EMPTY_SPACE_CHUNK.get()) {
 				ci.cancel();
 			}
 			return;

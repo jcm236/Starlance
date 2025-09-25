@@ -34,6 +34,9 @@ public class VSCHMod {
 		VSCHBlocks.register(modBus);
 		VSCHBlockEntities.register(modBus);
 		VSCHConfig.register(ModLoadingContext.get());
+
+		VSCHServerConfig.register(ModLoadingContext.get());
+        VSCHCommonConfig.register(ModLoadingContext.get());
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
 		VSCHTags.register();

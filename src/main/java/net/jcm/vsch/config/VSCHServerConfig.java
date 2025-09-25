@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class VSCHConfig {
+public class VSCHServerConfig {
 	private static final Gson GSON = new GsonBuilder().create();
 	private static final TypeToken<Map<String, Integer>> STRING_INT_MAP_TYPE = new TypeToken<Map<String, Integer>>(){};
 
@@ -66,10 +66,6 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.ConfigValue<Boolean> CANCEL_ASSEMBLY;
 
-    public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_DETONATOR_RENDER;
-    public static final ForgeConfigSpec.ConfigValue<Boolean> DISABLE_PROJECTOR_RENDER;
-
-
     public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
@@ -77,7 +73,8 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
 
-	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+
+    private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
 		"minecraft:barrier",
 		"minecraft:bedrock",
 		"minecraft:command_block"
@@ -124,8 +121,6 @@ public class VSCHConfig {
 		BUILDER.push("Optimize");
 
 		ENABLE_EMPTY_SPACE_CHUNK = BUILDER.comment("Do not load or save space chunks.\nThis option will significantly reduce memory allocation and disk usage\nwhen travelling at high speed.\nHowever then you can only build blocks on ships.\nIt is highly recommended to turn on Misc.enable_place_ship_platform at same time.").define("enable_empty_space_chunk", false);
-        DISABLE_DETONATOR_RENDER = BUILDER.comment("Disable the beam rendering from the detonator item. Can significantly improve FPS").define("disable_detonator_render", true);
-        DISABLE_PROJECTOR_RENDER = BUILDER.comment("Disables the rendering of the projector block. Enable this for more FPS if you don't need the projector").define("disable_projector_render", false);
 
 		BUILDER.pop();
 
@@ -144,13 +139,13 @@ public class VSCHConfig {
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
 
-		BUILDER.pop();
+        BUILDER.pop();
 
 		SPEC = BUILDER.build();
 	}
 
 	public static void register(ModLoadingContext context){
-		context.registerConfig(ModConfig.Type.SERVER, VSCHConfig.SPEC, "vsch-config.toml");
+		context.registerConfig(ModConfig.Type.SERVER, VSCHServerConfig.SPEC, "vsch-config.toml");
 	}
 
 	private static String getDefaultThrusterFuelConsumeRates() {

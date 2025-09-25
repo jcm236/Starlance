@@ -3,7 +3,7 @@ package net.jcm.vsch.blocks.rocketassembler;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.compat.CompatMods;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.util.Pair;
 import net.jcm.vsch.util.assemble.IMoveable;
 import net.jcm.vsch.util.assemble.MoveUtil;
@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -34,8 +33,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import dan200.computercraft.shared.Capabilities;
 
-import com.simibubi.create.content.contraptions.Contraption;
-import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 
@@ -57,7 +54,6 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -69,7 +65,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements ParticleB
 	private volatile AssembleResult assembleResult = AssembleResult.SUCCESS;
 	private String shipSlug = null;
 	private int energyStored = 0;
-	private final int energyConsumption = VSCHConfig.ASSEMBLER_ENERGY_CONSUMPTION.get();
+	private final int energyConsumption = VSCHServerConfig.ASSEMBLER_ENERGY_CONSUMPTION.get();
 	private final Queue<BlockPos> queueing = new ArrayDeque<>();
 	private final DenseBlockPosSet blocks = new DenseBlockPosSet();
 	private final DenseBlockPosSet checked = new DenseBlockPosSet();
@@ -227,7 +223,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements ParticleB
 				}
 				break;
 			}
-			if (this.blocks.size() >= VSCHConfig.MAX_ASSEMBLE_BLOCKS.get()) {
+			if (this.blocks.size() >= VSCHServerConfig.MAX_ASSEMBLE_BLOCKS.get()) {
 				this.finishAssemble(AssembleResult.TOO_MANY_BLOCKS);
 				return;
 			}
@@ -296,7 +292,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements ParticleB
 	protected boolean canAssembleBlock(final BlockState state) {
 		final Block block = state.getBlock();
 		final ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
-		if (VSCHConfig.getAssembleBlacklistSet().contains(blockId)) {
+		if (VSCHServerConfig.getAssembleBlacklistSet().contains(blockId)) {
 			return false;
 		}
 		return true;

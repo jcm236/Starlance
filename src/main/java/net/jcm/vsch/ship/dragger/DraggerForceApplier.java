@@ -1,6 +1,6 @@
 package net.jcm.vsch.ship.dragger;
 
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.jcm.vsch.util.VSCHUtils;
 import net.minecraft.core.BlockPos;
@@ -31,14 +31,14 @@ public class DraggerForceApplier implements IVSCHForceApplier {
 
 		final Vector3d force = linearVelocity.mul(-physShip.getInertia().getShipMass(), new Vector3d());
 
-		final double maxDrag = VSCHConfig.MAX_DRAG.get().intValue();
+		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue();
 		if (force.lengthSquared() > maxDrag * maxDrag) {
 			force.normalize(maxDrag);
 		}
 
 		final Vector3d rotForce = angularVelocity.mul(-physShip.getInertia().getShipMass(), new Vector3d());
 
-		VSCHUtils.clampVector(rotForce, VSCHConfig.MAX_DRAG.get().intValue());
+		VSCHUtils.clampVector(rotForce, VSCHServerConfig.MAX_DRAG.get().intValue());
 
 		physShip.applyInvariantForce(force);
 		physShip.applyInvariantTorque(rotForce);

@@ -1,7 +1,7 @@
 package net.jcm.vsch.blocks.entity;
 
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,11 +26,11 @@ public class GravityInducerBlockEntity extends BlockEntity implements ParticleBl
 	}
 
 	public double getAttractDistance() {
-		return VSCHConfig.GRAVITY_DISTANCE.get().doubleValue();
+		return VSCHServerConfig.GRAVITY_DISTANCE.get().doubleValue();
 	}
 
 	public double getMaxForce() {
-		return VSCHConfig.GRAVITY_MAX_FORCE.get().doubleValue();
+		return VSCHServerConfig.GRAVITY_MAX_FORCE.get().doubleValue();
 	}
 
 

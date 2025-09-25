@@ -1,6 +1,6 @@
 package net.jcm.vsch.ship.thruster;
 
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.IVSCHForceApplier;
 
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,6 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
@@ -40,9 +39,9 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
 
         Vector3dc linearVelocity = physShip.getPoseVel().getVel();
 
-        if (VSCHConfig.LIMIT_SPEED.get()) {
+        if (VSCHServerConfig.LIMIT_SPEED.get()) {
 
-            int maxSpeed = VSCHConfig.MAX_SPEED.get().intValue();
+            int maxSpeed = VSCHServerConfig.MAX_SPEED.get().intValue();
 
             if (Math.abs(linearVelocity.length()) >= maxSpeed) {
 

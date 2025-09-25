@@ -4,7 +4,7 @@ import net.jcm.vsch.VSCHTags;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 
 import net.minecraft.core.BlockPos;
@@ -33,9 +33,9 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 	@Override
 	protected ThrusterEngine createThrusterEngine() {
 		return new PowerfulThrusterEngine(
-			VSCHConfig.POWERFUL_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-			VSCHConfig.POWERFUL_THRUSTER_STRENGTH.get().floatValue(),
-			VSCHConfig.POWERFUL_THRUSTER_FUEL_CONSUME_RATE.get().intValue()
+			VSCHServerConfig.POWERFUL_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHServerConfig.POWERFUL_THRUSTER_STRENGTH.get().floatValue(),
+			VSCHServerConfig.POWERFUL_THRUSTER_FUEL_CONSUME_RATE.get().intValue()
 		);
 	}
 
