@@ -7,7 +7,9 @@ import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHClientConfig;
+import net.jcm.vsch.config.VSCHCommonConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
@@ -33,10 +35,11 @@ public class VSCHMod {
 		VSCHItems.register(modBus);
 		VSCHBlocks.register(modBus);
 		VSCHBlockEntities.register(modBus);
-		VSCHConfig.register(ModLoadingContext.get());
 
 		VSCHServerConfig.register(ModLoadingContext.get());
         VSCHCommonConfig.register(ModLoadingContext.get());
+        VSCHClientConfig.register(ModLoadingContext.get());
+
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
 		VSCHTags.register();
