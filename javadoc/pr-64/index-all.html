@@ -244,10 +244,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/jcm/vsch/blocks/custom/template/BlockWithEntity.html#%3Cinit%3E(net.minecraft.world.level.block.state.BlockBehaviour.Properties)" class="member-name-link">BlockWithEntity(BlockBehaviour.Properties)</a> - Constructor for class net.jcm.vsch.blocks.custom.template.<a href="net/jcm/vsch/blocks/custom/template/BlockWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockWithEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/BooleanRef.html" class="type-name-link" title="class in net.jcm.vsch.util">BooleanRef</a> - Class in <a href="net/jcm/vsch/util/package-summary.html">net.jcm.vsch.util</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/BooleanRef.html#%3Cinit%3E(boolean)" class="member-name-link">BooleanRef(boolean)</a> - Constructor for class net.jcm.vsch.util.<a href="net/jcm/vsch/util/BooleanRef.html" title="class in net.jcm.vsch.util">BooleanRef</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/rot/RotShapes.html#box(double,double,double,double,double,double)" class="member-name-link">box(double, double, double, double, double, double)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShapes.html" title="class in net.jcm.vsch.util.rot">RotShapes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#%3Cinit%3E()" class="member-name-link">BoxLightMap()</a> - Constructor for class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
@@ -447,6 +443,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/compat/create/ponder/VSCHPonderRegistrateBlocks.html#DRAG_INDUCER_BLOCK" class="member-name-link">DRAG_INDUCER_BLOCK</a> - Static variable in class net.jcm.vsch.compat.create.ponder.<a href="net/jcm/vsch/compat/create/ponder/VSCHPonderRegistrateBlocks.html" title="class in net.jcm.vsch.compat.create.ponder">VSCHPonderRegistrateBlocks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/VSCHBlockEntities.html#DRAG_INDUCER_BLOCK_ENTITY" class="member-name-link">DRAG_INDUCER_BLOCK_ENTITY</a> - Static variable in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/VSCHBlockEntities.html" title="class in net.jcm.vsch.blocks.entity">VSCHBlockEntities</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/valkyrienskies/MixinEntityDragger.html#dragEntitiesWithShips$getLastShipStoodOn(org.valkyrienskies.mod.common.util.EntityDraggingInformation,com.llamalad7.mixinextras.injector.wrapoperation.Operation,net.minecraft.world.entity.Entity)" class="member-name-link">dragEntitiesWithShips$getLastShipStoodOn(EntityDraggingInformation, Operation&lt;Long&gt;, Entity)</a> - Method in class net.jcm.vsch.mixin.valkyrienskies.<a href="net/jcm/vsch/mixin/valkyrienskies/MixinEntityDragger.html" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinEntityDragger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/dragger/DraggerData.html" class="type-name-link" title="class in net.jcm.vsch.ship.dragger">DraggerData</a> - Class in <a href="net/jcm/vsch/ship/dragger/package-summary.html">net.jcm.vsch.ship.dragger</a></dt>
 <dd>&nbsp;</dd>
@@ -744,6 +742,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/util/wapi/PlanetData.html#getLevelData()" class="member-name-link">getLevelData()</a> - Method in class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/PlanetData.html" title="class in net.jcm.vsch.util.wapi">PlanetData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/VSCHUtils.html#getLoadedShipsInLevel(net.minecraft.server.level.ServerLevel)" class="member-name-link">getLoadedShipsInLevel(ServerLevel)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/VSCHUtils.html" title="class in net.jcm.vsch.util">VSCHUtils</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/items/custom/MagnetBootItem.html#getMagnetizedShip(net.minecraft.world.item.ItemStack)" class="member-name-link">getMagnetizedShip(ItemStack)</a> - Static method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#getMaxEnergyStored()" class="member-name-link">getMaxEnergyStored()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
@@ -1439,6 +1439,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#%3Cinit%3E()" class="member-name-link">MixinEntity()</a> - Constructor for class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/valkyrienskies/MixinEntityDragger.html" class="type-name-link" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinEntityDragger</a> - Class in <a href="net/jcm/vsch/mixin/valkyrienskies/package-summary.html">net.jcm.vsch.mixin.valkyrienskies</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/valkyrienskies/MixinEntityDragger.html#%3Cinit%3E()" class="member-name-link">MixinEntityDragger()</a> - Constructor for class net.jcm.vsch.mixin.valkyrienskies.<a href="net/jcm/vsch/mixin/valkyrienskies/MixinEntityDragger.html" title="class in net.jcm.vsch.mixin.valkyrienskies">MixinEntityDragger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntityRotationPackets.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinEntityRotationPackets</a> - Class in <a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a></dt>
 <dd>&nbsp;</dd>
@@ -2582,8 +2586,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
-<dt><a href="net/jcm/vsch/util/BooleanRef.html#value" class="member-name-link">value</a> - Variable in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/BooleanRef.html" title="class in net.jcm.vsch.util">BooleanRef</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleLED</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -2647,6 +2649,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html#vsch$collide(net.minecraft.world.phys.Vec3)" class="member-name-link">vsch$collide(Vec3)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinEntity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$findSupportingBlock()" class="member-name-link">vsch$findSupportingBlock()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$findSupportingBlock(java.util.function.Consumer)" class="member-name-link">vsch$findSupportingBlock(Consumer&lt;AABBd&gt;)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$findSupportingBlock(java.util.function.Consumer)" class="member-name-link">vsch$findSupportingBlock(Consumer&lt;AABBd&gt;)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
@@ -2701,6 +2705,10 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$getHeadYawO()" class="member-name-link">vsch$getHeadYawO()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$getSupportingShip()" class="member-name-link">vsch$getSupportingShip()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$getSupportingShip()" class="member-name-link">vsch$getSupportingShip()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/LivingEntityAccessor.html#vsch$getTickSinceLastJump()" class="member-name-link">vsch$getTickSinceLastJump()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html#vsch$getTickSinceLastJump()" class="member-name-link">vsch$getTickSinceLastJump()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a></dt>
@@ -2710,8 +2718,6 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$getVanillaDimensions(net.minecraft.world.entity.Pose)" class="member-name-link">vsch$getVanillaDimensions(Pose)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$hasSupportingBlock()" class="member-name-link">vsch$hasSupportingBlock()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$hasSupportingBlock()" class="member-name-link">vsch$hasSupportingBlock()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$isFreeRotating()" class="member-name-link">vsch$isFreeRotating()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
 <dd>&nbsp;</dd>
@@ -2732,6 +2738,10 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$setBodyRotationO(org.joml.Quaternionf)" class="member-name-link">vsch$setBodyRotationO(Quaternionf)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$setBodyRotationO(org.joml.Quaternionf)" class="member-name-link">vsch$setBodyRotationO(Quaternionf)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html#vsch$setFeetPosition(double,double,double)" class="member-name-link">vsch$setFeetPosition(double, double, double)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/FreeRotatePlayerAccessor.html" title="interface in net.jcm.vsch.accessor">FreeRotatePlayerAccessor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html#vsch$setFeetPosition(double,double,double)" class="member-name-link">vsch$setFeetPosition(double, double, double)</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinPlayer.html" title="class in net.jcm.vsch.mixin.minecraft">MixinPlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/EntityRotationPacketAccessor.html#vsch$setHeadPitch(float)" class="member-name-link">vsch$setHeadPitch(float)</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/EntityRotationPacketAccessor.html" title="interface in net.jcm.vsch.accessor">EntityRotationPacketAccessor</a></dt>
 <dd>&nbsp;</dd>
