@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class VSCHConfig {
+public class VSCHServerConfig {
 	private static final Gson GSON = new GsonBuilder().create();
 	private static final TypeToken<Map<String, Integer>> STRING_INT_MAP_TYPE = new TypeToken<Map<String, Integer>>(){};
 
@@ -78,7 +78,8 @@ public class VSCHConfig {
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
 
-	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+
+    private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
 		"minecraft:barrier",
 		"minecraft:bedrock",
 		"minecraft:command_block"
@@ -150,13 +151,13 @@ public class VSCHConfig {
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
 
-		BUILDER.pop();
+        BUILDER.pop();
 
 		SPEC = BUILDER.build();
 	}
 
 	public static void register(ModLoadingContext context){
-		context.registerConfig(ModConfig.Type.SERVER, VSCHConfig.SPEC, "vsch-config.toml");
+		context.registerConfig(ModConfig.Type.SERVER, VSCHServerConfig.SPEC, "vsch-config.toml");
 	}
 
 	private static String getDefaultThrusterFuelConsumeRates() {

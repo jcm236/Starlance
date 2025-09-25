@@ -1,11 +1,8 @@
 package net.jcm.vsch.items.custom;
 
-import net.jcm.vsch.config.VSCHConfig;
-import net.lointain.cosmos.item.SteelarmourItem;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,11 +25,11 @@ public class MagnetBootItem extends ArmorItem {
 	}
 
 	public double getAttractDistance() {
-		return VSCHConfig.MAGNET_BOOT_DISTANCE.get().doubleValue();
+		return VSCHServerConfig.MAGNET_BOOT_DISTANCE.get().doubleValue();
 	}
 
 	public double getMaxForce() {
-		return VSCHConfig.MAGNET_BOOT_MAX_FORCE.get().doubleValue();
+		return VSCHServerConfig.MAGNET_BOOT_MAX_FORCE.get().doubleValue();
 	}
 
 	public boolean getEnabled(ItemStack stack) {

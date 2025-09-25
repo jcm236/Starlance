@@ -6,7 +6,7 @@ import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.GyroPeripheral;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.gyro.GyroData;
 
@@ -48,11 +48,11 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 	public GyroBlockEntity(BlockPos pos, BlockState state) {
 		super(VSCHBlockEntities.GYRO_BLOCK_ENTITY.get(), pos, state);
 		this.data = new GyroData(new Vector3d());
-		this.energyStorage = new EnergyStorage(VSCHConfig.GYRO_ENERGY_CONSUME_RATE.get());
+		this.energyStorage = new EnergyStorage(VSCHServerConfig.GYRO_ENERGY_CONSUME_RATE.get());
 	}
 
 	public double getTorqueForce() {
-		return VSCHConfig.GYRO_STRENGTH.get().doubleValue();
+		return VSCHServerConfig.GYRO_STRENGTH.get().doubleValue();
 	}
 
 	public double getTorqueX() {

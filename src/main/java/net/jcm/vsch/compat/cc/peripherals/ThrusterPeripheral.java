@@ -9,7 +9,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.thruster.ThrusterBrain;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 
 import java.util.Map;
@@ -58,7 +58,7 @@ public class ThrusterPeripheral implements IPeripheral {
 
 	@LuaFunction(mainThread = true)
 	public final void setMode(IArguments args) throws LuaException {
-		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
+		if (!VSCHServerConfig.THRUSTER_TOGGLE.get()) {
 			throw new LuaException("Thruster mode toggle disabled in server config");
 		}
 		ThrusterData.ThrusterMode tmode;

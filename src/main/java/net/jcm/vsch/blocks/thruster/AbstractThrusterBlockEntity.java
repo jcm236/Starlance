@@ -1,11 +1,10 @@
 package net.jcm.vsch.blocks.thruster;
 
 import net.jcm.vsch.accessor.IGuiAccessor;
-import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.custom.BaseThrusterBlock;
 import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.util.NoSourceClipContext;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -281,7 +279,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 		final Player player = ctx.getPlayer();
 
-		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
+		if (!VSCHServerConfig.THRUSTER_TOGGLE.get()) {
 			if (player != null) {
 				player.displayClientMessage(
 					Component.translatable("vsch.error.thruster_modes_disabled")
