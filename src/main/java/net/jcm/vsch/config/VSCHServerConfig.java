@@ -53,6 +53,8 @@ public class VSCHServerConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
 	public static final ForgeConfigSpec.BooleanValue GYRO_LIMIT_SPEED;
 
+    /* Assembler */
+
 	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
 	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
 	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ASSEMBLE_BLACKLIST;
@@ -88,8 +90,8 @@ public class VSCHServerConfig {
 	static {
 		BUILDER.push("Landing");
 
-		SHIP_LANDING_MODE = BUILDER.comment("Define how will the ship land to a planet.\nPLAYER_MENU: Always use the player menu to make ship land on a planet.\nHISTORY: the history launch position or origin will be used for the ship to land.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
-		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accuracy the ship will land to a position, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
+		SHIP_LANDING_MODE = BUILDER.comment("Defines how the ship will land at planets.\nPLAYER_MENU: Always use the player menu for landing location. Ships cannot land without a player nearby.\nHISTORY: The saved launch position will be used. If no launch has been saved, the origin will be used.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
+		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accurate the ships landing position is, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
 
 		BUILDER.pop();
 
@@ -125,8 +127,8 @@ public class VSCHServerConfig {
 		BUILDER.push("RocketAssembler");
 
 		ASSEMBLER_ENERGY_CONSUMPTION = BUILDER.comment("Assemble Energy Consumption").defineInRange("energy_consumption", 0, 0, Integer.MAX_VALUE); // 100 default for next update
-		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max assemble blocks for rocket assembler").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
-		ASSEMBLE_BLACKLIST = BUILDER.comment("Prevent assemble if contatins any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
+		MAX_ASSEMBLE_BLOCKS = BUILDER.comment("Max blocks the rocket assembler can assemble").defineInRange("max_assemble_blocks", 16 * 16 * 256 * 9, 0, Integer.MAX_VALUE);
+		ASSEMBLE_BLACKLIST = BUILDER.comment("Assembly is cancelled if it includes any of these blocks").defineList("assemble_blacklist", DEFAULT_ASSEMBLE_BLACKLIST, (o) -> o instanceof String value && value.length() > 0);
 
 		BUILDER.pop();
 
@@ -157,6 +159,7 @@ public class VSCHServerConfig {
 	}
 
 	public static void register(ModLoadingContext context){
+        // vsch-config.toml to not break existing config files, otherwise we would use vsch-server.toml
 		context.registerConfig(ModConfig.Type.SERVER, VSCHServerConfig.SPEC, "vsch-config.toml");
 	}
 

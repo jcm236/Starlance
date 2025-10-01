@@ -1,6 +1,5 @@
 package net.jcm.vsch.config;
 
-import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;

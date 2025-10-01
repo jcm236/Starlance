@@ -25,6 +25,6 @@ public final class VSCHClientConfig {
 	}
 
 	public static void register(ModLoadingContext context){
-		context.registerConfig(ModConfig.Type.CLIENT, SPEC, "vsch-client-config.toml");
+		context.registerConfig(ModConfig.Type.CLIENT, SPEC, "vsch-client.toml");
 	}
 }

@@ -1,12 +1,10 @@
 package net.jcm.vsch;
 
-import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
 import net.jcm.vsch.util.EmptyChunkAccess;
-import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
