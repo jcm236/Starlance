@@ -106,16 +106,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="#AUTO_HISTORY" class="member-name-link">AUTO_HISTORY</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">When a ship is near a planet with a player, <a href="#PLAYER_MENU"><code>will be used</code></a>
- When a ship is near a planet and there is no player nearby, <a href="#HISTORY"><code>will be used</code></a></div>
+<div class="block">When a ship is near a planet with a player, <a href="#PLAYER_MENU"><code>PLAYER_MENU</code></a> will be used.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#HISTORY" class="member-name-link">HISTORY</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">When a ship is near a planet, the history launch position will be used for the ship to land.</div>
+<div class="block">When a ship is near a planet, the saved launch position will be used for landing.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="#PLAYER_MENU" class="member-name-link">PLAYER_MENU</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Always use the player menu to make ship land on a planet.</div>
+<div class="block">Always use the player menu for ships landing on a planet.</div>
 </div>
 </div>
 </section>
@@ -172,8 +171,8 @@ the order they are declared.</div>
 <section class="detail" id="PLAYER_MENU">
 <h3>PLAYER_MENU</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ShipLandingMode.html" title="enum class in net.jcm.vsch.config">ShipLandingMode</a></span>&nbsp;<span class="element-name">PLAYER_MENU</span></div>
-<div class="block">Always use the player menu to make ship land on a planet.
- A ship without player nearby will not land and may get freezed in the space untill a player appear
+<div class="block">Always use the player menu for ships landing on a planet.
+ A ship without a player nearby will not land, and may freeze in place until a player arrives
  and lands it.</div>
 </section>
 </li>
@@ -181,7 +180,7 @@ the order they are declared.</div>
 <section class="detail" id="HISTORY">
 <h3>HISTORY</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ShipLandingMode.html" title="enum class in net.jcm.vsch.config">ShipLandingMode</a></span>&nbsp;<span class="element-name">HISTORY</span></div>
-<div class="block">When a ship is near a planet, the history launch position will be used for the ship to land.
+<div class="block">When a ship is near a planet, the saved launch position will be used for landing.
  If no history is present, the ship will land at the origin.</div>
 </section>
 </li>
@@ -189,8 +188,8 @@ the order they are declared.</div>
 <section class="detail" id="AUTO_HISTORY">
 <h3>AUTO_HISTORY</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ShipLandingMode.html" title="enum class in net.jcm.vsch.config">ShipLandingMode</a></span>&nbsp;<span class="element-name">AUTO_HISTORY</span></div>
-<div class="block">When a ship is near a planet with a player, <a href="#PLAYER_MENU"><code>will be used</code></a>
- When a ship is near a planet and there is no player nearby, <a href="#HISTORY"><code>will be used</code></a></div>
+<div class="block">When a ship is near a planet with a player, <a href="#PLAYER_MENU"><code>PLAYER_MENU</code></a> will be used.
+ When a ship is near a planet and there is no player nearby, <a href="#HISTORY"><code>HISTORY</code></a> will be used.</div>
 </section>
 </li>
 </ul>
