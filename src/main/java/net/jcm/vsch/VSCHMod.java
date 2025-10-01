@@ -8,35 +8,35 @@ import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
 import net.jcm.vsch.config.VSCHClientConfig;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHCommonConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
-import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import org.valkyrienskies.core.impl.hooks.VSEvents;
 
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
 
-	public VSCHMod() {
-		final FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
+	public VSCHMod(final FMLJavaModLoadingContext context) {
+
 		final IEventBus modBus = context.getModEventBus();
 
 		VSCHItems.register(modBus);
 		VSCHBlocks.register(modBus);
 		VSCHBlockEntities.register(modBus);
+
+		VSCHServerConfig.register(context);
+        VSCHCommonConfig.register(context);
 		VSCHClientConfig.register(context);
-		VSCHConfig.register(context);
+
 		VSCHTab.register(modBus);
 		VSCHEntities.register(modBus);
 		VSCHTags.register();

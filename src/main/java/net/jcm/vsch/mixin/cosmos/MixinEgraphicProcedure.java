@@ -1,6 +1,5 @@
 package net.jcm.vsch.mixin.cosmos;
 
-import net.jcm.vsch.config.VSCHConfig;
 import net.lointain.cosmos.procedures.EgraphicProcedure;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.eventbus.api.Event;

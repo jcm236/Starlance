@@ -1,6 +1,6 @@
 package net.jcm.vsch.ship.gyro;
 
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3dc;
@@ -20,8 +20,8 @@ public class GyroForceApplier implements IVSCHForceApplier {
 	@Override
 	public void applyForces(BlockPos pos, PhysShipImpl physShip) {
 		Vector3dc angularVelocity = physShip.getPoseVel().getOmega();
-		if (VSCHConfig.GYRO_LIMIT_SPEED.get()) {
-			if (Math.abs(angularVelocity.length()) >= VSCHConfig.GYRO_MAX_SPEED.get().doubleValue()) {
+		if (VSCHServerConfig.GYRO_LIMIT_SPEED.get()) {
+			if (Math.abs(angularVelocity.length()) >= VSCHServerConfig.GYRO_MAX_SPEED.get().doubleValue()) {
 				//TODO: someone smarter than me fix this
 				return;
 			}

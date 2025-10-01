@@ -3,7 +3,7 @@ package net.jcm.vsch.event;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.event.PreTravelEvent;
 import net.jcm.vsch.config.ShipLandingMode;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
@@ -13,9 +13,7 @@ import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -29,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -45,7 +42,6 @@ import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.HashMap;
@@ -70,8 +66,8 @@ public class PlanetCollision {
 	private static final double CLOSE_RANGE = 16;
 
 	public static void planetCollisionTick(final ServerLevel level) {
-		final ShipLandingMode landingMode = VSCHConfig.SHIP_LANDING_MODE.get();
-		final int accuracy = VSCHConfig.SHIP_LANDING_ACCURACY.get();
+		final ShipLandingMode landingMode = VSCHServerConfig.SHIP_LANDING_MODE.get();
+		final int accuracy = VSCHServerConfig.SHIP_LANDING_ACCURACY.get();
 
 		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
 		final LevelData levelData = LevelData.get(level);

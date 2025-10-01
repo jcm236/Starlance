@@ -3,7 +3,7 @@ package net.jcm.vsch.blocks.entity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,9 +31,9 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 	@Override
 	protected ThrusterEngine createThrusterEngine() {
 		return new NormalThrusterEngine(
-			VSCHConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-			VSCHConfig.THRUSTER_STRENGTH.get().intValue(),
-			VSCHConfig.getThrusterFuelConsumeRates()
+			VSCHServerConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHServerConfig.THRUSTER_STRENGTH.get().intValue(),
+			VSCHServerConfig.getThrusterFuelConsumeRates()
 		);
 	}
 

@@ -4,7 +4,7 @@ import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.ThrusterPeripheral;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 
 import net.minecraft.core.BlockPos;
@@ -79,7 +79,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.connectedBlocks = connectedBlocks;
 		this.peripheralType = peripheralType;
 		this.facing = facing;
-		this.thrusterData = new ThrusterData(VectorConversionsMCKt.toJOMLD(facing.getNormal()), 0, VSCHConfig.THRUSTER_MODE.get());
+		this.thrusterData = new ThrusterData(VectorConversionsMCKt.toJOMLD(facing.getNormal()), 0, VSCHServerConfig.THRUSTER_MODE.get());
 		this.engine = engine;
 		final int count = this.connectedBlocks.size();
 		this.maxEnergy = this.engine.getEnergyConsumeRate() * count;
@@ -262,7 +262,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 			this.setCurrentPower(0);
 		} else {
 			final List<BlockPos> positions = this.connectedBlocks.stream().map(BlockEntity::getBlockPos).collect(Collectors.toList());
-			if (VSCHConfig.THRUSTER_FLAME_IMPACT.get()) {
+			if (VSCHServerConfig.THRUSTER_FLAME_IMPACT.get()) {
 				this.engine.tickBurningObjects(context, positions, this.facing.getOpposite());
 			}
 			this.setCurrentPower((float) (context.getPower()));

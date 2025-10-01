@@ -1,21 +1,26 @@
 package net.jcm.vsch;
 
+import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.event.PlanetCollision;
 import net.jcm.vsch.util.EmptyChunkAccess;
-import net.lointain.cosmos.network.CosmosModVariables;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.core.impl.config.VSCoreConfig;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mod.EventBusSubscriber
@@ -69,4 +74,22 @@ public class VSCHEvents {
 			event.setCanceled(true);
 		}
 	}
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
+        if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
+            return;
+        }
+
+        if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
+            return;
+        }
+
+        if (joinEvent.getEntity() instanceof ServerPlayer player) {
+            player.sendSystemMessage(
+                    Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
+                            .withStyle(ChatFormatting.YELLOW)
+            );
+        }
+    }
 }

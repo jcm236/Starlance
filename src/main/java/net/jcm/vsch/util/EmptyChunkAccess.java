@@ -1,7 +1,7 @@
 package net.jcm.vsch.util;
 
-import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
@@ -123,7 +123,7 @@ public class EmptyChunkAccess extends LevelChunk {
 	}
 
 	public static boolean shouldUseEmptyChunk(final Level level, final int x, final int z) {
-		if (!VSCHConfig.ENABLE_EMPTY_SPACE_CHUNK.get()) {
+		if (!VSCHServerConfig.ENABLE_EMPTY_SPACE_CHUNK.get()) {
 			return false;
 		}
 		if (VSGameUtilsKt.isChunkInShipyard(level, x, z)) {
