@@ -45,13 +45,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -86,24 +86,6 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static net.minecraft.nbt.CompoundTag</code></div>
-<div class="col-second even-row-color"><code><a href="#gravityDataTag" class="member-name-link">gravityDataTag</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>org.valkyrienskies.core.api.ships.ServerShip</code></div>
-<div class="col-second odd-row-color"><code><a href="#ship" class="member-name-link">ship</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -114,8 +96,6 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">GravityInducer</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">GravityInducer</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -134,7 +114,7 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyForces(org.valkyrienskies.core.api.ships.PhysShip)" class="member-name-link">applyForces</a><wbr>(@NotNull org.valkyrienskies.core.api.ships.PhysShip&nbsp;physShip)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getOrCreate(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">getOrCreate</a><wbr>(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tickOnShip(org.valkyrienskies.core.api.ships.LoadedServerShip)" class="member-name-link">tickOnShip</a><wbr>(org.valkyrienskies.core.api.ships.LoadedServerShip&nbsp;ship)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -151,26 +131,6 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="gravityDataTag">
-<h3>gravityDataTag</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.minecraft.nbt.CompoundTag</span>&nbsp;<span class="element-name">gravityDataTag</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="ship">
-<h3>ship</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.valkyrienskies.core.api.ships.ServerShip</span>&nbsp;<span class="element-name">ship</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -180,12 +140,6 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 <section class="detail" id="&lt;init&gt;()">
 <h3>GravityInducer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GravityInducer</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(org.valkyrienskies.core.api.ships.ServerShip)">
-<h3>GravityInducer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GravityInducer</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</span></div>
 </section>
 </li>
 </ul>
@@ -208,9 +162,9 @@ implements org.valkyrienskies.core.api.ships.ShipForcesInducer</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="getOrCreate(org.valkyrienskies.core.api.ships.ServerShip)">
-<h3>getOrCreate</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></span>&nbsp;<span class="element-name">getOrCreate</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.ServerShip&nbsp;ship)</span></div>
+<section class="detail" id="tickOnShip(org.valkyrienskies.core.api.ships.LoadedServerShip)">
+<h3>tickOnShip</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></span>&nbsp;<span class="element-name">tickOnShip</span><wbr><span class="parameters">(org.valkyrienskies.core.api.ships.LoadedServerShip&nbsp;ship)</span></div>
 </section>
 </li>
 </ul>
