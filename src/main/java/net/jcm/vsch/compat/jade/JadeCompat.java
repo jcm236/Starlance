@@ -15,7 +15,9 @@ import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
+	@SuppressWarnings("removal")
 	public static final ResourceLocation THRUSTER_BLOCK = new ResourceLocation(VSCHMod.MODID, "thruster_component_config");
+	@SuppressWarnings("removal")
 	public static final ResourceLocation GYRO_BLOCK = new ResourceLocation(VSCHMod.MODID, "gyro_component_config");
 
 	@Override

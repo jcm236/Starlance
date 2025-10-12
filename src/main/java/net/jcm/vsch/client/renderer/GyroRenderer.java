@@ -31,6 +31,7 @@ public class GyroRenderer implements BlockEntityRenderer<GyroBlockEntity> {
 	private static final ModelTextures CORE_MODEL;
 
 	static {
+		@SuppressWarnings("removal")
 		final ResourceLocation resource = new ResourceLocation(VSCHMod.MODID, "block/gyro");
 		CORE_MODEL = new ModelTextures(
 			TextureLocation.fromNonStandardSize(resource, 12, 44, 128),

@@ -57,6 +57,7 @@ public final class ShipLandingAttachment {
 		return positions;
 	}
 
+	@SuppressWarnings("removal")
 	@JsonSetter("launchPositions")
 	private void setLaunchPositions0(final Map<String, Long> positions) {
 		this.launchPositions.clear();

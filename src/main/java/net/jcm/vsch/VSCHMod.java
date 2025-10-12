@@ -26,21 +26,18 @@ public class VSCHMod {
 	public static final String MODID = "vsch";
 
 	public VSCHMod(final FMLJavaModLoadingContext context) {
-
 		final IEventBus modBus = context.getModEventBus();
 
-		VSCHItems.register(modBus);
-		VSCHBlocks.register(modBus);
-		VSCHBlockEntities.register(modBus);
-
-		VSCHServerConfig.register(context);
-        VSCHCommonConfig.register(context);
-		VSCHClientConfig.register(context);
-
-		VSCHTab.register(modBus);
-		VSCHEntities.register(modBus);
-		VSCHTags.register();
 		MoveUtil.registerDefaultMovers();
+		VSCHBlockEntities.register(modBus);
+		VSCHBlocks.register(modBus);
+		VSCHClientConfig.register(context);
+		VSCHCommonConfig.register(context);
+		VSCHEntities.register(modBus);
+		VSCHItems.register(modBus);
+		VSCHServerConfig.register(context);
+		VSCHTab.register(modBus);
+		VSCHTags.register();
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
@@ -65,8 +62,3 @@ public class VSCHMod {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
-
-
-
-
-

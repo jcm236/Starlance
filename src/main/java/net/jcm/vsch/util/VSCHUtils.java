@@ -128,6 +128,7 @@ public class VSCHUtils {
 	 * @param dimension The dimension ID string in format registry_namespace:registry_name:dimension_namespace:dimension_name
 	 * @return A {@link net.minecraft.server.level.ServerLevel ServerLevel} instance with the dimension ID given
 	 */
+	@SuppressWarnings("removal")
 	public static ServerLevel registeryDimToLevel(final String dimension) {
 		// Split 'minecraft:dimension:namespace:dimension_name' into [minecraft, dimension, namespace, dimension_name]
 		final String[] parts = dimension.split(":");
@@ -138,6 +139,7 @@ public class VSCHUtils {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(levelId);
 	}
 
+	@SuppressWarnings("removal")
 	public static ServerLevel dimToLevel(final String dimensionString) {
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(dimensionString)));
 	}
