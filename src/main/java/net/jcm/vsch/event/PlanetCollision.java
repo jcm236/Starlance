@@ -115,11 +115,7 @@ public class PlanetCollision {
 			if (distance > OUTER_RANGE) {
 				final ServerPlayer commander = landingAttachment.commander;
 				if (commander != null && commander.containerMenu instanceof ShipLandingSelectorMenu) {
-					final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(commander);
-					if (playerVars != null) {
-						playerVars.check_collision = true;
-						playerVars.syncPlayerVariables(commander);
-					}
+					setPlayerCapCheckCollision(commander, true);
 					commander.doCloseContainer();
 				}
 				landingAttachment.launching = false;
@@ -142,11 +138,7 @@ public class PlanetCollision {
 						continue;
 					}
 				} else {
-					final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(nearestPlayer);
-					if (playerVars != null) {
-						playerVars.check_collision = false;
-						playerVars.syncPlayerVariables(nearestPlayer);
-					}
+					setPlayerCapCheckCollision(nearestPlayer, false);
 					landingAttachment.commander = nearestPlayer;
 				}
 			}
@@ -246,16 +238,11 @@ public class PlanetCollision {
 	 * @return the nearest player found, or null
 	 */
 	private static ServerPlayer getShipNearestPlayer(final Ship ship, final ServerLevel level) {
-		// Get the AABB of the last tick and the AABB of the current tick
 		final AABBdc shipBox = ship.getWorldAABB();
-		final AABB prevWorldAABB = VectorConversionsMCKt.toMinecraft(VSCHUtils.transformToAABBd(ship.getPrevTickTransform(), ship.getShipAABB())).inflate(8);
 		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
 		final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
 
-		// Combine the AABB's into one big one
-		final AABB totalAABB = currentWorldAABB.minmax(prevWorldAABB);
-
-		final List<ServerPlayer> players = level.getEntities(PLAYER_TESTER, totalAABB, EntitySelector.NO_SPECTATORS);
+		final List<ServerPlayer> players = level.getEntities(PLAYER_TESTER, currentWorldAABB, EntitySelector.NO_SPECTATORS);
 
 		ServerPlayer nearestPlayer = null;
 		double nearestDistance = Double.MAX_VALUE;
@@ -272,6 +259,15 @@ public class PlanetCollision {
 			}
 		}
 		return nearestPlayer;
+	}
+
+	private static void setPlayerCapCheckCollision(final ServerPlayer player, final boolean checkCollision) {
+		final CosmosModVariables.PlayerVariables playerVars = VSCHUtils.getPlayerCap(player);
+		if (playerVars == null) {
+			return;
+		}
+		playerVars.check_collision = checkCollision;
+		playerVars.syncPlayerVariables(player);
 	}
 
 	private static final class ShipLandingSelectorMenu extends LandingSelectorMenu {

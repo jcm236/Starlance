@@ -19,6 +19,7 @@
 		"create.MixinOrientedContraptionEntity",
 		"minecraft.MixinChunkMap",
 		"minecraft.MixinLevel",
+		"minecraft.MixinLivingEntity",
 		"minecraft.MixinMob",
 		"valkyrienskies.MixinShipAssemblyKt",
 		"valkyrienskies.MixinVSGameUtilsKt",

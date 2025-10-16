@@ -1,10 +1,10 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.compat.CompatMods;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -25,12 +25,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.joml.Vector3d;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
@@ -51,10 +53,16 @@ import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -66,26 +74,6 @@ public class VSCHUtils {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	/**
-	 * Converts a VS dimension id string of
-	 * <code>'minecraft:dimension:namespace:dimension_name'</code> to a normal
-	 * dimension id string of <code>'namespace:dimension_name'</code>
-	 * 
-	 * @param dimension The VS format dimension id string
-	 * @return The converted dimension id string
-	 * @author Brickyboy
-	 * @see #dimToVSDim(String)
-	 */
-	public static String vsDimToDim(String dimension) {
-		// Transform VS's 'minecraft:dimension:namespace:dimension_name' into
-		// 'namespace:dimension_name'
-		final String[] parts = dimension.split(":");
-		if (parts.length != 4) {
-			throw new IllegalArgumentException("Unexpected dimension ID: " + dimension);
-		}
-		return parts[2] + ":" + parts[3];
-	}
-
-	/**
 	 * Converts a normal dimension id string of
 	 * <code>'namespace:dimension_name'</code> to a VS dimension id string
 	 * <code>'minecraft:dimension:namespace:dimension_name'</code>
@@ -93,33 +81,9 @@ public class VSCHUtils {
 	 * @param dimension The normal format dimension id string
 	 * @return The converted VS dimension id string
 	 * @author Brickyboy
-	 * @see #vsDimToDim(String)
 	 */
 	public static String dimToVSDim(String dimension) {
 		return "minecraft:dimension:" + dimension;
-	}
-
-	/**
-	 * Takes in a
-	 * {@link org.valkyrienskies.core.api.ships.properties.ShipTransform
-	 * ShipTransform} and its ship {@link org.joml.primitives.AABBic AABBic} (its
-	 * <b>shipyard</b> {@link org.joml.primitives.AABBic AABBic}) and returns a
-	 * world-based {@link org.joml.primitives.AABBd AABBd} using the transform <br>
-	 * <br>
-	 * Basically the same as
-	 * {@link org.valkyrienskies.core.api.ships.Ship#getWorldAABB()
-	 * Ship#getWorldAABB()} but can take in a specified transform and ship AABBic
-	 * 
-	 * @param transform The ship transform to use
-	 * @param shipAABB  The <b>shipyard</b> AABBic of the ship
-	 * @author Brickyboy
-	 * @return The world based AABBd
-	 */
-	public static AABBd transformToAABBd(final ShipTransform transform, final AABBic shipAABB) {
-		// From AABBic (Int, constant) to AABBd (Double)
-		AABBd shipAABBd = AABBdUtilKt.toAABBd(shipAABB, new AABBd());
-		// Turn the shipyard AABBd to the world AABBd using the transform
-		return shipAABBd.transform(transform.getShipToWorld());
 	}
 
 	/**
@@ -167,7 +131,7 @@ public class VSCHUtils {
 		return force;
 	}
 
-	public static List<LoadedServerShip> getLoadedShipsInLevel(ServerLevel level) {
+	public static List<LoadedServerShip> getLoadedShipsInLevel(final ServerLevel level) {
 		final String dimId = VSGameUtilsKt.getDimensionId(level);
 		final List<LoadedServerShip> loadedships = new ArrayList<>();
 		for (final LoadedServerShip ship : VSGameUtilsKt.getShipObjectWorld(level).getLoadedShips()) {
@@ -179,6 +143,31 @@ public class VSCHUtils {
 	}
 
 	public static Component getWarningComponent() {
-		return Component.translatable(VSCHMod.MODID+".tooltip.may_need_fuel_or_energy").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
+		return Component.translatable(VSCHMod.MODID + ".tooltip.may_need_fuel_or_energy").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
+	}
+
+	public static boolean testCuriosItems(final LivingEntity entity, final String id, final BiPredicate<ItemStack, Integer> tester) {
+		if (!CompatMods.CURIOS.isLoaded()) {
+			return false;
+		}
+		final ICuriosItemHandler curiosInv = CuriosApi.getCuriosInventory(entity).orElse(null);
+		if (curiosInv == null) {
+			return false;
+		}
+		final ICurioStacksHandler stacksHandler = curiosInv.getStacksHandler(id).orElse(null);
+		if (stacksHandler == null) {
+			return false;
+		}
+		final IDynamicStackHandler stacks = stacksHandler.getStacks();
+		for (int slot = 0; slot < stacks.getSlots(); slot++) {
+			final ItemStack stack = stacks.getStackInSlot(slot);
+			if (stack.isEmpty()) {
+				continue;
+			}
+			if (tester.test(stack, slot)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -12,6 +12,7 @@ import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -35,6 +36,7 @@ public class VSCHMod {
 		VSCHCommonConfig.register(context);
 		VSCHEntities.register(modBus);
 		VSCHItems.register(modBus);
+		VSCHNetwork.register();
 		VSCHServerConfig.register(context);
 		VSCHTab.register(modBus);
 		VSCHTags.register();

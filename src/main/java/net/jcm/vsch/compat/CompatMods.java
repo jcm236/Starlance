@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 public enum CompatMods {
 	COMPUTERCRAFT("computercraft"),
 	CREATE("create"),
+	CURIOS("curios"),
 	JADE("jade");
 
 	private final String modId;
