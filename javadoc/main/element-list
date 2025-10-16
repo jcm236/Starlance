@@ -18,6 +18,7 @@ net.jcm.vsch.compat
 net.jcm.vsch.compat.cc.peripherals
 net.jcm.vsch.compat.create.ponder
 net.jcm.vsch.compat.create.ponder.scenes
+net.jcm.vsch.compat.curios
 net.jcm.vsch.compat.jade
 net.jcm.vsch.compat.jade.componentproviders
 net.jcm.vsch.config
@@ -32,6 +33,8 @@ net.jcm.vsch.mixin.create
 net.jcm.vsch.mixin.minecraft
 net.jcm.vsch.mixin.valkyrienskies
 net.jcm.vsch.mixin.valkyrienskies.accessor
+net.jcm.vsch.network
+net.jcm.vsch.network.c2s
 net.jcm.vsch.ship
 net.jcm.vsch.ship.dragger
 net.jcm.vsch.ship.gyro
