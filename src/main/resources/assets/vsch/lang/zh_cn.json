@@ -6,6 +6,7 @@
 	"vsch.message.magnet_boot.disabled": "磁力靴 §4已禁用",
 	"vsch.message.magnet_boot.enabled": "磁力靴 §2已启用",
 	"vsch.message.mode": "模式: ",
+	"vsch.message.planet.entering": "正在进入 %1$s | %2$s米",
 	"vsch.message.strength": "力度: ",
 	"vsch.message.toggle": "将模式设置为",
 	"vsch.position": "§e位置",

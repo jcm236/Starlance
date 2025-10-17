@@ -45,38 +45,38 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PlanetCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
-	private static final EntityTypeTest<Entity, ServerPlayer> PLAYER_TESTER = new EntityTypeTest<>() {
-		@Override
-		public ServerPlayer tryCast(final Entity entity) {
-			// We do not want FakePlayer (aka ServerPlayer's subclasses) being involved here
-			return entity.getClass() == ServerPlayer.class ? (ServerPlayer)(entity) : null;
-		}
-
-		@Override
-		public Class<ServerPlayer> getBaseClass() {
-			return ServerPlayer.class;
-		}
-	};
-	private static final double OUTER_RANGE = 128;
 	private static final double CLOSE_RANGE = 16;
+	private static final double OUTER_RANGE = 128;
+	private static final double WARN_RANGE = OUTER_RANGE + 128;
+	private static final DecimalFormat DISTANCE_FORMAT = new DecimalFormat("0.0");
 
 	public static void planetCollisionTick(final ServerLevel level) {
+		final LevelData levelData = LevelData.get(level);
+		if (!levelData.hasPlanets()) {
+			return;
+		}
+		final String dimension = level.dimension().location().toString();
+
 		final ShipLandingMode landingMode = VSCHServerConfig.SHIP_LANDING_MODE.get();
 		final int landingAccuracy = VSCHServerConfig.SHIP_LANDING_ACCURACY.get();
 		final int firstLandingAccuracy = VSCHServerConfig.SHIP_FIRST_LANDING_SPAWN_RANGE.get();
 
 		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
-		final LevelData levelData = LevelData.get(level);
-		final String dimension = level.dimension().location().toString();
+		final Map<ServerPlayer, LevelData.ClosestPlanetData> gravityDistances = new HashMap<>();
 
-		if (!levelData.hasPlanets()) {
-			return;
+		final List<ServerPlayer> players = level.getPlayers((player) -> player.getClass() == ServerPlayer.class && !player.isSpectator());
+		for (final ServerPlayer player : players) {
+			final LevelData.ClosestPlanetData nearestPlanetData = levelData.getNearestPlanet(player.position());
+			if (nearestPlanetData.distance() < WARN_RANGE) {
+				gravityDistances.put(player, nearestPlanetData);
+			}
 		}
 
 		final List<LoadedServerShip> ships = VSCHUtils.getLoadedShipsInLevel(level);
@@ -121,6 +121,9 @@ public class PlanetCollision {
 					commander.doCloseContainer();
 				}
 				landingAttachment.launching = false;
+				if (commander != null && distance < WARN_RANGE) {
+					gravityDistances.put(commander, nearestPlanetData);
+				}
 				continue;
 			}
 
@@ -219,6 +222,15 @@ public class PlanetCollision {
 			}
 			handler.finalizeTeleport();
 		}
+
+		for (final Map.Entry<ServerPlayer, LevelData.ClosestPlanetData> entry : gravityDistances.entrySet()) {
+			final ServerPlayer player = entry.getKey();
+			final LevelData.ClosestPlanetData planetData = entry.getValue();
+			// TODO: use localized name?
+			final String name = planetData.planet().getLevelData().getDimension().location().toString();
+			final double distance = Math.max(planetData.distance() - OUTER_RANGE, 0);
+			player.displayClientMessage(Component.translatable("vsch.message.planet.entering", name, DISTANCE_FORMAT.format(distance)), true);
+		}
 	}
 
 	private static ChunkPos playerMenuTick(
@@ -257,7 +269,9 @@ public class PlanetCollision {
 		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
 		final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
 
-		final List<ServerPlayer> players = level.getEntities(PLAYER_TESTER, currentWorldAABB, EntitySelector.NO_SPECTATORS);
+		final List<ServerPlayer> players = level.getPlayers(
+			(player) -> player.getClass() == ServerPlayer.class && !player.isSpectator() && player.getBoundingBox().intersects(currentWorldAABB)
+		);
 
 		ServerPlayer nearestPlayer = null;
 		double nearestDistance = Double.MAX_VALUE;

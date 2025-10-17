@@ -6,6 +6,7 @@
 	"vsch.message.magnet_boot.disabled": "Magnet boots §4DISABLED",
 	"vsch.message.magnet_boot.enabled": "Magnet boots §2ENABLED",
 	"vsch.message.mode": "Mode: ",
+	"vsch.message.planet.entering": "Entering %1$s | %2$sm",
 	"vsch.message.strength": "Strength: ",
 	"vsch.message.toggle": "Mode set to ",
 	"vsch.position": "§ePOSITION",
