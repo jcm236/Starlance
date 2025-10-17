@@ -2,6 +2,7 @@ package net.jcm.vsch.compat.curios;
 
 import net.jcm.vsch.items.custom.MagnetBootItem;
 
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,6 +27,9 @@ public final class MagnetBootCurio implements ICurio {
 	@Override
 	public void curioTick(final SlotContext context) {
 		final LivingEntity owner = context.getWearer();
+		if (owner.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof MagnetBootItem) {
+			return;
+		}
 		this.item.onInventoryTick(this.stack, owner.level(), owner);
 	}
 }

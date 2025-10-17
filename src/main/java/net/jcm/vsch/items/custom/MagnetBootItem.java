@@ -142,6 +142,9 @@ public class MagnetBootItem extends ArmorItem implements IToggleableItem {
 		if (!(entity instanceof final LivingEntity livingEntity)) {
 			return;
 		}
+		if (livingEntity.getItemBySlot(EquipmentSlot.FEET) != stack) {
+			return;
+		}
 		this.onInventoryTick(stack, level, livingEntity);
 	}
 
