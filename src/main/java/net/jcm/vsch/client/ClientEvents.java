@@ -10,6 +10,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Dist.CLIENT)
 public final class ClientEvents {
 	private static final Vector3f CAMERA_ROT_VEC = new Vector3f();
 
