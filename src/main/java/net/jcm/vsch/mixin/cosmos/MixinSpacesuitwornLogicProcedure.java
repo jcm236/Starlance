@@ -46,9 +46,8 @@ public class MixinSpacesuitwornLogicProcedure {
 		validSpacesuits.add(MagnetBootItem.class);
 	}
 
-	//CallbackInfoReturnable<LevelYRange> cir)
 	@Inject(method = "execute", remap = false, at = @At("HEAD"), cancellable = true)
-	private static void execute(LevelAccessor world, Entity entity, CallbackInfoReturnable<Boolean> cir) {
+	private static void execute(final LevelAccessor world, final Entity entity, final CallbackInfoReturnable<Boolean> cir) {
 		if (entity == null) {
 			cir.setReturnValue(false);
 			return;
@@ -72,9 +71,9 @@ public class MixinSpacesuitwornLogicProcedure {
 		cir.setReturnValue(isEntityWearingSpaceSuit(livingEntity));
 	}
 
-	private static boolean isEntityWearingSpaceSuit(LivingEntity entity) {
-		for (EquipmentSlot slot : armorSlots) {
-			ItemStack stack = entity.getItemBySlot(slot);
+	private static boolean isEntityWearingSpaceSuit(final LivingEntity entity) {
+		for (final EquipmentSlot slot : armorSlots) {
+			final ItemStack stack = entity.getItemBySlot(slot);
 			if (stack.isEmpty()) {
 				return false;
 			}
@@ -85,8 +84,8 @@ public class MixinSpacesuitwornLogicProcedure {
 		return true;
 	}
 
-	private static boolean isSpaceSuitItem(Item item) {
-		for (Class<? extends Item> suitClass : validSpacesuits) {
+	private static boolean isSpaceSuitItem(final Item item) {
+		for (final Class<? extends Item> suitClass : validSpacesuits) {
 			if (suitClass.isInstance(item)) {
 				return true;
 			}

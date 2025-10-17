@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinPlaceplatformOnKeyPressedProcedure {
 	@Inject(method = "execute", at = @At("HEAD"), cancellable = true, remap = false)
 	private static void execute(final LevelAccessor levelAccessor, final Entity entity, final CallbackInfo ci) {
-		if (!(levelAccessor instanceof ServerLevel level)) {
+		if (!(levelAccessor instanceof final ServerLevel level)) {
 			ci.cancel();
 			return;
 		}
@@ -49,7 +49,7 @@ public class MixinPlaceplatformOnKeyPressedProcedure {
 
 		ci.cancel();
 
-		if (!(entity instanceof Player player)) {
+		if (!(entity instanceof final Player player)) {
 			return;
 		}
 

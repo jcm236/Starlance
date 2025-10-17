@@ -10,6 +10,7 @@
 		"cosmos.MixinPlaceplatformOnKeyPressedProcedure",
 		"cosmos.MixinShipspawnspaceProcedure",
 		"cosmos.MixinSpacesuitwornLogicProcedure",
+		"cosmos.MixinTempoProcedure",
 		"create.MixinBeltBlockEntity",
 		"create.MixinClockworkBearingBlockEntity",
 		"create.MixinControlledContraptionEntity",

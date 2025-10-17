@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EgraphicProcedure.class)
 public class MixinEgraphicProcedure {
 	@Inject(method = "execute(Lnet/minecraftforge/eventbus/api/Event;Lnet/minecraft/world/level/LevelAccessor;)V", at = @At("HEAD"), cancellable = true, remap = false)
-	private static void execute(Event event, LevelAccessor world, CallbackInfo ci) {
+	private static void execute(final Event event, final LevelAccessor world, final CallbackInfo ci) {
 		// Never released feature that clogs up the FPS
 		ci.cancel();
 	}
