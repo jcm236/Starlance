@@ -133,16 +133,21 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.network.chat.Component</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getWarningComponent()" class="member-name-link">getWarningComponent</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerLevel</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registeryDimToLevel(java.lang.String)" class="member-name-link">registeryDimToLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.joml.Vector2i</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#randomPosOnSqaureRing(net.minecraft.util.RandomSource,int,org.joml.Vector2i)" class="member-name-link">randomPosOnSqaureRing</a><wbr>(net.minecraft.util.RandomSource&nbsp;rnd,
+ int&nbsp;distance,
+ org.joml.Vector2i&nbsp;dest)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.minecraft.server.level.ServerLevel</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registeryDimToLevel(java.lang.String)" class="member-name-link">registeryDimToLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dimension)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get <code>ServerLevel</code> from a VS dimension ID.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#testCuriosItems(net.minecraft.world.entity.LivingEntity,java.lang.String,java.util.function.BiPredicate)" class="member-name-link">testCuriosItems</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;entity,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#testCuriosItems(net.minecraft.world.entity.LivingEntity,java.lang.String,java.util.function.BiPredicate)" class="member-name-link">testCuriosItems</a><wbr>(net.minecraft.world.entity.LivingEntity&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;net.minecraft.world.item.ItemStack,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;tester)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -254,6 +259,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">testCuriosItems</span><wbr><span class="parameters">(net.minecraft.world.entity.LivingEntity&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;net.minecraft.world.item.ItemStack,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;tester)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="randomPosOnSqaureRing(net.minecraft.util.RandomSource,int,org.joml.Vector2i)">
+<h3>randomPosOnSqaureRing</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.joml.Vector2i</span>&nbsp;<span class="element-name">randomPosOnSqaureRing</span><wbr><span class="parameters">(net.minecraft.util.RandomSource&nbsp;rnd,
+ int&nbsp;distance,
+ org.joml.Vector2i&nbsp;dest)</span></div>
 </section>
 </li>
 </ul>
