@@ -20,6 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.joml.Vector2i;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
@@ -169,5 +171,13 @@ public class VSCHUtils {
 			}
 		}
 		return false;
+	}
+
+	public static Vector2i randomPosOnSqaureRing(final RandomSource rnd, final int distance, final Vector2i dest) {
+		final int x = rnd.nextInt(distance + 1);
+		final int y = distance - x;
+		dest.x = rnd.nextBoolean() ? x : -x;
+		dest.y = rnd.nextBoolean() ? y : -y;
+		return dest;
 	}
 }

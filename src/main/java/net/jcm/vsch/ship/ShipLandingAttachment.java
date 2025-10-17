@@ -89,7 +89,6 @@ public final class ShipLandingAttachment {
 	}
 
 	public ChunkPos getLaunchPosition(final ResourceKey<Level> level) {
-		final ChunkPos pos = this.launchPositions.get(level);
-		return pos == null ? ChunkPos.ZERO : pos;
+		return this.launchPositions.get(level);
 	}
 }

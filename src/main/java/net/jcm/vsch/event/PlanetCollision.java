@@ -36,6 +36,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.joml.Quaterniond;
+import org.joml.Vector2i;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBdc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
@@ -67,7 +68,8 @@ public class PlanetCollision {
 
 	public static void planetCollisionTick(final ServerLevel level) {
 		final ShipLandingMode landingMode = VSCHServerConfig.SHIP_LANDING_MODE.get();
-		final int accuracy = VSCHServerConfig.SHIP_LANDING_ACCURACY.get();
+		final int landingAccuracy = VSCHServerConfig.SHIP_LANDING_ACCURACY.get();
+		final int firstLandingAccuracy = VSCHServerConfig.SHIP_FIRST_LANDING_SPAWN_RANGE.get();
 
 		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
 		final LevelData levelData = LevelData.get(level);
@@ -145,6 +147,7 @@ public class PlanetCollision {
 			final ServerPlayer commander = landingAttachment.commander;
 
 			final ChunkPos newChunkPos;
+			final boolean isFirstLand;
 
 			if (commander != null) {
 				if (!ship.isStatic() && distance <= CLOSE_RANGE) {
@@ -171,17 +174,29 @@ public class PlanetCollision {
 				}
 				// Otherwise, we just skip them since the playerMenuTick will take care of them.
 				newChunkPos = playerMenuTick(commander, ship, level);
+				isFirstLand = false;
 				if (newChunkPos == null) {
 					continue;
 				}
 			} else {
-				newChunkPos = landingAttachment.getLaunchPosition(targetDimension);
+				final ChunkPos historyPos = landingAttachment.getLaunchPosition(targetDimension);
+				if (historyPos == null) {
+					newChunkPos = ChunkPos.ZERO;
+					isFirstLand = true;
+				} else {
+					newChunkPos = historyPos;
+					isFirstLand = false;
+				}
 			}
 
+			final int accuracy = isFirstLand ? firstLandingAccuracy : landingAccuracy;
+			System.out.println("accuracy: " + accuracy);
+
+			final Vector2i addPos = VSCHUtils.randomPosOnSqaureRing(level.random, accuracy, new Vector2i());
 			final Vector3d newPos = new Vector3d(
-				SectionPos.sectionToBlockCoord(newChunkPos.x + level.random.nextInt(accuracy * 2 + 1) - accuracy),
+				SectionPos.sectionToBlockCoord(newChunkPos.x + addPos.x),
 				nearestPlanetData.planet().getLevelData().getAtmosphereY(),
-				SectionPos.sectionToBlockCoord(newChunkPos.z + level.random.nextInt(accuracy * 2 + 1) - accuracy)
+				SectionPos.sectionToBlockCoord(newChunkPos.z + addPos.y)
 			);
 			final Quaterniond rotation = new Quaterniond(nearestPlanetData.direction().getRotation());
 			nearestPlanetData.planet().getRotation().mul(rotation, rotation).conjugate();

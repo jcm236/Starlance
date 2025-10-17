@@ -27,6 +27,7 @@ public class VSCHServerConfig {
 
 	public static final ForgeConfigSpec.EnumValue<ShipLandingMode> SHIP_LANDING_MODE;
 	public static final ForgeConfigSpec.IntValue SHIP_LANDING_ACCURACY;
+	public static final ForgeConfigSpec.IntValue SHIP_FIRST_LANDING_SPAWN_RANGE;
 
 	/* Thrusters */
 
@@ -53,7 +54,7 @@ public class VSCHServerConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
 	public static final ForgeConfigSpec.BooleanValue GYRO_LIMIT_SPEED;
 
-    /* Assembler */
+	/* Assembler */
 
 	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
 	public static final ForgeConfigSpec.IntValue MAX_ASSEMBLE_BLOCKS;
@@ -80,8 +81,7 @@ public class VSCHServerConfig {
 
 	public static final ForgeConfigSpec.BooleanValue ENABLE_PLACE_SHIP_PLATFORM;
 
-
-    private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
+	private static final List<String> DEFAULT_ASSEMBLE_BLACKLIST = List.of(
 		"minecraft:barrier",
 		"minecraft:bedrock",
 		"minecraft:command_block"
@@ -92,6 +92,7 @@ public class VSCHServerConfig {
 
 		SHIP_LANDING_MODE = BUILDER.comment("Defines how the ship will land at planets.\nPLAYER_MENU: Always use the player menu for landing location. Ships cannot land without a player nearby.\nHISTORY: The saved launch position will be used. If no launch has been saved, the origin will be used.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
 		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accurate the ships landing position is, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
+		SHIP_FIRST_LANDING_SPAWN_RANGE = BUILDER.comment("Define how far from the origin the ship will be teleported, in chunks.\nOnly have effect when a ship never been to the planet and is trying to use HISTORY mode.").defineInRange("ship_first_landing_spawn_range", 128, 0, 32768);
 
 		BUILDER.pop();
 
@@ -145,7 +146,6 @@ public class VSCHServerConfig {
 		MAX_SPEED = BUILDER.comment("Max speed to limit to. Blocks/tick I think. Default is highly recommended").define("max_speed", 150);
 		CANCEL_ASSEMBLY = BUILDER.comment("Cancel multi-block assemblies when above world height. This is a temporary fix, but for now ships made above world height have issues with starlance.").define("cancel_assembly", true);
 
-
 		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
 		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);
 		GRAVITY_DISTANCE = BUILDER.comment("Distance (in blocks) at which gravity generator will pull you in").define("gravity_gen_distance", 6);
@@ -153,13 +153,13 @@ public class VSCHServerConfig {
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
 
-        BUILDER.pop();
+		BUILDER.pop();
 
 		SPEC = BUILDER.build();
 	}
 
 	public static void register(ModLoadingContext context){
-        // vsch-config.toml to not break existing config files, otherwise we would use vsch-server.toml
+		// vsch-config.toml to not break existing config files, otherwise we would use vsch-server.toml
 		context.registerConfig(ModConfig.Type.SERVER, VSCHServerConfig.SPEC, "vsch-config.toml");
 	}
 
