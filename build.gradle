@@ -138,8 +138,18 @@ repositories {
 	}
 
 	maven {
-		name = "create maven"
+		name = "Create 0.5 maven"
 		url = "https://maven.tterrag.com/"
+		content {
+			includeGroup("com.simibubi.create")
+			includeGroup("com.jozufozu.flywheel")
+			includeGroup("com.tterrag.registrate")
+		}
+	}
+
+	maven {
+		name = "Create 6.0 maven"
+		url = "https://maven.createmod.net"
 		content {
 			includeGroup("com.simibubi.create")
 			includeGroup("com.jozufozu.flywheel")
@@ -208,10 +218,11 @@ dependencies {
 	compileOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
 	compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
-	// Create for ponders
-	compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-	compileOnly fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-	compileOnly fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:all")
+    // Create
+    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+    implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 	//// RUNTIME ////
 

@@ -4,6 +4,8 @@ import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
 import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.compat.create.ponder.PonderRegister;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderPlugin;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
@@ -55,8 +57,7 @@ public class VSCHMod {
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)
 	private void onClientSetup(FMLClientSetupEvent event) {
 		if (CompatMods.CREATE.isLoaded()) {
-			VSCHPonderRegistry.register();
-			VSCHPonderTags.register();
+			PonderRegister.add();
 		}
 	}
 

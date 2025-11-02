@@ -1,11 +1,14 @@
 package net.jcm.vsch.compat.create.ponder.scenes;
 
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
-import com.simibubi.create.foundation.ponder.*;
-import com.simibubi.create.foundation.ponder.element.InputWindowElement;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
-import com.simibubi.create.foundation.ponder.instruction.EmitParticlesInstruction;
-import com.simibubi.create.foundation.utility.Pointing;
+import net.createmod.catnip.math.Pointing;
+import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
+import net.createmod.ponder.api.scene.OverlayInstructions;
+import net.createmod.ponder.api.scene.SceneBuilder;
+import net.createmod.ponder.api.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.scene.Selection;
 import net.jcm.vsch.items.VSCHItems;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.core.BlockPos;
@@ -15,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public class ThrusterScenes {
+	
 	public static void thrusters(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("thrusters", "Thrusters");
 		scene.configureBasePlate(1, 0, 5);
@@ -22,26 +26,26 @@ public class ThrusterScenes {
 		scene.removeShadow();
 		// scene.setSceneOffsetY(-1.5f);
 
-		BlockPos middleThrusterLever = util.grid.at(2, 2, 2);
-		BlockPos leftThrusterLever = util.grid.at(3, 2, 2);
-		BlockPos rightThrusterLever = util.grid.at(1, 2, 2);
+		BlockPos middleThrusterLever = util.grid().at(2, 2, 2);
+		BlockPos leftThrusterLever = util.grid().at(3, 2, 2);
+		BlockPos rightThrusterLever = util.grid().at(1, 2, 2);
 
-		Selection leftThruster = util.select.fromTo(3, 1, 1, 3, 2, 2);
-		Selection middleThruster = util.select.fromTo(2, 1, 1, 2, 2, 2);
-		Selection rightThruster = util.select.fromTo(1, 1, 1, 1, 2, 2);
+		Selection leftThruster = util.select().fromTo(3, 1, 1, 3, 2, 2);
+		Selection middleThruster = util.select().fromTo(2, 1, 1, 2, 2, 2);
+		Selection rightThruster = util.select().fromTo(1, 1, 1, 1, 2, 2);
 
-		Selection baseplate = util.select.fromTo(0, 0, 0, 4, 0, 4);
+		Selection baseplate = util.select().fromTo(0, 0, 0, 4, 0, 4);
 
-		scene.world.showSection(baseplate, Direction.UP);
-		ElementLink<WorldSectionElement> middleThrusterContraption = scene.world.showIndependentSection(middleThruster, Direction.DOWN);
+		scene.world().showSection(baseplate, Direction.UP);
+		ElementLink<WorldSectionElement> middleThrusterContraption = scene.world().showIndependentSection(middleThruster, Direction.DOWN);
 
 		scene.idle(40);
 
-		scene.overlay
+		scene.overlay()
 			.showText(80)
 			.colored(PonderPalette.WHITE)
 			.text("Thrusters need to be powered with redstone to thrust")
-			.pointAt(util.vector.centerOf(middleThrusterLever))
+			.pointAt(util.vector().centerOf(middleThrusterLever))
 			.attachKeyFrame()
 			.placeNearTarget();
 
@@ -51,29 +55,29 @@ public class ThrusterScenes {
 
 		scene.addKeyframe();
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(middleThrusterLever), Pointing.DOWN)
-				.rightClick()
-			, 30);
+		scene.overlay()
+			.showControls(util.vector().topOf(middleThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(30);
 
 
-		scene.world.moveSection(middleThrusterContraption, util.vector.of(0, 0, 20), 30);
+		scene.world().moveSection(middleThrusterContraption, util.vector().of(0, 0, 20), 30);
 
-		scene.effects.emitParticles(util.vector.of(2.5, 1.5, 3.5), EmitParticlesInstruction.Emitter.simple(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(2.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(60);
 
-		ElementLink<WorldSectionElement> leftThrusterContraption = scene.world.showIndependentSection(leftThruster, Direction.DOWN);
-		ElementLink<WorldSectionElement> rightThrusterContraption = scene.world.showIndependentSection(rightThruster, Direction.DOWN);
+		ElementLink<WorldSectionElement> leftThrusterContraption = scene.world().showIndependentSection(leftThruster, Direction.DOWN);
+		ElementLink<WorldSectionElement> rightThrusterContraption = scene.world().showIndependentSection(rightThruster, Direction.DOWN);
 
 		scene.idle(40);
 
-		scene.overlay
+		scene.overlay()
 			.showText(65)
 			.colored(PonderPalette.WHITE)
 			.text("Redstone level can control strength")
-			.pointAt(util.vector.centerOf(leftThrusterLever))
+			.pointAt(util.vector().centerOf(leftThrusterLever))
 			.attachKeyFrame()
 			.placeNearTarget();
 
@@ -81,38 +85,41 @@ public class ThrusterScenes {
 
 		scene.idle(20);
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(leftThrusterLever), Pointing.DOWN)
-				.rightClick()
-			, 30);
+		scene.overlay()
+			.showControls(util.vector().topOf(leftThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
-		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(rightThrusterLever), Pointing.DOWN)
-				.rightClick()
-			, 30);
+		scene.overlay()
+			.showControls(util.vector().topOf(rightThrusterLever), Pointing.DOWN, 30)
+			.rightClick();
 
 		scene.idle(20);
 
 		scene.addKeyframe();
 
-		scene.world.modifyBlockEntityNBT(util.select.position(leftThrusterLever), AnalogLeverBlockEntity.class,
-			nbt -> nbt.putInt("State", 1));
+		scene.world().modifyBlockEntityNBT(
+			util.select().position(leftThrusterLever),
+			AnalogLeverBlockEntity.class,
+			nbt -> nbt.putInt("State", 1)
+		);
 
 		scene.idle(10);
 
 		scene.idle(10);
 
-		scene.world.moveSection(leftThrusterContraption, util.vector.of(0, 0, 20), 70);
-		scene.world.moveSection(rightThrusterContraption, util.vector.of(0, 0, 20), 30);
+		scene.world().moveSection(leftThrusterContraption, util.vector().of(0, 0, 20), 70);
+		scene.world().moveSection(rightThrusterContraption, util.vector().of(0, 0, 20), 30);
 
-		scene.effects.emitParticles(util.vector.of(3.5, 1.5, 3.5), EmitParticlesInstruction.Emitter.simple(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
-		scene.effects.emitParticles(util.vector.of(1.5, 1.5, 3.5), EmitParticlesInstruction.Emitter.simple(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(10);
 
-		scene.effects.emitParticles(util.vector.of(3.5, 1.5, 6.5), EmitParticlesInstruction.Emitter.simple(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 6.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(15);
 
-		scene.effects.emitParticles(util.vector.of(3.5, 1.5, 9), EmitParticlesInstruction.Emitter.simple(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 9), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(50);
 
@@ -124,48 +131,48 @@ public class ThrusterScenes {
 		scene.configureBasePlate(1, 0, 5);
 		scene.removeShadow();
 
-		Selection basePlate = util.select.fromTo(0, 0, 0, 4, 0, 4);
-		Selection ship = util.select.fromTo(3, 1, 1, 1, 2, 2);
+		Selection basePlate = util.select().fromTo(0, 0, 0, 4, 0, 4);
+		Selection ship = util.select().fromTo(3, 1, 1, 1, 2, 2);
 
-		BlockPos thruster = util.grid.at(3, 1, 1);
-		BlockPos lever = util.grid.at(3, 2, 2);
+		BlockPos thruster = util.grid().at(3, 1, 1);
+		BlockPos lever = util.grid().at(3, 2, 2);
 
-		scene.world.showSection(basePlate, Direction.UP);
+		scene.world().showSection(basePlate, Direction.UP);
 		scene.idle(5);
-		ElementLink<WorldSectionElement> shipLink = scene.world.showIndependentSection(ship, Direction.DOWN);
+		ElementLink<WorldSectionElement> shipLink = scene.world().showIndependentSection(ship, Direction.DOWN);
 
 		scene.idle(10);
 
-		scene.overlay.showText(60)
+		scene.overlay().showText(60)
 			.text("By default, thrusters are in POSITION mode")
-			.pointAt(util.vector.centerOf(thruster))
+			.pointAt(util.vector().centerOf(thruster))
 			.attachKeyFrame();
 
 		scene.idle(60+20);
 
-		scene.overlay
+		scene.overlay()
 			.showText(60)
 			.text("This means they will apply force based on where they are")
-			.pointAt(util.vector.centerOf(thruster))
+			.pointAt(util.vector().centerOf(thruster))
 			.attachKeyFrame();
 
 		scene.idle(30);
 
-		scene.overlay.showOutline(PonderPalette.RED, 1, util.select.position(thruster), 60);
+		scene.overlay().showOutline(PonderPalette.RED, 1, util.select().position(thruster), 60);
 
 		scene.idle(5);
 
-		drawArrow(scene.overlay, util.vector.centerOf(thruster), util.vector.centerOf(3, 1, 5), PonderPalette.RED, 55);
+		drawArrow(scene.overlay(), util.vector().centerOf(thruster), util.vector().centerOf(3, 1, 5), PonderPalette.RED, 55);
 
 		scene.idle(55+10);
 
-		scene.world.configureCenterOfRotation(shipLink, new Vec3(1, 1, 4));
-		scene.world.rotateSection(shipLink, 0, -60, 0, 20);
-		scene.world.moveSection(shipLink, new Vec3(-2, 0, 9), 20);
+		scene.world().configureCenterOfRotation(shipLink, new Vec3(1, 1, 4));
+		scene.world().rotateSection(shipLink, 0, -60, 0, 20);
+		scene.world().moveSection(shipLink, new Vec3(-2, 0, 9), 20);
 
-		scene.effects.emitParticles(
-			util.vector.centerOf(3, 1, 2),
-			EmitParticlesInstruction.Emitter.simple(
+		scene.effects().emitParticles(
+			util.vector().centerOf(3, 1, 2),
+			scene.effects().simpleParticleEmitter(
 				CosmosModParticleTypes.THRUSTED.get(),
 				new Vec3(0, 0, -10)
 			),
@@ -175,9 +182,9 @@ public class ThrusterScenes {
 
 		scene.idle(7);
 
-		scene.effects.emitParticles(
-			util.vector.centerOf(3, 1, 5),
-			EmitParticlesInstruction.Emitter.simple(
+		scene.effects().emitParticles(
+			util.vector().centerOf(3, 1, 5),
+			scene.effects().simpleParticleEmitter(
 				CosmosModParticleTypes.THRUSTED.get(),
 				new Vec3(3, 0, -7)
 			),
@@ -187,9 +194,9 @@ public class ThrusterScenes {
 
 		scene.idle(5);
 
-		scene.effects.emitParticles(
-			util.vector.centerOf(3, 1, 8),
-			EmitParticlesInstruction.Emitter.simple(
+		scene.effects().emitParticles(
+			util.vector().centerOf(3, 1, 8),
+			scene.effects().simpleParticleEmitter(
 				CosmosModParticleTypes.THRUSTED.get(),
 				new Vec3(5, 0, -5)
 			),
@@ -199,57 +206,55 @@ public class ThrusterScenes {
 
 		scene.idle(5+3+10);
 
-		scene.world.hideIndependentSectionImmediately(shipLink);
-		shipLink = scene.world.showIndependentSection(ship, Direction.DOWN);
+		scene.world().hideIndependentSection(shipLink, Direction.DOWN);
+		shipLink = scene.world().showIndependentSection(ship, Direction.DOWN);
 
 		scene.idle(10);
 
-		scene.overlay.showText(60)
+		scene.overlay().showText(60)
 			.text("However, this can cause unwanted rotation")
-			.pointAt(util.vector.centerOf(2, 1, 2));
+			.pointAt(util.vector().centerOf(2, 1, 2));
 
 		scene.idle(60 + 20);
 
 		scene.addKeyframe();
 
-		scene.overlay.showControls(
-			new InputWindowElement(
-				util.vector.topOf(thruster),
-				Pointing.DOWN
+		scene.overlay()
+			.showControls(
+				util.vector().topOf(thruster),
+				Pointing.DOWN, 30
 			)
 			.rightClick()
-			.withItem(new ItemStack(VSCHItems.WRENCH.get())),
-			30
-		);
+			.withItem(new ItemStack(VSCHItems.WRENCH.get()));
 
 		scene.idle(30 + 10);
 
-		scene.overlay.showText(60)
+		scene.overlay().showText(60)
 			.text("Using a wrench, a thruster can be changed to GLOBAL mode")
-			.pointAt(util.vector.centerOf(thruster));
+			.pointAt(util.vector().centerOf(thruster));
 
 		scene.idle(60 + 20);
 
-		scene.overlay.showText(60)
+		scene.overlay().showText(60)
 			.text("In GLOBAL mode it applies force without position")
-			.pointAt(util.vector.centerOf(thruster))
+			.pointAt(util.vector().centerOf(thruster))
 			.attachKeyFrame();
 
 		scene.idle(30);
 
-		scene.overlay.showOutline(PonderPalette.GREEN, 1, ship.substract(util.select.layer(2)), 60);
+		scene.overlay().showOutline(PonderPalette.GREEN, 1, ship.substract(util.select().layer(2)), 60);
 
 		scene.idle(5);
 
-		drawArrow(scene.overlay, util.vector.centerOf(2, 1, 2), util.vector.centerOf(2, 1, 5), PonderPalette.GREEN, 55);
+		drawArrow(scene.overlay(), util.vector().centerOf(2, 1, 2), util.vector().centerOf(2, 1, 5), PonderPalette.GREEN, 55);
 
 		scene.idle(55+10);
 
-		scene.world.moveSection(shipLink, new Vec3(0, 0, 10), 20);
+		scene.world().moveSection(shipLink, new Vec3(0, 0, 10), 20);
 
-		scene.effects.emitParticles(
-			util.vector.centerOf(3, 1, 2),
-			EmitParticlesInstruction.Emitter.simple(
+		scene.effects().emitParticles(
+			util.vector().centerOf(3, 1, 2),
+			scene.effects().simpleParticleEmitter(
 				CosmosModParticleTypes.THRUSTED.get(),
 				new Vec3(0, 0, -10)
 			),
@@ -259,9 +264,9 @@ public class ThrusterScenes {
 
 		scene.idle(10);
 
-		scene.effects.emitParticles(
-			util.vector.centerOf(3, 1, 7),
-			EmitParticlesInstruction.Emitter.simple(
+		scene.effects().emitParticles(
+			util.vector().centerOf(3, 1, 7),
+			scene.effects().simpleParticleEmitter(
 				CosmosModParticleTypes.THRUSTED.get(),
 				new Vec3(0, 0, -10)
 			),
@@ -271,14 +276,14 @@ public class ThrusterScenes {
 
 		scene.idle(10+10);
 
-		scene.world.hideIndependentSectionImmediately(shipLink);
-		shipLink = scene.world.showIndependentSection(ship, Direction.DOWN);
+		scene.world().hideIndependentSection(shipLink, Direction.DOWN);
+		shipLink = scene.world().showIndependentSection(ship, Direction.DOWN);
 
 		scene.idle(10);
 
-		scene.overlay.showText(60)
+		scene.overlay().showText(60)
 			.text("This prevents unwanted rotation")
-			.pointAt(util.vector.centerOf(2,1,2))
+			.pointAt(util.vector().centerOf(2,1,2))
 			.attachKeyFrame();
 
 		scene.idle(60 + 20);
@@ -286,7 +291,7 @@ public class ThrusterScenes {
 		scene.markAsFinished();
 	}
 
-	private static void drawArrow(SceneBuilder.OverlayInstructions overlay, Vec3 start, Vec3 end, PonderPalette color, int duration) {
+	private static void drawArrow(OverlayInstructions overlay, Vec3 start, Vec3 end, PonderPalette color, int duration) {
 		//Draw main line
 		overlay.showLine(color, start, end, duration);
 
