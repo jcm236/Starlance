@@ -24,6 +24,8 @@ public class VSCHPonderTags {
 
 		HELPER.addToTag(STARLANCE_PONDERS)
 			.add(VSCHPonderRegistrateBlocks.THRUSTER_BLOCK)
+            .add(VSCHPonderRegistrateBlocks.AIR_THRUSTER_BLOCK)
+            .add(VSCHPonderRegistrateBlocks.POWERFUL_THRUSTER_BLOCK)
 			.add(VSCHPonderRegistrateBlocks.DRAG_INDUCER_BLOCK);
 	}
 }

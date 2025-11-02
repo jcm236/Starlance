@@ -103,7 +103,10 @@ public class ThrusterScenes {
 			nbt -> nbt.putInt("State", 1)
 		);
 
-		scene.idle(10);
+        scene.world().toggleRedstonePower(util.select().fromTo(rightThrusterLever, rightThrusterLever));
+
+
+        scene.idle(10);
 
 		scene.idle(10);
 

@@ -59,6 +59,8 @@ public class DragInducerScene {
 
 		scene.world().hideIndependentSection(rocket, Direction.UP);
 
+        scene.idle(20);
+
 		scene.world().moveSection(baseplate, util.vector().of(20, 0, 0), 0);
 
 		rocket = scene.world().showIndependentSection(rocketWithInducer, Direction.DOWN);
@@ -107,6 +109,8 @@ public class DragInducerScene {
 		scene.idle(20);
 
 		scene.world().hideIndependentSection(rocket, Direction.UP);
+
+        scene.idle(20);
 
 		scene.world().moveSection(baseplate, util.vector().of(10, 0, 0), 0);
 
