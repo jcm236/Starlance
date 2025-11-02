@@ -13,6 +13,7 @@ public class ThrusterEngineContext {
 	private final IFluidHandler tanks;
 	private final List<EngineConsumeAction> consumers = new ArrayList<>(2);
 	private final int amount;
+	private final double scale;
 	private double power;
 	private boolean rejected = false;
 
@@ -22,13 +23,15 @@ public class ThrusterEngineContext {
 	 * @param tanks  The engine's fluid tanks, drain only
 	 * @param power  The maximum power (in range of [0.0, 1.0]) the engine should maximum run with
 	 * @param amount The amount of thrusters
+	 * @param scale  The ship's scale
 	 */
-	public ThrusterEngineContext(ServerLevel level, IEnergyStorage energy, IFluidHandler tanks, double power, int amount) {
+	public ThrusterEngineContext(ServerLevel level, IEnergyStorage energy, IFluidHandler tanks, double power, int amount, double scale) {
 		this.level = level;
 		this.energy = energy;
 		this.tanks = tanks;
 		this.power = power;
 		this.amount = amount;
+		this.scale = scale;
 	}
 
 	public void reject() {
@@ -65,6 +68,10 @@ public class ThrusterEngineContext {
 
 	public int getAmount() {
 		return this.amount;
+	}
+
+	public double getScale() {
+		return this.scale;
 	}
 
 	/**

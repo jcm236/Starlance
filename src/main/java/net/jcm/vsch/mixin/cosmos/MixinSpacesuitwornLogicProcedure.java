@@ -1,29 +1,31 @@
 package net.jcm.vsch.mixin.cosmos;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.items.custom.MagnetBootItem;
+import net.jcm.vsch.util.wapi.LevelData;
 import net.lointain.cosmos.entity.RocketSeatEntity;
 import net.lointain.cosmos.item.NickelSuitItem;
 import net.lointain.cosmos.item.SteelSuitItem;
 import net.lointain.cosmos.item.TitaniumSuitItem;
-import net.lointain.cosmos.network.CosmosModVariables.WorldVariables;
 import net.lointain.cosmos.procedures.SpacesuitwornLogicProcedure;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Mixin(SpacesuitwornLogicProcedure.class)
 public class MixinSpacesuitwornLogicProcedure {
@@ -44,9 +46,8 @@ public class MixinSpacesuitwornLogicProcedure {
 		validSpacesuits.add(MagnetBootItem.class);
 	}
 
-	//CallbackInfoReturnable<LevelYRange> cir)
 	@Inject(method = "execute", remap = false, at = @At("HEAD"), cancellable = true)
-	private static void execute(LevelAccessor world, Entity entity, CallbackInfoReturnable<Boolean> cir) {
+	private static void execute(final LevelAccessor world, final Entity entity, final CallbackInfoReturnable<Boolean> cir) {
 		if (entity == null) {
 			cir.setReturnValue(false);
 			return;
@@ -57,9 +58,7 @@ public class MixinSpacesuitwornLogicProcedure {
 			return;
 		}
 
-		String dimension = entity.level().dimension().location().toString();
-		String dimensionType = WorldVariables.get(world).dimension_type.getString(dimension);
-		if (!dimensionType.equals("space")) {
+		if (!LevelData.get((Level) (world)).isSpace()) {
 			cir.setReturnValue(false);
 			return;
 		}
@@ -72,9 +71,9 @@ public class MixinSpacesuitwornLogicProcedure {
 		cir.setReturnValue(isEntityWearingSpaceSuit(livingEntity));
 	}
 
-	private static boolean isEntityWearingSpaceSuit(LivingEntity entity) {
-		for (EquipmentSlot slot : armorSlots) {
-			ItemStack stack = entity.getItemBySlot(slot);
+	private static boolean isEntityWearingSpaceSuit(final LivingEntity entity) {
+		for (final EquipmentSlot slot : armorSlots) {
+			final ItemStack stack = entity.getItemBySlot(slot);
 			if (stack.isEmpty()) {
 				return false;
 			}
@@ -85,8 +84,8 @@ public class MixinSpacesuitwornLogicProcedure {
 		return true;
 	}
 
-	private static boolean isSpaceSuitItem(Item item) {
-		for (Class<? extends Item> suitClass : validSpacesuits) {
+	private static boolean isSpaceSuitItem(final Item item) {
+		for (final Class<? extends Item> suitClass : validSpacesuits) {
 			if (suitClass.isInstance(item)) {
 				return true;
 			}

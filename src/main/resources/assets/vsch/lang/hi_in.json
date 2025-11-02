@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "थ्रस्टर मोड टॉगलिंग अक्षम है!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "मोड: ",
+	"vsch.message.toggle": "मोड सेट करें",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "एयर थ्रस्टर",
+	"block.vsch.drag_inducer_block": "ड्रैग इंड्यूसर",
+	"block.vsch.powerful_thruster_block": "शक्तिशाली थ्रस्टर",
+	"block.vsch.thruster_block": "थ्रस्टर",
+	"item.vsch.magnet_boot": "मैग्नेट बूट्स",
+	"item.vsch.wrench": "रिंच",
+
+	"config.jade.plugin_vsch.thruster_component_config": "थ्रस्टर मोड विवरण",
+
+	"vsch.ponder.drag_inducer.header": "ड्रैग इंड्यूसर",
+	"vsch.ponder.drag_inducer.text_1": "कभी-कभी, अंतरिक्ष में धीमा करना मुश्किल हो सकता है",
+	"vsch.ponder.drag_inducer.text_2": "यह वह जगह है जहाँ ड्रैग इंड्यूसर काम आता है",
+	"vsch.ponder.drag_inducer.text_3": "जब रेडस्टोन से संचालित किया जाता है, तो ड्रैग इंड्यूसर आपको सभी दिशाओं में धीमा करने की कोशिश करेगा",
+	"vsch.ponder.thruster_modes.header": "थ्रस्टर मोड्स",
+	"vsch.ponder.thruster_modes.text_1": "डिफ़ॉल्ट रूप से, थ्रस्टर्स POSITION मोड में होते हैं",
+	"vsch.ponder.thruster_modes.text_2": "इसका मतलब है कि वे जहाँ हैं, उसके आधार पर बल लगाएँगे",
+	"vsch.ponder.thruster_modes.text_3": "हालाँकि, यह हो सकता है अवांछित घुमाव का कारण बनता है",
+	"vsch.ponder.thruster_modes.text_4": "एक रिंच का उपयोग करके, एक थ्रस्टर को ग्लोबल मोड में बदला जा सकता है",
+	"vsch.ponder.thruster_modes.text_5": "ग्लोबल मोड में यह बिना किसी स्थिति के बल लागू करता है",
+	"vsch.ponder.thruster_modes.text_6": "यह अवांछित घुमाव को रोकता है",
+	"vsch.ponder.thrusters.header": "थ्रस्टर्स",
+	"vsch.ponder.thrusters.text_1": "थ्रस्टर्स को थ्रस्ट करने के लिए रेडस्टोन से संचालित करने की आवश्यकता होती है",
+	"vsch.ponder.thrusters.text_2": "रेडस्टोन स्तर शक्ति को नियंत्रित कर सकता है"
+}

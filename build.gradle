@@ -1,25 +1,29 @@
 buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
+	repositories {
+		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+		maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+		classpath 'org.parchmentmc:librarian:1.+'
 
-    }
+	}
 }
 
 plugins {
-    id 'maven-publish'
-    id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+	id 'maven-publish'
+	id 'idea'
+	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+
+	// For auto-publishing
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -27,224 +31,233 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
+apply from: './gradle-scripts/publish-mod.gradle'
 
 //group = mod_version
 
 base {
-    archivesName = "${archives_base_name}-${mod_version}"
+	archivesName = "${archives_base_name}-${mod_version}"
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+	toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
+
+
 
 minecraft {
 
-    mappings channel: 'parchment', version: '2023.09.03-1.20.1'
+	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 
-    copyIdeResources = true
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
+	copyIdeResources = true
+	runs {
+		// applies to all the run configs below
+		configureEach {
+			workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
+			// Recommended logging data for a userdev environment
+			// The markers can be added/remove as needed separated by commas.
+			// "SCAN": For mods scan.
+			// "REGISTRIES": For firing of registry events.
+			// "REGISTRYDUMP": For getting the contents of all registries.
+			property 'forge.logging.markers', 'REGISTRIES'
 
 
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'info'
+			// Recommended logging level for the console
+			// You can set various levels here.
+			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+			property 'forge.logging.console.level', 'info'
 
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
+			mods {
+				"${mod_id}" {
+					source sourceSets.main
+				}
+			}
+		}
 
-        client {
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
+		client {
+			// Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+			property 'forge.enabledGameTestNamespaces', mod_id
+		}
 
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
+		server {
+			property 'forge.enabledGameTestNamespaces', mod_id
+			args '--nogui'
+		}
 
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
+		// This run config launches GameTestServer and runs all registered gametests, then exits.
+		// By default, the server will crash when no gametests are provided.
+		// The gametest system is also enabled by default for other run configs under the /test command.
+		gameTestServer {
+			property 'forge.enabledGameTestNamespaces', mod_id
+		}
 
-        data {
-            // example of overriding the workingDirectory set in configureEach above
-            workingDirectory project.file('run-data')
+		data {
+			// example of overriding the workingDirectory set in configureEach above
+			workingDirectory project.file('run-data')
 
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
-    }
+			// Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+			args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+		}
+	}
 }
 
 mixin {
-    add sourceSets.main, "mixins.vsch.refmap.json"
+	add sourceSets.main, "mixins.vsch.refmap.json"
 
-    config "vsch.mixins.json"
+	config "vsch.mixins.json"
 }
 
 // Include resources generated by data generators.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenCentral()
-    flatDir {
-        dir "lib"
-    }
+	mavenCentral()
+	flatDir {
+		dir "lib"
+	}
 
-    maven {
-        url = "https://modmaven.dev/"
-    }
+	maven {
+		url = "https://modmaven.dev/"
+	}
 
-    maven {
-        name = "Modrinth Maven"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup("maven.modrinth")
-        }
-    }
+	maven {
+		name = "Modrinth Maven"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup("maven.modrinth")
+		}
+	}
 
-    maven {
-        name = "CurseForge Maven"
-        url = "https://cursemaven.com"
-        content {
-            includeGroup("curse.maven")
-        }
-    }
+	maven {
+		name = "CurseForge Maven"
+		url = "https://cursemaven.com"
+		content {
+			includeGroup("curse.maven")
+		}
+	}
 
-    maven {
-        name = "create maven"
-        url = "https://maven.tterrag.com/"
-        content {
-            includeGroup("com.simibubi.create")
-            includeGroup("com.jozufozu.flywheel")
-            includeGroup("com.tterrag.registrate")
-        }
-    }
+	maven {
+		name = "Create 0.5 maven"
+		url = "https://maven.tterrag.com/"
+		content {
+			includeGroup("com.simibubi.create")
+			includeGroup("com.jozufozu.flywheel")
+			includeGroup("com.tterrag.registrate")
+		}
+	}
 
-    maven {
-        name = 'createmod maven'
-        url = "https://maven.createmod.net"
-    }
+	maven {
+		name = "Create 6.0 maven"
+		url = "https://maven.createmod.net"
+		content {
+			includeGroup("com.simibubi.create")
+			includeGroup("com.jozufozu.flywheel")
+			includeGroup("com.tterrag.registrate")
+		}
+	}
 
-    maven {
-        name = "ParchmentMC"
-        url = "https://maven.parchmentmc.org"
-    }
+	maven {
+		name = "ParchmentMC"
+		url = "https://maven.parchmentmc.org"
+	}
 
-    maven {
-        name = "Kotlin for Forge"
-        url = "https://thedarkcolour.github.io/KotlinForForge/"
-        content {
-            includeModule("thedarkcolour", "kotlinforforge")
-        }
-    }
+	maven {
+		name = "Kotlin for Forge"
+		url = "https://thedarkcolour.github.io/KotlinForForge/"
+		content {
+			includeModule("thedarkcolour", "kotlinforforge")
+		}
+	}
 
-    maven {
-        name = "Valkyrien Skies Internal"
-        url = "https://maven.valkyrienskies.org"
-        content {
-            excludeGroup("org.spongepowered")
-        }
-    }
+	maven {
+		name = "Valkyrien Skies Internal"
+		url = "https://maven.valkyrienskies.org"
+		content {
+			excludeGroup("org.spongepowered")
+		}
+	}
 
-    maven {
-        name = "Squiddev maven cct"
-        url = "https://maven.squiddev.cc/"
-        content {
-            includeGroup("cc.tweaked")
-            includeModule("org.squiddev", "Cobalt")
-        }
-    }
+	maven {
+		name = "Squiddev maven cct"
+		url = "https://maven.squiddev.cc/"
+		content {
+			includeGroup("cc.tweaked")
+			includeModule("org.squiddev", "Cobalt")
+		}
+	}
+
+	maven {
+		name = "Illusive Soulworks maven"
+		url = "https://maven.theillusivec4.top/"
+		content {
+			includeGroup("top.theillusivec4.curios")
+		}
+	}
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    // cri
-    //annotationProcessor(implementation("com.github.LlamaLad7:MixinExtras:0.1.1"))
+	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+	compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+	implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+		jarJar.ranged(it, "[0.4.1,)")
+	}
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
 
-    implementation         ("org.valkyrienskies.core:api:${vs_core_version}")
-    implementation         ("org.valkyrienskies.core:impl:${vs_core_version}")
-    implementation         ("org.valkyrienskies.core:api-game:${vs_core_version}")
-    implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
-    implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
+	implementation         ("org.valkyrienskies.core:api:${vs_core_version}")
+	implementation         ("org.valkyrienskies.core:impl:${vs_core_version}")
+	implementation         ("org.valkyrienskies.core:api-game:${vs_core_version}")
+	implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
+	implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
 
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
-        jarJar.ranged(it, "[0.4.1,)")
-    }
+	implementation "thedarkcolour:kotlinforforge:4.10.0"
+	implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
 
-    //implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
-    //runtimeOnly    fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
-    //runtimeOnly    fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
+	compileOnly fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
+	compileOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
+	compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
-    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
-
-    implementation "org.joml:joml:1.10.5"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
-    implementation "thedarkcolour:kotlinforforge:4.10.0"
-    implementation fg.deobf("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
-    implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
     // Create
     implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-
-    implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
-
-    // Flywheel
-    //implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
     implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-
-    // Registrate
+    implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    //compileOnly fg.deobf("curse.maven:female-gender-forge-481655:4603538")
+	//// RUNTIME ////
 
-    //RUNTIME
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-//    runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
-//    runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
-    runtimeOnly fg.deobf("maven.modrinth:jade-addons-forge:5.3.1+forge")
-    //runtimeOnly fg.deobf("curse.maven:rubidium-574856:4494903")
-    //runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")
-    // Le mod de V for testing
-    //implementation fg.deobf("maven.modrinth:vmod:mGgUMpre")
+	runtimeOnly fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:all")
+	// runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")
+	// runtimeOnly fg.deobf("curse.maven:rubidium-574856:4494903")
+	runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
+	// runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
+	// runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
+	runtimeOnly fg.deobf("maven.modrinth:jade-addons-forge:5.3.1+forge")
+	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+	// Le mod de V for testing
+	// implementation fg.deobf("maven.modrinth:vmod:mGgUMpre")
 
-    //using lodestone for now until vsfx comes out
-    //implementation fg.deobf("team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}")
+	// runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
+	// runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
+	// runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
 
-    //for figuring out what is laggy
-    //okay so this causes it to fnuuy itself
-    //runtimeOnly("curse.maven:spark-361579:3824951")
+	// using lodestone for now until vsfx comes out
+	// implementation fg.deobf("team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}")
+
+	// for figuring out what is laggy
+	// okay so this causes it to fnuuy itself
+	// runtimeOnly fg.deobf("curse.maven:spark-361579:3824951")
 }
 
 configurations {
-    shade
-    implementation.extendsFrom shade
+	shade
+	implementation.extendsFrom shade
 }
 
 minecraft.runs.all {
-    lazyToken('minecraft_classpath') {
-        configurations.shade.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
-    }
+	lazyToken('minecraft_classpath') {
+		configurations.shade.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+	}
 }
 
 
@@ -253,56 +266,56 @@ minecraft.runs.all {
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
-            // This property isn't used right now in mods.toml
-            vs2_version: vs2_version.split("\\+").first(), //gradle.properties will have git commit version, but public releases won't
-            cosmos_version: cosmos_version,
-            cc_version: cc_version,
-            create_version: create_version.split("-").first(), //Our version is 0.5.1j-55, but we support any 0.5.1j
-    ]
+	var replaceProperties = [
+		minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+		forge_version: forge_version, forge_version_range: forge_version_range,
+		loader_version_range: loader_version_range,
+		mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+		mod_authors: mod_authors, mod_description: mod_description,
+		// This property isn't used right now in mods.toml
+		vs2_version: vs2_version.split("\\+").first(), // gradle.properties will have git commit version, but public releases won't
+		cosmos_version: cosmos_version,
+		cc_version: cc_version,
+		create_version: create_version.split("-").first(), // Our version is 0.5.1j-55, but we support any 0.5.1j
+	]
 
-    inputs.properties replaceProperties
+	inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }}
+	filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+		expand replaceProperties + [project: project]
+	}}
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                "Specification-Title": mod_id,
-                "Specification-Vendor": mod_authors,
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": mod_version,
-                "Implementation-Vendor": mod_authors,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+	manifest {
+		attributes([
+			"Specification-Title": mod_id,
+			"Specification-Vendor": mod_authors,
+			"Specification-Version": "1", // We are version 1 of ourselves
+			"Implementation-Title": project.name,
+			"Implementation-Version": mod_version,
+			"Implementation-Vendor": mod_authors,
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
 
-    // This is the preferred method to reobfuscate your jar file
-    //finalizedBy 'reobfJar'
+	// This is the preferred method to reobfuscate your jar file
+	finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
 publishing {
-  repositories {
-    maven {
-      name = "GitHubPackages"
-      url = "https://maven.pkg.github.com/jcm236/Valkyrien-Skies-X-Cosmic-Horizons"
-      credentials {
-        username = System.getenv("GITHUB_ACTOR")
-        password = System.getenv("GITHUB_TOKEN")
-      }
-    }
-  }
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/jcm236/Valkyrien-Skies-X-Cosmic-Horizons"
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
 }

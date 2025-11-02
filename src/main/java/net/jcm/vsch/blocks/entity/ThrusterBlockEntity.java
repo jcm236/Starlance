@@ -3,7 +3,7 @@ package net.jcm.vsch.blocks.entity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,9 +31,9 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 	@Override
 	protected ThrusterEngine createThrusterEngine() {
 		return new NormalThrusterEngine(
-			VSCHConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-			VSCHConfig.THRUSTER_STRENGTH.get().intValue(),
-			VSCHConfig.getThrusterFuelConsumeRates()
+			VSCHServerConfig.THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHServerConfig.THRUSTER_STRENGTH.get().intValue(),
+			VSCHServerConfig.getThrusterFuelConsumeRates()
 		);
 	}
 
@@ -62,26 +62,28 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			if (this.fuelConsumeRates.size() == 0) {
 				return;
 			}
-			double power = context.getPower();
+			final double power = context.getPower();
 			if (power == 0) {
 				return;
 			}
-			Fluid fluid = context.getFluidHandler().getFluidInTank(0).getFluid();
+			final Fluid fluid = context.getFluidHandler().getFluidInTank(0).getFluid();
 			if (fluid == Fluids.EMPTY) {
 				context.setPower(0);
 				return;
 			}
-			String fluidName = BuiltInRegistries.FLUID.getKey(fluid).toString();
-			int consumeRate = this.fuelConsumeRates.get(fluidName);
+			final String fluidName = BuiltInRegistries.FLUID.getKey(fluid).toString();
+			final int consumeRate = this.fuelConsumeRates.get(fluidName);
 			if (consumeRate == 0) {
 				return;
 			}
+			final double scale = context.getScale();
+			final int amount = context.getAmount();
 
-			int needsFuel = (int)(Math.ceil(consumeRate * power));
-			int avaliableFuel = context.getFluidHandler().drain(new FluidStack(fluid, needsFuel), IFluidHandler.FluidAction.SIMULATE).getAmount();
-			context.setPower((double)(avaliableFuel) / consumeRate);
+			final int needsFuel = (int) (Math.ceil(consumeRate * power * scale * amount));
+			final int avaliableFuel = context.getFluidHandler().drain(new FluidStack(fluid, needsFuel), IFluidHandler.FluidAction.SIMULATE).getAmount();
+			context.setPower((double) (avaliableFuel) / (consumeRate * amount));
 			context.addConsumer((ctx) -> {
-				ctx.getFluidHandler().drain(new FluidStack(fluid, (int)(Math.ceil(consumeRate * ctx.getPower()))), IFluidHandler.FluidAction.EXECUTE);
+				ctx.getFluidHandler().drain(new FluidStack(fluid, (int)(Math.ceil(consumeRate * ctx.getPower() * ctx.getScale() * ctx.getAmount()))), IFluidHandler.FluidAction.EXECUTE);
 			});
 		}
 

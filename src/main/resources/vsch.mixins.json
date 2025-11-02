@@ -1,22 +1,38 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.jcm.vsch.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "mixins.vsch.refmap.json",
-  "mixins": [
-    "cosmos.MixinLightRenderer",
-    "cosmos.MixinSpacesuitwornLogicProcedure",
-    "minecraft.MixinEntity",
-    "minecraft.MixinMob",
-    "valkyrienskies.MixinShipAssemblyKt",
-    "valkyrienskies.MixinVSGameUtilsKt",
-    "valkyrienskies.accessor.ServerShipObjectWorldAccessor"
-  ],
-  "client": [
-    "client.MixinGui"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.jcm.vsch.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "mixins.vsch.refmap.json",
+	"mixins": [
+		"cosmos.MixinCollisionDetectorProcedure",
+		"cosmos.MixinEgraphicProcedure",
+		"cosmos.MixinPlaceplatformOnKeyPressedProcedure",
+		"cosmos.MixinShipspawnspaceProcedure",
+		"cosmos.MixinSpacesuitwornLogicProcedure",
+		"cosmos.MixinTempoProcedure",
+		"create.MixinBeltBlockEntity",
+		"create.MixinClockworkBearingBlockEntity",
+		"create.MixinControlledContraptionEntity",
+		"create.MixinKineticBlockEntity",
+		"create.MixinLinearActuatorBlockEntity",
+		"create.MixinMechanicalBearingBlockEntity",
+		"create.MixinOrientedContraptionEntity",
+		"minecraft.MixinChunkMap",
+		"minecraft.MixinLevel",
+		"minecraft.MixinLivingEntity",
+		"minecraft.MixinMob",
+		"valkyrienskies.MixinShipAssemblyKt",
+		"valkyrienskies.MixinVSGameUtilsKt",
+		"valkyrienskies.accessor.ServerShipObjectWorldAccessor"
+	],
+	"client": [
+		"client.MixinGui",
+		"client.cosmos.MixinDevFieldNameRenderers",
+		"client.cosmos.MixinProjectionRendererProcedure",
+		"client.cosmos.MixinRayrendererProcedure",
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "Le changement de mode du propulseur est désactivé",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "Mode: ",
+	"vsch.message.toggle": "Passer en mode",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "Propulseur à air",
+	"block.vsch.drag_inducer_block": "Générateur de traînée",
+	"block.vsch.powerful_thruster_block": "Propulseur haute puissance",
+	"block.vsch.thruster_block": "Propulseur",
+	"item.vsch.magnet_boot": "Bottes magnétiques",
+	"item.vsch.wrench": "Clé",
+
+	"config.jade.plugin_vsch.thruster_component_config": "Détails du mode du propulseur",
+
+	"vsch.ponder.drag_inducer.header": "Générateur de traînée",
+	"vsch.ponder.drag_inducer.text_1": "Parfois, il peut être difficile de freiner dans l'espace",
+	"vsch.ponder.drag_inducer.text_2": "C'est là que le générateur de traînée entre en jeu",
+	"vsch.ponder.drag_inducer.text_3": "Lorsqu'il est alimenté par redstone, il applique une force de traînée",
+	"vsch.ponder.thruster_modes.header": "Modes du propulseur",
+	"vsch.ponder.thruster_modes.text_1": "Par défaut, les propulseurs sont en mode POSITION",
+	"vsch.ponder.thruster_modes.text_2": "Ce qui veut dire qu'ils appliquent une force selon leur emplacement",
+	"vsch.ponder.thruster_modes.text_3": "Cela peut toutefois causer des rotations indésirables",
+	"vsch.ponder.thruster_modes.text_4": "En utilisant la clé, vous pouvez passer le propulseur en mode GLOBAL",
+	"vsch.ponder.thruster_modes.text_5": "En mode GLOBAL, il applique une force sans tenir compte de son emplacement",
+	"vsch.ponder.thruster_modes.text_6": "Cela empêche la rotation indésirable",
+	"vsch.ponder.thrusters.header": "Propulseurs",
+	"vsch.ponder.thrusters.text_1": "Les propulseurs doivent être alimentés par redstone pour fonctionner",
+	"vsch.ponder.thrusters.text_2": "Le niveau de redstone détermine la puissance"
+}

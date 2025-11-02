@@ -1,21 +1,36 @@
 package net.jcm.vsch.event;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.api.event.PreTravelEvent;
+import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
+import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.util.wapi.PlanetData;
 import net.lointain.cosmos.network.CosmosModVariables;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.LevelAccessor;
 
+import net.minecraft.core.SectionPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.Ship;
+import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
+
+	private static final TeleportationHandler TELEPORT_HANDLER = new TeleportationHandler(null, null, false);
 
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
@@ -25,45 +40,62 @@ public class AtmosphericCollision {
 	 * @param level
 	 */
 	public static void atmosphericCollisionTick(final ServerLevel level) {
-		// Atmo collision JSON for overworld:
-		// "minecraft:overworld":'{"atmosphere_y":560,"travel_to":"cosmos:solar_sys_d","origin_x":-24100,"origin_y":1000,"origin_z":5100,"overlay_texture_id":"earth_bar","shipbit_y":24,"ship_min_y":120}'
+		final LevelData levelData = LevelData.get(level);
 
-		final CosmosModVariables.WorldVariables worldVariables = CosmosModVariables.WorldVariables.get(level);
-		final CompoundTag atmoDatas = worldVariables.atmospheric_collision_data_map;
-		final CompoundTag atmoData = atmoDatas.getCompound(level.dimension().location().toString());
-
-		// Skip current dimension has atmo data (i.e. no space dimension attached)
-		if (atmoData.isEmpty()) {
+		final ResourceKey<Level> targetDimension = levelData.getUpperDimension();
+		if (targetDimension == null) {
 			return;
 		}
 
-		final double atmoHeight = atmoData.getDouble("atmosphere_y");
-		final double targetX = atmoData.getDouble("origin_x");
-		final double targetY = atmoData.getDouble("origin_y");
-		final double targetZ = atmoData.getDouble("origin_z");
-		final String targetDim = atmoData.getString("travel_to");
-		final ServerLevel targetLevel = VSCHUtils.dimToLevel(targetDim);
+		final ServerLevel targetLevel = level.getServer().getLevel(targetDimension);
 		if (targetLevel == null) {
-			// TODO: enable warn and avoid log spam when dimension does not exist.
-			// LOGGER.warn("[starlance]: dimension {} is not exists", targetDim);
 			return;
 		}
 
-		final TeleportationHandler teleportHandler = new TeleportationHandler(targetLevel, level, false);
+		final ResourceKey<Level> dimension = level.dimension();
+		final LevelData targetLevelData = LevelData.get(targetLevel);
+		final PlanetData planet = targetLevelData.getPlanet(dimension);
+		if (planet == null) {
+			return;
+		}
+		final Vec3 planetPos = planet.getPosition();
+		final double atmoHeight = levelData.getAtmosphereY();
 
-		for (final Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
-			if (ship.getTransform().getPositionInWorld().y() <= atmoHeight) {
+		final TeleportationHandler teleportHandler = TELEPORT_HANDLER;
+		teleportHandler.reset(level, targetLevel);
+
+		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+			if (ship.isStatic() || teleportHandler.hasShip(ship)) {
+				continue;
+			}
+			final Vector3dc shipPos = ship.getTransform().getPositionInWorld();
+			final double shipY = shipPos.y();
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+			if (shipY + 10 < atmoHeight) {
+				landingAttachment.landing = false;
+				continue;
+			}
+			if (landingAttachment.landing && shipY < atmoHeight + 128) {
 				continue;
 			}
 
-			// ----- Get destination x, y, z and dimension ----- //
 			// TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
-			double posX = targetX; // + Mth.nextInt(RandomSource.create(), -10, 10)
-			double posY = targetY; // + Mth.nextInt(RandomSource.create(), -5, 5)
-			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
+			// TODO: map ship loaction around the planet instead of always spawn at same location
+			final Vector3d targetPos = new Vector3d(0, planet.getSize() / 2 + 120, 0);
+			final Quaterniond rotation = new Quaterniond(planet.getRotation());
+			rotation.transform(targetPos);
+			targetPos.add(planetPos.x, planetPos.y, planetPos.z);
 
-			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-			teleportHandler.handleTeleport(ship, new Vector3d(posX, posY, posZ));
+			MinecraftForge.EVENT_BUS.post(new PreTravelEvent.PlanetToSpace(dimension, shipPos, targetDimension, targetPos, rotation));
+
+			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDimension.location(), targetPos.x, targetPos.y, targetPos.z);
+			teleportHandler.addShip(ship, targetPos, rotation);
 		}
+		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+			final Vector3dc pos = ship.getTransform().getPositionInWorld();
+			landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
+		}
+		teleportHandler.finalizeTeleport();
 	}
 }

@@ -1,0 +1,9 @@
+{
+	"parent": "minecraft:block/cube_bottom_top",
+	"textures": {
+		"bottom": "vsch:block/rocket_assembler_bottom",
+		"particle": "vsch:block/rocket_assembler_side",
+		"side": "vsch:block/rocket_assembler_side",
+		"top": "vsch:block/rocket_assembler_top"
+	}
+}

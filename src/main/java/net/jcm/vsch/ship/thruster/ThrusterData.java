@@ -29,10 +29,10 @@ public class ThrusterData {
 	}
 
 	public final Vector3d dir;
-	public volatile float throttle;
+	public volatile double throttle;
 	public volatile ThrusterMode mode;
 
-	public ThrusterData(Vector3d dir, float throttle, ThrusterMode mode) {
+	public ThrusterData(Vector3d dir, double throttle, ThrusterMode mode) {
 		this.dir = dir;
 		this.throttle = throttle;
 		this.mode = mode;

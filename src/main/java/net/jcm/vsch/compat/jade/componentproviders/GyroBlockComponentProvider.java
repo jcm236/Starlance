@@ -24,7 +24,7 @@ public final class GyroBlockComponentProvider implements IBlockComponentProvider
 			return;
 		}
 		tooltip.add(Component.translatable("vsch.message.strength")
-			.append(String.format(" %d%%", be.getPercentPower() * 10))
+			.append(String.format("%d%%", be.getPercentPower()))
 		);
 	}
 

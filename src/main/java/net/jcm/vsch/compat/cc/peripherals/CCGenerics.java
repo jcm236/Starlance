@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.cc;
+package net.jcm.vsch.compat.cc.peripherals;
 
 import dan200.computercraft.shared.peripheral.generic.methods.EnergyMethods;
 import dan200.computercraft.shared.peripheral.generic.methods.FluidMethods;

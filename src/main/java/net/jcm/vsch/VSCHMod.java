@@ -7,40 +7,44 @@ import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderPlugin;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
+import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
+import net.jcm.vsch.config.VSCHClientConfig;
+import net.jcm.vsch.config.VSCHCommonConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
-import net.jcm.vsch.event.GravityInducer;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.network.VSCHNetwork;
+import net.jcm.vsch.util.assemble.MoveUtil;
+
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import org.valkyrienskies.core.impl.hooks.VSEvents;
 
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
 
-	public VSCHMod() {
-		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public VSCHMod(final FMLJavaModLoadingContext context) {
+		final IEventBus modBus = context.getModEventBus();
 
-		VSCHItems.register(modBus);
-		VSCHBlocks.register(modBus);
+		MoveUtil.registerDefaultMovers();
 		VSCHBlockEntities.register(modBus);
-		VSCHConfig.register(ModLoadingContext.get());
-		VSCHTab.register(modBus);
+		VSCHBlocks.register(modBus);
+		VSCHClientConfig.register(context);
+		VSCHCommonConfig.register(context);
 		VSCHEntities.register(modBus);
+		VSCHItems.register(modBus);
+		VSCHNetwork.register();
+		VSCHServerConfig.register(context);
+		VSCHTab.register(modBus);
 		VSCHTags.register();
+
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
-
-		VSEvents.ShipLoadEvent.Companion.on((shipLoadEvent) -> {
-			GravityInducer.getOrCreate(shipLoadEvent.getShip());
-		});
 
 		modBus.addListener(this::onClientSetup);
 		modBus.addListener(this::registerRenderers);
@@ -61,8 +65,3 @@ public class VSCHMod {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);
 	}
 }
-
-
-
-
-

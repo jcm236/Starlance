@@ -1,4 +1,4 @@
-package net.jcm.vsch.compat.cc;
+package net.jcm.vsch.compat.cc.peripherals;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
@@ -9,7 +9,7 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.thruster.ThrusterBrain;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 
 import java.util.Map;
@@ -58,7 +58,7 @@ public class ThrusterPeripheral implements IPeripheral {
 
 	@LuaFunction(mainThread = true)
 	public final void setMode(IArguments args) throws LuaException {
-		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
+		if (!VSCHServerConfig.THRUSTER_TOGGLE.get()) {
 			throw new LuaException("Thruster mode toggle disabled in server config");
 		}
 		ThrusterData.ThrusterMode tmode;
@@ -92,7 +92,7 @@ public class ThrusterPeripheral implements IPeripheral {
 	}
 
 	@LuaFunction
-	public final float getPower() {
+	public final double getPower() {
 		return this.brain.getPower();
 	}
 
@@ -101,31 +101,31 @@ public class ThrusterPeripheral implements IPeripheral {
 		if (!this.brain.getPeripheralMode()) {
 			throw new LuaException("Peripheral mode is off, redstone control only");
 		}
-		this.brain.setPower((float) power);
+		this.brain.setPower(power);
 	}
 
 	@LuaFunction
-	public final float getThrusters() {
+	public final double getThrusters() {
 		return this.brain.getThrusterCount();
 	}
 
 	@LuaFunction
-	public final float getTotalMaxThrottle() {
-		return this.brain.getEngine().getMaxThrottle() * this.brain.getThrusterCount();
+	public final double getTotalMaxThrottle() {
+		return this.brain.getMaxThrottle() * this.brain.getThrusterCount();
 	}
 
 	@LuaFunction
-	public final float getTotalThrottle() {
+	public final double getTotalThrottle() {
 		return this.brain.getCurrentThrottle() * this.brain.getThrusterCount();
 	}
 
 	@LuaFunction
-	public final float getEachMaxThrottle() {
-		return this.brain.getEngine().getMaxThrottle();
+	public final double getEachMaxThrottle() {
+		return this.brain.getMaxThrottle();
 	}
 
 	@LuaFunction
-	public final float getEachThrottle() {
+	public final double getEachThrottle() {
 		return this.brain.getCurrentThrottle();
 	}
 

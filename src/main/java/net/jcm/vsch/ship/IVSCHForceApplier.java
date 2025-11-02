@@ -1,4 +1,4 @@
-package net.jcm.vsch.api.force;
+package net.jcm.vsch.ship;
 
 import net.minecraft.core.BlockPos;
 

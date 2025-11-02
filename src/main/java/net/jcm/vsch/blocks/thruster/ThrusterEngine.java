@@ -44,9 +44,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public abstract class ThrusterEngine {
+	private static final Random RND = new Random();
 	private static final EntityTypeTest<Entity, Entity> ANY_ENTITY_TESTER = new EntityTypeTest<>() {
 		@Override
 		public Entity tryCast(Entity entity) {
@@ -104,23 +106,24 @@ public abstract class ThrusterEngine {
 		if (this.energyConsumeRate == 0) {
 			return;
 		}
-		double power = context.getPower();
+		final double power = context.getPower();
 		if (power == 0) {
 			return;
 		}
-		int amount = context.getAmount();
-		int needs = (int)(Math.ceil(this.energyConsumeRate * power * amount));
-		int extracted = context.getEnergyStorage().extractEnergy(needs, true);
-		context.setPower(extracted / ((double)(this.energyConsumeRate) * amount));
+		final double scale = context.getScale();
+		final int amount = context.getAmount();
+		final int needs = (int) (Math.ceil(this.energyConsumeRate * power * scale * amount));
+		final int extracted = context.getEnergyStorage().extractEnergy(needs, true);
+		context.setPower(extracted / ((double) (this.energyConsumeRate) * amount * scale));
 		context.addConsumer((ctx) -> {
-			ctx.getEnergyStorage().extractEnergy((int)(Math.ceil(ctx.getPower() * ctx.getAmount() * this.energyConsumeRate)), false);
+			ctx.getEnergyStorage().extractEnergy((int) (Math.ceil(ctx.getPower() * ctx.getScale() * ctx.getAmount() * this.energyConsumeRate)), false);
 		});
 	}
 
 	/**
 	 * tickBurningObjects sets on fire entities/blocks that should be burned by the thruster
 	 *
-	 * @param context   A {@link ThrusterEngineContext}
+	 * @param context   A {@link ThrusterEngineContext}, should never be modified
 	 * @param thrusters Thrusters' positions
 	 * @param direction Thrusters' facing direction
 	 */
@@ -167,7 +170,7 @@ public abstract class ThrusterEngine {
 	public static void simpleTickBurningObjects(final ThrusterEngineContext context, final List<BlockPos> thrusters, final Direction direction, final double maxDistance, final int maxBurnDamage, final double maxPushVel) {
 		final int maxBurnTime = 15 * 20;
 		final ServerLevel level = context.getLevel();
-		final double distance = maxDistance * context.getPower();
+		final double distance = maxDistance * context.getPower() * context.getScale();
 		if (distance <= 0) {
 			return;
 		}
@@ -211,10 +214,10 @@ public abstract class ThrusterEngine {
 							final BlockState firePosState = level.getBlockState(firePos);
 							return firePosState.isAir() || firePosState.canBeReplaced();
 						})
+						.filter((firePos) -> RND.nextFloat() < 0.025f)
 						.forEach((firePos) -> {
-							// TODO: make it so theres a random chance, its not setting fire EVERY tick
-                            level.setBlock(firePos, BaseFireBlock.getState(level, firePos), Block.UPDATE_ALL);
-                        });
+							level.setBlock(firePos, BaseFireBlock.getState(level, firePos), Block.UPDATE_ALL);
+						});
 				} else if (!hitFluid.isSource() || hitFluid.is(Fluids.WATER)) {
 					if (hitBlock instanceof LiquidBlock) {
 						level.setBlock(hitPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
@@ -230,8 +233,22 @@ public abstract class ThrusterEngine {
 				clipDist = particleHitResult.getLocation().distanceTo(centerPosWorld);
 			}
 
-			final Vec3 cornerPos = Vec3.atLowerCornerOf(pos).relative(direction, 0.5);
-			final AABB box = new AABB(cornerPos, cornerPos.relative(direction, clipDist - 1.5).add(1, 1, 1));
+			final Direction.Axis axis = direction.getAxis();
+			final Vec3 cornerPos = switch (axis) {
+				case X -> new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ());
+				case Y -> new Vec3(pos.getX(), pos.getY() + 0.5, pos.getZ());
+				case Z -> new Vec3(pos.getX(), pos.getY(), pos.getZ() + 0.5);
+			};
+			final AABB box = new AABB(
+				cornerPos,
+				cornerPos
+					.relative(direction, clipDist - 0.5)
+					.add(
+						axis.choose(0, 1, 1),
+						axis.choose(1, 0, 1),
+						axis.choose(1, 1, 0)
+					)
+			);
 			level.getEntities(
 				ANY_ENTITY_TESTER,
 				VSGameUtilsKt.transformAabbToWorld(level, box),

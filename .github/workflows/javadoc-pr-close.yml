@@ -1,0 +1,66 @@
+name: Remove JavaDoc as Pull Request closed
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  update-javadoc:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout Gh Pages Branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Remove Javadoc
+        env:
+          REF_NAME: ${{ format('pr-{0}', github.event.pull_request.number) }}
+        run: |
+          FOLDER_NAME="${REF_NAME////-}"
+          rm -rf ./javadoc/${FOLDER_NAME}/ && \
+          git add ./javadoc/${FOLDER_NAME}/ || \
+          echo "::warning::Could not remove folder ./javadoc/${FOLDER_NAME}/"
+
+      - name: Generate Index
+        run: |
+          cat >index.html <<EOF
+          <!DOCTYPE HTML>
+          <html lang="en">
+          <head>
+            <title>Starlance Javadoc Versions Index</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          </head>
+          <body>
+            <h1>Starlance Javadoc Versions</h1>
+            <ul>
+          EOF
+          for name in $(ls ./javadoc); do
+            echo "<li><a href=\"./javadoc/${name}/\">${name}/</a></li>" >>index.html;
+          done
+          cat >>index.html <<EOF
+            </ul>
+          </body>
+          </html>
+          EOF
+          git add index.html
+
+      - name: Commit and Push Javadoc
+        id: push
+        env:
+          REF_NAME: ${{ format('pr-{0}', github.event.pull_request.number) }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions[bot]@users.noreply.github.com
+          if ! git commit -m "remove ${REF_NAME////-}"; then
+            echo "status=noop" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git push
+          echo "status=succeed" >> "$GITHUB_OUTPUT"

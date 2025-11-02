@@ -1,0 +1,127 @@
+{
+	"variants": {
+		"facing=down,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 180,
+			"y": 0
+		},
+		"facing=up,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 0,
+			"y": 0
+		},
+		"facing=north,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 90,
+			"y": 0 
+		},
+		"facing=south,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 90,
+			"y": 180
+		},
+		"facing=west,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east,led=black": {
+			"model": "vsch:block/rocket_assembler_black",
+			"x": 90,
+			"y": 90
+		},
+
+		"facing=down,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 180,
+			"y": 0
+		},
+		"facing=up,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 0,
+			"y": 0
+		},
+		"facing=north,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 90,
+			"y": 0 
+		},
+		"facing=south,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 90,
+			"y": 180
+		},
+		"facing=west,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east,led=green": {
+			"model": "vsch:block/rocket_assembler_green",
+			"x": 90,
+			"y": 90
+		},
+
+		"facing=down,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 180,
+			"y": 0
+		},
+		"facing=up,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 0,
+			"y": 0
+		},
+		"facing=north,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 90,
+			"y": 0 
+		},
+		"facing=south,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 90,
+			"y": 180
+		},
+		"facing=west,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east,led=red": {
+			"model": "vsch:block/rocket_assembler_red",
+			"x": 90,
+			"y": 90
+		},
+
+		"facing=down,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 180,
+			"y": 0
+		},
+		"facing=up,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 0,
+			"y": 0
+		},
+		"facing=north,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 90,
+			"y": 0 
+		},
+		"facing=south,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 90,
+			"y": 180
+		},
+		"facing=west,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 90,
+			"y": 270
+		},
+		"facing=east,led=yellow": {
+			"model": "vsch:block/rocket_assembler_yellow",
+			"x": 90,
+			"y": 90
+		}
+	}
+}

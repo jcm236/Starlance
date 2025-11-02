@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "שינוי מצב המדחפים מבוטל!",
+	"vsch.global": "§6גלובלי",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "מצב: ",
+	"vsch.message.toggle": "שנה מצב ל",
+	"vsch.position": "§eמקומי",
+
+	"block.vsch.thruster_block": "מדחף",
+	"block.vsch.drag_inducer_block": "גורר",
+	"block.vsch.air_thruster_block": "מדחף אוויר",
+	"block.vsch.powerful_thruster_block": "מדחף עוצמתי",
+	"item.vsch.wrench": "מפתח ברגים",
+	"item.vsch.magnet_boot": "מגפי מגנט",
+
+	"config.jade.plugin_vsch.thruster_component_config": "פרטי מצב מדחף",
+
+	"vsch.ponder.drag_inducer.header": "גורר",
+	"vsch.ponder.drag_inducer.text_1": "מדי פעם יכול להיות קשה להאט בחלל",
+	"vsch.ponder.drag_inducer.text_2": "זה איפה שהגורר מועיל",
+	"vsch.ponder.drag_inducer.text_3": "כשמתפועל על ידי רטסון, הגורר ינסה להאט אותך מכל הכיוונים",
+	"vsch.ponder.thruster_modes.header": "מצבי המדחף",
+	"vsch.ponder.thruster_modes.text_1": "ברגיל, המדחפים במצב מקומי",
+	"vsch.ponder.thruster_modes.text_2": "כלומר הם יפעילו דחיפה ממקומם",
+	"vsch.ponder.thruster_modes.text_3": "אבל זה יכול לגרום לשינוי כיוון לא רצוי",
+	"vsch.ponder.thruster_modes.text_4": "עם מפתח ברגים, אפשר לשנות את מצב המדחף לגלובלי",
+	"vsch.ponder.thruster_modes.text_5": "במצב גלובלי המדחף יפעיל דחיפה לצד הנגדי",
+	"vsch.ponder.thruster_modes.text_6": "זה יכול לפתור שינוי כיוון אי רצוי",
+	"vsch.ponder.thrusters.header": "מדחפים",
+	"vsch.ponder.thrusters.text_1": "מדחפים צריכים רדסטון בשביל לדחוף",
+	"vsch.ponder.thrusters.text_2": "רמת הרדסון שולטת ברמת הכוח של המדחף"
+}

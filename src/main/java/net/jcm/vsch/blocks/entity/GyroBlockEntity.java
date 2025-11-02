@@ -6,7 +6,7 @@ import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.GyroPeripheral;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.gyro.GyroData;
 
@@ -29,18 +29,18 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity, WrenchableBlock {
 	private final GyroData data;
 	private final EnergyStorage energyStorage;
+	private final Quaternionf rotation = new Quaternionf();
+	private final Quaternionf rotationO = new Quaternionf();
 	private volatile double torqueX = 0;
 	private volatile double torqueY = 0;
 	private volatile double torqueZ = 0;
-	private int percentPower = 10;
+	private int percentPower = 100;
 	private volatile boolean isPeripheralMode = false;
 	private boolean wasPeripheralMode = true;
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
@@ -48,11 +48,11 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 	public GyroBlockEntity(BlockPos pos, BlockState state) {
 		super(VSCHBlockEntities.GYRO_BLOCK_ENTITY.get(), pos, state);
 		this.data = new GyroData(new Vector3d());
-		this.energyStorage = new EnergyStorage(VSCHConfig.GYRO_ENERGY_CONSUME_RATE.get());
+		this.energyStorage = new EnergyStorage(VSCHServerConfig.GYRO_ENERGY_CONSUME_RATE.get());
 	}
 
 	public double getTorqueForce() {
-		return VSCHConfig.GYRO_STRENGTH.get().doubleValue();
+		return VSCHServerConfig.GYRO_STRENGTH.get().doubleValue();
 	}
 
 	public double getTorqueX() {
@@ -117,12 +117,13 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 	}
 
 	/**
-	 * @param power in range {@code [0, 10]}
+	 * @param power in range {@code [0, 100]}
 	 */
 	public void setPercentPower(int power) {
-		if (power < 0 || power > 10) {
-			throw new IllegalArgumentException("power out of range [0, 10]");
+		if (power < 0 || power > 100) {
+			throw new IllegalArgumentException("power out of range [0, 100]");
 		}
+		power = (int) (Math.round(power / 10.0)) * 10;
 		if (this.percentPower == power) {
 			return;
 		}
@@ -142,6 +143,10 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 	}
 
+	public Quaternionf getCoreRotation(float partialTick) {
+		return this.rotationO.slerp(this.rotation, partialTick, new Quaternionf());
+	}
+
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
 		if (this.wasPeripheralMode != this.isPeripheralMode && !this.isPeripheralMode) {
@@ -149,27 +154,14 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 		this.wasPeripheralMode = this.isPeripheralMode;
 
-		// If we're not on a ship, don't bother calculating energy use
-		// (It would be mean to consume that energy anyway)
-		if (!VSGameUtilsKt.isBlockInShipyard(level, pos)) {
-			return;
-		}
-
-		double x = this.torqueX;
-		double y = this.torqueY;
-		double z = this.torqueZ;
+		final Vector3d torque = new Vector3d(this.torqueX, this.torqueY, this.torqueZ);
 		if (this.energyStorage.maxEnergy > 0) {
-			final double requirePower = (Math.abs(x) + Math.abs(y) + Math.abs(z)) * this.energyStorage.maxEnergy / 3;
+			final double requirePower = (Math.abs(torque.x) + Math.abs(torque.y) + Math.abs(torque.z)) * this.energyStorage.maxEnergy / 3;
 			final double availablePower = this.energyStorage.storedEnergy;
 			if (availablePower <= 0) {
-				x = 0;
-				y = 0;
-				z = 0;
+				torque.zero();
 			} else if (requirePower > availablePower) {
-				final double ratio = availablePower / requirePower;
-				x *= ratio;
-				y *= ratio;
-				z *= ratio;
+				torque.mul(availablePower / requirePower);
 				this.energyStorage.storedEnergy = 0;
 			} else {
 				this.energyStorage.storedEnergy -= requirePower;
@@ -177,7 +169,21 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 
 		final double force = this.getTorqueForce();
-		this.data.torque.set(x * force, y * force, z * force);
+		this.data.torque.set(torque.x * force, torque.y * force, torque.z * force);
+
+		if (torque.x != 0 || torque.y != 0 || torque.z != 0) {
+			this.setChanged();
+			this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+			if (force != 0) {
+				torque.mul(-force * Math.PI * 1e-6);
+				this.rotation.conjugate(new Quaternionf()).transform(torque);
+				final float angle = (float) (torque.length());
+				torque.normalize();
+				this.rotation
+					.mul(new Quaternionf().fromAxisAngleRad((float) (torque.x), (float) (torque.y), (float) (torque.z), angle))
+					.normalize();
+			}
+		}
 
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
 		if (ships == null) {
@@ -194,51 +200,64 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 			return InteractionResult.PASS;
 		}
 
-		final int newPower = (this.getPercentPower() % 10) + 1;
+		int newPower = ((this.getPercentPower() / 10) + 1) * 10;
+		if (newPower > 100) {
+			newPower = 10;
+		}
 		this.setPercentPower(newPower);
 
 		final Player player = ctx.getPlayer();
 		if (player != null) {
-			player.displayClientMessage(Component.translatable("vsch.message.gyro", newPower * 10), true);
+			player.displayClientMessage(Component.translatable("vsch.message.gyro", this.getPercentPower()), true);
 		}
+
+		this.updatePowerByRedstone();
 
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void tickParticles(Level level, BlockPos pos, BlockState state) {
-		//
+		this.rotationO.set(this.rotation);
 	}
 
 	@Override
 	public void load(CompoundTag data) {
 		this.energyStorage.storedEnergy = data.getInt("Energy");
+		this.isPeripheralMode = CompatMods.COMPUTERCRAFT.isLoaded() && data.getBoolean("PeripheralMode");
+
+		this.rotation.set(data.getFloat("RotateX"), data.getFloat("RotateY"), data.getFloat("RotateZ"), data.getFloat("RotateW"));
+		// TODO: detect if it's first load and also update rotationO
 		this.torqueX = data.getDouble("TorqueX");
 		this.torqueY = data.getDouble("TorqueY");
 		this.torqueZ = data.getDouble("TorqueZ");
 		this.percentPower = data.getInt("PercentPower");
-		this.isPeripheralMode = CompatMods.COMPUTERCRAFT.isLoaded() && data.getBoolean("PeripheralMode");
 		super.load(data);
+	}
+
+	public void saveShared(CompoundTag data) {
+		data.putFloat("RotateX", this.rotation.x);
+		data.putFloat("RotateY", this.rotation.y);
+		data.putFloat("RotateZ", this.rotation.z);
+		data.putFloat("RotateW", this.rotation.w);
+		data.putDouble("TorqueX", this.torqueX);
+		data.putDouble("TorqueY", this.torqueY);
+		data.putDouble("TorqueZ", this.torqueZ);
+		data.putInt("PercentPower", this.percentPower);
 	}
 
 	@Override
 	public void saveAdditional(CompoundTag data) {
 		super.saveAdditional(data);
 		data.putInt("Energy", this.energyStorage.storedEnergy);
-		data.putDouble("TorqueX", this.torqueX);
-		data.putDouble("TorqueY", this.torqueY);
-		data.putDouble("TorqueZ", this.torqueZ);
-		data.putInt("PercentPower", this.percentPower);
 		data.putBoolean("PeripheralMode", this.getPeripheralMode());
+		this.saveShared(data);
 	}
 
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag data = super.getUpdateTag();
-		data.putDouble("TorqueX", this.torqueX);
-		data.putDouble("TorqueY", this.torqueY);
-		data.putDouble("TorqueZ", this.torqueZ);
-		data.putInt("PercentPower", this.percentPower);
+		this.saveShared(data);
 		return data;
 	}
 
@@ -273,7 +292,7 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		final double x = (level.getSignal(pos.east(), Direction.EAST) - level.getSignal(pos.west(), Direction.WEST)) / 15.0;
 		final double y = (level.getSignal(pos.above(), Direction.UP) - level.getSignal(pos.below(), Direction.DOWN)) / 15.0;
 		final double z = (level.getSignal(pos.south(), Direction.SOUTH) - level.getSignal(pos.north(), Direction.NORTH)) / 15.0;
-		final double scale = this.percentPower / 10.0;
+		final double scale = this.percentPower / 100.0;
 		this.setTorque(x * scale, y * scale, z * scale);
 	}
 
