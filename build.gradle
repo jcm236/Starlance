@@ -138,6 +138,22 @@ repositories {
 	}
 
 	maven {
+		name = "LiterMC maven"
+		url = "https://litermc.github.io/maven/"
+		content {
+			includeGroupAndSubgroups("com.github.litermc")
+		}
+	}
+
+	maven {
+		name = "Architectury maven"
+		url = "https://maven.architectury.dev/"
+		content {
+			includeGroup("dev.architectury")
+		}
+	}
+
+	maven {
 		name = "Create 0.5 maven"
 		url = "https://maven.tterrag.com/"
 		content {
@@ -211,6 +227,8 @@ dependencies {
 	implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
 	implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
 
+	implementation fg.deobf("com.github.litermc.vtil:Vtil-forge-${minecraft_version}:${vtil_version}")
+
 	implementation "thedarkcolour:kotlinforforge:4.10.0"
 	implementation fg.deobf("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
 
@@ -218,11 +236,11 @@ dependencies {
 	compileOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
 	compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
-    // Create
-    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-    implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-    implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+	// Create
+	implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+	implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+	implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+	implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 	//// RUNTIME ////
 

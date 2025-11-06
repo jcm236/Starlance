@@ -81,6 +81,13 @@ license = "${mod_license}"
 	side = "BOTH"
 
 [[dependencies.${mod_id}]]
+	modId = "vtil"
+	mandatory = true
+	versionRange = "[0.2.0,)"
+	ordering = "AFTER"
+	side = "BOTH"
+
+[[dependencies.${mod_id}]]
 	modId = "computercraft"
 	mandatory = false
 	versionRange = "*"
