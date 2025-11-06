@@ -2,10 +2,12 @@ package net.jcm.vsch.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -63,6 +65,10 @@ public final class VSCHNetwork {
 
 	public static void sendToPlayer(final INetworkPacket packet, final ServerPlayer player) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+	}
+
+	public static void sendToPlayersIn(final INetworkPacket packet, final ResourceKey<Level> dimension) {
+		CHANNEL.send(PacketDistributor.DIMENSION.with(() -> dimension), packet);
 	}
 
 	public static void sendToTracking(final INetworkPacket packet, final ServerLevel level, final BlockPos pos) {

@@ -13,7 +13,6 @@
 		"cosmos.MixinSpacesuitwornLogicProcedure",
 		"cosmos.MixinTempoProcedure",
 		"minecraft.MixinChunkMap",
-		"minecraft.MixinLevel",
 		"minecraft.MixinLivingEntity",
 		"minecraft.MixinMob",
 		"valkyrienskies.MixinShipAssemblyKt",

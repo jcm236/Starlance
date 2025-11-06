@@ -5,6 +5,7 @@ import net.jcm.vsch.event.AtmosphericCollision;
 import net.jcm.vsch.event.Gravity;
 import net.jcm.vsch.event.PlanetCollision;
 import net.jcm.vsch.util.EmptyChunkAccess;
+import net.jcm.vsch.util.wapi.server.ServerPlanetData;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -41,6 +42,7 @@ public class VSCHEvents {
 		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
+		ServerPlanetData.onLevelTick(serverLevel);
 		switch (event.phase) {
 			case START -> {
 			}
