@@ -34,8 +34,8 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityAc
 	@Unique
 	private int tickSinceLastJump = Integer.MAX_VALUE;
 
-	@Shadow
-	protected abstract float getJumpPower();
+	// @Shadow
+	// protected abstract float getJumpPower();
 
 	@Override
 	public int vsch$getTickSinceLastJump() {

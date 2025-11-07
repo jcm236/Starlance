@@ -4,7 +4,6 @@ import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.config.VSCHServerConfig;
-import net.jcm.vsch.util.Pair;
 import com.github.litermc.vtil.block.AbstractAssemblerBlockEntity;
 
 import net.minecraft.core.BlockPos;
@@ -14,17 +13,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Clearable;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -32,30 +25,8 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import dan200.computercraft.shared.Capabilities;
 
-import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
-import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
-
-import org.joml.Quaterniond;
-import org.joml.RoundingMode;
-import org.joml.Vector3d;
-import org.joml.Vector3i;
 import org.joml.primitives.AABBi;
 import org.joml.primitives.AABBic;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.ServerShipTransformProvider;
-import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
-import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
-import org.valkyrienskies.core.impl.game.ships.ShipTransformImpl;
-import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity implements ParticleBlockEntity {
 	private static final int MAX_SIZE = 256 * 16;
@@ -247,6 +218,10 @@ public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity imp
 			return;
 		}
 		this.box.union(pos.getX(), pos.getY(), pos.getZ());
+		if (this.box.lengthX() > MAX_SIZE || this.box.lengthY() > MAX_SIZE || this.box.lengthZ() > MAX_SIZE) {
+			this.finishAssemble(AssembleResult.SIZE_OVERFLOW);
+			return;
+		}
 		super.addAssemblingBlock(pos);
 	}
 
