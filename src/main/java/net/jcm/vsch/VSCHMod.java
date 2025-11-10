@@ -15,7 +15,6 @@ import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.network.VSCHNetwork;
-import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,7 +30,6 @@ public class VSCHMod {
 	public VSCHMod(final FMLJavaModLoadingContext context) {
 		final IEventBus modBus = context.getModEventBus();
 
-		MoveUtil.registerDefaultMovers();
 		VSCHBlockEntities.register(modBus);
 		VSCHBlocks.register(modBus);
 		VSCHClientConfig.register(context);
