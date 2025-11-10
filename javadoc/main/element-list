@@ -29,7 +29,6 @@ net.jcm.vsch.items.custom
 net.jcm.vsch.mixin.client
 net.jcm.vsch.mixin.client.cosmos
 net.jcm.vsch.mixin.cosmos
-net.jcm.vsch.mixin.create
 net.jcm.vsch.mixin.minecraft
 net.jcm.vsch.mixin.valkyrienskies
 net.jcm.vsch.mixin.valkyrienskies.accessor
@@ -40,6 +39,5 @@ net.jcm.vsch.ship.dragger
 net.jcm.vsch.ship.gyro
 net.jcm.vsch.ship.thruster
 net.jcm.vsch.util
-net.jcm.vsch.util.assemble
 net.jcm.vsch.util.rot
 net.jcm.vsch.util.wapi

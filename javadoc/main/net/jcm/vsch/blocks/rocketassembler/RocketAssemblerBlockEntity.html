@@ -74,7 +74,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraftforge.common.capabilities.CapabilityProvider&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;
 <div class="inheritance">net.minecraft.world.level.block.entity.BlockEntity
+<div class="inheritance">com.github.litermc.vtil.block.AbstractAssemblerBlockEntity
 <div class="inheritance">net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlockEntity</div>
+</div>
 </div>
 </div>
 </div>
@@ -85,7 +87,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">RocketAssemblerBlockEntity</span>
-<span class="extends-implements">extends net.minecraft.world.level.block.entity.BlockEntity
+<span class="extends-implements">extends com.github.litermc.vtil.block.AbstractAssemblerBlockEntity
 implements <a href="../entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></span></div>
 </section>
 <section class="summary">
@@ -103,6 +105,9 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.litermc.vtil.block.AbstractAssemblerBlockEntity">Fields inherited from class&nbsp;com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</h3>
+<code>blocks, checked, queueing</code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Fields inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>level, remove, worldPosition</code></div>
@@ -136,8 +141,32 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canAssembleBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">canAssembleBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addAssemblingBlock(net.minecraft.core.BlockPos)" class="member-name-link">addAssemblingBlock</a><wbr>(net.minecraft.core.BlockPos&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canAssembleBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">canAssembleBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssemble()" class="member-name-link">finishAssemble</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssemble(net.jcm.vsch.blocks.rocketassembler.AssembleResult)" class="member-name-link">finishAssemble</a><wbr>(<a href="AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a>&nbsp;result)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssembleAsAssembleSelf()" class="member-name-link">finishAssembleAsAssembleSelf</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssembleAsConflicts()" class="member-name-link">finishAssembleAsConflicts</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssembleAsNoBlockToAssemble()" class="member-name-link">finishAssembleAsNoBlockToAssemble</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssembleAsSuccess()" class="member-name-link">finishAssembleAsSuccess</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#finishAssembleAsTooManyBlocks()" class="member-name-link">finishAssembleAsTooManyBlocks</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAssembleResult()" class="member-name-link">getAssembleResult</a>()</code></div>
@@ -149,48 +178,54 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnergyConsumption()" class="member-name-link">getEnergyConsumption</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdatePacket()" class="member-name-link">getUpdatePacket</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxAssembleBlocks()" class="member-name-link">getMaxAssembleBlocks</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdateTag()" class="member-name-link">getUpdateTag</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdatePacket()" class="member-name-link">getUpdatePacket</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAirBlock(net.minecraft.world.level.block.state.BlockState)" class="member-name-link">isAirBlock</a><wbr>(net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.nbt.CompoundTag</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpdateTag()" class="member-name-link">getUpdateTag</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAssembleSuccessed()" class="member-name-link">isAssembleSuccessed</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAssembling()" class="member-name-link">isAssembling</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#neighborChanged(net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)" class="member-name-link">neighborChanged</a><wbr>(net.minecraft.world.level.block.Block&nbsp;neighbor,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#neighborChanged(net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)" class="member-name-link">neighborChanged</a><wbr>(net.minecraft.world.level.block.Block&nbsp;neighbor,
  net.minecraft.core.BlockPos&nbsp;neighborPos,
  boolean&nbsp;moving)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveShared(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveShared</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveShared(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveShared</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;data)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAssembling(boolean)" class="member-name-link">setAssembling</a><wbr>(boolean&nbsp;assembling)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startAssemble(java.lang.String)" class="member-name-link">startAssemble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;slug)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.github.litermc.vtil.block.AbstractAssemblerBlockEntity">Methods inherited from class&nbsp;com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</h3>
+<code>createShip, getBlockChecksPerTick, getMaxAssembleDimension, isAssembling, onAssembleSuccess, queryNextBlocks, serverTick</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, clearRemoved, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPersistentData, getPosFromTag, getType, hasLevel, isRemoved, loadStatic, onChunkUnloaded, onlyOpCanSetNbt, saveToItem, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setLevel, setRemoved, triggerEvent</code></div>
@@ -236,12 +271,6 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="isAssembling()">
-<h3>isAssembling</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAssembling</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="isAssembleSuccessed()">
 <h3>isAssembleSuccessed</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAssembleSuccessed</span>()</div>
@@ -257,6 +286,16 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 <section class="detail" id="getAssembleResult()">
 <h3>getAssembleResult</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></span>&nbsp;<span class="element-name">getAssembleResult</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxAssembleBlocks()">
+<h3>getMaxAssembleBlocks</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxAssembleBlocks</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>getMaxAssembleBlocks</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -352,9 +391,99 @@ implements <a href="../entity/template/ParticleBlockEntity.html" title="interfac
 </section>
 </li>
 <li>
-<section class="detail" id="isAirBlock(net.minecraft.world.level.block.state.BlockState)">
-<h3>isAirBlock</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAirBlock</span><wbr><span class="parameters">(net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
+<section class="detail" id="startAssemble(java.lang.String)">
+<h3>startAssemble</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">startAssemble</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;slug)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>startAssemble</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setAssembling(boolean)">
+<h3>setAssembling</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAssembling</span><wbr><span class="parameters">(boolean&nbsp;assembling)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>setAssembling</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssemble(net.jcm.vsch.blocks.rocketassembler.AssembleResult)">
+<h3>finishAssemble</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssemble</span><wbr><span class="parameters">(<a href="AssembleResult.html" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a>&nbsp;result)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssemble()">
+<h3>finishAssemble</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssemble</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssemble</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssembleAsSuccess()">
+<h3>finishAssembleAsSuccess</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssembleAsSuccess</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssembleAsSuccess</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssembleAsAssembleSelf()">
+<h3>finishAssembleAsAssembleSelf</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssembleAsAssembleSelf</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssembleAsAssembleSelf</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssembleAsTooManyBlocks()">
+<h3>finishAssembleAsTooManyBlocks</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssembleAsTooManyBlocks</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssembleAsTooManyBlocks</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssembleAsNoBlockToAssemble()">
+<h3>finishAssembleAsNoBlockToAssemble</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssembleAsNoBlockToAssemble</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssembleAsNoBlockToAssemble</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="finishAssembleAsConflicts()">
+<h3>finishAssembleAsConflicts</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">finishAssembleAsConflicts</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>finishAssembleAsConflicts</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addAssemblingBlock(net.minecraft.core.BlockPos)">
+<h3>addAssemblingBlock</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addAssemblingBlock</span><wbr><span class="parameters">(net.minecraft.core.BlockPos&nbsp;pos)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>addAssemblingBlock</code>&nbsp;in class&nbsp;<code>com.github.litermc.vtil.block.AbstractAssemblerBlockEntity</code></dd>
+</dl>
 </section>
 </li>
 <li>
