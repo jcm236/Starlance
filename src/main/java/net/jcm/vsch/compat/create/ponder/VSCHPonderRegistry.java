@@ -5,6 +5,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.jcm.vsch.compat.create.ponder.scenes.DragInducerScene;
+import net.jcm.vsch.compat.create.ponder.scenes.RocketAssemblerScene;
 import net.jcm.vsch.compat.create.ponder.scenes.ThrusterScenes;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,12 +17,17 @@ public class VSCHPonderRegistry {
 			VSCHPonderRegistrateBlocks.AIR_THRUSTER_BLOCK,
 			VSCHPonderRegistrateBlocks.POWERFUL_THRUSTER_BLOCK
 		)
-			.addStoryBoard("thrusters", ThrusterScenes::thrusters)
-			.addStoryBoard("thruster_modes", ThrusterScenes::modes);
+        .addStoryBoard("thrusters", ThrusterScenes::thrusters)
+        .addStoryBoard("thruster_modes", ThrusterScenes::modes);
 
 		HELPER.forComponents(
 			VSCHPonderRegistrateBlocks.DRAG_INDUCER_BLOCK
 		)
-			.addStoryBoard("drag_inducer", DragInducerScene::inducer);
+        .addStoryBoard("drag_inducer", DragInducerScene::inducer);
+
+        HELPER.forComponents(
+                VSCHPonderRegistrateBlocks.ROCKET_ASSEMBLER_BLOCK
+        )
+        .addStoryBoard("rocket_assembler", RocketAssemblerScene::inducer);
 	}
 }

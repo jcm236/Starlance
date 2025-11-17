@@ -22,6 +22,9 @@ public class VSCHPonderRegistrateBlocks {
 	public static final BlockEntry<Block> DRAG_INDUCER_BLOCK = REGISTRATE.block("drag_inducer_block", properties -> VSCHBlocks.DRAG_INDUCER_BLOCK.get())
 			.register();
 
+    public static final BlockEntry<Block> ROCKET_ASSEMBLER_BLOCK = REGISTRATE.block("rocket_assembler", properties -> VSCHBlocks.ROCKET_ASSEMBLER_BLOCK.get())
+            .register();
+
 	/**
 	 * Doesn't do anything, but makes sure this class is loaded
 	 */
