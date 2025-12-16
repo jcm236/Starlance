@@ -1,7 +1,6 @@
 net.jcm.vsch
 net.jcm.vsch.accessor
 net.jcm.vsch.api.block
-net.jcm.vsch.api.entity
 net.jcm.vsch.api.event
 net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
