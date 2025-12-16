@@ -16,8 +16,7 @@
 		"minecraft.MixinLivingEntity",
 		"minecraft.MixinMob",
 		"valkyrienskies.MixinShipAssemblyKt",
-		"valkyrienskies.MixinVSGameUtilsKt",
-		"valkyrienskies.accessor.ServerShipObjectWorldAccessor"
+		"valkyrienskies.MixinVSGameUtilsKt"
 	],
 	"client": [
 		"client.MixinGui",

@@ -4,7 +4,8 @@ import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.minecraft.core.BlockPos;
 import org.joml.Vector3dc;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.core.api.ships.PhysShip;
+import org.valkyrienskies.core.api.world.PhysLevel;
 
 public class GyroForceApplier implements IVSCHForceApplier {
 	private final GyroData data;
@@ -18,14 +19,14 @@ public class GyroForceApplier implements IVSCHForceApplier {
 	}
 
 	@Override
-	public void applyForces(BlockPos pos, PhysShipImpl physShip) {
-		Vector3dc angularVelocity = physShip.getPoseVel().getOmega();
+	public void applyForces(BlockPos pos, PhysShip ship, PhysLevel level) {
+		Vector3dc angularVelocity = ship.getAngularVelocity();
 		if (VSCHServerConfig.GYRO_LIMIT_SPEED.get()) {
 			if (Math.abs(angularVelocity.length()) >= VSCHServerConfig.GYRO_MAX_SPEED.get().doubleValue()) {
 				//TODO: someone smarter than me fix this
 				return;
 			}
 		}
-		physShip.applyRotDependentTorque(this.data.torque);
+		ship.applyRotDependentTorque(this.data.torque);
 	}
 }

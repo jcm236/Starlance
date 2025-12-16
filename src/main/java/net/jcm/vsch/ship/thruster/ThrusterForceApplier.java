@@ -7,8 +7,9 @@ import net.minecraft.core.BlockPos;
 
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
@@ -24,7 +25,7 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
     }
 
     @Override
-    public void applyForces(BlockPos pos, PhysShipImpl physShip) {
+    public void applyForces(BlockPos pos, PhysShip ship, PhysLevel physLevel) {
         // Get current thrust from thruster
         double throttle = data.throttle;
         if (throttle == 0) {
@@ -32,12 +33,12 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
         }
 
         // Transform force direction from ship relative to world relative
-        ShipTransform transform = physShip.getTransform();
+        ShipTransform transform = ship.getTransform();
         // TODO: investigate if VS 2.5 still scaling down velocity
         Vector3d tForce = transform.getShipToWorld().transformDirection(data.dir.div(transform.getShipToWorldScaling(), new Vector3d()));
         tForce.mul(throttle);
 
-        Vector3dc linearVelocity = physShip.getPoseVel().getVel();
+        Vector3dc linearVelocity = ship.getVelocity();
 
         if (VSCHServerConfig.LIMIT_SPEED.get()) {
 
@@ -51,7 +52,7 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
 
                     if (data.mode == ThrusterData.ThrusterMode.GLOBAL) {
 
-                        applyScaledForce(physShip, linearVelocity, tForce, maxSpeed);
+                        applyScaledForce(ship, linearVelocity, tForce, maxSpeed);
 
                     } else {
                         // POSITION should be the only other value
@@ -66,10 +67,10 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
                         Vector3d perpendicular = new Vector3d(tForce).sub(parallel);
 
                         // rotate the ship
-                        physShip.applyInvariantForceToPos(perpendicular, tPos);
+                        ship.applyInvariantForceToPos(perpendicular, tPos);
 
                         // apply global force, since the force is perfectly lined up with the centre of gravity
-                        applyScaledForce(physShip, linearVelocity, parallel, maxSpeed);
+                        applyScaledForce(ship, linearVelocity, parallel, maxSpeed);
 
                     }
                     return;
@@ -83,25 +84,25 @@ public class ThrusterForceApplier implements IVSCHForceApplier {
                     .add(0.5, 0.5, 0.5, new Vector3d())
                     .sub(transform.getPositionInShip());
 
-            physShip.applyInvariantForceToPos(tForce, tPos);
+            ship.applyInvariantForceToPos(tForce, tPos);
 
             //ThrusterData.ThrusterMode.GLOBAL should be the only other value:
         } else {
             // Apply the force at no specific position
-            physShip.applyInvariantForce(tForce);
+            ship.applyInvariantForce(tForce);
         }
     }
 
-    private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
+    private static void applyScaledForce(PhysShip ship, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
         assert ValkyrienSkiesMod.getCurrentServer() != null;
         double deltaTime = 1.0 / (20 * 3);
-        double mass = physShip.getInertia().getShipMass();
+        double mass = ship.getMass();
 
         //Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly
         // equal to length of linearVelocity, but still in the direction the ship would have been going without the speed limit
         Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
 
         // Apply the force at no specific position
-        physShip.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
+        ship.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
     }
 }

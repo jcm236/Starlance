@@ -14,7 +14,8 @@ import net.jcm.vsch.ship.gyro.GyroForceApplier;
 import org.jetbrains.annotations.NotNull;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.ShipForcesInducer;
+import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
+import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -23,7 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 @SuppressWarnings("deprecation")
-public class VSCHForceInducedShips implements ShipForcesInducer {
+public class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	/**
 	 * Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.
@@ -32,20 +33,12 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	 */
 	public Map<BlockPos, IVSCHForceApplier> appliers = new ConcurrentHashMap<>();
 
-
-	private String dimensionId = null;
-
 	public VSCHForceInducedShips() {}
 
-	public VSCHForceInducedShips(String dimensionId) {
-		this.dimensionId = dimensionId;
-	}
-
 	@Override
-	public void applyForces(@NotNull PhysShip physicShip) {
-		PhysShipImpl physShip = (PhysShipImpl) physicShip;
-		appliers.forEach((pos,applier) -> {
-			applier.applyForces(pos,physShip);
+	public void physTick(PhysShip ship, PhysLevel physLevel) {
+		appliers.forEach((pos, applier) -> {
+			applier.applyForces(pos, ship, physLevel);
 		});
 	}
 

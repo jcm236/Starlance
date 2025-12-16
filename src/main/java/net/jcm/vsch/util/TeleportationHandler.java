@@ -3,7 +3,6 @@ package net.jcm.vsch.util;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.entity.ISpecialTeleportLogicEntity;
 import net.jcm.vsch.api.event.PreShipTravelEvent;
-import net.jcm.vsch.mixin.valkyrienskies.accessor.ServerShipObjectWorldAccessor;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -15,9 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,13 +30,10 @@ import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ServerShipTransformProvider;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.apigame.ShipTeleportData;
-import org.valkyrienskies.core.apigame.constraints.VSConstraint;
-import org.valkyrienskies.core.apigame.physics.PhysicsEntityServer;
-import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
-import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
-import org.valkyrienskies.core.impl.game.ships.ShipObjectServerWorld;
 import org.valkyrienskies.core.impl.game.ships.ShipTransformImpl;
+import org.valkyrienskies.core.internal.ShipTeleportData;
+import org.valkyrienskies.core.internal.physics.PhysicsEntityServer;
+import org.valkyrienskies.core.internal.world.VsiServerShipWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.ArrayList;
@@ -49,10 +42,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
-@Mod.EventBusSubscriber
 public class TeleportationHandler {
 
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
@@ -60,39 +53,37 @@ public class TeleportationHandler {
 	private static final double ENTITY_COLLECT_RANGE = 8;
 	private static final double SHIP_COLLECT_RANGE = 10;
 
-	private static Map<Long, Set<Integer>> SHIP2CONSTRAINTS;
-	private static Map<Integer, VSConstraint> ID2CONSTRAINT;
-
 	private final Long2ObjectOpenHashMap<TeleportData> ships = new Long2ObjectOpenHashMap<>();
 	private final Map<Entity, Vec3> entityToPos = new HashMap<>();
-	private ServerShipWorldCore shipWorld;
+	private VsiServerShipWorld shipWorld;
 	private double greatestOffset;
 	private ServerLevel oldLevel;
 	private ServerLevel newLevel;
+	private String oldLevelId;
 	private final boolean isReturning;
+	private final List<CompletableFuture<Void>> addingShips = new ArrayList<>();
 
 	public TeleportationHandler(final ServerLevel oldLevel, final ServerLevel newLevel, final boolean isReturning) {
 		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
 		this.oldLevel = oldLevel;
 		this.newLevel = newLevel;
+		this.oldLevelId = oldLevel == null ? null : VSGameUtilsKt.getDimensionId(oldLevel);
 		// Look for the lowest ship when escaping, in order to not collide with the planet.
 		// Look for the highest ship when reentering, in order to not collide with the atmosphere.
 		this.isReturning = isReturning;
-	}
-
-	@SubscribeEvent
-	public static void onServerStart(final ServerStartedEvent event) {
-		final ServerShipObjectWorldAccessor server = (ServerShipObjectWorldAccessor) VSGameUtilsKt.getShipObjectWorld(event.getServer());
-		SHIP2CONSTRAINTS = server.getShipIdToConstraints();
-		ID2CONSTRAINT = server.getConstraints();
 	}
 
 	public void reset(final ServerLevel oldLevel, final ServerLevel newLevel) {
 		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
 		this.oldLevel = oldLevel;
 		this.newLevel = newLevel;
+		this.oldLevelId = oldLevel == null ? null : VSGameUtilsKt.getDimensionId(oldLevel);
 		this.ships.clear();
 		this.entityToPos.clear();
+	}
+
+	public boolean addedShip() {
+		return !this.addingShips.isEmpty();
 	}
 
 	public boolean hasShip(final ServerShip ship) {
@@ -109,18 +100,34 @@ public class TeleportationHandler {
 			return;
 		}
 		this.greatestOffset = 0;
-		final List<ServerShip> collected = new ArrayList<>();
+		final List<Long> collected = new ArrayList<>();
 		final Vector3dc origin = ship.getTransform().getPositionInWorld();
-		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected);
-		this.collectNearbyShips(collected, origin, newPos, rotation);
-		this.collectNearbyEntities(collected, origin, newPos, rotation);
-		this.finalizeCollect(collected, rotation);
+		this.addingShips.add(
+			this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected)
+				.thenCompose((void_) -> this.collectNearbyShips(collected, origin, newPos, rotation), this.oldLevel.getServer())
+				.thenAcceptAsync((void_) -> {
+					this.collectNearbyEntities(collected, origin, newPos, rotation);
+					this.finalizeCollect(collected, rotation);
+				}, this.oldLevel.getServer())
+		);
+	}
+
+	private LoadedServerShip getOldShip(final long id) {
+		final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
+		return ship != null && ship.getChunkClaimDimension().equals(this.oldLevelId) ? ship : null;
+	}
+
+	public CompletableFuture<Void> afterShipsAdded() {
+		if (this.addingShips.isEmpty()) {
+			return CompletableFuture.completedFuture(null);
+		}
+		return CompletableFuture.allOf(this.addingShips.toArray(new CompletableFuture<Void>[this.addingShips.size()]));
 	}
 
 	public List<LoadedServerShip> getPendingShips() {
 		final List<LoadedServerShip> ships = new ArrayList<>(this.ships.size());
 		for (long id : this.ships.keySet()) {
-			final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
+			final LoadedServerShip ship = this.getOldShip(id);
 			if (ship != null) {
 				ships.add(ship);
 			}
@@ -128,18 +135,14 @@ public class TeleportationHandler {
 		return ships;
 	}
 
-	private void collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation, final List<ServerShip> collected) {
-		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, null, null, collected);
-	}
-
-	private void collectShipAndConnectedWithVelocity(
+	private void collectShipWithVelocity(
 		final long shipId,
 		final Vector3dc origin,
 		final Vector3dc newPos,
 		final Quaterniondc rotation,
 		Vector3dc velocity,
 		Vector3dc omega,
-		final List<ServerShip> collected
+		final List<Long> collected
 	) {
 		if (this.ships.containsKey(shipId)) {
 			return;
@@ -161,7 +164,7 @@ public class TeleportationHandler {
 				omega = new Vector3d(ship.getOmega());
 			}
 		}
-		collected.add(ship);
+		collected.add(shipId);
 
 		final Vector3d relPos = pos.sub(origin, new Vector3d());
 		final Quaterniond newRotataion = new Quaterniond(ship.getTransform().getShipToWorldRotation());
@@ -201,38 +204,73 @@ public class TeleportationHandler {
 				omega0
 			)
 		);
-
-		final Set<Integer> constraints = SHIP2CONSTRAINTS.get(shipId);
-		if (constraints != null) {
-			constraints.stream().map(ID2CONSTRAINT::get).forEach((constraint) -> {
-				this.collectShipAndConnected(constraint.getShipId0(), origin, newPos, rotation, collected);
-				this.collectShipAndConnected(constraint.getShipId1(), origin, newPos, rotation, collected);
-			});
-		}
 	}
 
-	private void collectNearbyShips(final List<ServerShip> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
+	private CompletableFuture<Void> collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation, final List<Long> collected) {
+		return this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, null, null, collected);
+	}
+
+	private CompletableFuture<Void> collectShipAndConnectedWithVelocity(
+		final long shipId,
+		final Vector3dc origin,
+		final Vector3dc newPos,
+		final Quaterniondc rotation,
+		final Vector3dc velocity,
+		final Vector3dc omega,
+		final List<Long> collected
+	) {
+		final CompletableFuture<long[]> connectivityFuture = new CompletableFuture();
+		final CompletableFuture<Void> collectFuture = connectivityFuture.thenAcceptAsync((shipIds) -> {
+			for (final long sId : shipIds) {
+				if (sId == shipId) {
+					this.collectShipWithVelocity(sId, origin, newPos, rotation, velocity, omega, collected);
+				} else {
+					this.collectShipWithVelocity(sId, origin, newPos, rotation, null, null, collected);
+				}
+			}
+		}, this.oldLevel.getServer());
+		ValkyrienSkiesMod.getApi().getPhysTickEvent().once((event) -> {
+			final Set<PhysShip> ships = ShipConnectivityApi.getAllConnectedShipsAndSelf(event.getWorld(), shipId);
+			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).toArray());
+		});
+		return collectFuture;
+	}
+
+	private CompletableFuture<Void> collectNearbyShips(final List<Long> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
 		final QueryableShipData<LoadedServerShip> loadedShips = this.shipWorld.getLoadedShips();
 		final Vector3d offset = newPos.sub(origin, new Vector3d());
-		// Note: collected list will grow during the loop
+		final List<CompletableFuture<Void>> futures = new ArrayList<>();
+		// Note: ~~collected list will grow during the loop~~
+		// Note: right now collected does not grow in the loop, since collecting is async
+		//  which means only the neighbours will be collected, but not neighbours' neighbour.
 		for (int i = 0; i < collected.size(); i++) {
-			final AABBdc shipBox = collected.get(i).getWorldAABB();
+			final ServerShip oldShip = this.getOldShip(collected.get(i));
+			if (oldShip == null) {
+				continue;
+			}
+			final AABBdc shipBox = oldShip.getWorldAABB();
 			final AABBd box = new AABBd(
 				shipBox.minX() - SHIP_COLLECT_RANGE, shipBox.minY() - SHIP_COLLECT_RANGE, shipBox.minZ() - SHIP_COLLECT_RANGE,
 				shipBox.maxX() + SHIP_COLLECT_RANGE, shipBox.maxY() + SHIP_COLLECT_RANGE, shipBox.maxZ() + SHIP_COLLECT_RANGE);
-			for (final ServerShip ship : loadedShips.getIntersecting(box)) {
-				this.collectShipAndConnected(ship.getId(), origin, newPos, rotation, collected);
+			for (final ServerShip ship : loadedShips.getIntersecting(box, this.oldLevelId)) {
+				final CompletableFuture<Void> future = this.collectShipAndConnected(ship.getId(), origin, newPos, rotation, collected);
+				futures.add(future);
 			}
 		}
+		return CompletableFuture.allOf(futures.toArray(new CompletableFuture<Void>[futures.size()]));
 	}
 
-	private void collectNearbyEntities(final List<ServerShip> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
-		for (final ServerShip ship : collected) {
+	private void collectNearbyEntities(final List<Long> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
+		for (final Long shipId : collected) {
+			final ServerShip ship = this.getOldShip(shipId);
+			if (ship == null) {
+				continue;
+			}
 			this.collectEntities(ship, origin, newPos, rotation);
 		}
 	}
 
-	private void finalizeCollect(final List<ServerShip> collected, final Quaterniondc rotation) {
+	private void finalizeCollect(final List<Long> collected, final Quaterniondc rotation) {
 		final Vector3d offset = new Vector3d(0, -this.greatestOffset, 0);
 		if (!this.isReturning) {
 			rotation.transform(offset);
@@ -318,6 +356,10 @@ public class TeleportationHandler {
 		this.entityToPos.clear();
 	}
 
+	private static Map<Long, PhysicsEntityServer> getLoadedPhysicsEntities(final VsiServerShipWorld world) {
+		return ((org.valkyrienskies.core.impl.shadow.Er) world).e();
+	}
+
 	private void handleShipTeleport(final long id, final TeleportData data) {
 		final String vsDimName = VSGameUtilsKt.getDimensionId(this.newLevel);
 		final Vector3dc newPos = data.newPos();
@@ -325,22 +367,32 @@ public class TeleportationHandler {
 		final Vector3dc velocity = data.velocity();
 		final Vector3dc omega = data.omega();
 
-		final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
+		final LoadedServerShip ship = this.getOldShip(id);
 		if (ship == null) {
-			final PhysicsEntityServer physEntity = ((ShipObjectServerWorld) this.shipWorld).getLoadedPhysicsEntities().get(id);
+			final PhysicsEntityServer physEntity = getLoadedPhysicsEntities(this.shipWorld).get(id);
 			if (physEntity == null) {
-				LOGGER.warn("[starlance]: Failed to teleport physics object with id " + id + "! It's neither a Ship nor a Physics Entity!");
+				LOGGER.warn("[starlance]: Failed to teleport physics object with id " + id + "! It's neither a Ship nor a Physics Entity! Or not in the same dimension anymore!");
 				return;
 			}
 			LOGGER.info("[starlance]: Teleporting physics entity {} to {} {}", id, vsDimName, newPos);
-			final ShipTeleportData teleportData = new ShipTeleportDataImpl(newPos, physEntity.getShipTransform().getShipToWorldRotation(), physEntity.getLinearVelocity(), physEntity.getAngularVelocity(), vsDimName, null);
+			final ShipTeleportData teleportData = ValkyrienSkiesMod.getVsCore().newShipTeleportData(
+				newPos,
+				physEntity.getShipTransform().getShipToWorldRotation(),
+				physEntity.getLinearVelocity(),
+				physEntity.getAngularVelocity(),
+				vsDimName,
+				null,
+				physEntity.getShipTransform().getPositionInShip()
+			);
 			this.shipWorld.teleportPhysicsEntity(physEntity, teleportData);
 			return;
 		}
 
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
 		ship.setStatic(false);
-		final ShipTeleportData teleportData = new ShipTeleportDataImpl(newPos, rotation, velocity, omega, vsDimName, null);
+		final ShipTeleportData teleportData = ValkyrienSkiesMod.getVsCore().newShipTeleportData(
+			newPos, rotation, velocity, omega, vsDimName, null, ship.getTransform().getPositionInShip()
+		);
 		this.shipWorld.teleportShip(ship, teleportData);
 		if (velocity.lengthSquared() != 0 || omega.lengthSquared() != 0) {
 			ship.setTransformProvider(new ServerShipTransformProvider() {

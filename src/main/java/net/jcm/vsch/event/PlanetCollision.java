@@ -107,6 +107,8 @@ public class PlanetCollision {
 
 			{
 				final TeleportationHandler handler = handlers.get(targetDimension);
+				// TODO: hasShip will always returns false, since ships won't get added until next tick.
+				// It is not a critical problem, because TeleportHandler internally will ignore duplicated ships.
 				if (handler != null && handler.hasShip(ship)) {
 					continue;
 				}
@@ -193,7 +195,6 @@ public class PlanetCollision {
 			}
 
 			final int accuracy = isFirstLand ? firstLandingAccuracy : landingAccuracy;
-			System.out.println("accuracy: " + accuracy);
 
 			final Vector2i addPos = VSCHUtils.randomPosOnSqaureRing(level.random, accuracy, new Vector2i());
 			final Vector3d newPos = new Vector3d(
@@ -215,12 +216,14 @@ public class PlanetCollision {
 		}
 
 		for (final TeleportationHandler handler : handlers.values()) {
-			for (final LoadedServerShip ship : handler.getPendingShips()) {
-				final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-				attachment.freezed = false;
-				attachment.setLanding();
-			}
-			handler.finalizeTeleport();
+			handler.afterShipsAdded().thenAcceptAsync((void_) -> {
+				for (final LoadedServerShip ship : handler.getPendingShips()) {
+					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+					attachment.freezed = false;
+					attachment.setLanding();
+				}
+				handler.finalizeTeleport();
+			}, level.getServer());
 		}
 
 		for (final Map.Entry<ServerPlayer, LevelData.ClosestPlanetData> entry : gravityDistances.entrySet()) {
