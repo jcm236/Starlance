@@ -6,6 +6,7 @@ import net.jcm.vsch.api.event.PreShipTravelEvent;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import com.github.litermc.vtil.api.connectivity.ShipConnectivityApi;
+import com.github.litermc.vtil.api.teleport.TeleportUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
@@ -394,26 +395,7 @@ public class TeleportationHandler {
 
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
 		ship.setStatic(false);
-		final ShipTeleportData teleportData = ValkyrienSkiesMod.getVsCore().newShipTeleportData(
-			newPos, rotation, velocity, omega, vsDimName, null, ship.getTransform().getPositionInShip()
-		);
-		this.shipWorld.teleportShip(ship, teleportData);
-		if (velocity.lengthSquared() != 0 || omega.lengthSquared() != 0) {
-			ship.setTransformProvider(new ServerShipTransformProvider() {
-				@Override
-				public NextTransformAndVelocityData provideNextTransformAndVelocity(final ShipTransform prevTransform, final ShipTransform transform) {
-					final LoadedServerShip ship2 = TeleportationHandler.this.shipWorld.getLoadedShips().getById(id);
-					if (!prevTransform.getPositionInWorld().equals(transform.getPositionInWorld()) || !prevTransform.getShipToWorldRotation().equals(transform.getShipToWorldRotation())) {
-						ship2.setTransformProvider(null);
-						return null;
-					}
-					if (ship2.getVelocity().lengthSquared() == 0 && ship2.getOmega().lengthSquared() == 0) {
-						return new NextTransformAndVelocityData(transform, velocity, omega);
-					}
-					return null;
-				}
-			});
-		}
+		TeleportUtil.teleportShip(ship, new TeleportUtil.TeleportData(this.newLevel, newPos, rotation, velocity, omega));
 	}
 
 	private static <T extends Entity> T teleportToWithPassengers(final T entity, final ServerLevel newLevel, final Vec3 newPos) {
