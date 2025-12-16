@@ -1,7 +1,6 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.api.entity.ISpecialTeleportLogicEntity;
 import net.jcm.vsch.api.event.PreShipTravelEvent;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 
@@ -350,13 +349,8 @@ public class TeleportationHandler {
 	}
 
 	private void teleportEntities() {
-		this.entityToPos.keySet().forEach((entity) -> {
-			if (entity instanceof ISpecialTeleportLogicEntity specialEntity) {
-				specialEntity.starlance$beforeTeleport();
-			}
-		});
 		this.entityToPos.forEach((entity, newPos) -> {
-			teleportToWithPassengers(entity, this.newLevel, newPos);
+			TeleportUtil.teleportEntity(entity, this.newLevel, newPos);
 		});
 		this.entityToPos.clear();
 	}
@@ -396,46 +390,6 @@ public class TeleportationHandler {
 		LOGGER.info("[starlance]: Teleporting ship {} ({}) to {} {}", ship.getSlug(), id, vsDimName, newPos);
 		ship.setStatic(false);
 		TeleportUtil.teleportShip(ship, new TeleportUtil.TeleportData(this.newLevel, newPos, rotation, velocity, omega));
-	}
-
-	private static <T extends Entity> T teleportToWithPassengers(final T entity, final ServerLevel newLevel, final Vec3 newPos) {
-		final Vec3 oldPos = entity.position();
-		final List<Entity> passengers = new ArrayList<>(entity.getPassengers());
-		passengers.forEach((e) -> {
-			if (e instanceof ISpecialTeleportLogicEntity specialEntity) {
-				specialEntity.starlance$beforeTeleport();
-			}
-		});
-		final T newEntity;
-		if (entity instanceof ServerPlayer player) {
-			player.teleportTo(newLevel, newPos.x, newPos.y, newPos.z, player.getYRot(), player.getXRot());
-			newEntity = entity;
-		} else {
-			newEntity = (T) entity.getType().create(newLevel);
-			if (newEntity == null) {
-				if (entity instanceof ISpecialTeleportLogicEntity specialEntity) {
-					specialEntity.starlance$afterTeleport(null);
-				}
-				return null;
-			}
-			entity.ejectPassengers();
-			newEntity.restoreFrom(entity);
-			newEntity.moveTo(newPos.x, newPos.y, newPos.z, newEntity.getYRot(), newEntity.getXRot());
-			newEntity.setYHeadRot(entity.getYHeadRot());
-			newEntity.setYBodyRot(entity.getVisualRotationYInDegrees());
-			newLevel.addDuringTeleport(newEntity);
-			entity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-		}
-		for (final Entity p : passengers) {
-			final Entity newPassenger = teleportToWithPassengers(p, newLevel, p.position().subtract(oldPos).add(newPos));
-			if (newPassenger != null) {
-				newPassenger.startRiding(newEntity, true);
-			}
-		}
-		if (newEntity instanceof ISpecialTeleportLogicEntity specialEntity) {
-			specialEntity.starlance$afterTeleport((ISpecialTeleportLogicEntity)(entity));
-		}
-		return newEntity;
 	}
 
 	private PreShipTravelEvent createPreShipTravelEvent(
