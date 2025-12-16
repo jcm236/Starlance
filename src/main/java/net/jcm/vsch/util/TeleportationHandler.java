@@ -356,7 +356,7 @@ public class TeleportationHandler {
 	}
 
 	private static Map<Long, PhysicsEntityServer> getLoadedPhysicsEntities(final VsiServerShipWorld world) {
-		return ((org.valkyrienskies.core.impl.shadow.Er) world).e();
+		return ((org.valkyrienskies.core.impl.shadow.Er) world).retrieveLoadedPhysicsEntities();
 	}
 
 	private void handleShipTeleport(final long id, final TeleportData data) {
