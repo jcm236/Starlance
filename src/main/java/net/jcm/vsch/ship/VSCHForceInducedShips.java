@@ -13,7 +13,7 @@ import net.jcm.vsch.ship.gyro.GyroData;
 import net.jcm.vsch.ship.gyro.GyroForceApplier;
 import org.jetbrains.annotations.NotNull;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
@@ -127,27 +127,17 @@ public class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	// ----- Force induced ships ----- //
 
-	public static VSCHForceInducedShips getOrCreate(ServerShip ship, String dimensionId) {
+	public static VSCHForceInducedShips get(LoadedServerShip ship) {
 		VSCHForceInducedShips attachment = ship.getAttachment(VSCHForceInducedShips.class);
 		if (attachment == null) {
-			attachment = new VSCHForceInducedShips(dimensionId);
-			ship.saveAttachment(VSCHForceInducedShips.class, attachment);
+			attachment = new VSCHForceInducedShips();
+			ship.setAttachment(attachment);
 		}
 		return attachment;
 	}
 
-	public static VSCHForceInducedShips getOrCreate(ServerShip ship) {
-		return getOrCreate(ship, ship.getChunkClaimDimension());
-	}
-
-	public static VSCHForceInducedShips get(Level level, BlockPos pos) {
-		ServerLevel serverLevel = (ServerLevel) level;
-		// Don't ask, I don't know
-		ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, pos);
-		if (ship == null) {
-			ship = VSGameUtilsKt.getShipManagingPos(serverLevel, pos);
-		}
-		// Seems counter-intutive at first. But basically, it returns null if it wasn't a ship. Otherwise, it gets the attachment OR creates and then gets it
-		return ship != null ? getOrCreate(ship) : null;
+	public static VSCHForceInducedShips get(ServerLevel level, BlockPos pos) {
+		LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, pos);
+		return ship != null ? get(ship) : null;
 	}
 }

@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,11 +40,11 @@ public final class ShipLandingAttachment {
 
 	public ShipLandingAttachment() {}
 
-	public static ShipLandingAttachment get(final ServerShip ship) {
+	public static ShipLandingAttachment get(final LoadedServerShip ship) {
 		ShipLandingAttachment attachment = ship.getAttachment(ShipLandingAttachment.class);
 		if (attachment == null) {
 			attachment = new ShipLandingAttachment();
-			ship.saveAttachment(ShipLandingAttachment.class, attachment);
+			ship.setAttachment(attachment);
 		}
 		return attachment;
 	}

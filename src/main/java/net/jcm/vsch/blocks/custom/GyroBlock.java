@@ -32,11 +32,11 @@ public class GyroBlock extends Block implements EntityBlock {
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
 
-		if (!(level instanceof ServerLevel)) {
+		if (!(level instanceof final ServerLevel serverLevel)) {
 			return;
 		}
 
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 		if (ships != null) {
 			ships.removeApplier(pos);
 		}

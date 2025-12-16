@@ -61,7 +61,9 @@ public class StarlanceCommand {
 
 	public static int reloadGravity(CommandSourceStack source) {
 		try {
-			Gravity.setAll(source.getServer().overworld());
+			for (final ServerLevel level : source.getServer().getAllLevels()) {
+				Gravity.updateFor(level);
+			}
 		} catch (Exception e) {
 			source.sendFailure(Component.literal("Couldn't execute command. See log for more info. " + e.getMessage()));
 			LOGGER.error("Error when reloading gravity", e);
