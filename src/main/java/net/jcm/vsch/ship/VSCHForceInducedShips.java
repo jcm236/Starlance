@@ -24,7 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
 @SuppressWarnings("deprecation")
-public class VSCHForceInducedShips implements ShipPhysicsListener {
+public final class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	/**
 	 * Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.

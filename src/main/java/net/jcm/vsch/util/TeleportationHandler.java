@@ -355,10 +355,6 @@ public class TeleportationHandler {
 		this.entityToPos.clear();
 	}
 
-	private static Map<Long, PhysicsEntityServer> getLoadedPhysicsEntities(final VsiServerShipWorld world) {
-		return ((org.valkyrienskies.core.impl.shadow.Er) world).retrieveLoadedPhysicsEntities();
-	}
-
 	private void handleShipTeleport(final long id, final TeleportData data) {
 		final String vsDimName = VSGameUtilsKt.getDimensionId(this.newLevel);
 		final Vector3dc newPos = data.newPos();
@@ -368,7 +364,7 @@ public class TeleportationHandler {
 
 		final LoadedServerShip ship = this.getOldShip(id);
 		if (ship == null) {
-			final PhysicsEntityServer physEntity = getLoadedPhysicsEntities(this.shipWorld).get(id);
+			final PhysicsEntityServer physEntity = this.shipWorld.retrieveLoadedPhysicsEntities().get(id);
 			if (physEntity == null) {
 				LOGGER.warn("[starlance]: Failed to teleport physics object with id " + id + "! It's neither a Ship nor a Physics Entity! Or not in the same dimension anymore!");
 				return;
