@@ -26,7 +26,7 @@ public class Gravity {
 	public static void updateFor(final ServerLevel level) {
 		final String dimId = level.dimension().location().toString();
 		final CompoundTag gravityData = CosmosModVariables.WorldVariables.get(level).gravity_data;
-		final double gravity = -10 * gravityData.getDouble(dimId);
+		final double gravity = -10 * (gravityData.contains(dimId) ? gravityData.getDouble(dimId) : 1);
 		try {
 			VSGameUtilsKt.getShipObjectWorld(level).updateDimension(
 				VSGameUtilsKt.getDimensionId(level),

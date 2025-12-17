@@ -1,29 +1,34 @@
 package net.jcm.vsch.ship;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
-
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
-import net.jcm.vsch.ship.thruster.ThrusterData;
-import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
 import net.jcm.vsch.ship.gyro.GyroData;
 import net.jcm.vsch.ship.gyro.GyroForceApplier;
-import org.jetbrains.annotations.NotNull;
-import org.valkyrienskies.core.api.ships.PhysShip;
+import net.jcm.vsch.ship.thruster.ThrusterData;
+import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
 import org.valkyrienskies.core.api.world.PhysLevel;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
+
 @SuppressWarnings("deprecation")
+@JsonAutoDetect(
+	fieldVisibility = JsonAutoDetect.Visibility.NONE,
+	isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+	getterVisibility = JsonAutoDetect.Visibility.NONE,
+	setterVisibility = JsonAutoDetect.Visibility.NONE
+)
 public final class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	/**
@@ -44,16 +49,16 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	// ----- Force Appliers ----- //
 
-	public void addApplier(BlockPos pos, IVSCHForceApplier applier){
+	public void addApplier(BlockPos pos, IVSCHForceApplier applier) {
 		appliers.put(pos, applier);
 	}
 
-	public void removeApplier(BlockPos pos){
+	public void removeApplier(BlockPos pos) {
 		appliers.remove(pos);
 	}
 
 	@Nullable
-	public IVSCHForceApplier getApplierAtPos(BlockPos pos){
+	public IVSCHForceApplier getApplierAtPos(BlockPos pos) {
 		return appliers.get(pos);
 	}
 

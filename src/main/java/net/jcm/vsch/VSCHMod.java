@@ -46,7 +46,10 @@ public class VSCHMod {
 		VSCHTags.register();
 
 		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
-		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class);
+		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
+			builder.useTransientSerializer();
+			return null; // blame kotlin
+		});
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
