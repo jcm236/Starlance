@@ -28,6 +28,7 @@ public class Gravity {
 		final CompoundTag gravityData = CosmosModVariables.WorldVariables.get(level).gravity_data;
 		final double gravity = -10 * (gravityData.contains(dimId) ? gravityData.getDouble(dimId) : 1);
 		try {
+			// Note: client dimension can also be updated. However, currently nothing is used.
 			VSGameUtilsKt.getShipObjectWorld(level).updateDimension(
 				VSGameUtilsKt.getDimensionId(level),
 				new Vector3d(0, gravity, 0),

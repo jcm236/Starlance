@@ -6,6 +6,7 @@ import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import com.github.litermc.vtil.api.connectivity.ShipConnectivityApi;
 import com.github.litermc.vtil.api.teleport.TeleportUtil;
+import com.github.litermc.vtil.util.TaskUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
@@ -131,7 +132,7 @@ public class TeleportationHandler {
 
 	public List<LoadedServerShip> getPendingShips() {
 		final List<LoadedServerShip> ships = new ArrayList<>(this.ships.size());
-		for (long id : this.ships.keySet()) {
+		for (final long id : this.ships.keySet()) {
 			final LoadedServerShip ship = this.getOldShip(id);
 			if (ship != null) {
 				ships.add(ship);
@@ -234,8 +235,8 @@ public class TeleportationHandler {
 				}
 			}
 		}, this.oldLevel.getServer());
-		ValkyrienSkiesMod.getApi().getPhysTickEvent().once((event) -> {
-			final Set<PhysShip> ships = ShipConnectivityApi.getAllConnectedShipsAndSelf((VsiPhysLevel) event.getWorld(), shipId);
+		TaskUtil.queuePhysicsTick(this.oldLevel, (world) -> {
+			final Set<PhysShip> ships = ShipConnectivityApi.getAllConnectedShipsAndSelf((VsiPhysLevel) world, shipId);
 			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).toArray());
 		});
 		return collectFuture;

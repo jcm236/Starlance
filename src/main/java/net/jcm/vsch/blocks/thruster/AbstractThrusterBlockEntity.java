@@ -60,6 +60,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	private static final String BRAIN_POS_TAG_NAME = "BrainPos";
 	private static final String BRAIN_DATA_TAG_NAME = "BrainData";
+	private static final String MODE_TAG_NAME = "Mode";
 
 	private final Direction facing;
 	private ThrusterBrain brain;
@@ -121,17 +122,14 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	public void load(final CompoundTag data) {
 		super.load(data);
 		final BlockPos pos = this.getBlockPos();
-		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_BYTE_ARRAY)) {
-			// TODO: remove in the next version
-			final byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
-			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
-		} else if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_INT_ARRAY)) {
+		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_INT_ARRAY)) {
 			final int[] offset = data.getIntArray(BRAIN_POS_TAG_NAME);
 			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
 		} else if (data.contains(BRAIN_DATA_TAG_NAME, Tag.TAG_COMPOUND)) {
 			this.brain.readFromNBT(data.getCompound(BRAIN_DATA_TAG_NAME));
 			this.brainNeedInit = true;
 		}
+		this.brain.setThrusterModeNoUpdate(ThrusterData.ThrusterMode.values()[data.getByte(MODE_TAG_NAME)]);
 	}
 
 	@Override
@@ -153,6 +151,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			final BlockPos offset = dataPos.subtract(selfPos);
 			data.putIntArray(BRAIN_POS_TAG_NAME, new int[]{offset.getX(), offset.getY(), offset.getZ()});
 		}
+		data.putByte(MODE_TAG_NAME, (byte) (this.getThrusterMode().ordinal()));
 	}
 
 	@Override
@@ -200,7 +199,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	private void resolveBrain() {
 		final Level level = this.getLevel();
 		final BlockEntity be = level.getBlockEntity(this.brainPos);
-		if (be instanceof AbstractThrusterBlockEntity thruster) {
+		if (be instanceof final AbstractThrusterBlockEntity thruster) {
 			if (thruster.brainNeedInit) {
 				thruster.searchThrusters();
 			}
