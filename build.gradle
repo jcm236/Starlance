@@ -1,35 +1,37 @@
 buildscript {
 	repositories {
-		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-		maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
 		mavenCentral()
+		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+		maven {
+			name = 'MinecraftForge'
+			url = 'https://maven.minecraftforge.net/'
+		}
+		maven {
+			name = 'Sponge'
+			url = 'https://repo.spongepowered.org/repository/maven-public'
+		}
 	}
 	dependencies {
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
 		classpath 'org.parchmentmc:librarian:1.+'
-
 	}
 }
 
 plugins {
 	id 'maven-publish'
 	id 'idea'
-	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+	id 'net.minecraftforge.gradle' version '6.+'
 	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 
 	// For auto-publishing
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
-	id "com.modrinth.minotaur" version "2.+"
+	id 'com.modrinth.minotaur' version '2.+'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
 
 apply from: './gradle-scripts/publish-mod.gradle'
 
@@ -115,19 +117,15 @@ repositories {
 	mavenCentral()
 	mavenLocal()
 
-	flatDir {
-		dir "lib"
-	}
-
 	maven {
 		url = "https://modmaven.dev/"
 	}
 
 	maven {
-		name = "Modrinth Maven"
-		url = "https://api.modrinth.com/maven"
+		name = "LiterMC maven"
+		url = "https://litermc.github.io/maven/"
 		content {
-			includeGroup("maven.modrinth")
+			includeGroupAndSubgroups("com.github.litermc")
 		}
 	}
 
@@ -140,18 +138,10 @@ repositories {
 	}
 
 	maven {
-		name = "LiterMC maven"
-		url = "https://litermc.github.io/maven/"
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
 		content {
-			includeGroupAndSubgroups("com.github.litermc")
-		}
-	}
-
-	maven {
-		name = "Architectury maven"
-		url = "https://maven.architectury.dev/"
-		content {
-			includeGroup("dev.architectury")
+			includeGroup("maven.modrinth")
 		}
 	}
 
@@ -201,7 +191,7 @@ repositories {
 		url = "https://maven.squiddev.cc/"
 		content {
 			includeGroup("cc.tweaked")
-			includeModule("org.squiddev", "Cobalt")
+			includeGroup("org.squiddev")
 		}
 	}
 
@@ -223,11 +213,11 @@ dependencies {
 	}
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
 
-	implementation         ("org.valkyrienskies.core:api:${vs_core_version}")
-	implementation         ("org.valkyrienskies.core:impl:${vs_core_version}")
-	implementation         ("org.valkyrienskies.core:internal:${vs_core_version}")
-	implementation         ("org.valkyrienskies.core:util:${vs_core_version}")
-	implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}")
+	implementation "org.valkyrienskies.core:api:${vs_core_version}"
+	implementation "org.valkyrienskies.core:impl:${vs_core_version}"
+	implementation "org.valkyrienskies.core:internal:${vs_core_version}"
+	implementation "org.valkyrienskies.core:util:${vs_core_version}"
+	implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}") { transitive = false }
 
 	implementation fg.deobf("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")
 	jarJar("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}") {
@@ -243,8 +233,9 @@ dependencies {
 
 	// Create
 	implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-	implementation fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 	implementation fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
+	compileOnly fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}")
+	runtimeOnly fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 	implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
 
 	//// RUNTIME ////
@@ -253,7 +244,6 @@ dependencies {
 	// runtimeOnly fg.deobf("curse.maven:ctm-267602:3933537")
 	// runtimeOnly fg.deobf("curse.maven:rubidium-574856:4494903")
 	runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
-	// runtimeOnly fg.deobf("maven.modrinth:architectury-api:9.2.14+forge")
 	// runtimeOnly fg.deobf("maven.modrinth:create-clockwork:1.20.1-0.1.16")
 	runtimeOnly fg.deobf("maven.modrinth:jade-addons-forge:5.3.1+forge")
 	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
@@ -306,7 +296,8 @@ tasks.named('processResources', ProcessResources).configure {
 
 	filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
 		expand replaceProperties + [project: project]
-	}}
+	}
+}
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
