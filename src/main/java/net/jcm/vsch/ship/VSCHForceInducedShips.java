@@ -11,12 +11,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
+import org.jetbrains.annotations.NotNull;
+import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +42,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public VSCHForceInducedShips() {}
 
 	@Override
-	public void physTick(PhysShip ship, PhysLevel physLevel) {
+	public void physTick(@NotNull PhysShip ship, @NotNull PhysLevel physLevel) {
 		appliers.forEach((pos, applier) -> {
 			applier.applyForces(pos, ship, physLevel);
 		});
@@ -142,7 +143,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	}
 
 	public static VSCHForceInducedShips get(ServerLevel level, BlockPos pos) {
-		LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, pos);
+		LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(level, pos);
 		return ship != null ? get(ship) : null;
 	}
 }
