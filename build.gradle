@@ -45,8 +45,6 @@ java {
 	toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
-
-
 minecraft {
 
 	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
@@ -204,13 +202,17 @@ repositories {
 	}
 }
 
+configurations {
+	shade
+}
+
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 	compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-	implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+	shade implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1") {
 		jarJar.ranged(it, "[0.4.1,)")
-	}
+	})
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
 
 	implementation "org.valkyrienskies.core:api:${vs_core_version}"
@@ -220,7 +222,7 @@ dependencies {
 	implementation fg.deobf("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}") { transitive = false }
 
 	implementation fg.deobf("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")
-	jarJar("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}") {
+	shade jarJar("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}") {
 		jarJar.ranged(it, "[${vtil_version},)")
 	}
 
@@ -262,23 +264,17 @@ dependencies {
 	// runtimeOnly fg.deobf("curse.maven:spark-361579:3824951")
 }
 
-configurations {
-	shade
-	implementation.extendsFrom shade
-}
-
 minecraft.runs.all {
 	lazyToken('minecraft_classpath') {
 		configurations.shade.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
 	}
 }
 
-
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-tasks.named('processResources', ProcessResources).configure {
+processResources {
 	var replaceProperties = [
 		minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
 		forge_version: forge_version, forge_version_range: forge_version_range,
@@ -300,7 +296,7 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
-tasks.named('jar', Jar).configure {
+jar {
 	manifest {
 		attributes([
 			"Specification-Title": mod_id,
