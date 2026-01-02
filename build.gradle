@@ -212,7 +212,7 @@ dependencies {
     // endregion
 
     // region Personal deps (VUtil + CH)
-    jarJar(modCompileOnly("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")) {
+    jarJar(modImplementation("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")) {
         version {
             strictly "[${vtil_version},)"
             prefer "${vtil_version}"
