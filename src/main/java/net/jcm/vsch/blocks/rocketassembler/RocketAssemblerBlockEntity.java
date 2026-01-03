@@ -79,6 +79,7 @@ public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity imp
 	@Override
 	public void load(final CompoundTag data) {
 		this.energyStored = data.getInt("EnergyStored");
+		this.triggering = data.getBoolean("Powered");
 		try {
 			this.assembleResult = AssembleResult.valueOf(data.getString("AssembleResult"));
 		} catch(IllegalArgumentException e) {
@@ -89,6 +90,7 @@ public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity imp
 	@Override
 	public void saveAdditional(final CompoundTag data) {
 		data.putInt("EnergyStored", this.energyStored);
+		data.putBoolean("Powered", this.triggering);
 		this.saveShared(data);
 	}
 
