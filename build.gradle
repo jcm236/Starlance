@@ -1,17 +1,16 @@
 buildscript {
 	repositories {
+		gradlePluginPortal()
 		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-		maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 		maven {
-			url "https://plugins.gradle.org/m2/"
+			url 'https://repo.spongepowered.org/repository/maven-public/'
 		}
-		mavenCentral()
 	}
 	dependencies {
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
 
-        // Make sure this version matches the one included in Kotlin for Forge
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
+		// Make sure this version matches the one included in Kotlin for Forge
+		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
 
 	}
 }
@@ -20,7 +19,7 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 
-    id 'net.neoforged.moddev.legacyforge' version '2.0.137'
+	id 'net.neoforged.moddev.legacyforge' version '2.0.137'
 
 	// For auto-publishing
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
@@ -42,33 +41,31 @@ java {
 	toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
-
-
 legacyForge {
-    version = "${minecraft_version}-${forge_version}"
+	version = "${minecraft_version}-${forge_version}"
 
-    // Validate AT files and raise errors when they have invalid targets
-    // This option is false by default, but turning it on is recommended
-    validateAccessTransformers = true
+	// Validate AT files and raise errors when they have invalid targets
+	// This option is false by default, but turning it on is recommended
+	validateAccessTransformers = true
 
-    runs {
-        client {
-            client()
-        }
-        data {
-            data()
-        }
-        server {
-            server()
-        }
-    }
+	runs {
+		client {
+			client()
+		}
+		data {
+			data()
+		}
+		server {
+			server()
+		}
+	}
 
-    mods {
-        // Should this be vsch instead of testproject? I'm not sure
-        testproject {
-            sourceSet sourceSets.main
-        }
-    }
+	mods {
+		// Should this be vsch instead of testproject? I'm not sure
+		testproject {
+			sourceSet sourceSets.main
+		}
+	}
 }
 
 mixin {
@@ -88,15 +85,15 @@ repositories {
 		url = "https://modmaven.dev/"
 	}
 
-    // Should mirror a lot of our deps, including Create, CC:T, KFF? and anything else VS has in its dev enviroment
-    // However we still include the other mavens, just in case it goes down
-    maven {
-        name = "Valkyrien Skies Internal"
-        url = "https://maven.valkyrienskies.org"
-        content {
-            excludeGroup("org.spongepowered")
-        }
-    }
+	// Should mirror a lot of our deps, including Create, CC:T, KFF? and anything else VS has in its dev enviroment
+	// However we still include the other mavens, just in case it goes down
+	maven {
+		name = "Valkyrien Skies Internal"
+		url = "https://maven.valkyrienskies.org"
+		content {
+			excludeGroup("org.spongepowered")
+		}
+	}
 
 	maven {
 		name = "Modrinth Maven"
@@ -106,7 +103,7 @@ repositories {
 		}
 	}
 
-    // Unfortunately curse maven is slow, but we need it for jade
+	// Unfortunately curse maven is slow, but we need it for jade
 	maven {
 		name = "CurseForge Maven"
 		url = "https://cursemaven.com"
@@ -161,7 +158,7 @@ repositories {
 		url = "https://maven.squiddev.cc/"
 		content {
 			includeGroup("cc.tweaked")
-            includeGroup("org.squiddev")
+			includeGroup("org.squiddev")
 		}
 	}
 
@@ -175,75 +172,75 @@ repositories {
 }
 
 dependencies {
-    // region mixins
+	// region mixins
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 	compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.4.1")) {
+	jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.4.1")) {
 		version {
-            strictly '[0.4.1,)'
-            prefer '0.4.1'
-        }
+			strictly '[0.4.1,)'
+			prefer '0.4.1'
+		}
 	}
-    // endregion
+	// endregion
 
-    // region Valkyrien Skies
-    implementation("org.valkyrienskies.core:api:$vs_core_version") { transitive = false
-        exclude group: 'org.joml', module: ''
-    }
-    implementation("org.valkyrienskies.core:internal:$vs_core_version") { transitive = false
-        exclude group: 'org.joml', module: ''
-    }
-    implementation("org.valkyrienskies.core:util:$vs_core_version") { transitive = false
-        exclude group: 'org.joml', module: ''
-    }
-    implementation("org.valkyrienskies.core:impl:$vs_core_version") { transitive = false
-        exclude group: 'org.joml', module: ''
-    }
-    modApi("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}") { transitive = false
-        exclude group: 'org.valkyrienskies.core', module: ''
-    }
-    // endregion
+	// region Valkyrien Skies
+	implementation("org.valkyrienskies.core:api:${vs_core_version}") { transitive = false
+		exclude group: 'org.joml', module: ''
+	}
+	implementation("org.valkyrienskies.core:internal:${vs_core_version}") { transitive = false
+		exclude group: 'org.joml', module: ''
+	}
+	implementation("org.valkyrienskies.core:util:${vs_core_version}") { transitive = false
+		exclude group: 'org.joml', module: ''
+	}
+	implementation("org.valkyrienskies.core:impl:${vs_core_version}") { transitive = false
+		exclude group: 'org.joml', module: ''
+	}
+	modApi("org.valkyrienskies:valkyrienskies-120-forge:${vs2_version}") { transitive = false
+		exclude group: 'org.valkyrienskies.core', module: ''
+	}
+	// endregion
 
-    // region VS deps
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
-    compileOnly("org.joml:joml:1.10.4")
-    compileOnly("org.joml:joml-primitives:1.10.0")
-    modImplementation "thedarkcolour:kotlinforforge:4.11.0"
-    // endregion
+	// region VS deps
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.3"
+	compileOnly("org.joml:joml:1.10.4")
+	compileOnly("org.joml:joml-primitives:1.10.0")
+	modImplementation "thedarkcolour:kotlinforforge:4.11.0"
+	// endregion
 
-    // region Personal deps (VUtil + CH)
-    jarJar(modImplementation("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")) {
-        version {
-            strictly "[${vtil_version},)"
-            prefer "${vtil_version}"
-        }
-    }
+	// region Personal deps (VUtil + CH)
+	jarJar(modImplementation("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")) {
+		version {
+			strictly "[${vtil_version},)"
+			prefer "${vtil_version}"
+		}
+	}
 	modImplementation("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    // endregion
+	// endregion
 
-    // region Compat deps
+	// region Compat deps
 
-    // CC: Tweaked
+	// CC: Tweaked
 	modCompileOnly("cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}")
 
-    // Jade
+	// Jade
 	modImplementation("curse.maven:jade-324717:${jade_version}")
-    modRuntimeOnly("maven.modrinth:jade-addons-forge:5.3.1+forge")
+	modRuntimeOnly("maven.modrinth:jade-addons-forge:5.3.1+forge")
 
-    // Curios
+	// Curios
 	modCompileOnly("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
 	// Create
 	modImplementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
 	modImplementation("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}")
-    modCompileOnly("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}")
-    modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
+	modCompileOnly("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}")
+	modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 	modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    // JEI (just for quality of life, not compat)
-    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+	// JEI (just for quality of life, not compat)
+	modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    // endregion
+	// endregion
 }
 
 configurations {
@@ -251,13 +248,21 @@ configurations {
 	implementation.extendsFrom shade
 }
 
-tasks.named('processResources', ProcessResources).configure {
+processResources {
 	var replaceProperties = [
-		minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-		forge_version: forge_version, forge_version_range: forge_version_range,
-		loader_version_range: loader_version_range,
-		mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-		mod_authors: mod_authors, mod_description: mod_description,
+		mod_id          : mod_id,
+		mod_name        : mod_name,
+		mod_license     : mod_license,
+		mod_version     : mod_version,
+		mod_authors     : mod_authors,
+		mod_description : mod_description,
+
+		minecraft_version       : minecraft_version,
+		minecraft_version_range : minecraft_version_range,
+		forge_version           : forge_version,
+		forge_version_range     : forge_version_range,
+		loader_version_range    : loader_version_range,
+
 		// This property isn't used right now in mods.toml
 		vs2_version: vs2_version.split("\\+").first(), // gradle.properties will have git commit version, but public releases won't
 		cosmos_version: cosmos_version,
@@ -272,7 +277,7 @@ tasks.named('processResources', ProcessResources).configure {
 	}
 }
 
-tasks.named('jar', Jar).configure {
+jar {
 	manifest {
 		attributes([
 			"Specification-Title": mod_id,
