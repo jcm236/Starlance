@@ -203,14 +203,19 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			if (thruster.brainNeedInit) {
 				thruster.searchThrusters();
 			}
-			if (this.brainPos != null) {
-				if (level.isClientSide) {
-					return;
+			if (level.isClientSide) {
+				if (thruster.getBrain().tryMergeBrain(this.brain)) {
+					this.brainPos = null;
 				}
+				return;
+			}
+			// Thruster may not connect after load, if so create a new group
+			if (this.brainPos != null) {
 				this.brainPos = null;
 				this.searchThrusters();
 			}
-		} else if (this.getLevel() instanceof ServerLevel) {
+		} else if (!this.getLevel().isClientSide) {
+			// Do not clear brainPos on client, since chunks do not load at same time.
 			LOGGER.debug("[starlance]: Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
 			this.brainPos = null;
 			this.setChanged();
@@ -220,8 +225,16 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	private void searchThrusters() {
 		this.brainNeedInit = false;
 		final Level level = this.getLevel();
+		if (level.isClientSide) {
+			// On client, other thrusters join main thruster by themselves, connection check is not needed.
+			return;
+		}
 		bfs(this.getBlockPos(), (otherPos) -> {
-			if (!(level.getBlockEntity(otherPos) instanceof final AbstractThrusterBlockEntity other) || other.brainPos == null || !this.canMerge(other)) {
+			if (
+				!(level.getBlockEntity(otherPos) instanceof final AbstractThrusterBlockEntity other) ||
+				other.brainPos == null ||
+				!this.canMerge(other)
+			) {
 				return false;
 			}
 			if (other.brainPos.equals(this.brainPos)) {
@@ -234,11 +247,11 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 				other.brainPos = null;
 				return false;
 			}
-			final boolean ok = this.brain.tryMergeBrain(other.getBrain());
-			if (ok) {
-				other.brainPos = null;
+			if (!this.brain.tryMergeBrain(other.getBrain())) {
+				return false;
 			}
-			return ok;
+			other.brainPos = null;
+			return true;
 		});
 	}
 

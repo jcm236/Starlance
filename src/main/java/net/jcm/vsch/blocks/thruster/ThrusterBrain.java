@@ -318,6 +318,9 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	}
 
 	boolean tryMergeBrain(final ThrusterBrain other) {
+		if (this == other) {
+			return true;
+		}
 		if (!this.canMerge(other)) {
 			return false;
 		}
