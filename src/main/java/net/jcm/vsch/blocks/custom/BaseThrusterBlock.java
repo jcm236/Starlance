@@ -88,13 +88,13 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
 
-		if (!(level instanceof ServerLevel)) {
+		if (!(level instanceof final ServerLevel serverLevel)) {
 			return;
 		}
 
 		// ----- Remove the thruster from the force appliers for the current level ----- //
 		// I guess VS does this automatically when switching a shipyards dimension?
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 		if (ships != null) {
 			ships.removeThruster(pos);
 		}

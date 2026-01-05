@@ -90,7 +90,7 @@ public class VSCHServerConfig {
 	static {
 		BUILDER.push("Landing");
 
-		SHIP_LANDING_MODE = BUILDER.comment("Defines how the ship will land at planets.\nPLAYER_MENU: Always use the player menu for landing location. Ships cannot land without a player nearby.\nHISTORY: The saved launch position will be used. If no launch has been saved, the origin will be used.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.PLAYER_MENU);
+		SHIP_LANDING_MODE = BUILDER.comment("Defines how the ship will land at planets.\nPLAYER_MENU: Always use the player menu for landing location. Ships cannot land without a player nearby.\nHISTORY: The saved launch position will be used. If no launch has been saved, the origin will be used.\nAUTO_HISTORY: Use PLAYER_MENU mode if a player is nearby, and use HISTORY mode otherwise.").defineEnum("ship_landing_mode", ShipLandingMode.HISTORY);
 		SHIP_LANDING_ACCURACY = BUILDER.comment("Define how accurate the ships landing position is, distance in chunks.").defineInRange("ship_landing_accuracy", 0, 0, 128);
 		SHIP_FIRST_LANDING_SPAWN_RANGE = BUILDER.comment("Define how far from the origin the ship will be teleported, in chunks.\nOnly have effect when a ship never been to the planet and is trying to use HISTORY mode.").defineInRange("ship_first_landing_spawn_range", 128, 0, 32768);
 

@@ -11,23 +11,19 @@ curseforge {
         apiKey = curse_api_token
         project {
             id = curse_project_id
-
+            releaseType = versionType
             addGameVersion '1.20.1'
 
-            releaseType = versionType
-
-            mainArtifact(jar) {
+            mainArtifact(build) {
                 relations {
-                        requiredDependency 'kotlin-for-forge'
-                        requiredDependency 'valkyrien-skies'
-                        requiredDependency 'cosmic-horizons'
+                    requiredDependency 'kotlin-for-forge'
+                    requiredDependency 'valkyrien-skies'
+                    requiredDependency 'cosmic-horizons'
                 }
 
-                changelogType = "markdown"
-
-                changelog = file('changelog.md')
-
                 displayName = fileDisplayName
+                changelogType = "markdown"
+                changelog = file('changelog.md')
             }
         }
     }
@@ -42,7 +38,7 @@ modrinth {
     archivesBaseName = fileDisplayName
     versionType = versionType
     changelog = file('changelog.md').text
-    uploadFile = jar
+    uploadFile = build
     gameVersions = ["1.20.1"] // Must be an array, even with only one version
     dependencies { // A special DSL for creating dependencies
         // scope.type

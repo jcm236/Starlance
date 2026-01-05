@@ -2,7 +2,7 @@ package net.jcm.vsch;
 
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.event.AtmosphericCollision;
-import net.jcm.vsch.event.GravityInducer;
+import net.jcm.vsch.event.Gravity;
 import net.jcm.vsch.event.PlanetCollision;
 import net.jcm.vsch.util.EmptyChunkAccess;
 
@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,9 +30,6 @@ public class VSCHEvents {
 	public static void onServerTick(final TickEvent.ServerTickEvent event) {
 		switch (event.phase) {
 			case START -> {
-				for (final LoadedServerShip ship : VSGameUtilsKt.getShipObjectWorld(event.getServer()).getLoadedShips()) {
-					GravityInducer.tickOnShip(ship);
-				}
 			}
 			case END -> {
 			}
@@ -58,11 +56,12 @@ public class VSCHEvents {
 		}
 	}
 
-	// For next vs update
-	//	@SubscribeEvent
-	//	public static void shipLoad(VSEvents.ShipLoadEvent event) {
-	////		Gravity.setAll(event.getServer().overworld());
-	//	}
+	@SubscribeEvent
+	public static void onLevelLoad(LevelEvent.Load event) {
+		if (event.getLevel() instanceof final ServerLevel level) {
+			Gravity.updateFor(level);
+		}
+	}
 
 	@SubscribeEvent
 	public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
@@ -75,21 +74,21 @@ public class VSCHEvents {
 		}
 	}
 
-    @SubscribeEvent
-    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
-        if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
-            return;
-        }
+	@SubscribeEvent
+	public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
+		if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
+			return;
+		}
 
-        if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
-            return;
-        }
+		if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
+			return;
+		}
 
-        if (joinEvent.getEntity() instanceof ServerPlayer player) {
-            player.sendSystemMessage(
-                    Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
-                            .withStyle(ChatFormatting.YELLOW)
-            );
-        }
-    }
+		if (joinEvent.getEntity() instanceof ServerPlayer player) {
+			player.sendSystemMessage(
+				Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
+					.withStyle(ChatFormatting.YELLOW)
+			);
+		}
+	}
 }

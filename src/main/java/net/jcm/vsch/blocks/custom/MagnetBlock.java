@@ -43,13 +43,13 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
 
-		if (!(level instanceof ServerLevel)) {
+		if (!(level instanceof final ServerLevel serverLevel)) {
 			return;
 		}
 
 		// ----- Remove this block from the force appliers for the current level ----- //
 		// I guess VS does this automatically when switching a shipyards dimension?
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 		if (ships != null) {
 			//ships.removeDragger(pos);
 		}
@@ -70,10 +70,12 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 
-		if (!(level instanceof ServerLevel)) return;
+		if (!(level instanceof final ServerLevel serverLevel)) {
+			return;
+		}
 
 		int signal = level.getBestNeighborSignal(pos);
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 
 		if (ships != null) {
 			/*DraggerData data = ships.getDraggerAtPos(pos);

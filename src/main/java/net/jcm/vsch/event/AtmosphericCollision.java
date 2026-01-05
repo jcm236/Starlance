@@ -30,8 +30,6 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 public class AtmosphericCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
-	private static final TeleportationHandler TELEPORT_HANDLER = new TeleportationHandler(null, null, false);
-
 	/**
 	 * Checks all VS ships for the given level, if any of them are above their
 	 * dimensions atmosphere (as set in a CH datapack), they will be moved to the
@@ -61,8 +59,7 @@ public class AtmosphericCollision {
 		final Vec3 planetPos = planet.getPosition();
 		final double atmoHeight = levelData.getAtmosphereY();
 
-		final TeleportationHandler teleportHandler = TELEPORT_HANDLER;
-		teleportHandler.reset(level, targetLevel);
+		final TeleportationHandler teleportHandler = new TeleportationHandler(level, targetLevel, false);
 
 		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
 			if (ship.isStatic() || teleportHandler.hasShip(ship)) {
@@ -91,11 +88,16 @@ public class AtmosphericCollision {
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDimension.location(), targetPos.x, targetPos.y, targetPos.z);
 			teleportHandler.addShip(ship, targetPos, rotation);
 		}
-		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
-			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
-			final Vector3dc pos = ship.getTransform().getPositionInWorld();
-			landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
+		if (!teleportHandler.addedShip()) {
+			return;
 		}
-		teleportHandler.finalizeTeleport();
+		teleportHandler.afterShipsAdded().thenAcceptAsync((void_) -> {
+			for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
+				final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+				final Vector3dc pos = ship.getTransform().getPositionInWorld();
+				landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
+			}
+			teleportHandler.finalizeTeleport();
+		}, level.getServer());
 	}
 }

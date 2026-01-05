@@ -22,9 +22,10 @@ import org.joml.Vector3d;
 import org.joml.Quaterniond;
 import org.joml.primitives.AABBd;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.apigame.world.ServerShipWorldCore;
 import org.valkyrienskies.core.impl.game.ShipTeleportDataImpl;
+import org.valkyrienskies.core.internal.world.VsiServerShipWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
+import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,14 +59,15 @@ public class MixinPlaceplatformOnKeyPressedProcedure {
 			return;
 		}
 
-		final ServerShipWorldCore shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
+		final VsiServerShipWorld shipWorld = VSGameUtilsKt.getShipObjectWorld(level);
 		final String levelId = VSGameUtilsKt.getDimensionId(level);
 
 		final Vec3 view = entity.getViewVector(0);
 		final Vec3 target = entity.getEyePosition(0).add(view.scale(entity.getType().getWidth() + 1.2));
 
-		for (final ServerShip ship : shipWorld.getAllShips().getIntersecting(
-			new AABBd(target.x - 1.5, target.y - 1.5, target.z - 1.5, target.x + 1.5, target.y + 1.5, target.z + 1.5)
+		for (final ServerShip ship : shipWorld.getLoadedShips().getIntersecting(
+			new AABBd(target.x - 1.5, target.y - 1.5, target.z - 1.5, target.x + 1.5, target.y + 1.5, target.z + 1.5),
+			levelId
 		)) {
 			return;
 		}
@@ -95,6 +97,6 @@ public class MixinPlaceplatformOnKeyPressedProcedure {
 		final Vector3d velocity = new Vector3d();
 		final Vector3d omega = new Vector3d();
 
-		shipWorld.teleportShip(ship, new ShipTeleportDataImpl(position, rotation, velocity, omega, levelId, 1.0));
+		shipWorld.teleportShip(ship, ValkyrienSkiesMod.getVsCore().newShipTeleportData(position, rotation, velocity, omega, levelId, 1.0, ship.getTransform().getPositionInShip()));
 	}
 }

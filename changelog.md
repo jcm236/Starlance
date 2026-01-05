@@ -1,6 +1,8 @@
-## Features
+### Features
+Now compatible with Valkyrien Skies **2.4.0+**.
+We are **no longer compatible** with Valkyrien Skies 2.3.
 
-Starlance now uses Create 6.0.7+ instead of 0.5.1j.
-
-Please note that not all other VS addons will support Create 6 yet, 
-you may need to use Starlance 1.4.1 with them for the time being
+### Other changes
+- Updated to use the unified VS dimension-gravity api for cosmic dimensions
+- Updated teleport handler significantly
+- Set the default landing option to HISTORY. Configs will need to be changed/reset for this to take effect.

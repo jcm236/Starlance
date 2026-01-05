@@ -1,29 +1,36 @@
 package net.jcm.vsch.ship;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.Nullable;
-
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
-import net.jcm.vsch.ship.thruster.ThrusterData;
-import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
 import net.jcm.vsch.ship.gyro.GyroData;
 import net.jcm.vsch.ship.gyro.GyroForceApplier;
-import org.jetbrains.annotations.NotNull;
+import net.jcm.vsch.ship.thruster.ThrusterData;
+import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.ShipForcesInducer;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
+import org.jetbrains.annotations.NotNull;
+import org.valkyrienskies.core.api.ships.*;
+import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
-public class VSCHForceInducedShips implements ShipForcesInducer {
+@JsonAutoDetect(
+	fieldVisibility = JsonAutoDetect.Visibility.NONE,
+	isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+	getterVisibility = JsonAutoDetect.Visibility.NONE,
+	setterVisibility = JsonAutoDetect.Visibility.NONE
+)
+public final class VSCHForceInducedShips implements ShipPhysicsListener {
 
 	/**
 	 * Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.
@@ -32,35 +39,27 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 	 */
 	public Map<BlockPos, IVSCHForceApplier> appliers = new ConcurrentHashMap<>();
 
-
-	private String dimensionId = null;
-
 	public VSCHForceInducedShips() {}
 
-	public VSCHForceInducedShips(String dimensionId) {
-		this.dimensionId = dimensionId;
-	}
-
 	@Override
-	public void applyForces(@NotNull PhysShip physicShip) {
-		PhysShipImpl physShip = (PhysShipImpl) physicShip;
-		appliers.forEach((pos,applier) -> {
-			applier.applyForces(pos,physShip);
+	public void physTick(@NotNull PhysShip ship, @NotNull PhysLevel physLevel) {
+		appliers.forEach((pos, applier) -> {
+			applier.applyForces(pos, ship, physLevel);
 		});
 	}
 
 	// ----- Force Appliers ----- //
 
-	public void addApplier(BlockPos pos, IVSCHForceApplier applier){
+	public void addApplier(BlockPos pos, IVSCHForceApplier applier) {
 		appliers.put(pos, applier);
 	}
 
-	public void removeApplier(BlockPos pos){
+	public void removeApplier(BlockPos pos) {
 		appliers.remove(pos);
 	}
 
 	@Nullable
-	public IVSCHForceApplier getApplierAtPos(BlockPos pos){
+	public IVSCHForceApplier getApplierAtPos(BlockPos pos) {
 		return appliers.get(pos);
 	}
 
@@ -134,27 +133,17 @@ public class VSCHForceInducedShips implements ShipForcesInducer {
 
 	// ----- Force induced ships ----- //
 
-	public static VSCHForceInducedShips getOrCreate(ServerShip ship, String dimensionId) {
+	public static VSCHForceInducedShips get(LoadedServerShip ship) {
 		VSCHForceInducedShips attachment = ship.getAttachment(VSCHForceInducedShips.class);
 		if (attachment == null) {
-			attachment = new VSCHForceInducedShips(dimensionId);
-			ship.saveAttachment(VSCHForceInducedShips.class, attachment);
+			attachment = new VSCHForceInducedShips();
+			ship.setAttachment(attachment);
 		}
 		return attachment;
 	}
 
-	public static VSCHForceInducedShips getOrCreate(ServerShip ship) {
-		return getOrCreate(ship, ship.getChunkClaimDimension());
-	}
-
-	public static VSCHForceInducedShips get(Level level, BlockPos pos) {
-		ServerLevel serverLevel = (ServerLevel) level;
-		// Don't ask, I don't know
-		ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, pos);
-		if (ship == null) {
-			ship = VSGameUtilsKt.getShipManagingPos(serverLevel, pos);
-		}
-		// Seems counter-intutive at first. But basically, it returns null if it wasn't a ship. Otherwise, it gets the attachment OR creates and then gets it
-		return ship != null ? getOrCreate(ship) : null;
+	public static VSCHForceInducedShips get(ServerLevel level, BlockPos pos) {
+		LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(level, pos);
+		return ship != null ? get(ship) : null;
 	}
 }

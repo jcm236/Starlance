@@ -21,13 +21,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -107,6 +105,8 @@ public class PlanetCollision {
 
 			{
 				final TeleportationHandler handler = handlers.get(targetDimension);
+				// TODO: hasShip will always returns false, since ships won't get added until next tick.
+				// It is not a critical problem, because TeleportHandler internally will ignore duplicated ships.
 				if (handler != null && handler.hasShip(ship)) {
 					continue;
 				}
@@ -130,7 +130,7 @@ public class PlanetCollision {
 			if (landingAttachment.launching && distance > 0) {
 				continue;
 			}
-			if (!landingAttachment.freezed && ship.isStatic()) {
+			if (!landingAttachment.frozen && ship.isStatic()) {
 				// Ignore static ships to allow build ring around planets? (why will people do that)
 				continue;
 			}
@@ -193,7 +193,6 @@ public class PlanetCollision {
 			}
 
 			final int accuracy = isFirstLand ? firstLandingAccuracy : landingAccuracy;
-			System.out.println("accuracy: " + accuracy);
 
 			final Vector2i addPos = VSCHUtils.randomPosOnSqaureRing(level.random, accuracy, new Vector2i());
 			final Vector3d newPos = new Vector3d(
@@ -215,12 +214,14 @@ public class PlanetCollision {
 		}
 
 		for (final TeleportationHandler handler : handlers.values()) {
-			for (final LoadedServerShip ship : handler.getPendingShips()) {
-				final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-				attachment.freezed = false;
-				attachment.setLanding();
-			}
-			handler.finalizeTeleport();
+			handler.afterShipsAdded().thenAcceptAsync((void_) -> {
+				for (final LoadedServerShip ship : handler.getPendingShips()) {
+					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+					attachment.frozen = false;
+					attachment.setLanding();
+				}
+				handler.finalizeTeleport();
+			}, level.getServer());
 		}
 
 		for (final Map.Entry<ServerPlayer, LevelData.ClosestPlanetData> entry : gravityDistances.entrySet()) {
@@ -248,8 +249,14 @@ public class PlanetCollision {
 		if (vars == null || vars.landing_coords.equals("^") || vars.landing_coords.equals("=")) {
 			return null;
 		}
-		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
-		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
+		final int xStart = vars.landing_coords.indexOf("*");
+		final int zStart = vars.landing_coords.indexOf("|");
+		final int zEnd = vars.landing_coords.indexOf("~");
+		if (xStart == -1 || zStart == -1 || zEnd == -1) {
+			return null;
+		}
+		final double posX = Double.parseDouble(vars.landing_coords.substring(xStart + 1, zStart));
+		final double posZ = Double.parseDouble(vars.landing_coords.substring(zStart + 1, zEnd));
 		vars.landing_coords = "^";
 		vars.check_collision = true;
 		vars.syncPlayerVariables(player);

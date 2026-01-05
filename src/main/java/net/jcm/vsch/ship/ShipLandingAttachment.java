@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +32,7 @@ public final class ShipLandingAttachment {
 	public ServerPlayer commander = null;
 
 	@JsonProperty
-	public boolean freezed = false;
+	public boolean frozen = false;
 	public Vector3dc velocity = null;
 	public Vector3dc omega = null;
 
@@ -41,11 +40,11 @@ public final class ShipLandingAttachment {
 
 	public ShipLandingAttachment() {}
 
-	public static ShipLandingAttachment get(final ServerShip ship) {
+	public static ShipLandingAttachment get(final LoadedServerShip ship) {
 		ShipLandingAttachment attachment = ship.getAttachment(ShipLandingAttachment.class);
 		if (attachment == null) {
 			attachment = new ShipLandingAttachment();
-			ship.saveAttachment(ShipLandingAttachment.class, attachment);
+			ship.setAttachment(attachment);
 		}
 		return attachment;
 	}
@@ -78,7 +77,7 @@ public final class ShipLandingAttachment {
 	}
 
 	public void freezeShip(final LoadedServerShip ship) {
-		this.freezed = true;
+		this.frozen = true;
 		this.velocity = new Vector3d(ship.getVelocity());
 		this.omega = new Vector3d(ship.getOmega());
 		ship.setStatic(true);

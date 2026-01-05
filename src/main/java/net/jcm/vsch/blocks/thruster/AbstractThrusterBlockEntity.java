@@ -60,6 +60,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	private static final String BRAIN_POS_TAG_NAME = "BrainPos";
 	private static final String BRAIN_DATA_TAG_NAME = "BrainData";
+	private static final String MODE_TAG_NAME = "Mode";
 
 	private final Direction facing;
 	private ThrusterBrain brain;
@@ -121,17 +122,14 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	public void load(final CompoundTag data) {
 		super.load(data);
 		final BlockPos pos = this.getBlockPos();
-		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_BYTE_ARRAY)) {
-			// TODO: remove in the next version
-			final byte[] offset = data.getByteArray(BRAIN_POS_TAG_NAME);
-			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
-		} else if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_INT_ARRAY)) {
+		if (data.contains(BRAIN_POS_TAG_NAME, Tag.TAG_INT_ARRAY)) {
 			final int[] offset = data.getIntArray(BRAIN_POS_TAG_NAME);
 			this.brainPos = pos.offset(offset[0], offset[1], offset[2]);
 		} else if (data.contains(BRAIN_DATA_TAG_NAME, Tag.TAG_COMPOUND)) {
 			this.brain.readFromNBT(data.getCompound(BRAIN_DATA_TAG_NAME));
 			this.brainNeedInit = true;
 		}
+		this.brain.setThrusterModeNoUpdate(ThrusterData.ThrusterMode.values()[data.getByte(MODE_TAG_NAME)]);
 	}
 
 	@Override
@@ -153,6 +151,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			final BlockPos offset = dataPos.subtract(selfPos);
 			data.putIntArray(BRAIN_POS_TAG_NAME, new int[]{offset.getX(), offset.getY(), offset.getZ()});
 		}
+		data.putByte(MODE_TAG_NAME, (byte) (this.getThrusterMode().ordinal()));
 	}
 
 	@Override
@@ -200,18 +199,23 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	private void resolveBrain() {
 		final Level level = this.getLevel();
 		final BlockEntity be = level.getBlockEntity(this.brainPos);
-		if (be instanceof AbstractThrusterBlockEntity thruster) {
+		if (be instanceof final AbstractThrusterBlockEntity thruster) {
 			if (thruster.brainNeedInit) {
 				thruster.searchThrusters();
 			}
-			if (this.brainPos != null) {
-				if (level.isClientSide) {
-					return;
+			if (level.isClientSide) {
+				if (thruster.getBrain().tryMergeBrain(this.brain)) {
+					this.brainPos = null;
 				}
+				return;
+			}
+			// Thruster may not connect after load, if so create a new group
+			if (this.brainPos != null) {
 				this.brainPos = null;
 				this.searchThrusters();
 			}
-		} else if (this.getLevel() instanceof ServerLevel) {
+		} else if (!this.getLevel().isClientSide) {
+			// Do not clear brainPos on client, since chunks do not load at same time.
 			LOGGER.debug("[starlance]: Thruster brain at {} for {} is not found", this.brainPos, this.getBlockPos());
 			this.brainPos = null;
 			this.setChanged();
@@ -221,8 +225,16 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	private void searchThrusters() {
 		this.brainNeedInit = false;
 		final Level level = this.getLevel();
+		if (level.isClientSide) {
+			// On client, other thrusters join main thruster by themselves, connection check is not needed.
+			return;
+		}
 		bfs(this.getBlockPos(), (otherPos) -> {
-			if (!(level.getBlockEntity(otherPos) instanceof final AbstractThrusterBlockEntity other) || other.brainPos == null || !this.canMerge(other)) {
+			if (
+				!(level.getBlockEntity(otherPos) instanceof final AbstractThrusterBlockEntity other) ||
+				other.brainPos == null ||
+				!this.canMerge(other)
+			) {
 				return false;
 			}
 			if (other.brainPos.equals(this.brainPos)) {
@@ -235,11 +247,11 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 				other.brainPos = null;
 				return false;
 			}
-			final boolean ok = this.brain.tryMergeBrain(other.getBrain());
-			if (ok) {
-				other.brainPos = null;
+			if (!this.brain.tryMergeBrain(other.getBrain())) {
+				return false;
 			}
-			return ok;
+			other.brainPos = null;
+			return true;
 		});
 	}
 

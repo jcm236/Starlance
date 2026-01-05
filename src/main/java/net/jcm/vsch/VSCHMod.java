@@ -15,6 +15,10 @@ import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.network.VSCHNetwork;
+import net.jcm.vsch.ship.ShipLandingAttachment;
+import net.jcm.vsch.ship.VSCHForceInducedShips;
+
+import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,6 +44,12 @@ public class VSCHMod {
 		VSCHServerConfig.register(context);
 		VSCHTab.register(modBus);
 		VSCHTags.register();
+
+		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
+		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
+			builder.useTransientSerializer();
+			return null; // blame kotlin
+		});
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);

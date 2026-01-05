@@ -40,7 +40,6 @@ import java.util.stream.Stream;
 // TODO: make sure it also works when only half thrusters is chunk loaded
 public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapabilityProvider {
 	private static final String THRUSTERS_COUNT_TAG_NAME = "ThrustersCount";
-	private static final String MODE_TAG_NAME = "Mode";
 	private static final String POWER_TAG_NAME = "Power";
 	private static final String CURRENT_POWER_TAG_NAME = "CurrentPower";
 	private static final String PERIPHERAL_MOD_TAG_NAME = "PeripheralMode";
@@ -114,12 +113,20 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		this.connectedBlocks.add(be);
 	}
 
+	public ThrusterData.ThrusterMode getThrusterMode() {
+		return this.thrusterData.mode;
+	}
+
 	public void setThrusterMode(ThrusterData.ThrusterMode mode) {
 		if (this.thrusterData.mode == mode) {
 			return;
 		}
 		this.thrusterData.mode = mode;
 		this.getDataBlock().sendUpdate();
+	}
+
+	void setThrusterModeNoUpdate(ThrusterData.ThrusterMode mode) {
+		this.thrusterData.mode = mode;
 	}
 
 	public double getCurrentPower() {
@@ -174,10 +181,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		return this.connectedBlocks.get(0);
 	}
 
-	public ThrusterData.ThrusterMode getThrusterMode() {
-		return this.thrusterData.mode;
-	}
-
 	public ThrusterData getThrusterData() {
 		return this.thrusterData;
 	}
@@ -199,7 +202,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 
 	public void readFromNBT(final CompoundTag data) {
 		final int count = data.getInt(THRUSTERS_COUNT_TAG_NAME);
-		this.thrusterData.mode = ThrusterData.ThrusterMode.values()[data.getByte(MODE_TAG_NAME)];
 		this.power = Math.min(Math.max(data.getDouble(POWER_TAG_NAME), 0), 1);
 		this.currentPower = data.getDouble(CURRENT_POWER_TAG_NAME);
 		this.isPeripheralMode = CompatMods.COMPUTERCRAFT.isLoaded() && data.getBoolean(PERIPHERAL_MOD_TAG_NAME);
@@ -220,7 +222,6 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 
 	public CompoundTag writeToNBT(final CompoundTag data) {
 		data.putInt(THRUSTERS_COUNT_TAG_NAME, this.connectedBlocks.size());
-		data.putByte(MODE_TAG_NAME, (byte) (this.thrusterData.mode.ordinal()));
 		data.putDouble(POWER_TAG_NAME, this.getPower());
 		data.putDouble(CURRENT_POWER_TAG_NAME, this.getCurrentPower());
 		data.putBoolean(PERIPHERAL_MOD_TAG_NAME, this.getPeripheralMode());
@@ -277,7 +278,7 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 	public void neighborChanged(final AbstractThrusterBlockEntity thruster, final Block block, final BlockPos pos, final boolean moving) {
 		final Level level = thruster.getLevel();
 		final BlockEntity changed = level.getBlockEntity(pos);
-		if (changed instanceof AbstractThrusterBlockEntity newThruster) {
+		if (changed instanceof final AbstractThrusterBlockEntity newThruster) {
 			// TODO: check if facing changed
 			final ThrusterBrain newBrain = newThruster.getBrain();
 			if (newBrain != this) {
@@ -307,10 +308,19 @@ public class ThrusterBrain implements IEnergyStorage, IFluidHandler, ICapability
 		if (this.facing.getAxis().choose(otherPos.getX() - selfPos.getX(), otherPos.getY() - selfPos.getY(), otherPos.getZ() - selfPos.getZ()) != 0) {
 			return false;
 		}
-		return this.peripheralType.equals(other.peripheralType) && this.getThrusterMode() == other.getThrusterMode();
+		if (!this.peripheralType.equals(other.peripheralType)) {
+			return false;
+		}
+		if (this.getThrusterMode() != other.getThrusterMode()) {
+			return false;
+		}
+		return true;
 	}
 
 	boolean tryMergeBrain(final ThrusterBrain other) {
+		if (this == other) {
+			return true;
+		}
 		if (!this.canMerge(other)) {
 			return false;
 		}
