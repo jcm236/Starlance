@@ -21,13 +21,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -132,7 +130,7 @@ public class PlanetCollision {
 			if (landingAttachment.launching && distance > 0) {
 				continue;
 			}
-			if (!landingAttachment.freezed && ship.isStatic()) {
+			if (!landingAttachment.frozen && ship.isStatic()) {
 				// Ignore static ships to allow build ring around planets? (why will people do that)
 				continue;
 			}
@@ -219,7 +217,7 @@ public class PlanetCollision {
 			handler.afterShipsAdded().thenAcceptAsync((void_) -> {
 				for (final LoadedServerShip ship : handler.getPendingShips()) {
 					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-					attachment.freezed = false;
+					attachment.frozen = false;
 					attachment.setLanding();
 				}
 				handler.finalizeTeleport();

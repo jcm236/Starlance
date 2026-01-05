@@ -32,7 +32,7 @@ public final class ShipLandingAttachment {
 	public ServerPlayer commander = null;
 
 	@JsonProperty
-	public boolean freezed = false;
+	public boolean frozen = false;
 	public Vector3dc velocity = null;
 	public Vector3dc omega = null;
 
@@ -77,7 +77,7 @@ public final class ShipLandingAttachment {
 	}
 
 	public void freezeShip(final LoadedServerShip ship) {
-		this.freezed = true;
+		this.frozen = true;
 		this.velocity = new Vector3d(ship.getVelocity());
 		this.omega = new Vector3d(ship.getOmega());
 		ship.setStatic(true);

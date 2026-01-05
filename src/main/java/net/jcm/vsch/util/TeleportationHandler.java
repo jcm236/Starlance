@@ -12,7 +12,6 @@ import com.github.litermc.vtil.util.TaskUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -30,12 +29,7 @@ import org.joml.primitives.AABBdc;
 import org.joml.primitives.AABBic;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.QueryableShipData;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.ServerShipTransformProvider;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.impl.game.ships.ShipTransformImpl;
 import org.valkyrienskies.core.internal.ShipTeleportData;
 import org.valkyrienskies.core.internal.physics.PhysicsEntityServer;
 import org.valkyrienskies.core.internal.world.VsiPhysLevel;
@@ -48,11 +42,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 public class TeleportationHandler {
 
@@ -160,7 +151,7 @@ public class TeleportationHandler {
 		}
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
-		if (ship.isStatic() && landingAttachment.freezed) {
+		if (ship.isStatic() && landingAttachment.frozen) {
 			velocity = landingAttachment.velocity;
 			omega = landingAttachment.omega;
 		} else {
