@@ -83,7 +83,7 @@ license = "${mod_license}"
 [[dependencies.${mod_id}]]
 	modId = "vtil"
 	mandatory = true
-	versionRange = "[0.2.0,)"
+	versionRange = "[0.5.0,)"
 	ordering = "AFTER"
 	side = "BOTH"
 
