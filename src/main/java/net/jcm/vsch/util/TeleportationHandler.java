@@ -256,7 +256,7 @@ public class TeleportationHandler {
 		// Note: collected list will grow during the loop
 		for (int i = 0; i < physShips.size(); i++) {
 			final PhysShip ship = physShips.get(i);
-			final AABBdc shipBox = ship.getWorldAABB();
+			final AABBdc shipBox = ShipQuerier.getShipWorldBox(ship);
 			final AABBd box = new AABBd(
 				shipBox.minX() - SHIP_COLLECT_RANGE, shipBox.minY() - SHIP_COLLECT_RANGE, shipBox.minZ() - SHIP_COLLECT_RANGE,
 				shipBox.maxX() + SHIP_COLLECT_RANGE, shipBox.maxY() + SHIP_COLLECT_RANGE, shipBox.maxZ() + SHIP_COLLECT_RANGE
