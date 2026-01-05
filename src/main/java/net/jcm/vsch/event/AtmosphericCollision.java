@@ -1,17 +1,20 @@
 package net.jcm.vsch.event;
 
 import net.jcm.vsch.VSCHMod;
+import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
 import net.lointain.cosmos.network.CosmosModVariables;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.joml.Quaterniond;
 import org.joml.Vector3d;
-import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
@@ -51,8 +54,16 @@ public class AtmosphericCollision {
 
 		final TeleportationHandler teleportHandler = new TeleportationHandler(targetLevel, level, false);
 
-		for (final Ship ship : VSCHUtils.getLoadedShipsInLevel(level)) {
-			if (ship.getTransform().getPositionInWorld().y() <= atmoHeight) {
+		for (final LoadedServerShip ship : VSCHUtils.getLoadedShipsInLevel(level)) {
+			final double shipY = ship.getTransform().getPositionInWorld().y();
+			final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+			if (shipY < atmoHeight - 10) {
+				if (landingAttachment != null) {
+					ship.saveAttachment(ShipLandingAttachment.class, null);
+				}
+				continue;
+			}
+			if (landingAttachment != null && landingAttachment.landing && shipY < atmoHeight + 128) {
 				continue;
 			}
 
@@ -63,7 +74,10 @@ public class AtmosphericCollision {
 			double posZ = targetZ; // + Mth.nextInt(RandomSource.create(), -10, 10)
 
 			LOGGER.info("[starlance]: Handling teleport {} ({}) to {} {} {} {}", ship.getSlug(), ship.getId(), targetDim, posX, posY, posZ);
-			teleportHandler.handleTeleport(ship, new Vector3d(posX, posY, posZ));
+			ship.saveAttachment(ShipLandingAttachment.class, new ShipLandingAttachment(true));
+			// TODO: map ship loaction around the planet instead of always spawn at same location
+			teleportHandler.addShip(ship, new Vector3d(posX, posY, posZ), new Quaterniond());
 		}
+		teleportHandler.finalizeTeleport();
 	}
 }

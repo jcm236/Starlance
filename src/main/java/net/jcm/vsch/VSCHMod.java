@@ -10,9 +10,10 @@ import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
 import net.jcm.vsch.config.VSCHConfig;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.event.GravityInducer;
-import net.jcm.vsch.fluids.VSCHFluidTypes;
-import net.jcm.vsch.fluids.VSCHFluids;
+import net.jcm.vsch.fluid.VSCHFluidTypes;
+import net.jcm.vsch.fluid.VSCHFluids;
 import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.util.assemble.MoveUtil;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -28,6 +29,7 @@ import org.valkyrienskies.core.impl.hooks.VSEvents;
 @Mod(VSCHMod.MODID)
 public class VSCHMod {
 	public static final String MODID = "vsch";
+	public static final String VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
 
 	public VSCHMod() {
 		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -41,6 +43,7 @@ public class VSCHMod {
 		VSCHTags.register();
 		VSCHFluidTypes.register(modBus);
 		VSCHFluids.register(modBus);
+		VSCHNetwork.register();
 
 		MoveUtil.registerDefaultMovers();
 

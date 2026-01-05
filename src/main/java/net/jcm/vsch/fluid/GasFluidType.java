@@ -1,4 +1,4 @@
-package net.jcm.vsch.fluids;
+package net.jcm.vsch.fluid;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
