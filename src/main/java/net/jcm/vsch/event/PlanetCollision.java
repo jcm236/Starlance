@@ -251,8 +251,14 @@ public class PlanetCollision {
 		if (vars == null || vars.landing_coords.equals("^") || vars.landing_coords.equals("=")) {
 			return null;
 		}
-		final double posX = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("*") + 1, vars.landing_coords.indexOf("|")));
-		final double posZ = Double.parseDouble(vars.landing_coords.substring(vars.landing_coords.indexOf("|") + 1, vars.landing_coords.indexOf("~")));
+		final int xStart = vars.landing_coords.indexOf("*");
+		final int zStart = vars.landing_coords.indexOf("|");
+		final int zEnd = vars.landing_coords.indexOf("~");
+		if (xStart == -1 || zStart == -1 || zEnd == -1) {
+			return null;
+		}
+		final double posX = Double.parseDouble(vars.landing_coords.substring(xStart + 1, zStart));
+		final double posZ = Double.parseDouble(vars.landing_coords.substring(zStart + 1, zEnd));
 		vars.landing_coords = "^";
 		vars.check_collision = true;
 		vars.syncPlayerVariables(player);

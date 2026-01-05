@@ -6,6 +6,7 @@ import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import com.github.litermc.vtil.api.connectivity.ShipConnectivityApi;
 import com.github.litermc.vtil.api.teleport.TeleportUtil;
+import com.github.litermc.vtil.util.ShipQuerier;
 import com.github.litermc.vtil.util.TaskUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -44,6 +45,7 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -110,7 +112,6 @@ public class TeleportationHandler {
 		final Vector3dc origin = ship.getTransform().getPositionInWorld();
 		this.addingShips.add(
 			this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected)
-				.thenComposeAsync((void_) -> this.collectNearbyShips(collected, origin, newPos, rotation), this.oldLevel.getServer())
 				.thenAcceptAsync((void_) -> {
 					this.collectNearbyEntities(collected, origin, newPos, rotation);
 					this.finalizeCollect(collected, rotation);
@@ -235,35 +236,49 @@ public class TeleportationHandler {
 				}
 			}
 		}, this.oldLevel.getServer());
-		TaskUtil.queuePhysicsTick(this.oldLevel, (world) -> {
-			final Set<PhysShip> ships = ShipConnectivityApi.getAllConnectedShipsAndSelf((VsiPhysLevel) world, shipId);
+		TaskUtil.queuePhysicsTick(this.oldLevel, (world0) -> {
+			final VsiPhysLevel world = (VsiPhysLevel) world0;
+			final List<PhysShip> ships = new ArrayList<>();
+			ships.add(world.getShipById(shipId));
+			this.collectConnectedAndNearbyShips(world, ships);
 			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).toArray());
 		});
 		return collectFuture;
 	}
 
-	private CompletableFuture<Void> collectNearbyShips(final List<Long> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
-		final QueryableShipData<LoadedServerShip> loadedShips = this.shipWorld.getLoadedShips();
-		final Vector3d offset = newPos.sub(origin, new Vector3d());
-		final List<CompletableFuture<Void>> futures = new ArrayList<>();
-		// Note: ~~collected list will grow during the loop~~
-		// Note: right now collected does not grow in the loop, since collecting is async
-		//  which means only the neighbours will be collected, but not neighbours' neighbour.
-		for (int i = 0; i < collected.size(); i++) {
-			final ServerShip oldShip = this.getOldShip(collected.get(i));
-			if (oldShip == null) {
-				continue;
-			}
-			final AABBdc shipBox = oldShip.getWorldAABB();
+	private void collectConnectedAndNearbyShips(
+		final VsiPhysLevel world,
+		final List<PhysShip> physShips
+	) {
+		final Set<PhysShip> physShipSet = new HashSet<>(physShips);
+		final Set<PhysShip> connectedShips = new HashSet<>();
+		final List<PhysShip> intersectShips = new ArrayList<>();
+		// Note: collected list will grow during the loop
+		for (int i = 0; i < physShips.size(); i++) {
+			final PhysShip ship = physShips.get(i);
+			final AABBdc shipBox = ship.getWorldAABB();
 			final AABBd box = new AABBd(
 				shipBox.minX() - SHIP_COLLECT_RANGE, shipBox.minY() - SHIP_COLLECT_RANGE, shipBox.minZ() - SHIP_COLLECT_RANGE,
-				shipBox.maxX() + SHIP_COLLECT_RANGE, shipBox.maxY() + SHIP_COLLECT_RANGE, shipBox.maxZ() + SHIP_COLLECT_RANGE);
-			for (final ServerShip ship : loadedShips.getIntersecting(box, this.oldLevelId)) {
-				final CompletableFuture<Void> future = this.collectShipAndConnected(ship.getId(), origin, newPos, rotation, collected);
-				futures.add(future);
+				shipBox.maxX() + SHIP_COLLECT_RANGE, shipBox.maxY() + SHIP_COLLECT_RANGE, shipBox.maxZ() + SHIP_COLLECT_RANGE
+			);
+			ShipConnectivityApi.getAllConnectedShipsAndSelf(world, ship.getId(), connectedShips);
+			for (final PhysShip other : connectedShips) {
+				if (physShipSet.add(other)) {
+					physShips.add(other);
+				}
 			}
+			connectedShips.clear();
+			ShipQuerier.getIntersecting(
+				world,
+				this.oldLevelId,
+				box,
+				(other) -> !physShipSet.contains(other),
+				intersectShips
+			);
+			physShipSet.addAll(intersectShips);
+			physShips.addAll(intersectShips);
+			intersectShips.clear();
 		}
-		return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]));
 	}
 
 	private void collectNearbyEntities(final List<Long> collected, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation) {
