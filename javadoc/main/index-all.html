@@ -31,7 +31,6 @@ loadScripts(document, 'script');</script>
 <li>Package</li>
 <li>Class</li>
 <li><a href="overview-tree.html">Tree</a></li>
-<li><a href="deprecated-list.html">Deprecated</a></li>
 <li class="nav-bar-cell1-rev">Index</li>
 <li><a href="help-doc.html#index">Help</a></li>
 </ul>
@@ -69,6 +68,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addDragger(net.minecraft.core.BlockPos,net.jcm.vsch.ship.dragger.DraggerData)" class="member-name-link">addDragger(BlockPos, DraggerData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#addedShip()" class="member-name-link">addedShip()</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/EmptyChunkAccess.html#addEntity(net.minecraft.world.entity.Entity)" class="member-name-link">addEntity(Entity)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/EmptyChunkAccess.html" title="class in net.jcm.vsch.util">EmptyChunkAccess</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addGyro(net.minecraft.core.BlockPos,net.jcm.vsch.ship.gyro.GyroData)" class="member-name-link">addGyro(BlockPos, GyroData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
@@ -78,6 +79,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#addShipWithVelocity(org.valkyrienskies.core.api.ships.ServerShip,org.joml.Vector3dc,org.joml.Quaterniondc,org.joml.Vector3dc,org.joml.Vector3dc)" class="member-name-link">addShipWithVelocity(ServerShip, Vector3dc, Quaterniondc, Vector3dc, Vector3dc)</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#addThruster(net.minecraft.core.BlockPos,net.jcm.vsch.ship.thruster.ThrusterData)" class="member-name-link">addThruster(BlockPos, ThrusterData)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#afterShipsAdded()" class="member-name-link">afterShipsAdded()</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/VSCHBlocks.html#AIR_THRUSTER_BLOCK" class="member-name-link">AIR_THRUSTER_BLOCK</a> - Static variable in class net.jcm.vsch.blocks.<a href="net/jcm/vsch/blocks/VSCHBlocks.html" title="class in net.jcm.vsch.blocks">VSCHBlocks</a></dt>
 <dd>&nbsp;</dd>
@@ -115,17 +118,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Don't mess with this unless you know what your doing.</div>
 </dd>
-<dt><a href="net/jcm/vsch/event/GravityInducer.html#applyForces(org.valkyrienskies.core.api.ships.PhysShip)" class="member-name-link">applyForces(PhysShip)</a> - Method in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
+<dt><a href="net/jcm/vsch/ship/dragger/DraggerForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.api.ships.PhysShip,org.valkyrienskies.core.api.world.PhysLevel)" class="member-name-link">applyForces(BlockPos, PhysShip, PhysLevel)</a> - Method in class net.jcm.vsch.ship.dragger.<a href="net/jcm/vsch/ship/dragger/DraggerForceApplier.html" title="class in net.jcm.vsch.ship.dragger">DraggerForceApplier</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#applyForces(org.valkyrienskies.core.api.ships.PhysShip)" class="member-name-link">applyForces(PhysShip)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
+<dt><a href="net/jcm/vsch/ship/gyro/GyroForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.api.ships.PhysShip,org.valkyrienskies.core.api.world.PhysLevel)" class="member-name-link">applyForces(BlockPos, PhysShip, PhysLevel)</a> - Method in class net.jcm.vsch.ship.gyro.<a href="net/jcm/vsch/ship/gyro/GyroForceApplier.html" title="class in net.jcm.vsch.ship.gyro">GyroForceApplier</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/dragger/DraggerForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.impl.game.ships.PhysShipImpl)" class="member-name-link">applyForces(BlockPos, PhysShipImpl)</a> - Method in class net.jcm.vsch.ship.dragger.<a href="net/jcm/vsch/ship/dragger/DraggerForceApplier.html" title="class in net.jcm.vsch.ship.dragger">DraggerForceApplier</a></dt>
+<dt><a href="net/jcm/vsch/ship/IVSCHForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.api.ships.PhysShip,org.valkyrienskies.core.api.world.PhysLevel)" class="member-name-link">applyForces(BlockPos, PhysShip, PhysLevel)</a> - Method in interface net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/gyro/GyroForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.impl.game.ships.PhysShipImpl)" class="member-name-link">applyForces(BlockPos, PhysShipImpl)</a> - Method in class net.jcm.vsch.ship.gyro.<a href="net/jcm/vsch/ship/gyro/GyroForceApplier.html" title="class in net.jcm.vsch.ship.gyro">GyroForceApplier</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/IVSCHForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.impl.game.ships.PhysShipImpl)" class="member-name-link">applyForces(BlockPos, PhysShipImpl)</a> - Method in interface net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/thruster/ThrusterForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.impl.game.ships.PhysShipImpl)" class="member-name-link">applyForces(BlockPos, PhysShipImpl)</a> - Method in class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterForceApplier.html" title="class in net.jcm.vsch.ship.thruster">ThrusterForceApplier</a></dt>
+<dt><a href="net/jcm/vsch/ship/thruster/ThrusterForceApplier.html#applyForces(net.minecraft.core.BlockPos,org.valkyrienskies.core.api.ships.PhysShip,org.valkyrienskies.core.api.world.PhysLevel)" class="member-name-link">applyForces(BlockPos, PhysShip, PhysLevel)</a> - Method in class net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterForceApplier.html" title="class in net.jcm.vsch.ship.thruster">ThrusterForceApplier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/CompatMods.html#asId()" class="member-name-link">asId()</a> - Method in enum class net.jcm.vsch.compat.<a href="net/jcm/vsch/compat/CompatMods.html" title="enum class in net.jcm.vsch.compat">CompatMods</a></dt>
 <dd>&nbsp;</dd>
@@ -137,15 +136,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html#ASSEMBLE_SUCCESS_EVENT_ID" class="member-name-link">ASSEMBLE_SUCCESS_EVENT_ID</a> - Static variable in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerPeripheral.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerPeripheral</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/ShipUtils.html#assembleBlock(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">assembleBlock(ServerLevel, BlockPos)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
-<dd>
-<div class="block">This function IS safe to use in space, but only assembles a single block.</div>
-</dd>
-<dt><a href="net/jcm/vsch/util/ShipUtils.html#assembleBlocks(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,int,int,int)" class="member-name-link">assembleBlocks(ServerLevel, BlockPos, int, int, int)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
-<dd>
-<div class="block"><b>Warning:</b> This function is still affected by the height bug that other addons have,
- and so can't be used in space.</div>
-</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html" class="type-name-link" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleLED</a> - Enum Class in <a href="net/jcm/vsch/blocks/rocketassembler/package-summary.html">net.jcm.vsch.blocks.rocketassembler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/VSCHServerConfig.html#ASSEMBLER_ENERGY_CONSUMPTION" class="member-name-link">ASSEMBLER_ENERGY_CONSUMPTION</a> - Static variable in class net.jcm.vsch.config.<a href="net/jcm/vsch/config/VSCHServerConfig.html" title="class in net.jcm.vsch.config">VSCHServerConfig</a></dt>
@@ -509,22 +499,24 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html#FLUID_METHODS" class="member-name-link">FLUID_METHODS</a> - Static variable in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/CCGenerics.html" title="class in net.jcm.vsch.compat.cc.peripherals">CCGenerics</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#freezed" class="member-name-link">freezed</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#freezeShip(org.valkyrienskies.core.api.ships.LoadedServerShip)" class="member-name-link">freezeShip(LoadedServerShip)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/resource/TextureLocation.html#fromNonStandardSize(net.minecraft.resources.ResourceLocation,int,int,int)" class="member-name-link">fromNonStandardSize(ResourceLocation, int, int, int)</a> - Static method in record class net.jcm.vsch.api.resource.<a href="net/jcm/vsch/api/resource/TextureLocation.html" title="class in net.jcm.vsch.api.resource">TextureLocation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#frozen" class="member-name-link">frozen</a> - Variable in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#get(net.minecraft.core.Direction)" class="member-name-link">get(Direction)</a> - Method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#get(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">get(ServerLevel, BlockPos)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/wapi/LevelData.html#get(net.minecraft.world.level.Level)" class="member-name-link">get(Level)</a> - Static method in class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/LevelData.html" title="class in net.jcm.vsch.util.wapi">LevelData</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#get(net.minecraft.world.level.Level,net.minecraft.core.BlockPos)" class="member-name-link">get(Level, BlockPos)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
+<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#get(org.valkyrienskies.core.api.ships.LoadedServerShip)" class="member-name-link">get(LoadedServerShip)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/ShipLandingAttachment.html#get(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">get(ServerShip)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/ShipLandingAttachment.html" title="class in net.jcm.vsch.ship">ShipLandingAttachment</a></dt>
+<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#get(org.valkyrienskies.core.api.ships.LoadedServerShip)" class="member-name-link">get(LoadedServerShip)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/wapi/LevelData.html#get0(net.minecraft.world.level.Level)" class="member-name-link">get0(Level)</a> - Static method in class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/LevelData.html" title="class in net.jcm.vsch.util.wapi">LevelData</a></dt>
 <dd>&nbsp;</dd>
@@ -572,10 +564,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#getCapability(net.minecraftforge.common.capabilities.Capability,net.minecraft.core.Direction)" class="member-name-link">getCapability(Capability&lt;T&gt;, Direction)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html#getConstraints()" class="member-name-link">getConstraints()</a> - Method in interface net.jcm.vsch.mixin.valkyrienskies.accessor.<a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html" title="interface in net.jcm.vsch.mixin.valkyrienskies.accessor">ServerShipObjectWorldAccessor</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html#getCoreRotation(float)" class="member-name-link">getCoreRotation(float)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GyroBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#getCurrentPower()" class="member-name-link">getCurrentPower()</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
@@ -700,10 +688,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/event/PreShipTravelEvent.html#getOmega()" class="member-name-link">getOmega()</a> - Method in class net.jcm.vsch.api.event.<a href="net/jcm/vsch/api/event/PreShipTravelEvent.html" title="class in net.jcm.vsch.api.event">PreShipTravelEvent</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#getOrCreate(org.valkyrienskies.core.api.ships.ServerShip)" class="member-name-link">getOrCreate(ServerShip)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#getOrCreate(org.valkyrienskies.core.api.ships.ServerShip,java.lang.String)" class="member-name-link">getOrCreate(ServerShip, String)</a> - Static method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TeleportationHandler.html#getPendingShips()" class="member-name-link">getPendingShips()</a> - Method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html#getPercentPower()" class="member-name-link">getPercentPower()</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/GyroBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">GyroBlockEntity</a></dt>
@@ -786,10 +770,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/event/PreShipTravelEvent.html#getShip()" class="member-name-link">getShip()</a> - Method in class net.jcm.vsch.api.event.<a href="net/jcm/vsch/api/event/PreShipTravelEvent.html" title="class in net.jcm.vsch.api.event">PreShipTravelEvent</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html#getShipIdToConstraints()" class="member-name-link">getShipIdToConstraints()</a> - Method in interface net.jcm.vsch.mixin.valkyrienskies.accessor.<a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html" title="interface in net.jcm.vsch.mixin.valkyrienskies.accessor">ServerShipObjectWorldAccessor</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/wapi/PlanetData.html#getSize()" class="member-name-link">getSize()</a> - Method in class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/PlanetData.html" title="class in net.jcm.vsch.util.wapi">PlanetData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#getSkyLightMap()" class="member-name-link">getSkyLightMap()</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
@@ -948,10 +928,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/config/VSCHServerConfig.html#GRAVITY_MAX_FORCE" class="member-name-link">GRAVITY_MAX_FORCE</a> - Static variable in class net.jcm.vsch.config.<a href="net/jcm/vsch/config/VSCHServerConfig.html" title="class in net.jcm.vsch.config">VSCHServerConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/event/GravityInducer.html" class="type-name-link" title="class in net.jcm.vsch.event">GravityInducer</a> - Class in <a href="net/jcm/vsch/event/package-summary.html">net.jcm.vsch.event</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/event/GravityInducer.html#%3Cinit%3E()" class="member-name-link">GravityInducer()</a> - Constructor for class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/GravityInducerBlock.html" class="type-name-link" title="class in net.jcm.vsch.blocks.custom">GravityInducerBlock</a> - Class in <a href="net/jcm/vsch/blocks/custom/package-summary.html">net.jcm.vsch.blocks.custom</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/GravityInducerBlock.html#%3Cinit%3E(net.minecraft.world.level.block.state.BlockBehaviour.Properties)" class="member-name-link">GravityInducerBlock(BlockBehaviour.Properties)</a> - Constructor for class net.jcm.vsch.blocks.custom.<a href="net/jcm/vsch/blocks/custom/GravityInducerBlock.html" title="class in net.jcm.vsch.blocks.custom">GravityInducerBlock</a></dt>
@@ -1072,17 +1048,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/cc/peripherals/DragInducerPeripheral.html#isEnabled()" class="member-name-link">isEnabled()</a> - Method in class net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/DragInducerPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">DragInducerPeripheral</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/ShipUtils.html#isEntityDraggedByShip(java.lang.Long,net.minecraft.world.entity.Entity)" class="member-name-link">isEntityDraggedByShip(Long, Entity)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/ShipUtils.html#isEntityDraggedByShip(org.valkyrienskies.core.api.ships.Ship,net.minecraft.world.entity.Entity)" class="member-name-link">isEntityDraggedByShip(Ship, Entity)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html#isFluidValid(int,net.minecraftforge.fluids.FluidStack)" class="member-name-link">isFluidValid(int, FluidStack)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterBrain.html" title="class in net.jcm.vsch.blocks.thruster">ThrusterBrain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/CompatMods.html#isLoaded()" class="member-name-link">isLoaded()</a> - Method in enum class net.jcm.vsch.compat.<a href="net/jcm/vsch/compat/CompatMods.html" title="enum class in net.jcm.vsch.compat">CompatMods</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/custom/MagnetBootItem.html#isMagnetized(net.minecraft.world.entity.LivingEntity)" class="member-name-link">isMagnetized(LivingEntity)</a> - Static method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/entity/ISpecialTeleportLogicEntity.html" class="type-name-link" title="interface in net.jcm.vsch.api.entity">ISpecialTeleportLogicEntity</a> - Interface in <a href="net/jcm/vsch/api/entity/package-summary.html">net.jcm.vsch.api.entity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/wapi/LevelData.html#isPlanet()" class="member-name-link">isPlanet()</a> - Method in class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/LevelData.html" title="class in net.jcm.vsch.util.wapi">LevelData</a></dt>
 <dd>&nbsp;</dd>
@@ -1314,8 +1284,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/block/package-summary.html">net.jcm.vsch.api.block</a> - package net.jcm.vsch.api.block</dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/entity/package-summary.html">net.jcm.vsch.api.entity</a> - package net.jcm.vsch.api.entity</dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/event/package-summary.html">net.jcm.vsch.api.event</a> - package net.jcm.vsch.api.event</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/api/resource/package-summary.html">net.jcm.vsch.api.resource</a> - package net.jcm.vsch.api.resource</dt>
@@ -1373,8 +1341,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/mixin/minecraft/package-summary.html">net.jcm.vsch.mixin.minecraft</a> - package net.jcm.vsch.mixin.minecraft</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/valkyrienskies/package-summary.html">net.jcm.vsch.mixin.valkyrienskies</a> - package net.jcm.vsch.mixin.valkyrienskies</dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/package-summary.html">net.jcm.vsch.mixin.valkyrienskies.accessor</a> - package net.jcm.vsch.mixin.valkyrienskies.accessor</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/package-summary.html">net.jcm.vsch.network</a> - package net.jcm.vsch.network</dt>
 <dd>&nbsp;</dd>
@@ -1457,6 +1423,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/custom/MagnetBootItem.html#onInventoryTick(net.minecraft.world.item.ItemStack,net.minecraft.world.level.Level,net.minecraft.world.entity.LivingEntity)" class="member-name-link">onInventoryTick(ItemStack, Level, LivingEntity)</a> - Method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/VSCHEvents.html#onLevelLoad(net.minecraftforge.event.level.LevelEvent.Load)" class="member-name-link">onLevelLoad(LevelEvent.Load)</a> - Static method in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHEvents.html" title="class in net.jcm.vsch">VSCHEvents</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHEvents.html#onLevelTick(net.minecraftforge.event.TickEvent.LevelTickEvent)" class="member-name-link">onLevelTick(TickEvent.LevelTickEvent)</a> - Static method in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHEvents.html" title="class in net.jcm.vsch">VSCHEvents</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/VSCHEvents.html#onPlayerJoin(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent)" class="member-name-link">onPlayerJoin(PlayerEvent.PlayerLoggedInEvent)</a> - Static method in class net.jcm.vsch.<a href="net/jcm/vsch/VSCHEvents.html" title="class in net.jcm.vsch">VSCHEvents</a></dt>
@@ -1472,8 +1440,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/jcm/vsch/blocks/custom/MagnetBlock.html#onRemove(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" class="member-name-link">onRemove(BlockState, Level, BlockPos, BlockState, boolean)</a> - Method in class net.jcm.vsch.blocks.custom.<a href="net/jcm/vsch/blocks/custom/MagnetBlock.html" title="class in net.jcm.vsch.blocks.custom">MagnetBlock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/template/BlockWithEntity.html#onRemove(net.minecraft.world.level.block.state.BlockState,net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,boolean)" class="member-name-link">onRemove(BlockState, Level, BlockPos, BlockState, boolean)</a> - Method in class net.jcm.vsch.blocks.custom.template.<a href="net/jcm/vsch/blocks/custom/template/BlockWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockWithEntity</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/util/TeleportationHandler.html#onServerStart(net.minecraftforge.event.server.ServerStartedEvent)" class="member-name-link">onServerStart(ServerStartedEvent)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TeleportationHandler.html" title="class in net.jcm.vsch.util">TeleportationHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/TaskUtil.html#onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent)" class="member-name-link">onServerTick(TickEvent.ServerTickEvent)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/TaskUtil.html" title="class in net.jcm.vsch.util">TaskUtil</a></dt>
 <dd>&nbsp;</dd>
@@ -1509,6 +1475,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates an instance of a <code>Pair</code> record class.</div>
 </dd>
 <dt><a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" class="type-name-link" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a> - Interface in <a href="net/jcm/vsch/blocks/entity/template/package-summary.html">net.jcm.vsch.blocks.entity.template</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#physTick(org.valkyrienskies.core.api.ships.PhysShip,org.valkyrienskies.core.api.world.PhysLevel)" class="member-name-link">physTick(PhysShip, PhysLevel)</a> - Method in class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/util/wapi/LevelData.ClosestPlanetData.html#planet()" class="member-name-link">planet()</a> - Method in record class net.jcm.vsch.util.wapi.<a href="net/jcm/vsch/util/wapi/LevelData.ClosestPlanetData.html" title="class in net.jcm.vsch.util.wapi">LevelData.ClosestPlanetData</a></dt>
 <dd>
@@ -1763,12 +1731,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/network/VSCHNetwork.html#sendToTracking(net.jcm.vsch.network.INetworkPacket,net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)" class="member-name-link">sendToTracking(INetworkPacket, ServerLevel, BlockPos)</a> - Static method in class net.jcm.vsch.network.<a href="net/jcm/vsch/network/VSCHNetwork.html" title="class in net.jcm.vsch.network">VSCHNetwork</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/mixin/valkyrienskies/accessor/ServerShipObjectWorldAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.mixin.valkyrienskies.accessor">ServerShipObjectWorldAccessor</a> - Interface in <a href="net/jcm/vsch/mixin/valkyrienskies/accessor/package-summary.html">net.jcm.vsch.mixin.valkyrienskies.accessor</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">sus vscore reference</div>
-</div>
-</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html#serverTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.DockerBlockEntity)" class="member-name-link">serverTick(Level, BlockPos, BlockState, DockerBlockEntity)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DockerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html#serverTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.template.ParticleBlockEntity)" class="member-name-link">serverTick(Level, BlockPos, BlockState, ParticleBlockEntity)</a> - Method in interface net.jcm.vsch.blocks.entity.template.<a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></dt>
@@ -1779,10 +1741,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#setAll(int)" class="member-name-link">setAll(int)</a> - Method in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/event/Gravity.html#setAll(net.minecraft.server.level.ServerLevel)" class="member-name-link">setAll(ServerLevel)</a> - Static method in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/Gravity.html" title="class in net.jcm.vsch.event">Gravity</a></dt>
-<dd>
-<div class="block">Sets the Gravity of all dimensions as defined in the datapacks.</div>
-</dd>
 <dt><a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html#setAssembling(boolean)" class="member-name-link">setAssembling(boolean)</a> - Method in class net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/RocketAssemblerBlockEntity.html" title="class in net.jcm.vsch.blocks.rocketassembler">RocketAssemblerBlockEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/entity/MagnetEntity.html#setAttachedPos(net.minecraft.core.BlockPos)" class="member-name-link">setAttachedPos(BlockPos)</a> - Method in class net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a></dt>
@@ -1941,10 +1899,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/compat/create/ponder/VSCHPonderTags.html#STARLANCE_PONDERS" class="member-name-link">STARLANCE_PONDERS</a> - Static variable in class net.jcm.vsch.compat.create.ponder.<a href="net/jcm/vsch/compat/create/ponder/VSCHPonderTags.html" title="class in net.jcm.vsch.compat.create.ponder">VSCHPonderTags</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/entity/ISpecialTeleportLogicEntity.html#starlance$afterTeleport(net.jcm.vsch.api.entity.ISpecialTeleportLogicEntity)" class="member-name-link">starlance$afterTeleport(ISpecialTeleportLogicEntity)</a> - Method in interface net.jcm.vsch.api.entity.<a href="net/jcm/vsch/api/entity/ISpecialTeleportLogicEntity.html" title="interface in net.jcm.vsch.api.entity">ISpecialTeleportLogicEntity</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/api/entity/ISpecialTeleportLogicEntity.html#starlance$beforeTeleport()" class="member-name-link">starlance$beforeTeleport()</a> - Method in interface net.jcm.vsch.api.entity.<a href="net/jcm/vsch/api/entity/ISpecialTeleportLogicEntity.html" title="interface in net.jcm.vsch.api.entity">ISpecialTeleportLogicEntity</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/accessor/ILevelAccessor.html#starlance$clearLevelData()" class="member-name-link">starlance$clearLevelData()</a> - Method in interface net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ILevelAccessor.html" title="interface in net.jcm.vsch.accessor">ILevelAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/mixin/minecraft/MixinLevel.html#starlance$clearLevelData()" class="member-name-link">starlance$clearLevelData()</a> - Method in class net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLevel.html" title="class in net.jcm.vsch.mixin.minecraft">MixinLevel</a></dt>
@@ -2083,8 +2037,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce(ServerLevel, BlockPos, BlockState)</a> - Method in class net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/event/GravityInducer.html#tickOnShip(org.valkyrienskies.core.api.ships.LoadedServerShip)" class="member-name-link">tickOnShip(LoadedServerShip)</a> - Static method in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/GravityInducer.html" title="class in net.jcm.vsch.event">GravityInducer</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles(Level, BlockPos, BlockState)</a> - Method in class net.jcm.vsch.blocks.custom.template.<a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles(Level, BlockPos, BlockState)</a> - Method in class net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DragInducerBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">DragInducerBlockEntity</a></dt>
@@ -2139,10 +2091,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
-<dt><a href="net/jcm/vsch/util/ShipUtils.html#transformFromId(java.lang.Long,org.valkyrienskies.core.apigame.world.ServerShipWorldCore)" class="member-name-link">transformFromId(Long, ServerShipWorldCore)</a> - Static method in class net.jcm.vsch.util.<a href="net/jcm/vsch/util/ShipUtils.html" title="class in net.jcm.vsch.util">ShipUtils</a></dt>
-<dd>
-<div class="block">Gets the transform of a @link{Ship} when given its id.</div>
-</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">
@@ -2158,6 +2106,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/jcm/vsch/util/rot/DirectionalShape.html#up(net.jcm.vsch.util.rot.RotShape)" class="member-name-link">up(RotShape)</a> - Static method in class net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/DirectionalShape.html" title="class in net.jcm.vsch.util.rot">DirectionalShape</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/jcm/vsch/event/Gravity.html#updateFor(net.minecraft.server.level.ServerLevel)" class="member-name-link">updateFor(ServerLevel)</a> - Static method in class net.jcm.vsch.event.<a href="net/jcm/vsch/event/Gravity.html" title="class in net.jcm.vsch.event">Gravity</a></dt>
+<dd>
+<div class="block">Update the gravity for the target dimension as defined in the datapacks.</div>
+</dd>
 <dt><a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html#use" class="member-name-link">use</a> - Variable in class net.jcm.vsch.client.<a href="net/jcm/vsch/client/RenderUtil.BoxLightMap.html" title="class in net.jcm.vsch.client">RenderUtil.BoxLightMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/custom/WrenchItem.html#useOn(net.minecraft.world.item.context.UseOnContext)" class="member-name-link">useOn(UseOnContext)</a> - Method in class net.jcm.vsch.items.custom.<a href="net/jcm/vsch/items/custom/WrenchItem.html" title="class in net.jcm.vsch.items.custom">WrenchItem</a></dt>
@@ -2255,8 +2207,6 @@ the order they are declared.</div>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" class="type-name-link" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a> - Class in <a href="net/jcm/vsch/ship/package-summary.html">net.jcm.vsch.ship</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#%3Cinit%3E()" class="member-name-link">VSCHForceInducedShips()</a> - Constructor for class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/jcm/vsch/ship/VSCHForceInducedShips.html#%3Cinit%3E(java.lang.String)" class="member-name-link">VSCHForceInducedShips(String)</a> - Constructor for class net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/VSCHForceInducedShips.html" title="class in net.jcm.vsch.ship">VSCHForceInducedShips</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/jcm/vsch/items/VSCHItems.html" class="type-name-link" title="class in net.jcm.vsch.items">VSCHItems</a> - Class in <a href="net/jcm/vsch/items/package-summary.html">net.jcm.vsch.items</a></dt>
 <dd>&nbsp;</dd>

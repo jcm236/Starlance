@@ -1,7 +1,6 @@
 net.jcm.vsch
 net.jcm.vsch.accessor
 net.jcm.vsch.api.block
-net.jcm.vsch.api.entity
 net.jcm.vsch.api.event
 net.jcm.vsch.api.resource
 net.jcm.vsch.blocks
@@ -31,7 +30,6 @@ net.jcm.vsch.mixin.client.cosmos
 net.jcm.vsch.mixin.cosmos
 net.jcm.vsch.mixin.minecraft
 net.jcm.vsch.mixin.valkyrienskies
-net.jcm.vsch.mixin.valkyrienskies.accessor
 net.jcm.vsch.network
 net.jcm.vsch.network.c2s
 net.jcm.vsch.ship
