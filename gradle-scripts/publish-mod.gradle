@@ -3,7 +3,7 @@
 // alpha, beta, or release
 def versionType = "release"
 
-def fileDisplayName = "Starlance ${mod_version}"
+def fileDisplayName = "Starlance-${mod_version}"
 
 // Publish to CurseForge
 curseforge {
