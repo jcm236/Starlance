@@ -14,7 +14,7 @@ curseforge {
             releaseType = versionType
             addGameVersion '1.20.1'
 
-            mainArtifact(build) {
+            mainArtifact(reobfJar) {
                 relations {
                     requiredDependency 'kotlin-for-forge'
                     requiredDependency 'valkyrien-skies'
@@ -38,7 +38,7 @@ modrinth {
     archivesBaseName = fileDisplayName
     versionType = versionType
     changelog = file('changelog.md').text
-    uploadFile = build
+    uploadFile = reobfJar
     gameVersions = ["1.20.1"] // Must be an array, even with only one version
     dependencies { // A special DSL for creating dependencies
         // scope.type

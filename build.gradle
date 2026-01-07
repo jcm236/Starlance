@@ -31,7 +31,6 @@ plugins {
 apply plugin: "org.jetbrains.kotlin.jvm"
 
 apply plugin: 'maven-publish'
-apply from: './gradle-scripts/publish-mod.gradle'
 
 base {
 	archivesName = "${archives_base_name}-${mod_version}"
@@ -295,6 +294,8 @@ jar {
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
+
+apply from: './gradle-scripts/publish-mod.gradle'
 
 publishing {
 	repositories {
