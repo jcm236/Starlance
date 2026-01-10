@@ -40,7 +40,5 @@ public class Gravity {
 			return;
 		}
 		LOGGER.info("[starlance]: Set gravity for dimension " + dimId + " to " + gravity);
-		// VSGameUtilsKt.getShipObjectWorld((ServerLevel) world).removeDimension("minecraft:dimension:cosmos:solar_system");
-		// VSGameUtilsKt.getShipObjectWorld((ServerLevel) world).addDimension("minecraft:dimension:cosmos:solar_system", VSGameUtilsKt.getYRange(world.getServer().overworld()),new Vector3d(0,0,0));
 	}
 }
