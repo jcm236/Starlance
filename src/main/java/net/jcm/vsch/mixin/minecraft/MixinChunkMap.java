@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.ImposterProtoChunk;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +31,11 @@ public class MixinChunkMap {
 		final ServerLevel level = this.level;
 		final ChunkPos pos = holder.getPos();
 		if (EmptyChunkAccess.shouldUseEmptyChunk(level, pos.x, pos.z)) {
-			cir.setReturnValue(CompletableFuture.completedFuture(Either.left(new EmptyChunkAccess(level, pos))));
+			final EmptyChunkAccess emptyAccess = new EmptyChunkAccess(level, pos);
+			cir.setReturnValue(CompletableFuture.completedFuture(Either.left(switch (status.getChunkType()) {
+				case PROTOCHUNK -> new ImposterProtoChunk(emptyAccess, true);
+				case LEVELCHUNK -> emptyAccess;
+			})));
 		}
 	}
 
