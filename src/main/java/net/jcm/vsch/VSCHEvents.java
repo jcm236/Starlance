@@ -42,9 +42,9 @@ public class VSCHEvents {
 		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
-		ServerPlanetData.onLevelTick(serverLevel);
 		switch (event.phase) {
 			case START -> {
+				ServerPlanetData.onSyncData(serverLevel);
 			}
 			case END -> {
 				if (serverLevel.getPlayers(player -> true, 1).isEmpty()) {
@@ -59,9 +59,16 @@ public class VSCHEvents {
 	}
 
 	@SubscribeEvent
-	public static void onLevelLoad(LevelEvent.Load event) {
+	public static void onLevelLoad(final LevelEvent.Load event) {
 		if (event.getLevel() instanceof final ServerLevel level) {
 			Gravity.updateFor(level);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLevelUnload(final LevelEvent.Unload event) {
+		if (event.getLevel() instanceof final ServerLevel level) {
+			ServerPlanetData.onSyncData(level);
 		}
 	}
 

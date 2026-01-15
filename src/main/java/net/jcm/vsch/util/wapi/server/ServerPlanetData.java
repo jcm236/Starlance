@@ -1,17 +1,37 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.util.wapi.server;
 
 import net.jcm.vsch.network.VSCHNetwork;
+import net.jcm.vsch.util.SerializeUtil;
 import net.jcm.vsch.util.wapi.LevelData;
 import net.jcm.vsch.util.wapi.PlanetData;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +49,7 @@ public class ServerPlanetData extends PlanetData {
 
 	public ServerPlanetData(
 		final LevelData levelData,
-		final Vec3 position,
+		final Vector3dc position,
 		final Quaterniondc rotation,
 		final double size,
 		final MinecraftServer server,
@@ -41,21 +61,19 @@ public class ServerPlanetData extends PlanetData {
 	}
 
 	public static ServerPlanetData create(final LevelData levelData, final MinecraftServer server, final CompoundTag collisionData, final CompoundTag data) {
-		Vec3 position = Vec3.ZERO;
+		final Vector3d position = new Vector3d();
 		final Quaterniond rotation = new Quaterniond();
 		double size = 1;
 		if (collisionData != null) {
-			position = new Vec3(collisionData.getDouble("x"), collisionData.getDouble("y"), collisionData.getDouble("z"));
+			position.set(collisionData.getDouble("x"), collisionData.getDouble("y"), collisionData.getDouble("z"));
 			rotation.rotationYXZ(Math.toRadians(collisionData.getDouble("yaw")), Math.toRadians(collisionData.getDouble("pitch")), Math.toRadians(collisionData.getDouble("roll")));
 			size = collisionData.getDouble("scale");
 		}
 		if (data.contains(POS_TAG)) {
-			final ListTag pos = data.getList(POS_TAG);
-			position = new Vec3(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2));
+			SerializeUtil.listToVector3d(data.getList(POS_TAG), position);
 		}
 		if (data.contains(ROT_TAG)) {
-			final ListTag rot = data.getList(ROT_TAG);
-			rotation.set(rot.getDouble(0), rot.getDouble(1), rot.getDouble(2), rot.getDouble(3));
+			SerializeUtil.listToQuaterniond(data.getList(ROT_TAG), rotation);
 		}
 		if (data.contains(SIZE_TAG)) {
 			size = data.getDouble(SIZE_TAG);
@@ -68,7 +86,7 @@ public class ServerPlanetData extends PlanetData {
 	}
 
 	@Override
-	public void setPosition(final Vec3 position) {
+	public void setPosition(final Vector3dc position) {
 		super.setPosition(position);
 		this.positionChanged = true;
 	}
@@ -83,25 +101,16 @@ public class ServerPlanetData extends PlanetData {
 	}
 
 	private void syncData() {
-		final Vec3 position = this.getPosition();
+		final Vector3dc position = this.getPosition();
 		final Quaterniondc rotation = this.getRotation();
 		final boolean positionChanged = this.positionChanged, rotationChanged = this.rotationChanged;
 		if (positionChanged) {
 			this.positionChanged = false;
-			final ListTag pos = new ListTag();
-			pos.addDouble(position.x);
-			pos.addDouble(position.y);
-			pos.addDouble(position.z);
-			this.data.put(POS_TAG, pos);
+			this.data.put(POS_TAG, SerializeUtil.vector3dToList(position));
 		}
 		if (rotationChanged) {
 			this.rotationChanged = false;
-			final ListTag rot = new ListTag();
-			rot.addDouble(rotation.x);
-			rot.addDouble(rotation.y);
-			rot.addDouble(rotation.z);
-			rot.addDouble(rotation.w);
-			this.data.put(ROT_TAG, rot);
+			this.data.put(ROT_TAG, SerializeUtil.quaterniondToList(rotation));
 		}
 		final PlanetDataUpdateS2C packet;
 		if (positionChanged && rotationChanged) {
@@ -119,8 +128,8 @@ public class ServerPlanetData extends PlanetData {
 		}
 	}
 
-	public static void onLevelTick(final ServerLevel level) {
-		for (final PlanetData planet : LevelData.get(level).getPlanets()) {
+	public static void onSyncData(final ServerLevel level) {
+		for (final PlanetData planet : ServerLevelData.get(level).getPlanets()) {
 			planet.syncData();
 		}
 	}

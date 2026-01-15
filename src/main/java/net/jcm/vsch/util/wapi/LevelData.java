@@ -2,9 +2,7 @@ package net.jcm.vsch.util.wapi;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -13,10 +11,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class LevelData {
 	private static final Map<ResourceKey<Level>, LevelData> CLIENT_DATAS = new HashMap<>();
@@ -30,6 +31,7 @@ public class LevelData {
 	private double atmosphereY = Integer.MAX_VALUE;
 
 	protected final Map<ResourceKey<Level>, PlanetData> lowerDimensions = new HashMap<>(0);
+	private final Set<ResourceKey<Level>> parsingLowerDimensions = new HashSet<>(0);
 
 	public LevelData(final ResourceKey<Level> dimension, final String type) {
 		this.dimension = dimension;
@@ -107,11 +109,15 @@ public class LevelData {
 		return this.lowerDimensions.get(level);
 	}
 
+	public void putPlanet(final PlanetData planet) {
+		this.lowerDimensions.put(planet.getLevelData().getDimension(), planet);
+	}
+
 	public ClosestPlanetData getNearestPlanet(final Vec3 pos) {
 		ClosestPlanetData nearestPlanet = null;
 		for (final PlanetData planet : this.lowerDimensions.values()) {
-			final Vec3 planetPos = planet.getPosition();
-			final Vector3d relDir = new Vector3d(pos.x - planetPos.x, pos.y - planetPos.y, pos.z - planetPos.z);
+			final Vector3dc planetPos = planet.getPosition();
+			final Vector3d relDir = new Vector3d(pos.x - planetPos.x(), pos.y - planetPos.y(), pos.z - planetPos.z());
 			planet.getRotation().transformInverse(relDir);
 
 			final double dx = Math.abs(relDir.x);
@@ -145,7 +151,17 @@ public class LevelData {
 			buf.writeResourceKey(this.upperDimension);
 		}
 		buf.writeDouble(this.atmosphereY);
-		buf.writeVarInt(this.lowerDimensions.size());
+	}
+
+	public void readFrom(final FriendlyByteBuf buf) {
+		this.dimension = buf.readResourceKey();
+		this.type = buf.readString();
+		this.gravity = buf.readDouble();
+		this.friction = buf.readDouble();
+		final boolean hasUpperDim = buf.readBoolean();
+		this.upperDimension = hasUpperDim ? buf.readResourceKey() : null;
+		this.atmosphereY = buf.readDouble();
+		this.lowerDimensions.clear();
 	}
 
 	public record ClosestPlanetData(PlanetData planet, double distance, Direction direction) {}

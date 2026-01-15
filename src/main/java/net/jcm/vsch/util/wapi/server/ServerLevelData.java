@@ -1,13 +1,37 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.util.wapi.server;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.util.wapi.LevelData;
 import net.lointain.cosmos.network.CosmosModVariables;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -104,7 +128,7 @@ public class ServerLevelData extends LevelData {
 		final CompoundTag planetTag = new CompoundTag();
 		this.planetsTag.put(dimension, planetTag);
 		final ServerPlanetData planet = ServerPlanetData.create(levelData, this.server, null, planetTag);
-		this.lowerDimensions.put(dimension, planet);
+		this.putPlanet(planet);
 		levelData.setUpperDimension(this.getDimension());
 		this.storage.setDirty();
 		return planet;

@@ -2,24 +2,22 @@ package net.jcm.vsch.util.wapi;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.MinecraftServer;
 
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class PlanetData {
 	private final LevelData levelData;
-	private Vec3 position;
-	private Vec3 positionO;
+	private Vector3dc position;
+	private Vector3dc positionO;
 	private Quaterniondc rotation;
 	private Quaterniondc rotationO;
 	private double size;
 
-	public PlanetData(final LevelData levelData, final Vec3 position, final Quaterniondc rotation, final double size) {
+	public PlanetData(final LevelData levelData, final Vector3dc position, final Quaterniondc rotation, final double size) {
 		this.levelData = levelData;
 		this.server = server;
 		this.position = position;
@@ -29,30 +27,23 @@ public class PlanetData {
 		this.size = size;
 	}
 
-	public static PlanetData create(final LevelData levelData, final MinecraftServer server, final CompoundTag collisionData) {
-		final Vec3 position = new Vec3(collisionData.getDouble("x"), collisionData.getDouble("y"), collisionData.getDouble("z"));
-		final Quaterniondc rotation = new Quaterniond().rotationYXZ(Math.toRadians(collisionData.getDouble("yaw")), Math.toRadians(collisionData.getDouble("pitch")), Math.toRadians(collisionData.getDouble("roll")));
-		final double size = collisionData.getDouble("scale");
-		return new ServerPlanetData(levelData, position, rotation, size, server);
-	}
-
 	public LevelData getLevelData() {
 		return this.levelData;
 	}
 
-	public Vec3 getPosition() {
+	public Vector3dc getPosition() {
 		return this.position;
 	}
 
-	public void setPosition(final Vec3 position) {
+	public void setPosition(final Vector3dc position) {
 		this.position = position;
 	}
 
-	public Vec3 getPositionO(final float partialTicks) {
+	public Vector3dc getPositionO(final float partialTicks) {
 		if (this.positionO == this.position) {
 			return this.position;
 		}
-		return this.positionO.lerp(this.position, partialTicks);
+		return this.positionO.lerp(this.position, partialTicks, new Vector3d());
 	}
 
 	public Quaterniondc getRotation() {
@@ -77,5 +68,10 @@ public class PlanetData {
 	public void clientTick() {
 		this.positionO = this.position;
 		this.rotationO = this.rotation;
+	}
+
+	public void writeTo(final FriendlyByteBuf buf) {
+		buf.writeResourceKey(this.levelData.getDimension());
+		buf.
 	}
 }
