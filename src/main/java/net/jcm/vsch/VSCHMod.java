@@ -45,16 +45,11 @@ public class VSCHMod {
 		VSCHTab.register(modBus);
 		VSCHTags.register();
 
-		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
-		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
-			builder.useTransientSerializer();
-			return null; // blame kotlin
-		});
-
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
 
 		modBus.addListener(this::onClientSetup);
+		modBus.addListener(this::onCommonSetup);
 		modBus.addListener(this::registerRenderers);
 
 		if (CompatMods.CREATE.isLoaded()) {
@@ -63,10 +58,24 @@ public class VSCHMod {
 	}
 
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)
-	private void onClientSetup(FMLClientSetupEvent event) {
+	private void onClientSetup(final FMLClientSetupEvent event) {
 		if (CompatMods.CREATE.isLoaded()) {
 			PonderRegister.add();
 		}
+	}
+
+	private void onCommonSetup(final FMLCommonSetupEvent event) {
+		event.enqueueWork(() -> {
+			this.registerAttachments();
+		});
+	}
+
+	private void registerAttachments() {
+		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
+		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
+			builder.useTransientSerializer();
+			return null; // blame kotlin
+		});
 	}
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
