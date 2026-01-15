@@ -3,6 +3,7 @@ package net.jcm.vsch.event;
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.event.PreTravelEvent;
 import net.jcm.vsch.config.ShipLandingMode;
+import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
@@ -224,13 +225,15 @@ public class PlanetCollision {
 			}, level.getServer());
 		}
 
-		for (final Map.Entry<ServerPlayer, LevelData.ClosestPlanetData> entry : gravityDistances.entrySet()) {
-			final ServerPlayer player = entry.getKey();
-			final LevelData.ClosestPlanetData planetData = entry.getValue();
-			// TODO: use localized name?
-			final String name = planetData.planet().getLevelData().getDimension().location().toString();
-			final double distance = Math.max(planetData.distance() - OUTER_RANGE, 0);
-			player.displayClientMessage(Component.translatable("vsch.message.planet.entering", name, DISTANCE_FORMAT.format(distance)), true);
+		if (VSCHCommonConfig.SHOW_ENTERING_PLANET_HINT.get()) {
+			for (final Map.Entry<ServerPlayer, LevelData.ClosestPlanetData> entry : gravityDistances.entrySet()) {
+				final ServerPlayer player = entry.getKey();
+				final LevelData.ClosestPlanetData planetData = entry.getValue();
+				// TODO: use localized name?
+				final String name = planetData.planet().getLevelData().getDimension().location().toString();
+				final double distance = Math.max(planetData.distance() - OUTER_RANGE, 0);
+				player.displayClientMessage(Component.translatable("vsch.message.planet.entering", name, DISTANCE_FORMAT.format(distance)), true);
+			}
 		}
 	}
 
