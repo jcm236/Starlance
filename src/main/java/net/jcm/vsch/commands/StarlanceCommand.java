@@ -19,7 +19,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.logging.LogUtils;
 import net.jcm.vsch.event.Gravity;
-import net.jcm.vsch.util.ShipUtils;
 import net.jcm.vsch.util.VSCHUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
