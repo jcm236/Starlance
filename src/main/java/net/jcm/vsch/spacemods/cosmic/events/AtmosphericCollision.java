@@ -13,24 +13,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.event;
+package net.jcm.vsch.spacemods.cosmic.events;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.event.PreTravelEvent;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
-import net.jcm.vsch.util.wapi.LevelData;
-import net.jcm.vsch.util.wapi.PlanetData;
-import net.lointain.cosmos.network.CosmosModVariables;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.PlanetData;
 
 import net.minecraft.core.SectionPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +37,6 @@ import org.joml.Quaterniond;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class AtmosphericCollision {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);

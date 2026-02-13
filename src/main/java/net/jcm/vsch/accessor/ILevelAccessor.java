@@ -15,7 +15,7 @@
  **/
 package net.jcm.vsch.accessor;
 
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 
 public interface ILevelAccessor {
 	LevelData starlance$getLevelData();

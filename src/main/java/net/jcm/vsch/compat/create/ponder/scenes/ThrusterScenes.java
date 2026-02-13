@@ -28,6 +28,7 @@ import net.jcm.vsch.items.VSCHItems;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -79,7 +80,7 @@ public class ThrusterScenes {
 
 		scene.world().moveSection(middleThrusterContraption, util.vector().of(0, 0, 20), 30);
 
-		scene.effects().emitParticles(util.vector().of(2.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(2.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(ParticleTypes.ASH, new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(60);
 
@@ -128,16 +129,16 @@ public class ThrusterScenes {
 		scene.world().moveSection(leftThrusterContraption, util.vector().of(0, 0, 20), 70);
 		scene.world().moveSection(rightThrusterContraption, util.vector().of(0, 0, 20), 30);
 
-		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
-		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(ParticleTypes.ASH, new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 3.5), scene.effects().simpleParticleEmitter(ParticleTypes.ASH, new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(10);
 
-		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 6.5), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 6.5), scene.effects().simpleParticleEmitter(ParticleTypes.ASH, new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(15);
 
-		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 9), scene.effects().simpleParticleEmitter(CosmosModParticleTypes.THRUSTED.get(), new Vec3(0, 0, -10)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(3.5, 1.5, 9), scene.effects().simpleParticleEmitter(ParticleTypes.ASH, new Vec3(0, 0, -10)), 2, 10);
 
 		scene.idle(50);
 
@@ -191,7 +192,7 @@ public class ThrusterScenes {
 		scene.effects().emitParticles(
 			util.vector().centerOf(3, 1, 2),
 			scene.effects().simpleParticleEmitter(
-				CosmosModParticleTypes.THRUSTED.get(),
+				ParticleTypes.ASH,
 				new Vec3(0, 0, -10)
 			),
 			10,
@@ -203,7 +204,7 @@ public class ThrusterScenes {
 		scene.effects().emitParticles(
 			util.vector().centerOf(3, 1, 5),
 			scene.effects().simpleParticleEmitter(
-				CosmosModParticleTypes.THRUSTED.get(),
+				ParticleTypes.ASH,
 				new Vec3(3, 0, -7)
 			),
 			10,
@@ -215,7 +216,7 @@ public class ThrusterScenes {
 		scene.effects().emitParticles(
 			util.vector().centerOf(3, 1, 8),
 			scene.effects().simpleParticleEmitter(
-				CosmosModParticleTypes.THRUSTED.get(),
+				ParticleTypes.ASH,
 				new Vec3(5, 0, -5)
 			),
 			10,
@@ -273,7 +274,7 @@ public class ThrusterScenes {
 		scene.effects().emitParticles(
 			util.vector().centerOf(3, 1, 2),
 			scene.effects().simpleParticleEmitter(
-				CosmosModParticleTypes.THRUSTED.get(),
+				ParticleTypes.ASH,
 				new Vec3(0, 0, -10)
 			),
 			10,
@@ -285,7 +286,7 @@ public class ThrusterScenes {
 		scene.effects().emitParticles(
 			util.vector().centerOf(3, 1, 7),
 			scene.effects().simpleParticleEmitter(
-				CosmosModParticleTypes.THRUSTED.get(),
+				ParticleTypes.ASH,
 				new Vec3(0, 0, -10)
 			),
 			10,

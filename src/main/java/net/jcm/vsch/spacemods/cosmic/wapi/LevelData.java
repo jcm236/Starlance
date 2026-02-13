@@ -13,7 +13,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.util.wapi;
+package net.jcm.vsch.spacemods.cosmic.wapi;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.accessor.ILevelAccessor;
@@ -24,7 +24,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

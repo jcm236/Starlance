@@ -20,19 +20,18 @@ import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderPlugin;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 
+import net.minecraftforge.fml.ModList;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -71,6 +70,10 @@ public class VSCHMod {
 		if (CompatMods.CREATE.isLoaded()) {
 			VSCHPonderRegistrateBlocks.register();
 		}
+
+        if (ModList.get().isLoaded("cosmos")) {
+            modBus.register(EventsWithCH.class);
+        }
 	}
 
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)

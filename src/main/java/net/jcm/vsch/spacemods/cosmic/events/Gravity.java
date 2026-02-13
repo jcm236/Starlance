@@ -13,12 +13,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.event;
+package net.jcm.vsch.spacemods.cosmic.events;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -13,13 +13,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.util.wapi;
+package net.jcm.vsch.spacemods.cosmic.wapi;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import org.joml.Quaterniond;
 import org.joml.Quaterniondc;
