@@ -168,6 +168,10 @@ repositories {
 			includeGroup("top.theillusivec4.curios")
 		}
 	}
+
+    maven {
+        url "https://maven.resourcefulbees.com/repository/maven-public/"
+    }
 }
 
 dependencies {
@@ -181,6 +185,9 @@ dependencies {
 		}
 	}
 	// endregion
+
+    //modImplementation("curse.maven:vs-tournament-reforged:1.0.0")
+    modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.2")
 
 	// region Valkyrien Skies
 	implementation("org.valkyrienskies.core:api:${vs_core_version}") { transitive = false
@@ -214,8 +221,14 @@ dependencies {
 			prefer "${vtil_version}"
 		}
 	}
-	modImplementation("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-	// endregion
+
+    modCompileOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
+    modImplementation("maven.modrinth:ad-astra:${ad_astra_version}")
+    modApi(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
+    modApi(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
+    modApi(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
+
+    // endregion
 
 	// region Compat deps
 

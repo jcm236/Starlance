@@ -25,6 +25,7 @@ import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.spacemods.SpaceMods;
+import net.jcm.vsch.spacemods.ad_astra.events.EventsWithAD;
 import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
@@ -32,7 +33,13 @@ import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
+import org.valkyrienskies.core.impl.config.VSCoreConfig;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -63,6 +70,7 @@ public class VSCHMod {
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
 
 		modBus.addListener(this::onClientSetup);
 		modBus.addListener(this::onCommonSetup);
@@ -74,6 +82,10 @@ public class VSCHMod {
 
         if (SpaceMods.COSMIC.isLoaded()) {
             MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
+        }
+
+        if (SpaceMods.AD_ASTRA.isLoaded()) {
+            MinecraftForge.EVENT_BUS.register(EventsWithAD.class);
         }
 	}
 
@@ -97,6 +109,23 @@ public class VSCHMod {
 			return null; // blame kotlin
 		});
 	}
+
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
+        if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
+            return;
+        }
+
+        if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
+            return;
+        }
+
+        if (joinEvent.getEntity() instanceof ServerPlayer player) {
+            player.sendSystemMessage(
+                    Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
+                            .withStyle(ChatFormatting.YELLOW)
+            );
+        }
+    }
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);

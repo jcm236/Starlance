@@ -13,40 +13,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.spacemods.cosmic.events;
+package net.jcm.vsch.spacemods.ad_astra.events;
 
-import net.jcm.vsch.config.VSCHCommonConfig;
-import net.jcm.vsch.util.EmptyChunkAccess;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import org.valkyrienskies.core.impl.config.VSCoreConfig;
-
 /**
- * This class will only be registered to the forge event bus if cosmic horizons is loaded
+ * This class will only be registered to the forge event bus if ad astra is loaded
  */
-public class EventsWithCH {
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onServerTick(final TickEvent.ServerTickEvent event) {
-		switch (event.phase) {
-			case START -> {
-			}
-			case END -> {
-			}
-		}
-	}
-
+public class EventsWithAD {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
 		if (!(event.level instanceof ServerLevel serverLevel)) {
@@ -62,7 +40,6 @@ public class EventsWithCH {
 					return;
 				}
 				AtmosphericCollision.atmosphericCollisionTick(serverLevel);
-				PlanetCollision.planetCollisionTick(serverLevel);
 			}
 		}
 	}
@@ -71,17 +48,6 @@ public class EventsWithCH {
 	public static void onLevelLoad(LevelEvent.Load event) {
 		if (event.getLevel() instanceof final ServerLevel level) {
             Gravity.updateFor(level);
-		}
-	}
-
-	@SubscribeEvent
-	public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-		if (!(event.getLevel() instanceof Level level)) {
-			return;
-		}
-		final ChunkPos pos = new ChunkPos(event.getPos());
-		if (EmptyChunkAccess.shouldUseEmptyChunk(level, pos.x, pos.z)) {
-			event.setCanceled(true);
 		}
 	}
 }
