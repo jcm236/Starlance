@@ -72,7 +72,7 @@ public class VSCHMod {
 		}
 
         if (ModList.get().isLoaded("cosmos")) {
-            modBus.register(EventsWithCH.class);
+            MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
         }
 	}
 
