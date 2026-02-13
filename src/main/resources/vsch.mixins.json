@@ -6,6 +6,7 @@
   "refmap": "mixins.vsch.refmap.json",
   "mixins": [
     "ad_astra.MixinModUtils",
+    "ad_astra.MixinPlanetsMenu",
     "cosmos.MixinCollisionDetectorProcedure",
     "cosmos.MixinEgraphicProcedure",
     "cosmos.MixinGravityRefreshProcedure",

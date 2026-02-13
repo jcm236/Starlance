@@ -24,6 +24,7 @@ import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.ship.ShipTierAttachment;
 import net.jcm.vsch.spacemods.SpaceMods;
 import net.jcm.vsch.spacemods.ad_astra.events.EventsWithAD;
 import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
@@ -97,13 +98,12 @@ public class VSCHMod {
 	}
 
 	private void onCommonSetup(final FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
-			this.registerAttachments();
-		});
+		event.enqueueWork(this::registerAttachments);
 	}
 
 	private void registerAttachments() {
 		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
+		ValkyrienSkiesMod.getApi().registerAttachment(ShipTierAttachment.class);
 		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
 			builder.useTransientSerializer();
 			return null; // blame kotlin

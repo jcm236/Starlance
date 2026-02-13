@@ -18,66 +18,29 @@ package net.jcm.vsch.spacemods.ad_astra.events;
 import earth.terrarium.adastra.common.config.AdAstraConfig;
 import earth.terrarium.adastra.common.menus.PlanetsMenu;
 import earth.terrarium.adastra.common.menus.base.PlanetsMenuProvider;
-import earth.terrarium.adastra.common.registry.ModSoundEvents;
 import earth.terrarium.botarium.common.menu.MenuHooks;
-import io.netty.buffer.Unpooled;
-import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.api.event.PreTravelEvent;
-import net.jcm.vsch.config.ShipLandingMode;
-import net.jcm.vsch.config.VSCHCommonConfig;
-import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.ship.ShipLandingAttachment;
-import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
-import net.jcm.vsch.util.TeleportationHandler;
+import net.jcm.vsch.ship.ShipTierAttachment;
+import net.jcm.vsch.spacemods.ad_astra.SyncMenuTierS2C;
+import net.jcm.vsch.util.TaskUtil;
 import net.jcm.vsch.util.VSCHUtils;
-import net.lointain.cosmos.network.CosmosModVariables;
-import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.network.NetworkHooks;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.joml.Quaterniond;
-import org.joml.Vector2i;
 import org.joml.Vector3d;
 import org.joml.primitives.AABBdc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AtmosphericCollision {
-	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
-
 	public static void atmosphericCollisionTick(final ServerLevel level) {
-
-		final String dimension = level.dimension().location().toString();
-
-		final Map<ResourceKey<Level>, TeleportationHandler> handlers = new HashMap<>();
 
 		final List<LoadedServerShip> ships = VSCHUtils.getLoadedShipsInLevel(level);
 		ships.sort((a, b) -> {
@@ -104,11 +67,15 @@ public class AtmosphericCollision {
                 if (nearestPlayer == null) continue;
                 if (attachment.landing) continue;
 
+                ShipTierAttachment tierAttachment = ShipTierAttachment.get(ship);
+
                 if (!(nearestPlayer.containerMenu instanceof PlanetsMenu)) {
-                    openPlanetsScreen(nearestPlayer);
+                    openPlanetsScreen(tierAttachment.getHighestTier(), nearestPlayer);
                 }
             } else {
-                attachment.landing = false;
+                if ((shipCenter.y + 10) < AdAstraConfig.atmosphereLeave) {
+                    attachment.landing = false;
+                }
             }
         }
 	}
@@ -146,10 +113,11 @@ public class AtmosphericCollision {
         return nearestPlayer;
     }
 
-    public static void openPlanetsScreen(ServerPlayer player) {
-        MenuHooks.openMenu(player, new PlanetsMenuProvider());
-        var packet = new ClientboundStopSoundPacket(BuiltInRegistries.SOUND_EVENT
-                .getKey(ModSoundEvents.ROCKET.get()), SoundSource.AMBIENT);
-        player.connection.send(packet);
+    public static void openPlanetsScreen(int tier, ServerPlayer player) {
+        VSCHNetwork.sendToPlayer(new SyncMenuTierS2C(tier), player);
+
+        TaskUtil.queueTickStart(() -> {
+            MenuHooks.openMenu(player, new PlanetsMenuProvider());
+        });
     }
 }

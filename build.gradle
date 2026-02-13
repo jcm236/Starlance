@@ -223,10 +223,10 @@ dependencies {
 	}
 
     modCompileOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    modImplementation("maven.modrinth:ad-astra:${ad_astra_version}")
-    modApi(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
-    modApi(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
-    modApi(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
+    modCompileOnly("maven.modrinth:ad-astra:${ad_astra_version}")
+    compileOnlyApi(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
+    compileOnlyApi(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
+    compileOnlyApi(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
 
     // endregion
 

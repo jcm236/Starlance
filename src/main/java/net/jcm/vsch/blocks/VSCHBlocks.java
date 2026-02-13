@@ -38,6 +38,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class VSCHBlocks {
@@ -141,6 +143,28 @@ public class VSCHBlocks {
 				.isRedstoneConductor((state, level, pos) -> false)
 		)
 	);
+
+    public static List<RegistryObject<Block>> TIER_BLOCKS = registerTierBlocks(5);
+
+    private static List<RegistryObject<Block>> registerTierBlocks(int amount) {
+        List<RegistryObject<Block>> result = new ArrayList<>();
+        for (int i = 1; i <= amount; i++) {
+            int finalI = i;
+            result.add(
+                    registerBlock(
+                            "tier_"+i,
+                            () -> new TierBlock(finalI,
+                                    BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+                                            .mapColor(MapColor.STONE)
+                                            .sound(SoundType.COPPER)
+                                            .strength(5f)
+                            )
+                    )
+            );
+        }
+        return result;
+    }
+
 
 	/*public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
 		"dock",
