@@ -24,6 +24,7 @@ import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.spacemods.SpaceMods;
 import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
@@ -71,7 +72,7 @@ public class VSCHMod {
 			VSCHPonderRegistrateBlocks.register();
 		}
 
-        if (ModList.get().isLoaded("cosmos")) {
+        if (SpaceMods.COSMIC.isLoaded()) {
             MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
         }
 	}
