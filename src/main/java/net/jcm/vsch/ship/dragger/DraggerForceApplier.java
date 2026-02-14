@@ -24,17 +24,8 @@ import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.world.PhysLevel;
 
-public class DraggerForceApplier implements IVSCHForceApplier {
+public record DraggerForceApplier(DraggerData data) implements IVSCHForceApplier {
 
-	private final DraggerData data;
-
-	public DraggerForceApplier(DraggerData data) {
-		this.data = data;
-	}
-
-	public DraggerData getData(){
-		return this.data;
-	}
 
 	@Override
 	public void applyForces(BlockPos pos, PhysShip ship, PhysLevel physLevel) {

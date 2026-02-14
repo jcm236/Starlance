@@ -93,7 +93,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public DraggerData getDraggerAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof DraggerForceApplier dragger) {
-			return dragger.getData();
+			return dragger.data();
 		} else {
 			return null;
 		}
