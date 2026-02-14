@@ -40,6 +40,7 @@ public abstract class MixinModUtils {
             if (serverShip == null) return;
             final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(serverShip);
             landingAttachment.landing = true;
+            landingAttachment.velocity = new Vector3d(0.0, -10.0, 0.0);
 
             TeleportationHandler handler = new TeleportationHandler(player.serverLevel(), targetLevel, false);
             handler.addShipWithVelocity(serverShip, VectorConversionsMCKt.toJOML(pos), serverShip.getTransform().getRotation(), new Vector3d(0.0, -10.0, 0.0), serverShip.getAngularVelocity());
