@@ -174,6 +174,20 @@ repositories {
     }
 }
 
+def spaceMod(String mod) {
+    dependencies.add("modCompileOnly", mod)
+    if (project.runtime_space_mod.toString().trim() == mod.split(":")[1]) {
+        dependencies.add("modRuntimeOnly", mod) { transitive = true }
+    }
+}
+
+def spaceModDep(String mod, String runWith) {
+    dependencies.add("compileOnlyApi", mod)
+    if (project.runtime_space_mod.toString().trim() == runWith) {
+        dependencies.add("modRuntimeOnly", mod) { transitive = true }
+    }
+}
+
 dependencies {
 	// region mixins
 	annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
@@ -222,21 +236,22 @@ dependencies {
 		}
 	}
 
-    modCompileOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    modCompileOnly("maven.modrinth:ad-astra:${ad_astra_version}")
-    compileOnlyApi(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
-    compileOnlyApi(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
-    compileOnlyApi(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
+    spaceMod("maven.modrinth:ad-astra:${ad_astra_version}")
+    spaceMod("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
 
-    if (runtime_space_mod == "cosmos") {
-        modRuntimeOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-    }
-    if (runtime_space_mod == "ad_astra") {
-        modRuntimeOnly("maven.modrinth:ad-astra:${ad_astra_version}")
-        modRuntimeOnly(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
-        modRuntimeOnly(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
-        modRuntimeOnly(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
-    }
+    spaceModDep("earth.terrarium.botarium:botarium-forge-${minecraft_version}:2.3.3", "ad-astra")
+    spaceModDep("com.teamresourceful.resourcefullib:resourcefullib-forge-${minecraft_version}:2.1.23", "ad-astra")
+    spaceModDep("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-${minecraft_version}:2.1.2", "ad-astra")
+
+//    if (runtime_space_mod == "cosmos") {
+//        modRuntimeOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
+//    }
+//    if (runtime_space_mod == "ad_astra") {
+//        modRuntimeOnly("maven.modrinth:ad-astra:${ad_astra_version}")
+//        modRuntimeOnly(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
+//        modRuntimeOnly(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
+//        modRuntimeOnly(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
+//    }
 
     // endregion
 
