@@ -27,7 +27,6 @@ import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
 import org.jetbrains.annotations.NotNull;
-import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -117,7 +116,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public ThrusterData getThrusterAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof ThrusterForceApplier thruster) {
-			return thruster.getData();
+			return thruster.data();
 		} else {
 			return null;
 		}
