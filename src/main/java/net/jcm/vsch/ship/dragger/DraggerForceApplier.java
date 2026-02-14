@@ -26,7 +26,7 @@ import org.valkyrienskies.core.api.world.PhysLevel;
 
 public class DraggerForceApplier implements IVSCHForceApplier {
 
-	private DraggerData data;
+	private final DraggerData data;
 
 	public DraggerForceApplier(DraggerData data) {
 		this.data = data;
@@ -45,18 +45,22 @@ public class DraggerForceApplier implements IVSCHForceApplier {
 		final Vector3dc linearVelocity = ship.getVelocity();
 		final Vector3dc angularVelocity = ship.getAngularVelocity();
 
+		final double s = ship.getTransform().getShipToWorldScaling().x();
+
 		final Vector3d force = linearVelocity.mul(-ship.getMass(), new Vector3d());
 
-		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue();
+		// Mass is scaled by s^3
+		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue() * s * s * s;
 		if (force.lengthSquared() > maxDrag * maxDrag) {
 			force.normalize(maxDrag);
 		}
 
-		final Vector3d rotForce = angularVelocity.mul(-ship.getMass(), new Vector3d());
+		// Torques scale by scaling^5
+		final Vector3d rotForce = angularVelocity.mul(-ship.getMass(), new Vector3d()).mul(s * s);
 
 		VSCHUtils.clampVector(rotForce, VSCHServerConfig.MAX_DRAG.get().intValue());
 
-		ship.applyInvariantForce(force);
-		ship.applyInvariantTorque(rotForce);
+		ship.applyWorldForceToBodyPos(force, new Vector3d());
+		ship.applyWorldTorque(rotForce);
 	}
 }
