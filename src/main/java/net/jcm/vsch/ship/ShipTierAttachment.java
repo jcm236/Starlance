@@ -1,21 +1,12 @@
 package net.jcm.vsch.ship;
 
 import net.minecraft.core.BlockPos;
-import org.jetbrains.annotations.NotNull;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
-import org.valkyrienskies.core.api.world.PhysLevel;
 
 import java.util.HashMap;
 
-public final class ShipTierAttachment implements ShipPhysicsListener {
+public final class ShipTierAttachment {
     private HashMap<Long, Integer> tierMods = new HashMap<>();
-
-    @Override
-    public void physTick(@NotNull PhysShip physShip, @NotNull PhysLevel physLevel) {
-
-    }
 
     public void addTierMod(BlockPos pos, int tier) {
         tierMods.put(pos.asLong(), tier);

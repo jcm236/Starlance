@@ -34,11 +34,6 @@ public class EventsWithAD {
 			case START -> {
 			}
 			case END -> {
-				if (serverLevel.getPlayers(player -> true, 1).isEmpty()) {
-					// skip if the no player is in the world
-					// TODO: maybe we'll have automated ships in the future and this needs to be removed?
-					return;
-				}
 				AtmosphericCollision.atmosphericCollisionTick(serverLevel);
 			}
 		}

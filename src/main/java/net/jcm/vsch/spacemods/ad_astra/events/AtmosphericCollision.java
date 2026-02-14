@@ -70,6 +70,7 @@ public class AtmosphericCollision {
                 ShipTierAttachment tierAttachment = ShipTierAttachment.get(ship);
 
                 if (!(nearestPlayer.containerMenu instanceof PlanetsMenu)) {
+                    attachment.freezeShip(ship);
                     openPlanetsScreen(tierAttachment.getHighestTier(), nearestPlayer);
                 }
             } else {
