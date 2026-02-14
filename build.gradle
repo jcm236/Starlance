@@ -228,7 +228,7 @@ dependencies {
 	modImplementation "thedarkcolour:kotlinforforge:4.11.0"
 	// endregion
 
-	// region Personal deps (VUtil + CH)
+	// region Personal deps (Vtil + Space Mods)
 	jarJar(modImplementation("com.github.litermc.vtil:vtil-forge-${minecraft_version}:${vtil_version}")) {
 		version {
 			strictly "[${vtil_version},)"
@@ -242,16 +242,6 @@ dependencies {
     spaceModDep("earth.terrarium.botarium:botarium-forge-${minecraft_version}:2.3.3", "ad-astra")
     spaceModDep("com.teamresourceful.resourcefullib:resourcefullib-forge-${minecraft_version}:2.1.23", "ad-astra")
     spaceModDep("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-${minecraft_version}:2.1.2", "ad-astra")
-
-//    if (runtime_space_mod == "cosmos") {
-//        modRuntimeOnly("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
-//    }
-//    if (runtime_space_mod == "ad_astra") {
-//        modRuntimeOnly("maven.modrinth:ad-astra:${ad_astra_version}")
-//        modRuntimeOnly(group: "earth.terrarium.botarium", name: "botarium-forge-${minecraft_version}", version: "2.3.3")
-//        modRuntimeOnly(group: "com.teamresourceful.resourcefullib", name: "resourcefullib-forge-${minecraft_version}", version: "2.1.23")
-//        modRuntimeOnly(group: "com.teamresourceful.resourcefulconfig", name: "resourcefulconfig-forge-${minecraft_version}", version: "2.1.2")
-//    }
 
     // endregion
 
