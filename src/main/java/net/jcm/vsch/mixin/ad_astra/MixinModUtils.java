@@ -25,8 +25,6 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 @Mixin(ModUtils.class)
 public abstract class MixinModUtils {
-    @Shadow
-    public abstract Entity teleportToDimension(Entity entity, ServerLevel level);
 
     @Inject(
             method = "land",
