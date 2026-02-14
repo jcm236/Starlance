@@ -13,20 +13,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.spacemods;
+package net.jcm.vsch;
 
 import net.minecraftforge.fml.ModList;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public enum SpaceMods {
-	COSMIC("cosmos"),
-	AD_ASTRA("ad_astra");
+public enum CompatMods {
+	COMPUTERCRAFT("computercraft"),
+	CREATE("create"),
+	CURIOS("curios"),
+	JADE("jade"),
+    COSMIC("cosmos"),
+    AD_ASTRA("ad_astra");
 
 	private final String modId;
 
-	SpaceMods(String modId) {
+	CompatMods(String modId) {
 		this.modId = modId;
 	}
 

@@ -15,7 +15,7 @@
  **/
 package net.jcm.vsch.network;
 
-import net.jcm.vsch.spacemods.SpaceMods;
+import net.jcm.vsch.CompatMods;
 import net.jcm.vsch.spacemods.ad_astra.SyncMenuTierS2C;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,7 +50,7 @@ public final class VSCHNetwork {
 
 	public static void register() {
 		registerC2S(ToggleItemPacketC2S.class, ToggleItemPacketC2S::decode);
-        if (SpaceMods.AD_ASTRA.isLoaded()) {
+        if (CompatMods.AD_ASTRA.isLoaded()) {
             registerS2C(SyncMenuTierS2C.class, SyncMenuTierS2C::decode);
         }
 	}

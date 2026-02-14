@@ -18,14 +18,12 @@ package net.jcm.vsch;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
-import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.ShipTierAttachment;
-import net.jcm.vsch.spacemods.SpaceMods;
 import net.jcm.vsch.spacemods.ad_astra.events.EventsWithAD;
 import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
 import net.jcm.vsch.entity.VSCHEntities;
@@ -38,8 +36,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import org.valkyrienskies.core.impl.config.VSCoreConfig;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
@@ -81,11 +77,11 @@ public class VSCHMod {
 			VSCHPonderRegistrateBlocks.register();
 		}
 
-        if (SpaceMods.COSMIC.isLoaded()) {
+        if (CompatMods.COSMIC.isLoaded()) {
             MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
         }
 
-        if (SpaceMods.AD_ASTRA.isLoaded()) {
+        if (CompatMods.AD_ASTRA.isLoaded()) {
             MinecraftForge.EVENT_BUS.register(EventsWithAD.class);
         }
 	}
