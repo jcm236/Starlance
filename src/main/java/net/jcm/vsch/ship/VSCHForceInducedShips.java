@@ -139,7 +139,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public GyroData getGyroAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof GyroForceApplier gyro) {
-			return gyro.getData();
+			return gyro.data();
 		} else {
 			return null;
 		}
