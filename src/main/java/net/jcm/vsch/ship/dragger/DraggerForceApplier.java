@@ -49,7 +49,7 @@ public class DraggerForceApplier implements IVSCHForceApplier {
 
 		final Vector3d force = linearVelocity.mul(-ship.getMass(), new Vector3d());
 
-		// Mass is scaled by s^3
+		// Scale max drag to induce the same acceleration regardless of ship scale
 		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue() * s * s * s;
 		if (force.lengthSquared() > maxDrag * maxDrag) {
 			force.normalize(maxDrag);
