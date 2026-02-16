@@ -22,7 +22,16 @@ import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.world.PhysLevel;
 
-public record GyroForceApplier(GyroData data) implements IVSCHForceApplier {
+public class GyroForceApplier implements IVSCHForceApplier {
+	private final GyroData data;
+
+	public GyroData getData() {
+		return this.data;
+	}
+
+	public GyroForceApplier(GyroData data){
+		this.data = data;
+	}
 
 	@Override
 	public void applyForces(BlockPos pos, PhysShip ship, PhysLevel level) {

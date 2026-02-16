@@ -27,7 +27,16 @@ import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-public record ThrusterForceApplier(ThrusterData data) implements IVSCHForceApplier {
+public class ThrusterForceApplier implements IVSCHForceApplier {
+    private final ThrusterData data;
+
+    public ThrusterData getData() {
+        return this.data;
+    }
+
+    public ThrusterForceApplier(ThrusterData data){
+        this.data = data;
+    }
 
     @Override
     public void applyForces(BlockPos pos, PhysShip ship, PhysLevel physLevel) {

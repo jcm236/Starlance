@@ -93,7 +93,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public DraggerData getDraggerAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof DraggerForceApplier dragger) {
-			return dragger.data();
+			return dragger.getData();
 		} else {
 			return null;
 		}
@@ -116,7 +116,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public ThrusterData getThrusterAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof ThrusterForceApplier thruster) {
-			return thruster.data();
+			return thruster.getData();
 		} else {
 			return null;
 		}
@@ -139,7 +139,7 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	public GyroData getGyroAtPos(BlockPos pos) {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof GyroForceApplier gyro) {
-			return gyro.data();
+			return gyro.getData();
 		} else {
 			return null;
 		}
