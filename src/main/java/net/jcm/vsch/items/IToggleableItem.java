@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.items;
 
-import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.network.c2s.ToggleItemPacketC2S;
 import net.jcm.vsch.util.VSCHUtils;

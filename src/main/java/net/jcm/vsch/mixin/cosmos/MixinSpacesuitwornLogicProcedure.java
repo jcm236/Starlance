@@ -17,7 +17,7 @@ package net.jcm.vsch.mixin.cosmos;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.items.custom.MagnetBootItem;
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 import net.lointain.cosmos.entity.RocketSeatEntity;
 import net.lointain.cosmos.item.NickelSuitItem;
 import net.lointain.cosmos.item.SteelSuitItem;

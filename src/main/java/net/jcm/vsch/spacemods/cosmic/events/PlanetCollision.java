@@ -13,7 +13,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.event;
+package net.jcm.vsch.spacemods.cosmic.events;
 
 import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.api.event.PreTravelEvent;
@@ -23,7 +23,7 @@ import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.util.TeleportationHandler;
 import net.jcm.vsch.util.VSCHUtils;
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 import net.lointain.cosmos.network.CosmosModVariables;
 import net.lointain.cosmos.world.inventory.LandingSelectorMenu;
 

@@ -15,9 +15,8 @@
  **/
 package net.jcm.vsch.util;
 
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 import net.jcm.vsch.config.VSCHServerConfig;
-import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;

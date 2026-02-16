@@ -13,9 +13,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.compat;
+package net.jcm.vsch;
 
-import net.minecraft.util.StringRepresentable;
 import net.minecraftforge.fml.ModList;
 
 import java.util.Optional;
@@ -25,7 +24,9 @@ public enum CompatMods {
 	COMPUTERCRAFT("computercraft"),
 	CREATE("create"),
 	CURIOS("curios"),
-	JADE("jade");
+	JADE("jade"),
+    COSMIC("cosmos"),
+    AD_ASTRA("ad_astra");
 
 	private final String modId;
 

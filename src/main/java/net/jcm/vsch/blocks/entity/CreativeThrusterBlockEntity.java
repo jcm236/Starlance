@@ -22,6 +22,7 @@ import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -55,12 +56,12 @@ public class CreativeThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
 	@Override
 	protected ParticleOptions getThrusterParticleType() {
-		return CosmosModParticleTypes.AIR_THRUST.get();
+		return ParticleTypes.ASH;
 	}
 
 	@Override
 	protected ParticleOptions getThrusterSmokeParticleType() {
-		return CosmosModParticleTypes.AIR_THRUST.get();
+		return ParticleTypes.ASH;
 	}
 
 	@Override

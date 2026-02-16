@@ -19,7 +19,7 @@ import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.GyroPeripheral;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;

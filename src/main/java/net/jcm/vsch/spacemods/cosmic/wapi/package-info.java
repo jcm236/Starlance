@@ -13,11 +13,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.util.wapi;
 
-public final class LevelType {
-	public static final String SPACE = "space";
-	public static final String PLANET = "planet";
-
-	private LevelType() {}
-}
+/**
+ * wapi package provides a set of wrapped API to acccess data friendly.
+ * 
+ * This may or may not be removed in the future.
+ */
+package net.jcm.vsch.spacemods.cosmic.wapi;

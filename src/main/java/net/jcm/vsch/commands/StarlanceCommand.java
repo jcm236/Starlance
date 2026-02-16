@@ -16,14 +16,10 @@
 package net.jcm.vsch.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.logging.LogUtils;
-import net.jcm.vsch.event.Gravity;
-import net.jcm.vsch.util.VSCHUtils;
+import net.jcm.vsch.spacemods.cosmic.events.Gravity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import org.slf4j.Logger;

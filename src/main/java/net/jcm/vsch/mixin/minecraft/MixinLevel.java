@@ -16,7 +16,7 @@
 package net.jcm.vsch.mixin.minecraft;
 
 import net.jcm.vsch.accessor.ILevelAccessor;
-import net.jcm.vsch.util.wapi.LevelData;
+import net.jcm.vsch.spacemods.cosmic.wapi.LevelData;
 
 import net.minecraft.world.level.Level;
 

@@ -18,6 +18,13 @@
 	"block.vsch.powerful_thruster_block": "Powerful thruster",
 	"block.vsch.rocket_assembler": "Rocket Assembler",
 	"block.vsch.thruster_block": "Thruster",
+	"block.vsch.tier_1": "Tier 1",
+	"block.vsch.tier_2": "Tier 2",
+	"block.vsch.tier_3": "Tier 3",
+	"block.vsch.tier_4": "Tier 4",
+	"block.vsch.tier_5": "Tier 5",
+
+
 	"item.vsch.magnet_boot": "Magnet Boots",
 	"item.vsch.wrench": "Wrench",
 	"key.categories.vsch": "Starlance",
