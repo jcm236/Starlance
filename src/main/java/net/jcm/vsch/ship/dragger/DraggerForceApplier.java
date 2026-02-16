@@ -55,7 +55,7 @@ public class DraggerForceApplier implements IVSCHForceApplier {
 			force.normalize(maxDrag);
 		}
 
-		// Torques scale by scaling^5
+		// Torques scale by s^5 - since mass already accounts for s^3, we multiply by s^2 (s^3 * s^2 = s^5)
 		final Vector3d rotForce = angularVelocity.mul(-ship.getMass(), new Vector3d()).mul(s * s);
 
 		VSCHUtils.clampVector(rotForce, VSCHServerConfig.MAX_DRAG.get().intValue());
