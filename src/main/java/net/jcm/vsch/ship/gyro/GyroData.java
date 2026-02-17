@@ -15,7 +15,7 @@
  **/
 package net.jcm.vsch.ship.gyro;
 
-import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public final class GyroData {
 	public volatile Vector3dc torque;

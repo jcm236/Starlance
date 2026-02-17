@@ -184,7 +184,7 @@ public class GyroBlockEntity extends BlockEntity implements ParticleBlockEntity,
 		}
 
 		final double force = this.getTorqueForce();
-		this.data.torque.set(torque.x * force, torque.y * force, torque.z * force);
+		this.data.torque = torque.mul(force, new Vector3d());
 
 		if (torque.x != 0 || torque.y != 0 || torque.z != 0) {
 			this.setChanged();

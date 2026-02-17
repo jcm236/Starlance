@@ -27,17 +27,17 @@ import org.valkyrienskies.core.api.ships.properties.ShipTransform;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-public class ThrusterForceApplier implements IVSCHForceApplier {
+public final class ThrusterForceApplier implements IVSCHForceApplier {
 	private static final Vector3dc ZERO_VEC3D = new Vector3d();
 
 	private final ThrusterData data;
 
-	public ThrusterData getData() {
-		return this.data;
-	}
-
 	public ThrusterForceApplier(final ThrusterData data) {
 		this.data = data;
+	}
+
+	public ThrusterData getData() {
+		return this.data;
 	}
 
 	@Override
