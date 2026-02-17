@@ -128,7 +128,6 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 		 addApplier(pos, new GyroForceApplier(data));
 	}
 
-
 	public void removeGyro(BlockPos pos) {
 		if (getGyroAtPos(pos) != null){
 			removeApplier(pos);
