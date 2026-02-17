@@ -15,8 +15,7 @@
  **/
 package net.jcm.vsch.ship.dragger;
 
-public class DraggerData {
-
+public final class DraggerData {
 	public volatile boolean on;
 
 	public DraggerData(boolean on) {

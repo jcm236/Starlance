@@ -17,10 +17,10 @@ package net.jcm.vsch.ship.gyro;
 
 import org.joml.Vector3d;
 
-public class GyroData {
-	public final Vector3d torque;
+public final class GyroData {
+	public volatile Vector3dc torque;
 
-	public GyroData(Vector3d torque) {
+	public GyroData(Vector3dc torque) {
 		this.torque = torque;
 	}
 

@@ -28,95 +28,80 @@ import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 public class ThrusterForceApplier implements IVSCHForceApplier {
-    private final ThrusterData data;
+	private static final Vector3dc ZERO_VEC3D = new Vector3d();
 
-    public ThrusterData getData() {
-        return this.data;
-    }
+	private final ThrusterData data;
 
-    public ThrusterForceApplier(ThrusterData data){
-        this.data = data;
-    }
+	public ThrusterData getData() {
+		return this.data;
+	}
 
-    @Override
-    public void applyForces(BlockPos pos, PhysShip ship, PhysLevel physLevel) {
-        // Get current thrust from thruster
-        double throttle = data.throttle;
-        if (throttle == 0) {
-            return;
-        }
+	public ThrusterForceApplier(final ThrusterData data) {
+		this.data = data;
+	}
 
-        // Transform force direction from ship relative to world relative
-        ShipTransform transform = ship.getTransform();
-        Vector3d tForce = transform.getShipToWorld().transformDirection(data.dir, new Vector3d());
-        tForce.mul(throttle);
+	@Override
+	public void applyForces(final BlockPos blockPos, final PhysShip ship, final PhysLevel physLevel) {
+		final double throttle = data.throttle;
+		if (throttle == 0) {
+			return;
+		}
 
-        Vector3dc linearVelocity = ship.getVelocity();
-        double shipToWorldScale = ship.getTransform().getShipToWorldScaling().x();
+		// Transform force direction from ship relative to world relative
+		final ShipTransform transform = ship.getTransform();
+		final Vector3dc force = transform.getShipToWorld().transformDirection(data.dir, new Vector3d()).mul(throttle);
 
-        if (VSCHServerConfig.LIMIT_SPEED.get()) {
+		final Vector3dc velocity = ship.getVelocity();
+		final Vector3dc scaling = transform.getShipToWorldScaling();
 
-            int maxSpeed = VSCHServerConfig.MAX_SPEED.get().intValue();
+		if (VSCHServerConfig.LIMIT_SPEED.get()) {
+			final int maxSpeed = VSCHServerConfig.MAX_SPEED.get().intValue();
+			if (Math.abs(velocity.length()) >= maxSpeed) {
+				final double dotProduct = force.dot(velocity);
+				if (dotProduct > 0) {
+					switch (data.mode) {
+						case GLOBAL -> applyScaledForce(ship, velocity, force, maxSpeed);
+						case POSITION -> {
+							final Vector3d pos = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5)
+								.sub(transform.getPositionInShip())
+								.mul(scaling);
+							final Vector3d parallel = pos.mul(force.dot(pos) / force.lengthSquared(), new Vector3d());
+							final Vector3d perpendicular = force.sub(parallel, new Vector3d());
 
-            if (Math.abs(linearVelocity.length()) >= maxSpeed) {
+							// rotate the ship
+							ship.applyWorldForceToBodyPos(perpendicular, pos);
+							// apply global force, since the force is perfectly lined up with the centre of gravity
+							applyScaledForce(ship, velocity, parallel, maxSpeed);
+						}
+					}
+					return;
+				}
+			}
+		}
 
-                double dotProduct = tForce.dot(linearVelocity);
+		switch (data.mode) {
+			case GLOBAL -> ship.applyWorldForceToBodyPos(force, ZERO_VEC3D);
+			case POSITION -> {
+				final Vector3dc pos = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5)
+					.sub(transform.getPositionInShip())
+					.mul(scaling);
+				ship.applyWorldForceToBodyPos(force, pos);
+			}
+		}
+	}
 
-                if (dotProduct > 0) {
+	private static void applyScaledForce(final PhysShip ship, final Vector3dc velocity, final Vector3dc force, final int maxSpeed) {
+		final double deltaTime = 1.0 / (20 * 3);
+		final double mass = ship.getMass();
 
-                    if (data.mode == ThrusterData.ThrusterMode.GLOBAL) {
+		// Invert the parallel projection of force onto velocity and scales it so that the resulting speed is exactly
+		// equal to length of velocity, but still in the direction the ship would have been going without the speed limit
+		final Vector3d targetVelocity = force.mul(deltaTime / mass, new Vector3d())
+			.add(velocity)
+			.normalize(maxSpeed)
+			.sub(velocity);
 
-                        applyScaledForce(ship, linearVelocity, tForce, maxSpeed);
-
-                    } else if (data.mode == ThrusterData.ThrusterMode.POSITION) {
-
-                        Vector3d tPos = VectorConversionsMCKt.toJOML(pos.getCenter())
-                                .sub(transform.getPositionInShip());
-
-
-                        Vector3d parallel = new Vector3d(tPos).mul(tForce.dot(tPos) / tForce.dot(tForce));
-
-                        Vector3d perpendicular = new Vector3d(tForce).sub(parallel);
-
-                        // rotate the ship
-                        ship.applyWorldForceToBodyPos(perpendicular, tPos.mul(shipToWorldScale));
-
-                        // apply global force, since the force is perfectly lined up with the centre of gravity
-                        applyScaledForce(ship, linearVelocity, parallel, maxSpeed);
-
-                    } else {
-                        throw new UnsupportedOperationException("Thruster mode not implemented: " + data.mode.name());
-                    }
-                    return;
-                }
-            }
-        }
-
-        // Switch between applying force at position and just applying the force
-        if (data.mode == ThrusterData.ThrusterMode.POSITION) {
-            Vector3d tPos = VectorConversionsMCKt.toJOMLD(pos)
-                    .add(0.5, 0.5, 0.5, new Vector3d())
-                    .sub(transform.getPositionInShip());
-
-            ship.applyWorldForceToBodyPos(tForce, tPos.mul(shipToWorldScale));
-
-        } else if (data.mode == ThrusterData.ThrusterMode.GLOBAL) {
-            // Apply the force at the center of gravity
-            ship.applyWorldForceToBodyPos(tForce, new Vector3d());
-        } else {
-            throw new UnsupportedOperationException("Thruster mode not implemented: " + data.mode.name());
-        }
-    }
-
-    private static void applyScaledForce(PhysShip ship, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
-        double deltaTime = 1.0 / (20 * 3);
-        double mass = ship.getMass();
-
-        //Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly
-        // equal to length of linearVelocity, but still in the direction the ship would have been going without the speed limit
-        Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
-
-        // Apply the force at the center of gravity
-        ship.applyWorldForceToBodyPos(targetVelocity.mul(mass / deltaTime), new Vector3d());
-    }
+		// Apply the force at the center of gravity
+		ship.applyWorldForceToBodyPos(targetVelocity.mul(mass / deltaTime), ZERO_VEC3D);
+	}
 }

@@ -24,15 +24,14 @@ import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.world.PhysLevel;
 
-public class DraggerForceApplier implements IVSCHForceApplier {
-
+public final class DraggerForceApplier implements IVSCHForceApplier {
 	private final DraggerData data;
 
 	public DraggerForceApplier(DraggerData data) {
 		this.data = data;
 	}
 
-	public DraggerData getData(){
+	public DraggerData getData() {
 		return this.data;
 	}
 
@@ -42,23 +41,25 @@ public class DraggerForceApplier implements IVSCHForceApplier {
 			return;
 		}
 
+		final double mass = ship.getMass();
+		final double scale = ship.getTransform().getShipToWorldScaling().x();
+
+		// Scale max drag to induce the same acceleration regardless of ship scale
+		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue() * scale * scale * scale;
+
 		final Vector3dc linearVelocity = ship.getVelocity();
 		final Vector3dc angularVelocity = ship.getAngularVelocity();
 
-		final double s = ship.getTransform().getShipToWorldScaling().x();
+		final Vector3d force = linearVelocity.mul(-mass, new Vector3d());
 
-		final Vector3d force = linearVelocity.mul(-ship.getMass(), new Vector3d());
-
-		// Scale max drag to induce the same acceleration regardless of ship scale
-		final double maxDrag = VSCHServerConfig.MAX_DRAG.get().intValue() * s * s * s;
 		if (force.lengthSquared() > maxDrag * maxDrag) {
 			force.normalize(maxDrag);
 		}
 
-		// Torques scale by s^5 - since mass already accounts for s^3, we multiply by s^2 (s^3 * s^2 = s^5)
-		final Vector3d rotForce = angularVelocity.mul(-ship.getMass(), new Vector3d()).mul(s * s);
-
-		VSCHUtils.clampVector(rotForce, VSCHServerConfig.MAX_DRAG.get().intValue());
+		// Torques scale by scale^5
+		// since mass already accounts for scale^3, its only necessary to multiply by scale^2
+		final Vector3d rotForce = angularVelocity.mul(-mass, new Vector3d()).mul(scale * scale);
+		VSCHUtils.clampVector(rotForce, maxDrag);
 
 		ship.applyWorldForceToBodyPos(force, new Vector3d());
 		ship.applyWorldTorque(rotForce);

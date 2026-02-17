@@ -19,7 +19,7 @@ import org.joml.Vector3d;
 
 import net.minecraft.util.StringRepresentable;
 
-public class ThrusterData {
+public final class ThrusterData {
 
 	public enum ThrusterMode implements StringRepresentable  {
 		POSITION("position"),
@@ -28,7 +28,7 @@ public class ThrusterData {
 		private final String name;
 
 		// Constructor that takes a string parameter
-		ThrusterMode(String name) {
+		private ThrusterMode(String name) {
 			this.name = name;
 		}
 

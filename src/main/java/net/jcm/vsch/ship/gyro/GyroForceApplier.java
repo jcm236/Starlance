@@ -22,15 +22,15 @@ import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.world.PhysLevel;
 
-public class GyroForceApplier implements IVSCHForceApplier {
+public final class GyroForceApplier implements IVSCHForceApplier {
 	private final GyroData data;
+
+	public GyroForceApplier(GyroData data) {
+		this.data = data;
+	}
 
 	public GyroData getData() {
 		return this.data;
-	}
-
-	public GyroForceApplier(GyroData data){
-		this.data = data;
 	}
 
 	@Override
