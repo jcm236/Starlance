@@ -28,8 +28,7 @@ public class MixinPlanetsMenu {
 
     @WrapOperation(
             method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Ljava/util/Set;Ljava/util/Map;Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;Ljava/util/Set;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getVehicle()Lnet/minecraft/world/entity/Entity;"),
-            remap = false
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getVehicle()Lnet/minecraft/world/entity/Entity;")
     )
     private Entity injectVehicle(Player instance, Operation<Entity> original) {
 
@@ -57,7 +56,7 @@ public class MixinPlanetsMenu {
 
     @WrapOperation(
             method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Ljava/util/Set;Ljava/util/Map;Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;Ljava/util/Set;)V",
-            at = @At(value = "INVOKE", target = "Learth/terrarium/adastra/common/entities/vehicles/Rocket;tier()I"),
+            at = @At(value = "INVOKE", target = "Learth/terrarium/adastra/common/entities/vehicles/Rocket;tier()I", remap = false),
             remap = false
     )
     private int injectTier(Rocket instance, Operation<Integer> original) {
