@@ -18,21 +18,25 @@ package net.jcm.vsch;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
-import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderPlugin;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistry;
-import net.jcm.vsch.compat.create.ponder.VSCHPonderTags;
 import net.jcm.vsch.config.VSCHClientConfig;
 import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.ship.ShipTierAttachment;
+import net.jcm.vsch.spacemods.ad_astra.events.EventsWithAD;
+import net.jcm.vsch.spacemods.cosmic.events.EventsWithCH;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.items.VSCHItems;
 import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import org.valkyrienskies.core.impl.config.VSCoreConfig;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -63,6 +67,7 @@ public class VSCHMod {
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
 
 		modBus.addListener(this::onClientSetup);
 		modBus.addListener(this::onCommonSetup);
@@ -71,6 +76,14 @@ public class VSCHMod {
 		if (CompatMods.CREATE.isLoaded()) {
 			VSCHPonderRegistrateBlocks.register();
 		}
+
+        if (CompatMods.COSMIC.isLoaded()) {
+            MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
+        }
+
+        if (CompatMods.AD_ASTRA.isLoaded()) {
+            MinecraftForge.EVENT_BUS.register(EventsWithAD.class);
+        }
 	}
 
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)
@@ -81,18 +94,34 @@ public class VSCHMod {
 	}
 
 	private void onCommonSetup(final FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
-			this.registerAttachments();
-		});
+		event.enqueueWork(this::registerAttachments);
 	}
 
 	private void registerAttachments() {
 		ValkyrienSkiesMod.getApi().registerAttachment(ShipLandingAttachment.class);
+		ValkyrienSkiesMod.getApi().registerAttachment(ShipTierAttachment.class);
 		ValkyrienSkiesMod.getApi().registerAttachment(VSCHForceInducedShips.class, (builder) -> {
 			builder.useTransientSerializer();
 			return null; // blame kotlin
 		});
 	}
+
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
+        if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
+            return;
+        }
+
+        if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
+            return;
+        }
+
+        if (joinEvent.getEntity() instanceof ServerPlayer player) {
+            player.sendSystemMessage(
+                    Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
+                            .withStyle(ChatFormatting.YELLOW)
+            );
+        }
+    }
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);

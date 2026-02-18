@@ -16,9 +16,8 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.CompatMods;
 import net.lointain.cosmos.network.CosmosModVariables;
-import net.lointain.cosmos.procedures.DistanceOrderProviderProcedure;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
@@ -26,16 +25,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

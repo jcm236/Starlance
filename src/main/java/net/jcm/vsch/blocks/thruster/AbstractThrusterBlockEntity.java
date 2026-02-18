@@ -31,6 +31,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -346,11 +347,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 	}
 
 	protected ParticleOptions getThrusterParticleType() {
-		return CosmosModParticleTypes.THRUSTED.get();
+        // TODO: Make custom particle
+		return ParticleTypes.ASH;//ParticleTypes.ASH;
 	}
 
 	protected ParticleOptions getThrusterSmokeParticleType() {
-		return CosmosModParticleTypes.THRUST_SMOKE.get();
+        // TODO: Make custom particle
+        return ParticleTypes.ASH;//ParticleTypes.ASH;
 	}
 
 	protected abstract double getEvaporateDistance();
@@ -435,7 +438,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			final Vec3 ppos = waterCenter.offsetRandom(level.random, 1.0f);
 			final Vec3 speed = Vec3.ZERO.offsetRandom(level.random, 0.5f);
 			level.addParticle(
-				CosmosModParticleTypes.AIR_THRUST.get(),
+				ParticleTypes.ASH,
 				true,
 				ppos.x, ppos.y, ppos.z,
 				speed.x, speed.y, speed.z

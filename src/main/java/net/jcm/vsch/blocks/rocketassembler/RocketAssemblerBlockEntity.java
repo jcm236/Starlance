@@ -17,7 +17,7 @@ package net.jcm.vsch.blocks.rocketassembler;
 
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.compat.CompatMods;
+import net.jcm.vsch.CompatMods;
 import net.jcm.vsch.config.VSCHServerConfig;
 import com.github.litermc.vtil.block.AbstractAssemblerBlockEntity;
 
@@ -30,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -41,7 +40,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 import dan200.computercraft.shared.Capabilities;
 
 import org.joml.primitives.AABBi;
-import org.joml.primitives.AABBic;
 
 public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity implements ParticleBlockEntity {
 	private static final int MAX_SIZE = 256 * 16;
