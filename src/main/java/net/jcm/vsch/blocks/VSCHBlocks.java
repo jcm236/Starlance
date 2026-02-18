@@ -38,6 +38,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class VSCHBlocks {
@@ -161,6 +163,28 @@ public class VSCHBlocks {
 				.noOcclusion()
 		)
 	);
+
+	public static List<RegistryObject<Block>> TIER_BLOCKS = registerTierBlocks(5);
+
+	private static List<RegistryObject<Block>> registerTierBlocks(final int maxTier) {
+		final List<RegistryObject<Block>> result = new ArrayList<>(maxTier);
+		for (int i = 1; i <= maxTier; i++) {
+			final int tier = i;
+			result.add(
+				registerBlock(
+					"tier_" + tier,
+					() -> new TierBlock(
+            tier,
+						BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+							.mapColor(MapColor.STONE)
+							.sound(SoundType.COPPER)
+							.strength(5f)
+				  )
+				)
+			);
+		}
+		return result;
+	}
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);
