@@ -1,60 +1,166 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.blocks;
 
-import java.util.function.Supplier;
-
 import net.jcm.vsch.VSCHMod;
-
 import net.jcm.vsch.blocks.custom.*;
+import net.jcm.vsch.blocks.entity.AirThrusterBlockEntity;
+import net.jcm.vsch.blocks.entity.CreativeThrusterBlockEntity;
+import net.jcm.vsch.blocks.entity.PowerfulThrusterBlockEntity;
+import net.jcm.vsch.blocks.entity.ThrusterBlockEntity;
+import net.jcm.vsch.blocks.rocketassembler.RocketAssemblerBlock;
+import net.jcm.vsch.items.VSCHItems;
+import net.jcm.vsch.util.rot.DirectionalShape;
+import net.jcm.vsch.util.rot.RotShapes;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.jcm.vsch.items.VSCHItems;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 public class VSCHBlocks {
-	public static final DeferredRegister<Block> BLOCKS =
-			DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
+	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, VSCHMod.MODID);
 
-	public static final RegistryObject<Block> THRUSTER_BLOCK = registerBlock("thruster_block",
-			() -> new ThrusterBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> VENT_BLOCK = registerBlock(
+		"vent_block",
+		() -> new VentBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);
 
-	public static final RegistryObject<Block> AIR_THRUSTER_BLOCK = registerBlock("air_thruster_block",
-			() -> new AirThrusterBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> THRUSTER_BLOCK = registerBlock(
+		"thruster_block",
+		() -> new BaseThrusterBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion(),
+			DirectionalShape.down(RotShapes.solid()),
+			ThrusterBlockEntity::new
+		)
+	);
 
-	public static final RegistryObject<Block> POWERFUL_THRUSTER_BLOCK = registerBlock("powerful_thruster_block",
-			() -> new PowerfulThrusterBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> AIR_THRUSTER_BLOCK = registerBlock(
+		"air_thruster_block",
+		() -> new BaseThrusterBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion(),
+			DirectionalShape.down(RotShapes.box(3.0, 0.0, 3.0, 13.0, 8.0, 13.0)),
+			AirThrusterBlockEntity::new
+		)
+	);
 
-	public static final RegistryObject<Block> DRAG_INDUCER_BLOCK = registerBlock("drag_inducer_block",
-			() -> new DragInducerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> POWERFUL_THRUSTER_BLOCK = registerBlock(
+		"powerful_thruster_block",
+		() -> new BaseThrusterBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion(),
+			DirectionalShape.down(RotShapes.solid()),
+			PowerfulThrusterBlockEntity::new
+		)
+	);
 
-	public static final RegistryObject<Block> GRAVITY_INDUCER_BLOCK = registerBlock("gravity_inducer_block",
-			() -> new GravityInducerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> CREATIVE_THRUSTER_BLOCK = registerBlock(
+		"creative_thruster_block",
+		() -> new BaseThrusterBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion(),
+			DirectionalShape.down(RotShapes.solid()),
+			CreativeThrusterBlockEntity::new
+		)
+	);
 
-	public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock("dock",
-			() -> new DockerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> DRAG_INDUCER_BLOCK = registerBlock(
+		"drag_inducer_block",
+		() -> new DragInducerBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);
 
-	public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock("magnet_block",
-			() -> new MagnetBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.COPPER)
-					.strength(5f)
-					.noOcclusion()));
+	public static final RegistryObject<Block> GRAVITY_INDUCER_BLOCK = registerBlock(
+		"gravity_inducer_block",
+		() -> new GravityInducerBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);
+
+	public static final RegistryObject<Block> GYRO_BLOCK = registerBlock(
+		"gyro",
+		() -> new GyroBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.ANVIL)
+				.strength(5f, 3f)
+				.noOcclusion()
+		)
+	);
+
+	public static final RegistryObject<Block> ROCKET_ASSEMBLER_BLOCK = registerBlock(
+		"rocket_assembler",
+		() -> new RocketAssemblerBlock(
+			BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+				.mapColor(MapColor.STONE)
+				.sound(SoundType.ANVIL)
+				.strength(5f)
+				.isRedstoneConductor((state, level, pos) -> false)
+		)
+	);
+
+	public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
+		"docker",
+		() -> new DockerBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);
+
+	public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock(
+		"magnet_block",
+		() -> new MagnetBlock(
+			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+				.sound(SoundType.COPPER)
+				.strength(5f)
+				.noOcclusion()
+		)
+	);
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);

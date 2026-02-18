@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "Pengerak Roket Pengalihan mode dinonaktifkan!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "Mode: ",
+	"vsch.message.toggle": "Mengatur mode ke",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "Pengerak roket udara",
+	"block.vsch.drag_inducer_block": "Geser inducer",
+	"block.vsch.powerful_thruster_block": "Pengerak roket kuat",
+	"block.vsch.thruster_block": "Pengerak Roket",
+	"item.vsch.magnet_boot": "Magnet Boots",
+	"item.vsch.wrench": "Wrench",
+
+	"config.jade.plugin_vsch.thruster_component_config": "Pengerak roket Mode Details",
+
+	"vsch.ponder.drag_inducer.header": "Geser Inducer",
+	"vsch.ponder.drag_inducer.text_1": "Terkadang, ini akan sulit untuk memperlambat di ruang angkasa",
+	"vsch.ponder.drag_inducer.text_2": "disini peran geser Inducer",
+	"vsch.ponder.drag_inducer.text_3": "ketika diaktifkanbv dengan batamerah, geser inducer akan mencoba memperlambat kamu ke segela arah",
+	"vsch.ponder.thruster_modes.header": "Pengerak roket Modes",
+	"vsch.ponder.thruster_modes.text_1": "Secara default, pengerak roket di mode POSITION", 
+	"vsch.ponder.thruster_modes.text_2": "Itu berarti mereka akan menerapkan kekuatan berdasarkan posisi mereka",
+	"vsch.ponder.thruster_modes.text_3": "Namum, itu bisa menyebabkan rotasi yang tidak diinginkan",
+	"vsch.ponder.thruster_modes.text_4": "Gunakan Wrench, pengerak roket dapat berubah ke Mode GLOBAL",
+	"vsch.ponder.thruster_modes.text_5": "Di Mode GLOBAL menerapkan kekuatan tanpa posisi",
+	"vsch.ponder.thruster_modes.text_6": "Ini mencegah rotasi yang tidak diinginkan",
+	"vsch.ponder.thrusters.header": "Pengerak Roket",
+	"vsch.ponder.thrusters.text_1": "Pengerak Roket harus diberi kekuatan dengan batamerah untuk mengerakan",
+	"vsch.ponder.thrusters.text_2": "Batamerah dapat menggontrol kekuatan"
+}

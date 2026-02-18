@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.compat.create.ponder;
 
 import com.tterrag.registrate.Registrate;
@@ -21,6 +36,9 @@ public class VSCHPonderRegistrateBlocks {
 
 	public static final BlockEntry<Block> DRAG_INDUCER_BLOCK = REGISTRATE.block("drag_inducer_block", properties -> VSCHBlocks.DRAG_INDUCER_BLOCK.get())
 			.register();
+
+    public static final BlockEntry<Block> ROCKET_ASSEMBLER_BLOCK = REGISTRATE.block("rocket_assembler", properties -> VSCHBlocks.ROCKET_ASSEMBLER_BLOCK.get())
+            .register();
 
 	/**
 	 * Doesn't do anything, but makes sure this class is loaded

@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "추진기 모드 전환이 비활성화되었습니다!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "스타랜스",
+	"vsch.message.mode": "모드: ",
+	"vsch.message.toggle": "모드 설정",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "공기 추진기",
+	"block.vsch.drag_inducer_block": "드래그 유도기",
+	"block.vsch.powerful_thruster_block": "강력한 추진기",
+	"block.vsch.thruster_block": "추진기",
+	"item.vsch.magnet_boot": "자석 부츠",
+	"item.vsch.wrench": "렌치",
+
+	"config.jade.plugin_vsch.thruster_component_config": "추진기 모드 세부 정보",
+
+	"vsch.ponder.drag_inducer.header": "드래그 유도기",
+	"vsch.ponder.drag_inducer.text_1": "때때로 우주에서 속도를 늦추는 것은 어려울 수 있습니다",
+	"vsch.ponder.drag_inducer.text_2": "여기서 드래그 유도제가 등장합니다",
+	"vsch.ponder.drag_inducer.text_3": "레드스톤으로 전원을 공급하면 드래그 유도 장치가 모든 방향으로 속도를 줄이려고 합니다.",
+	"vsch.ponder.thruster_modes.header": "추진기 모드",
+	"vsch.ponder.thruster_modes.text_1": "기본적으로 추진기는 POSITION 모드에 있습니다",
+	"vsch.ponder.thruster_modes.text_2": "이것은 그들이 있는 위치에 따라 힘을 가한다는 것을 의미합니다",
+	"vsch.ponder.thruster_modes.text_3": "그러나 이것은 원치 않는 회전을 일으킬 수 있습니다",
+	"vsch.ponder.thruster_modes.text_4": "렌치를 사용하면 추진기를 GLOBAL 모드로 변경할 수 있습니다",
+	"vsch.ponder.thruster_modes.text_5": "GLOBAL 모드에서는 위치 없이 힘을 적용합니다",
+	"vsch.ponder.thruster_modes.text_6": "이것은 원치 않는 회전을 방지합니다",
+	"vsch.ponder.thrusters.header": "추진기",
+	"vsch.ponder.thrusters.text_1": "추진기는 추력을 내기 위해 레드스톤으로 전원을 공급해야 합니다",
+	"vsch.ponder.thrusters.text_2": "레드스톤 레벨은 강도를 제어할 수 있습니다"
+}

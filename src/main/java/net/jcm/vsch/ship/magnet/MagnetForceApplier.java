@@ -9,34 +9,31 @@ import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
+import org.valkyrienskies.core.api.ships.ships.PhysShip;
 
-public class MagnetForceApplier implements IVSCHForceApplier {
-	private MagnetData data;
+public final class MagnetForceApplier implements IVSCHForceApplier {
+	private final MagnetData data;
 
-	public MagnetData getData(){
-		return this.data;
-	}
-
-	public MagnetForceApplier(MagnetData data){
+	public MagnetForceApplier(MagnetData data) {
 		this.data = data;
 	}
 
+	public MagnetData getData() {
+		return this.data;
+	}
+
 	@Override
-	public void applyForces(BlockPos pos, PhysShipImpl physShip) {
+	public void applyForces(final BlockPos blockPos, final PhysShip ship, final PhysLevel physLevel) {
 		final Vector3d centerPos = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 		final Vector3f facing = data.facing;
 		final boolean isGenerator = data.isGenerator;
 		final MagnetData.ForceCalculator forceCalculator = data.forceCalculator;
 		final Vector3d frontForce = new Vector3d();
 		final Vector3d backForce = new Vector3d();
-		forceCalculator.calc(physShip, frontForce, backForce);
+		forceCalculator.calc(ship, frontForce, backForce);
 		if (isGenerator) {
-			physShip.applyInvariantForce(frontForce);
-			physShip.applyInvariantTorque(backForce);
+			ship.applyWorldForceToBodyPos(frontForce, ZERO_VEC3D);
+			ship.applyWorldTorque(backForce);
 			return;
 		}
 
@@ -45,30 +42,32 @@ public class MagnetForceApplier implements IVSCHForceApplier {
 		if (!hasFrontForce && !hasBackForce) {
 			return;
 		}
-		final ShipTransform transform = physShip.getTransform();
+		final ShipTransform transform = ship.getTransform();
 		final Vector3d frontPos = new Vector3d(facing.x / 2, facing.y / 2, facing.z / 2).add(centerPos).sub(transform.getPositionInShip());
 		final Vector3d backPos = frontPos.sub(facing, new Vector3d());
 
 		// TODO: add speed limit
 
 		if (hasFrontForce) {
-			physShip.applyInvariantForceToPos(frontForce, frontPos);
+			ship.applyInvariantForceToPos(frontForce, frontPos);
 		}
 		if (hasBackForce) {
-			physShip.applyInvariantForceToPos(backForce, backPos);
+			ship.applyInvariantForceToPos(backForce, backPos);
 		}
 	}
 
-	private static void applyScaledForce(PhysShipImpl physShip, Vector3dc linearVelocity, Vector3d tForce, int maxSpeed) {
-		assert ValkyrienSkiesMod.getCurrentServer() != null;
-		double deltaTime = 1.0 / (VSGameUtilsKt.getVsPipeline(ValkyrienSkiesMod.getCurrentServer()).computePhysTps());
-		double mass = physShip.getInertia().getShipMass();
+	private static void applyScaledForce(final PhysShip ship, final Vector3dc velocity, final Vector3dc force, final int maxSpeed) {
+		final double deltaTime = 1.0 / (20 * 3);
+		final double mass = ship.getMass();
 
-		// Invert the parallel projection of tForce onto linearVelocity and scales it so that the resulting speed is exactly
-		// equal to length of linearVelocity, but still in the direction the ship would have been going without the speed limit
-		Vector3d targetVelocity = (new Vector3d(linearVelocity).add(new Vector3d(tForce).mul(deltaTime / mass)).normalize(maxSpeed)).sub(linearVelocity);
+		// Invert the parallel projection of force onto velocity and scales it so that the resulting speed is exactly
+		// equal to length of velocity, but still in the direction the ship would have been going without the speed limit
+		final Vector3d targetVelocity = force.mul(deltaTime / mass, new Vector3d())
+			.add(velocity)
+			.normalize(maxSpeed)
+			.sub(velocity);
 
-		// Apply the force at no specific position
-		physShip.applyInvariantForce(targetVelocity.mul(mass / deltaTime));
+		// Apply the force at the center of gravity
+		ship.applyWorldForceToBodyPos(targetVelocity.mul(mass / deltaTime), ZERO_VEC3D);
 	}
 }

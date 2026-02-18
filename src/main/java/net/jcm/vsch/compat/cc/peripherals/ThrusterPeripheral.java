@@ -1,17 +1,44 @@
-package net.jcm.vsch.compat.cc;
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
+package net.jcm.vsch.compat.cc.peripherals;
 
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.LuaValues;
 import dan200.computercraft.api.lua.MethodResult;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 
 import net.jcm.vsch.blocks.thruster.ThrusterBrain;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class ThrusterPeripheral implements IPeripheral {
+	private static final Set<String> ADDTIONAL_TYPES = Stream.concat(
+		CCGenerics.ENERGY_METHODS.getType().getAdditionalTypes().stream(),
+		CCGenerics.FLUID_METHODS.getType().getAdditionalTypes().stream()
+	).collect(Collectors.toSet());
+
 	private final ThrusterBrain brain;
 
 	public ThrusterPeripheral(ThrusterBrain brain) {
@@ -28,6 +55,11 @@ public class ThrusterPeripheral implements IPeripheral {
 		return "starlance_thruster";
 	}
 
+	@Override
+	public Set<String> getAdditionalTypes() {
+		return ADDTIONAL_TYPES;
+	}
+
 	@LuaFunction
 	public final String getThrusterType() {
 		return this.brain.getPeripheralType();
@@ -41,7 +73,7 @@ public class ThrusterPeripheral implements IPeripheral {
 
 	@LuaFunction(mainThread = true)
 	public final void setMode(IArguments args) throws LuaException {
-		if (!VSCHConfig.THRUSTER_TOGGLE.get()) {
+		if (!VSCHServerConfig.THRUSTER_TOGGLE.get()) {
 			throw new LuaException("Thruster mode toggle disabled in server config");
 		}
 		ThrusterData.ThrusterMode tmode;
@@ -75,7 +107,7 @@ public class ThrusterPeripheral implements IPeripheral {
 	}
 
 	@LuaFunction
-	public final float getPower() {
+	public final double getPower() {
 		return this.brain.getPower();
 	}
 
@@ -84,21 +116,31 @@ public class ThrusterPeripheral implements IPeripheral {
 		if (!this.brain.getPeripheralMode()) {
 			throw new LuaException("Peripheral mode is off, redstone control only");
 		}
-		this.brain.setPower((float) power);
+		this.brain.setPower(power);
 	}
 
 	@LuaFunction
-	public final float getThrusters() {
+	public final double getThrusters() {
 		return this.brain.getThrusterCount();
 	}
 
 	@LuaFunction
-	public final float getEachMaxThrottle() {
-		return this.brain.getEngine().getMaxThrottle();
+	public final double getTotalMaxThrottle() {
+		return this.brain.getMaxThrottle() * this.brain.getThrusterCount();
 	}
 
 	@LuaFunction
-	public final float getEachThrottle() {
+	public final double getTotalThrottle() {
+		return this.brain.getCurrentThrottle() * this.brain.getThrusterCount();
+	}
+
+	@LuaFunction
+	public final double getEachMaxThrottle() {
+		return this.brain.getMaxThrottle();
+	}
+
+	@LuaFunction
+	public final double getEachThrottle() {
 		return this.brain.getCurrentThrottle();
 	}
 
@@ -111,5 +153,32 @@ public class ThrusterPeripheral implements IPeripheral {
 			return this.brain == otherThruster.brain;
 		}
 		return false;
+	}
+
+	//// Generic methods ////
+
+	@LuaFunction(mainThread = true)
+	public int getEnergy() {
+		return CCGenerics.ENERGY_METHODS.getEnergy(this.brain);
+	}
+
+	@LuaFunction(mainThread = true)
+	public int getEnergyCapacity() {
+		return CCGenerics.ENERGY_METHODS.getEnergyCapacity(this.brain);
+	}
+
+	@LuaFunction(mainThread = true)
+	public Map<Integer, Map<String, ?>> tanks() {
+		return CCGenerics.FLUID_METHODS.tanks(this.brain);
+	}
+
+	@LuaFunction(mainThread = true)
+	public int pushFluid(IComputerAccess computer, String toName, Optional<Integer> limit, Optional<String> fluidName) throws LuaException {
+		return CCGenerics.FLUID_METHODS.pushFluid(this.brain, computer, toName, limit, fluidName);
+	}
+
+	@LuaFunction(mainThread = true)
+	public int pullFluid(IComputerAccess computer, String fromName, Optional<Integer> limit, Optional<String> fluidName) throws LuaException {
+		return CCGenerics.FLUID_METHODS.pullFluid(this.brain, computer, fromName, limit, fluidName);
 	}
 }

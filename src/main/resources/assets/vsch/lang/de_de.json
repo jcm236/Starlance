@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "Das Umschalten des Schubdüsenmodus ist deaktiviert!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "Modus: ",
+	"vsch.message.toggle": "Modus einstellen auf",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "Lufttriebwerk",
+	"block.vsch.drag_inducer_block": "Widerstandsinduktor",
+	"block.vsch.powerful_thruster_block": "Leistungsstarker Antrieb",
+	"block.vsch.thruster_block": "Triebwerk",
+	"item.vsch.magnet_boot": "Magnetstiefel",
+	"item.vsch.wrench": "Schraubenschlüssel",
+
+	"config.jade.plugin_vsch.thruster_component_config": "Details zum Schubdüsenmodus",
+
+	"vsch.ponder.drag_inducer.header": "Widerstandsinduktor",
+	"vsch.ponder.drag_inducer.text_1": "Manchmal kann es schwierig sein, im Weltraum langsamer zu werden",
+	"vsch.ponder.drag_inducer.text_2": "Hier kommt der Widerstandsinducer ins Spiel",
+	"vsch.ponder.drag_inducer.text_3": "Wenn der Drag Inducer mit Redstone betrieben wird, versucht er, Sie in alle Richtungen zu verlangsamen.",
+	"vsch.ponder.thruster_modes.header": "Schubdüsenmodi",
+	"vsch.ponder.thruster_modes.text_1": "Standardmäßig befinden sich die Triebwerke im POSITION-Modus",
+	"vsch.ponder.thruster_modes.text_2": "Das bedeutet, dass sie je nach Standort Kraft anwenden",
+	"vsch.ponder.thruster_modes.text_3": "Dies kann jedoch zu einer unerwünschten Rotation führen",
+	"vsch.ponder.thruster_modes.text_4": "Mit einem Schraubenschlüssel kann ein Triebwerk in den GLOBAL-Modus versetzt werden",
+	"vsch.ponder.thruster_modes.text_5": "Im GLOBAL-Modus wird Kraft ohne Position angewendet",
+	"vsch.ponder.thruster_modes.text_6": "Dies verhindert eine ungewollte Rotation",
+	"vsch.ponder.thrusters.header": "Triebwerke",
+	"vsch.ponder.thrusters.text_1": "Die Triebwerke müssen mit Redstone betrieben werden, um Schub zu erzeugen",
+	"vsch.ponder.thrusters.text_2": "Redstone-Level kann Stärke steuern"
+}

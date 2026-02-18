@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "La commutazione della modalità propulsore è disabilitata!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "Modalità: ",
+	"vsch.message.toggle": "Imposta modalità su",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "Propulsore ad aria",
+	"block.vsch.drag_inducer_block": "Induttore di resistenza",
+	"block.vsch.powerful_thruster_block": "Propulsore potente",
+	"block.vsch.thruster_block": "Propulsore",
+	"item.vsch.magnet_boot": "Magnet Boots",
+	"item.vsch.wrench": "Chiave inglese",
+
+	"config.jade.plugin_vsch.thruster_component_config": "Dettagli modalità propulsore",
+
+	"vsch.ponder.drag_inducer.header": "Induttore di resistenza",
+	"vsch.ponder.drag_inducer.text_1": "A volte, può essere difficile rallentare nello spazio",
+	"vsch.ponder.drag_inducer.text_2": "È qui che entra in gioco l'induttore di resistenza",
+	"vsch.ponder.drag_inducer.text_3": "Quando alimentato con redstone, l'induttore di resistenza cercherà di rallentarti in tutte le direzioni",
+	"vsch.ponder.thruster_modes.header": "Modalità propulsore",
+	"vsch.ponder.thruster_modes.text_1": "Per impostazione predefinita, i propulsori sono in modalità POSIZIONE",
+	"vsch.ponder.thruster_modes.text_2": "Ciò significa che applicheranno la forza in base alla posizione in cui si trovano",
+	"vsch.ponder.thruster_modes.text_3": "Tuttavia, ciò può causare una rotazione indesiderata",
+	"vsch.ponder.thruster_modes.text_4": "Utilizzando una chiave inglese, un propulsore può può essere cambiato in modalità GLOBALE",
+	"vsch.ponder.thruster_modes.text_5": "In modalità GLOBALE applica forza senza posizione",
+	"vsch.ponder.thruster_modes.text_6": "Ciò impedisce la rotazione indesiderata",
+	"vsch.ponder.thrusters.header": "Propulsori",
+	"vsch.ponder.thrusters.text_1": "Per spingere, i propulsori devono essere alimentati con redstone",
+	"vsch.ponder.thrusters.text_2": "Il livello di redstone può controllare la forza"
+}

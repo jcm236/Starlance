@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "スラスター モードの切り替えが無効です!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "スターランス",
+	"vsch.message.mode": "モード: ",
+	"vsch.message.toggle": "モードを設定",
+	"vsch.position": "§ePOSITION",
+
+	"block.vsch.air_thruster_block": "エア スラスター",
+	"block.vsch.drag_inducer_block": "ドラッグ インデューサー",
+	"block.vsch.powerful_thruster_block": "パワフル スラスター",
+	"block.vsch.thruster_block": "スラスター",
+	"item.vsch.magnet_boot": "マグネット ブーツ",
+	"item.vsch.wrench": "レンチ",
+
+	"config.jade.plugin_vsch.thruster_component_config": "スラスターモードの詳細",
+
+	"vsch.ponder.drag_inducer.header": "ドラッグ インデューサー",
+	"vsch.ponder.drag_inducer.text_1": "宇宙空間では減速が難しい場合があります",
+	"vsch.ponder.drag_inducer.text_2": "ここでドラッグ インデューサーの出番です",
+	"vsch.ponder.drag_inducer.text_3": "レッドストーンで駆動すると、ドラッグ インデューサーはすべての方向で減速しようとします",
+	"vsch.ponder.thruster_modes.header": "スラスターモード",
+	"vsch.ponder.thruster_modes.text_1": "デフォルトでは、スラスターはPOSITIONモードです",
+	"vsch.ponder.thruster_modes.text_2": "つまり、スラスターの位置に基づいて力が適用されます",
+	"vsch.ponder.thruster_modes.text_3": "ただし、これにより不要な回転が発生する可能性があります",
+	"vsch.ponder.thruster_modes.text_4": "レンチを使用して、スラスターはグローバル モードに変更できます",
+	"vsch.ponder.thruster_modes.text_5": "グローバル モードでは、位置に関係なく力が適用されます",
+	"vsch.ponder.thruster_modes.text_6": "これにより、不要な回転が防止されます",
+	"vsch.ponder.thrusters.header": "スラスター",
+	"vsch.ponder.thrusters.text_1": "スラスターはレッドストーンで駆動する必要があります",
+	"vsch.ponder.thrusters.text_2": "レッドストーンのレベルによって強度を制御できます"
+}

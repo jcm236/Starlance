@@ -25,6 +25,7 @@ jobs:
       ARTIFACT_URL: ${{ steps.metadata.outputs.ARTIFACT_URL }}
       ARTIFACT_EXP: ${{ steps.metadata.outputs.ARTIFACT_EXP }}
       ARTIFACT_NAME: ${{ steps.metadata.outputs.ARTIFACT_NAME }}
+      JAVADOC_FOLDER: ${{ steps.metadata.outputs.JAVADOC_FOLDER }}
     steps:
       - name: Get Artifact URL & PR Info
         id: metadata
@@ -79,6 +80,12 @@ jobs:
             echo "ARTIFACT NAME: $ARTIFACT_NAME"
             echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> "$GITHUB_OUTPUT"
           fi
+
+          parse_var JAVADOC_FOLDER
+          JAVADOC_FOLDER=$parsed
+          echo "JAVADOC FOLDER: $JAVADOC_FOLDER"
+          echo "JAVADOC_FOLDER=$JAVADOC_FOLDER" >> "$GITHUB_OUTPUT"
+
           exit 0
 
   comment-success:
@@ -95,30 +102,52 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: '## Build Preview'
 
-      - name: Update Comment
+      - name: Generate Comment
+        id: generate-body
         env:
           JOB_PATH: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}"
           HEAD_SHA: ${{ needs.parse-metadata.outputs.HEAD_SHA }}
           ARTIFACT_URL: ${{ needs.parse-metadata.outputs.ARTIFACT_URL }}
           ARTIFACT_EXP: ${{ needs.parse-metadata.outputs.ARTIFACT_EXP }}
           ARTIFACT_NAME: ${{ needs.parse-metadata.outputs.ARTIFACT_NAME }}
+          JAVADOC_FOLDER: ${{ needs.parse-metadata.outputs.JAVADOC_FOLDER }}
+        run: |-
+          BODY="
+          ## Build Preview
+
+          [![badge]](${JOB_PATH})
+
+          You can find files attached to the below linked Workflow Run URL (Logs).
+
+          | Name      | Link        |
+          |-----------|-------------|
+          | Commit    | ${HEAD_SHA} |
+          | Logs      | ${JOB_PATH} |"
+
+          if [ -n "$JAVADOC_FOLDER" ]; then
+            BODY="${BODY}
+          | JavaDoc   | <https://jcm236.github.io/Starlance/javadoc/${JAVADOC_FOLDER}/> |"
+          fi
+
+          if [ -n "$ARTIFACT_URL" ]; then
+            BODY="${BODY}
+          | Jar Files  | [${ARTIFACT_NAME}](${ARTIFACT_URL}) |
+          | Expires At | ${ARTIFACT_EXP} |"
+          fi
+
+          BODY="${BODY}
+
+          [badge]: https://img.shields.io/badge/${{ format('{0}-{1}', github.event.workflow_run.conclusion, github.event.workflow_run.conclusion == 'success' && '3fb950' || 'f85149') }}?style=for-the-badge&logo=github&label=build
+          "
+
+          echo "BODY<<BODY_EOF" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "BODY_EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Update Comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ needs.parse-metadata.outputs.PR_NUMBER }}
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
-          body: |-
-            ## Build Preview
-
-            [![badge]](${{ env.JOB_PATH }})
-
-            You can find files attached to the below linked Workflow Run URL (Logs).
-
-            | Name      | Link                    |
-            |-----------|-------------------------|
-            | Commit    | ${{ env.HEAD_SHA }}     |
-            | Logs      | ${{ env.JOB_PATH }}     |
-            ${{ env.ARTIFACT_URL && format('| Jar Files  | [{0}]({1}) |', env.ARTIFACT_NAME, env.ARTIFACT_URL) || '' }}
-            ${{ env.ARTIFACT_EXP && format('| Expires At | {0} |', env.ARTIFACT_EXP) || '' }}
-
-            [badge]: https://img.shields.io/badge/${{ format('{0}-{1}', github.event.workflow_run.conclusion, github.event.workflow_run.conclusion == 'success' && '3fb950' || 'f85149') }}?style=for-the-badge&logo=github&label=build
+          body: ${{ steps.generate-body.outputs.BODY }}

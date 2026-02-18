@@ -1,0 +1,44 @@
+{
+  "block.vsch.air_thruster_block": "Воздушный движитель",
+  "block.vsch.drag_inducer_block": "Механизм торможения",
+  "block.vsch.gyro": "Гироскоп",
+  "block.vsch.powerful_thruster_block": "Мощный двигатель",
+  "block.vsch.rocket_assembler": "Сборщик ракет",
+  "block.vsch.thruster_block": "Двигатель",
+
+  "config.jade.plugin_vsch.gyro_component_config": "Сведения о режиме гироскопа",
+  "config.jade.plugin_vsch.thruster_component_config": "Сведения о режиме двигателя",
+
+  "item.vsch.magnet_boot": "Магнитные ботинки",
+  "item.vsch.wrench": "Гаечный ключ",
+
+  "vsch.error.thruster_modes_disabled": "Переключение режимов двигателя отключено!",
+  "vsch.error.thruster_not_on_ship": "На корабле отсутствует двигатель",
+
+  "vsch.global": "§6ГЛОБАЛЬНО",
+  "vsch.itemtab": "Starlance",
+
+  "vsch.message.gyro": "Мощность установлена на §6%s%%",
+  "vsch.message.mode": "Режим: ",
+  "vsch.message.strength": "Сила: ",
+  "vsch.message.toggle": "Режим установлен на ",
+
+  "vsch.ponder.drag_inducer.header": "Вызывающий торможение",
+  "vsch.ponder.drag_inducer.text_1": "Иногда бывает трудно замедлиться в пространстве",
+  "vsch.ponder.drag_inducer.text_2": "Именно здесь включается механизм торможения",
+  "vsch.ponder.drag_inducer.text_3": "При редстоун сигнале механизм торможения будет пытаться замедлить вас во всех направлениях",
+  "vsch.ponder.thruster_modes.header": "Режимы работы двигателя",
+  "vsch.ponder.thruster_modes.text_1": "По умолчанию двигатели находятся в режиме ПОЗИЦИОНИРОВАНИЯ",
+  "vsch.ponder.thruster_modes.text_2": "Это означает, что они будут прикладывать усилие в зависимости от того, где они находятся",
+  "vsch.ponder.thruster_modes.text_3": "Однако, это может привести к нежелательному вращению",
+  "vsch.ponder.thruster_modes.text_4": "С помощью гаечного ключа двигатель можно перевести в глобальный режим",
+  "vsch.ponder.thruster_modes.text_5": "В ГЛОБАЛЬНОМ режиме он прикладывает усилие без учета положения",
+  "vsch.ponder.thruster_modes.text_6": "Это предотвращает нежелательные вращение",
+  "vsch.ponder.thrusters.header": "Двигатели",
+  "vsch.ponder.thrusters.text_1": "Двигатели должны быть запитаны редстоуном для обеспечения тяги",
+  "vsch.ponder.thrusters.text_2": "Уровень редстоуна может регулировать силу",
+
+  "vsch.position": "§eПОЛОЖЕНИЕ",
+
+  "vsch.tooltip.may_need_fuel_or_energy": "Предупреждение: Возможно, в будущем обновлении потребуется топливо или энергия"
+}

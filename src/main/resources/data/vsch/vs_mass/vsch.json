@@ -14,5 +14,9 @@
 	{
 		"block": "vsch:drag_inducer_block",
 		"mass": 100
+	},
+	{
+		"block": "vsch:gyro",
+		"mass": 8192
 	}
 ]

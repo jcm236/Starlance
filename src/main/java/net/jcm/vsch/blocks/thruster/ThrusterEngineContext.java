@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.blocks.thruster;
 
 import net.minecraft.server.level.ServerLevel;
@@ -13,6 +28,7 @@ public class ThrusterEngineContext {
 	private final IFluidHandler tanks;
 	private final List<EngineConsumeAction> consumers = new ArrayList<>(2);
 	private final int amount;
+	private final double scale;
 	private double power;
 	private boolean rejected = false;
 
@@ -22,13 +38,15 @@ public class ThrusterEngineContext {
 	 * @param tanks  The engine's fluid tanks, drain only
 	 * @param power  The maximum power (in range of [0.0, 1.0]) the engine should maximum run with
 	 * @param amount The amount of thrusters
+	 * @param scale  The ship's scale
 	 */
-	public ThrusterEngineContext(ServerLevel level, IEnergyStorage energy, IFluidHandler tanks, double power, int amount) {
+	public ThrusterEngineContext(ServerLevel level, IEnergyStorage energy, IFluidHandler tanks, double power, int amount, double scale) {
 		this.level = level;
 		this.energy = energy;
 		this.tanks = tanks;
 		this.power = power;
 		this.amount = amount;
+		this.scale = scale;
 	}
 
 	public void reject() {
@@ -67,10 +85,14 @@ public class ThrusterEngineContext {
 		return this.amount;
 	}
 
+	public double getScale() {
+		return this.scale;
+	}
+
 	/**
 	 * consume should not be invoked by anything other than ThrusterBrain
 	 */
-	  void consume() {
+	void consume() {
 		for (EngineConsumeAction consumer : this.consumers) {
 			consumer.consume(this);
 		}

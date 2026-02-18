@@ -1,12 +1,28 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.blocks.entity;
 
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.config.VSCHConfig;
-
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -18,15 +34,25 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import org.joml.Vector3d;
 
+import java.util.List;
+
 public class AirThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
 	public AirThrusterBlockEntity(BlockPos pos, BlockState state) {
-		super("air_thruster", VSCHBlockEntities.AIR_THRUSTER_BLOCK_ENTITY.get(), pos, state,
-			new AirThrusterEngine(
-				VSCHConfig.AIR_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-				VSCHConfig.AIR_THRUSTER_STRENGTH.get().floatValue(),
-				VSCHConfig.AIR_THRUSTER_MAX_WATER_CONSUME_RATE.get().intValue()
-			)
+		super(VSCHBlockEntities.AIR_THRUSTER_BLOCK_ENTITY.get(), pos, state);
+	}
+
+	@Override
+	protected String getPeripheralType() {
+		return "air_thruster";
+	}
+
+	@Override
+	protected ThrusterEngine createThrusterEngine() {
+		return new AirThrusterEngine(
+			VSCHServerConfig.AIR_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHServerConfig.AIR_THRUSTER_STRENGTH.get().floatValue(),
+			VSCHServerConfig.AIR_THRUSTER_MAX_WATER_CONSUME_RATE.get().intValue()
 		);
 	}
 
@@ -41,22 +67,27 @@ public class AirThrusterBlockEntity extends AbstractThrusterBlockEntity {
 	}
 
 	@Override
+	protected double getEvaporateDistance() {
+		return 1 * this.getCurrentPower();
+	}
+
+	@Override
 	protected void spawnParticles(Vector3d pos, Vector3d direction) {
-		Vector3d speed = new Vector3d(direction).mul(-this.getCurrentPower());
+		final Vector3d speed = new Vector3d(direction).mul(this.getCurrentPower());
+
 		speed.mul(0.118);
 
-		int max = 100;
-
-		for (int i = 0; i < max; i++) {
+		int amount = 100;
+		for (int i = 0; i < amount; i++) {
 			level.addParticle(
-					this.getThrusterParticleType(),
-					pos.x, pos.y, pos.z,
-					speed.x, speed.y, speed.z
-					);
+				this.getThrusterParticleType(),
+				pos.x, pos.y, pos.z,
+				speed.x, speed.y, speed.z
+			);
 		}
 	}
 
-	private static class AirThrusterEngine extends ThrusterEngine {
+	private final static class AirThrusterEngine extends ThrusterEngine {
 		private final int maxWaterConsumeRate;
 
 		public AirThrusterEngine(int energyConsumeRate, float maxThrottle, int maxWaterConsumeRate) {
@@ -75,24 +106,30 @@ public class AirThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			if (this.maxWaterConsumeRate == 0) {
 				return;
 			}
-			double power = context.getPower();
+			final double power = context.getPower();
 			if (power == 0) {
 				return;
 			}
-			double density = getLevelAirDensity(context.getLevel());
+			final double density = getLevelAirDensity(context.getLevel());
 			if (density >= 1) {
 				return;
 			}
-			int amount = context.getAmount();
+			final double scale = context.getScale();
+			final int amount = context.getAmount();
 
-			double waterConsumeRate = this.maxWaterConsumeRate * (1 - density);
-			int needsWater = (int)(Math.ceil(waterConsumeRate * power * amount));
-			int avaliableWater = context.getFluidHandler().drain(new FluidStack(Fluids.WATER, needsWater), IFluidHandler.FluidAction.SIMULATE).getAmount();
+			final double waterConsumeRate = this.maxWaterConsumeRate * (1 - density);
+			final int needsWater = (int) (Math.ceil(waterConsumeRate * power * scale * amount));
+			final int avaliableWater = context.getFluidHandler().drain(new FluidStack(Fluids.WATER, needsWater), IFluidHandler.FluidAction.SIMULATE).getAmount();
 			context.setPower(avaliableWater / (waterConsumeRate * amount));
 			context.addConsumer((ctx) -> {
-				int water = (int)(Math.ceil(this.maxWaterConsumeRate * (1 - density) * ctx.getPower() * ctx.getAmount()));
+				final int water = (int) (Math.ceil(this.maxWaterConsumeRate * (1 - density) * ctx.getPower() * ctx.getScale() * ctx.getAmount()));
 				ctx.getFluidHandler().drain(new FluidStack(Fluids.WATER, water), IFluidHandler.FluidAction.EXECUTE);
 			});
+		}
+
+		@Override
+		public void tickBurningObjects(final ThrusterEngineContext context, final List<BlockPos> thrusters, final Direction direction) {
+			//
 		}
 
 		/**

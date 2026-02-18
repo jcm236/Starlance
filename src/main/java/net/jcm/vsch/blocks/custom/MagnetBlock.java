@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.blocks.custom;
 
 import net.jcm.vsch.blocks.custom.template.BlockWithEntity;
@@ -44,11 +59,18 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
-		if (!(level instanceof ServerLevel)) {
+
+		if (!(level instanceof final ServerLevel serverLevel)) {
 			return;
 		}
 
+<<<<<<< HEAD
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
+=======
+		// ----- Remove this block from the force appliers for the current level ----- //
+		// I guess VS does this automatically when switching a shipyards dimension?
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
+>>>>>>> main
 		if (ships != null) {
 			ships.removeMagnet(pos);
 		}
@@ -57,7 +79,7 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
 		Direction dir = ctx.getNearestLookingDirection();
-		if (ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()) {
+		if (ctx.isSecondaryUseActive()) {
 			dir = dir.getOpposite();
 		}
 		return defaultBlockState()
@@ -65,10 +87,30 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean moving) {
 		super.neighborChanged(state, world, pos, neighbor, neighborPos, moving);
 		MagnetBlockEntity be = (MagnetBlockEntity) world.getBlockEntity(pos);
 		be.neighborChanged(neighbor, neighborPos, moving);
+=======
+	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+
+		if (!(level instanceof final ServerLevel serverLevel)) {
+			return;
+		}
+
+		int signal = level.getBestNeighborSignal(pos);
+		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
+
+		if (ships != null) {
+			/*DraggerData data = ships.getDraggerAtPos(pos);
+
+			if (data != null) {
+				data.on = (signal > 0);
+			}*/
+		}
+>>>>>>> main
 	}
 
 	public MagnetBlockEntity newBlockEntity(BlockPos pos, BlockState state) {

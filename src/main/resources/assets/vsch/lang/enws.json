@@ -1,0 +1,32 @@
+{
+	"vsch.error.thruster_modes_disabled": "Toggling of thy thrusters hath been dis-enabled!",
+	"vsch.global": "§6GLOBAL",
+	"vsch.itemtab": "Starlance",
+	"vsch.message.mode": "Thee mode: ",
+	"vsch.message.toggle": "The mode hath been set to",
+	"vsch.position": "§ePOSITION'd",
+
+	"block.vsch.air_thruster_block": "Thruster of the sky itself",
+	"block.vsch.drag_inducer_block": "Inducer of drag",
+	"block.vsch.powerful_thruster_block": "The mightiest thruster",
+	"block.vsch.thruster_block": "Thruster",
+	"item.vsch.magnet_boot": "Magically Infused Boots of Iron",
+	"item.vsch.wrench": "Rotating-stick",
+
+	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
+
+	"vsch.ponder.drag_inducer.header": "Inducer of drag",
+	"vsch.ponder.drag_inducer.text_1": "In some occasions, you mayhaps find it difficult to reduce thy speed when in the higher-sky",
+	"vsch.ponder.drag_inducer.text_2": "This here inducer of drag may aid you in your issues",
+	"vsch.ponder.drag_inducer.text_3": "When provided with power from redstone, thee inducer of drag will attempt to reduce your speed in all of the compasses directions",
+	"vsch.ponder.thruster_modes.header": "Thruster Modes",
+	"vsch.ponder.thruster_modes.text_1": "In thee normal state, thrusters be in POSITION mode",
+	"vsch.ponder.thruster_modes.text_2": "This meaneth they push based on where they are",
+	"vsch.ponder.thruster_modes.text_3": "Though perchance, this can causeth rotation unwanted",
+	"vsch.ponder.thruster_modes.text_4": "If thou useth a rotating-stick, yon thruster can be changed to GLOBAL mode",
+	"vsch.ponder.thruster_modes.text_5": "In GLOBAL mode, the thruster pushes position'd-less",
+	"vsch.ponder.thruster_modes.text_6": "This circumnavigates that awful rotation unwanted",
+	"vsch.ponder.thrusters.header": "Thrusters",
+	"vsch.ponder.thrusters.text_1": "Thou must provide power to thy thrusters with the redstone for movement",
+	"vsch.ponder.thrusters.text_2": "The intensity of yon redstone controleth thee thruster strength"
+}

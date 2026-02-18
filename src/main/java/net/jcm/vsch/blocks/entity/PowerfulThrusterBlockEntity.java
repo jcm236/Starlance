@@ -1,28 +1,56 @@
+/**
+ * Copyright (C) 2025  the authors of Starlance
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 3 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ **/
 package net.jcm.vsch.blocks.entity;
 
 import net.jcm.vsch.VSCHTags;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
-import net.jcm.vsch.config.VSCHConfig;
-
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.util.List;
+
 public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
+	private static final int HYDROGEN_SLOT = 0;
+	private static final int OXYGEN_SLOT = 1;
 
 	public PowerfulThrusterBlockEntity(BlockPos pos, BlockState state) {
-		super("powerful_thruster", VSCHBlockEntities.POWERFUL_THRUSTER_BLOCK_ENTITY.get(), pos, state,
-			new PowerfulThrusterEngine(
-				VSCHConfig.POWERFUL_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
-				VSCHConfig.POWERFUL_THRUSTER_STRENGTH.get().floatValue(),
-				VSCHConfig.POWERFUL_THRUSTER_FUEL_CONSUME_RATE.get().intValue()
-			)
+		super(VSCHBlockEntities.POWERFUL_THRUSTER_BLOCK_ENTITY.get(), pos, state);
+	}
+
+	@Override
+	protected String getPeripheralType() {
+		return "powerful_thruster";
+	}
+
+	@Override
+	protected ThrusterEngine createThrusterEngine() {
+		return new PowerfulThrusterEngine(
+			VSCHServerConfig.POWERFUL_THRUSTER_ENERGY_CONSUME_RATE.get().intValue(),
+			VSCHServerConfig.POWERFUL_THRUSTER_STRENGTH.get().floatValue(),
+			VSCHServerConfig.POWERFUL_THRUSTER_FUEL_CONSUME_RATE.get().intValue()
 		);
 	}
 
@@ -31,7 +59,12 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		return CosmosModParticleTypes.BLUETHRUSTED.get();
 	}
 
-	private static class PowerfulThrusterEngine extends ThrusterEngine {
+	@Override
+	protected double getEvaporateDistance() {
+		return 8 * this.getCurrentPower();
+	}
+
+	private final static class PowerfulThrusterEngine extends ThrusterEngine {
 		private final int fuelConsumeRate;
 
 		public PowerfulThrusterEngine(int energyConsumeRate, float maxThrottle, int fuelConsumeRate) {
@@ -42,8 +75,8 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		@Override
 		public boolean isValidFuel(int slot, Fluid fluid) {
 			return switch (slot) {
-			case 0 -> fluid.is(VSCHTags.Fluids.HYDROGEN);
-			case 1 -> fluid.is(VSCHTags.Fluids.OXYGEN);
+			case HYDROGEN_SLOT -> fluid.is(VSCHTags.Fluids.HYDROGEN);
+			case OXYGEN_SLOT -> fluid.is(VSCHTags.Fluids.OXYGEN);
 			default -> throw new IllegalArgumentException("fluid slot is not in range [0, 1]");
 			};
 		}
@@ -54,31 +87,37 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			if (this.fuelConsumeRate == 0) {
 				return;
 			}
-			double power = context.getPower();
+			final double power = context.getPower();
 			if (power == 0) {
 				return;
 			}
-			int amount = context.getAmount();
+			final double scale = context.getScale();
+			final int amount = context.getAmount();
 
-			int needsOxygen = (int)(Math.ceil(this.fuelConsumeRate * power * amount));
-			int needsHydrogen = needsOxygen * 2;
-			IFluidHandler fluidHandler = context.getFluidHandler();
-			FluidStack oxygenStack = fluidHandler.getFluidInTank(0);
-			FluidStack hydrogenStack = fluidHandler.getFluidInTank(1);
-			int avaliableHydrogen = Math.min(needsHydrogen, hydrogenStack.getAmount());
-			int avaliableOxygen = Math.min(avaliableHydrogen / 2, Math.min(needsOxygen, oxygenStack.getAmount()));
+			final int needsOxygen = (int) (Math.ceil(this.fuelConsumeRate * power * scale * amount));
+			final int needsHydrogen = needsOxygen * 2;
+			final IFluidHandler fluidHandler = context.getFluidHandler();
+			final FluidStack oxygenStack = fluidHandler.getFluidInTank(OXYGEN_SLOT);
+			final FluidStack hydrogenStack = fluidHandler.getFluidInTank(HYDROGEN_SLOT);
+			final int avaliableHydrogen = Math.min(needsHydrogen, hydrogenStack.getAmount());
+			final int avaliableOxygen = Math.min(avaliableHydrogen / 2, Math.min(needsOxygen, oxygenStack.getAmount()));
 			if (avaliableOxygen == 0) {
 				context.setPower(0);
 				return;
 			}
-			context.setPower(avaliableOxygen / ((double)(this.fuelConsumeRate) * amount));
+			context.setPower(avaliableOxygen / ((double) (this.fuelConsumeRate) * amount));
 			context.addConsumer((ctx) -> {
-				IFluidHandler tanks = ctx.getFluidHandler();
-				int oxygen = (int)(Math.ceil(this.fuelConsumeRate * ctx.getPower() * ctx.getAmount()));
-				int hydrogen = oxygen * 2;
+				final IFluidHandler tanks = ctx.getFluidHandler();
+				final int oxygen = (int) (Math.ceil(this.fuelConsumeRate * ctx.getPower() * ctx.getScale() * ctx.getAmount()));
+				final int hydrogen = oxygen * 2;
 				tanks.drain(new FluidStack(oxygenStack.getFluid(), oxygen), IFluidHandler.FluidAction.EXECUTE);
 				tanks.drain(new FluidStack(hydrogenStack.getFluid(), hydrogen), IFluidHandler.FluidAction.EXECUTE);
 			});
+		}
+
+		@Override
+		public void tickBurningObjects(final ThrusterEngineContext context, final List<BlockPos> thrusters, final Direction direction) {
+			simpleTickBurningObjects(context, thrusters, direction, 8, 5, 0.3);
 		}
 	}
 }
