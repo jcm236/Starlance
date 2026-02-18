@@ -16,7 +16,7 @@
 package net.jcm.vsch.items.custom;
 
 import net.jcm.vsch.accessor.LivingEntityAccessor;
-import net.jcm.vsch.CompatMods;
+import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.curios.MagnetBootCurio;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.items.IToggleableItem;

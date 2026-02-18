@@ -1,9 +1,7 @@
 package net.jcm.vsch.spacemods.ad_astra;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public final class ClientValues {
+	public static volatile Integer storedTier = null;
 
-public class ClientValues {
-    @OnlyIn(Dist.CLIENT)
-    public static Integer storedTier = null;
+	private ClientValues() {}
 }

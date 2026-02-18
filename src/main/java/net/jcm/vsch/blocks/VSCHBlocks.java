@@ -174,12 +174,12 @@ public class VSCHBlocks {
 				registerBlock(
 					"tier_" + tier,
 					() -> new TierBlock(
-            tier,
+						tier,
 						BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 							.mapColor(MapColor.STONE)
 							.sound(SoundType.COPPER)
 							.strength(5f)
-				  )
+					)
 				)
 			);
 		}

@@ -37,15 +37,15 @@ public class Gravity {
 	 * @param level The loading {@link ServerLevel ServerLevel}.
 	 */
 	public static void updateFor(final ServerLevel level) {
-        float grav = GravityApiImpl.API.getGravity(level);
+		final float grav = GravityApiImpl.API.getGravity(level);
 		final double gravity = -10 * grav;
 
-        // Note: client dimension can also be updated. However, currently nothing is used.
-        VSGameUtilsKt.getShipObjectWorld(level).updateDimension(
-            VSGameUtilsKt.getDimensionId(level),
-            new Vector3d(0, gravity, 0),
-            null,
-            OxygenApiImpl.API.hasOxygen(level) ? -1.0 : null
-        );
+		// Note: client dimension can also be updated. However, currently nothing is used.
+		VSGameUtilsKt.getShipObjectWorld(level).updateDimension(
+			VSGameUtilsKt.getDimensionId(level),
+			new Vector3d(0, gravity, 0),
+			null,
+			OxygenApiImpl.API.hasOxygen(level) ? -1.0 : null
+		);
 	}
 }

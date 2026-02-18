@@ -67,10 +67,10 @@ public final class MagnetForceApplier implements IVSCHForceApplier {
 		// TODO: add speed limit
 
 		if (hasFrontForce) {
-			ship.applyInvariantForceToPos(frontForce, frontPos);
+			ship.applyWorldForceToBodyPos(frontForce, frontPos);
 		}
 		if (hasBackForce) {
-			ship.applyInvariantForceToPos(backForce, backPos);
+			ship.applyWorldForceToBodyPos(backForce, backPos);
 		}
 	}
 
