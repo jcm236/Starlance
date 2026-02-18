@@ -82,11 +82,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeBlockEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
+<dd><code><a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></code>, <code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeBlockEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MagnetBlockEntity</span>
-<span class="extends-implements">extends <a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</span></div>
+<span class="extends-implements">extends <a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;
+implements <a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -181,27 +182,30 @@ loadScripts(document, 'script');</script>
  net.minecraft.core.BlockPos&nbsp;pos,
  boolean&nbsp;moving)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.InteractionResult</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUseWrench(net.minecraft.world.item.context.UseOnContext)" class="member-name-link">onUseWrench</a><wbr>(net.minecraft.world.item.context.UseOnContext&nbsp;ctx)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsGenerator(boolean)" class="member-name-link">setIsGenerator</a><wbr>(boolean&nbsp;isGenerator)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPeripheralMode(boolean)" class="member-name-link">setPeripheralMode</a><wbr>(boolean&nbsp;on)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsGenerator(boolean)" class="member-name-link">setIsGenerator</a><wbr>(boolean&nbsp;isGenerator)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float)" class="member-name-link">setPower</a><wbr>(float&nbsp;power)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPeripheralMode(boolean)" class="member-name-link">setPeripheralMode</a><wbr>(boolean&nbsp;on)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float,boolean)" class="member-name-link">setPower</a><wbr>(float&nbsp;power,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float)" class="member-name-link">setPower</a><wbr>(float&nbsp;power)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float,boolean)" class="member-name-link">setPower</a><wbr>(float&nbsp;power,
  boolean&nbsp;update)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;blockPos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -226,6 +230,9 @@ loadScripts(document, 'script');</script>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.jcm.vsch.blocks.entity.template.ParticleBlockEntity">Methods inherited from interface&nbsp;net.jcm.vsch.blocks.entity.template.<a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></h3>
 <code><a href="template/ParticleBlockEntity.html#clientTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.template.ParticleBlockEntity)">clientTick</a>, <a href="template/ParticleBlockEntity.html#serverTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.template.ParticleBlockEntity)">serverTick</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-net.jcm.vsch.blocks.custom.template.WrenchableBlock">Methods inherited from interface&nbsp;net.jcm.vsch.blocks.custom.template.<a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></h3>
+<code><a href="../custom/template/WrenchableBlock.html#onFocusWithWrench(net.minecraft.world.item.ItemStack,net.minecraft.world.level.Level,net.minecraft.world.entity.player.Player)">onFocusWithWrench</a></code></div>
 </section>
 </li>
 </ul>
@@ -354,6 +361,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="markPowerChanged()">
 <h3>markPowerChanged</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markPowerChanged</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onUseWrench(net.minecraft.world.item.context.UseOnContext)">
+<h3>onUseWrench</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.InteractionResult</span>&nbsp;<span class="element-name">onUseWrench</span><wbr><span class="parameters">(net.minecraft.world.item.context.UseOnContext&nbsp;ctx)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../custom/template/WrenchableBlock.html#onUseWrench(net.minecraft.world.item.context.UseOnContext)">onUseWrench</a></code>&nbsp;in interface&nbsp;<code><a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
