@@ -65,6 +65,7 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/client/package-tree.html">net.jcm.vsch.client</a>, </li>
 <li><a href="net/jcm/vsch/client/renderer/package-tree.html">net.jcm.vsch.client.renderer</a>, </li>
 <li><a href="net/jcm/vsch/commands/package-tree.html">net.jcm.vsch.commands</a>, </li>
+<li><a href="net/jcm/vsch/compat/package-tree.html">net.jcm.vsch.compat</a>, </li>
 <li><a href="net/jcm/vsch/compat/cc/peripherals/package-tree.html">net.jcm.vsch.compat.cc.peripherals</a>, </li>
 <li><a href="net/jcm/vsch/compat/create/ponder/package-tree.html">net.jcm.vsch.compat.create.ponder</a>, </li>
 <li><a href="net/jcm/vsch/compat/create/ponder/scenes/package-tree.html">net.jcm.vsch.compat.create.ponder.scenes</a>, </li>
@@ -86,6 +87,7 @@ loadScripts(document, 'script');</script>
 <li><a href="net/jcm/vsch/ship/package-tree.html">net.jcm.vsch.ship</a>, </li>
 <li><a href="net/jcm/vsch/ship/dragger/package-tree.html">net.jcm.vsch.ship.dragger</a>, </li>
 <li><a href="net/jcm/vsch/ship/gyro/package-tree.html">net.jcm.vsch.ship.gyro</a>, </li>
+<li><a href="net/jcm/vsch/ship/magnet/package-tree.html">net.jcm.vsch.ship.magnet</a>, </li>
 <li><a href="net/jcm/vsch/ship/thruster/package-tree.html">net.jcm.vsch.ship.thruster</a>, </li>
 <li><a href="net/jcm/vsch/spacemods/ad_astra/package-tree.html">net.jcm.vsch.spacemods.ad_astra</a>, </li>
 <li><a href="net/jcm/vsch/spacemods/ad_astra/events/package-tree.html">net.jcm.vsch.spacemods.ad_astra.events</a>, </li>
@@ -146,7 +148,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">net.jcm.vsch.blocks.custom.template.<a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" class="type-name-link" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;E&gt; (implements net.jcm.vsch.blocks.entity.template.<a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a>)
 <ul>
-<li class="circle">net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html" class="type-name-link" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a></li>
+<li class="circle">net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html" class="type-name-link" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a> (implements net.jcm.vsch.blocks.custom.template.<a href="net/jcm/vsch/blocks/custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a>)</li>
 </ul>
 </li>
 <li class="circle">net.jcm.vsch.blocks.entity.<a href="net/jcm/vsch/blocks/entity/DockerBlockEntity.html" class="type-name-link" title="class in net.jcm.vsch.blocks.entity">DockerBlockEntity</a></li>
@@ -157,7 +159,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">net.minecraft.world.entity.Entity (implements net.minecraft.commands.CommandSource, net.minecraft.world.level.entity.EntityAccess, net.minecraftforge.common.extensions.IForgeEntity, net.minecraft.world.Nameable)
 <ul>
-<li class="circle">net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/MagnetEntity.html" class="type-name-link" title="class in net.jcm.vsch.entity">MagnetEntity</a></li>
+<li class="circle">net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/MagnetEntity.html" class="type-name-link" title="class in net.jcm.vsch.entity">MagnetEntity</a> (implements net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/IAttachableEntity.html" title="interface in net.jcm.vsch.entity">IAttachableEntity</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinLivingEntity.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinLivingEntity</a> (implements net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a>)</li>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinMob.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinMob</a></li>
 </ul>
@@ -188,6 +190,11 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.ship.dragger.<a href="net/jcm/vsch/ship/dragger/DraggerForceApplier.html" class="type-name-link" title="class in net.jcm.vsch.ship.dragger">DraggerForceApplier</a> (implements net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>)</li>
 <li class="circle">net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/DragInducerPeripheral.html" class="type-name-link" title="class in net.jcm.vsch.compat.cc.peripherals">DragInducerPeripheral</a> (implements dan200.computercraft.api.peripheral.IPeripheral)</li>
 <li class="circle">net.jcm.vsch.compat.create.ponder.scenes.<a href="net/jcm/vsch/compat/create/ponder/scenes/DragInducerScene.html" class="type-name-link" title="class in net.jcm.vsch.compat.create.ponder.scenes">DragInducerScene</a></li>
+<li class="circle">net.minecraft.client.renderer.entity.EntityRenderer&lt;T&gt;
+<ul>
+<li class="circle">net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/MagnetEntity.Renderer.html" class="type-name-link" title="class in net.jcm.vsch.entity">MagnetEntity.Renderer</a></li>
+</ul>
+</li>
 <li class="circle">net.minecraftforge.eventbus.api.Event
 <ul>
 <li class="circle">net.jcm.vsch.api.event.<a href="net/jcm/vsch/api/event/PreShipTravelEvent.html" class="type-name-link" title="class in net.jcm.vsch.api.event">PreShipTravelEvent</a>
@@ -227,6 +234,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.spacemods.cosmic.wapi.<a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelData.html" class="type-name-link" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelData</a></li>
 <li class="circle">net.jcm.vsch.spacemods.cosmic.wapi.<a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelType.html" class="type-name-link" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelType</a></li>
 <li class="circle">net.jcm.vsch.compat.curios.<a href="net/jcm/vsch/compat/curios/MagnetBootCurio.html" class="type-name-link" title="class in net.jcm.vsch.compat.curios">MagnetBootCurio</a> (implements top.theillusivec4.curios.api.type.capability.ICurio)</li>
+<li class="circle">net.jcm.vsch.ship.magnet.<a href="net/jcm/vsch/ship/magnet/MagnetData.html" class="type-name-link" title="class in net.jcm.vsch.ship.magnet">MagnetData</a></li>
+<li class="circle">net.jcm.vsch.ship.magnet.<a href="net/jcm/vsch/ship/magnet/MagnetForceApplier.html" class="type-name-link" title="class in net.jcm.vsch.ship.magnet">MagnetForceApplier</a> (implements net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a>)</li>
+<li class="circle">net.jcm.vsch.compat.cc.peripherals.<a href="net/jcm/vsch/compat/cc/peripherals/MagnetPeripheral.html" class="type-name-link" title="class in net.jcm.vsch.compat.cc.peripherals">MagnetPeripheral</a> (implements dan200.computercraft.api.peripheral.IPeripheral)</li>
 <li class="circle">net.jcm.vsch.mixin.minecraft.<a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" class="type-name-link" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a></li>
 <li class="circle">net.jcm.vsch.mixin.cosmos.<a href="net/jcm/vsch/mixin/cosmos/MixinCollisionDetectorProcedure.html" class="type-name-link" title="class in net.jcm.vsch.mixin.cosmos">MixinCollisionDetectorProcedure</a></li>
 <li class="circle">net.jcm.vsch.mixin.client.cosmos.<a href="net/jcm/vsch/mixin/client/cosmos/MixinDevFieldNameRenderers.html" class="type-name-link" title="class in net.jcm.vsch.mixin.client.cosmos">MixinDevFieldNameRenderers</a></li>
@@ -302,6 +312,7 @@ loadScripts(document, 'script');</script>
 <section class="hierarchy">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
+<li class="circle">net.jcm.vsch.entity.<a href="net/jcm/vsch/entity/IAttachableEntity.html" class="type-name-link" title="interface in net.jcm.vsch.entity">IAttachableEntity</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/IGuiAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/ILevelAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">ILevelAccessor</a></li>
 <li class="circle">net.jcm.vsch.network.<a href="net/jcm/vsch/network/INetworkPacket.html" class="type-name-link" title="interface in net.jcm.vsch.network">INetworkPacket</a></li>
@@ -309,6 +320,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">net.jcm.vsch.api.block.<a href="net/jcm/vsch/api/block/IVentBlock.html" class="type-name-link" title="interface in net.jcm.vsch.api.block">IVentBlock</a></li>
 <li class="circle">net.jcm.vsch.ship.<a href="net/jcm/vsch/ship/IVSCHForceApplier.html" class="type-name-link" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></li>
 <li class="circle">net.jcm.vsch.accessor.<a href="net/jcm/vsch/accessor/LivingEntityAccessor.html" class="type-name-link" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></li>
+<li class="circle">net.jcm.vsch.ship.magnet.<a href="net/jcm/vsch/ship/magnet/MagnetData.ForceCalculator.html" class="type-name-link" title="interface in net.jcm.vsch.ship.magnet">MagnetData.ForceCalculator</a></li>
 <li class="circle">net.jcm.vsch.blocks.entity.template.<a href="net/jcm/vsch/blocks/entity/template/ParticleBlockEntity.html" class="type-name-link" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></li>
 <li class="circle">net.jcm.vsch.util.rot.<a href="net/jcm/vsch/util/rot/RotShape.html" class="type-name-link" title="interface in net.jcm.vsch.util.rot">RotShape</a></li>
 <li class="circle">net.jcm.vsch.blocks.thruster.<a href="net/jcm/vsch/blocks/thruster/ThrusterEngineContext.EngineConsumeAction.html" class="type-name-link" title="interface in net.jcm.vsch.blocks.thruster">ThrusterEngineContext.EngineConsumeAction</a></li>
@@ -324,7 +336,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleLED.html" class="type-name-link" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleLED</a> (implements net.minecraft.util.StringRepresentable)</li>
 <li class="circle">net.jcm.vsch.blocks.rocketassembler.<a href="net/jcm/vsch/blocks/rocketassembler/AssembleResult.html" class="type-name-link" title="enum class in net.jcm.vsch.blocks.rocketassembler">AssembleResult</a></li>
-<li class="circle">net.jcm.vsch.<a href="net/jcm/vsch/CompatMods.html" class="type-name-link" title="enum class in net.jcm.vsch">CompatMods</a></li>
+<li class="circle">net.jcm.vsch.compat.<a href="net/jcm/vsch/compat/CompatMods.html" class="type-name-link" title="enum class in net.jcm.vsch.compat">CompatMods</a></li>
 <li class="circle">net.jcm.vsch.config.<a href="net/jcm/vsch/config/ShipLandingMode.html" class="type-name-link" title="enum class in net.jcm.vsch.config">ShipLandingMode</a></li>
 <li class="circle">net.jcm.vsch.ship.thruster.<a href="net/jcm/vsch/ship/thruster/ThrusterData.ThrusterMode.html" class="type-name-link" title="enum class in net.jcm.vsch.ship.thruster">ThrusterData.ThrusterMode</a> (implements net.minecraft.util.StringRepresentable)</li>
 </ul>

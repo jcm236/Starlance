@@ -13,6 +13,7 @@ net.jcm.vsch.blocks.thruster
 net.jcm.vsch.client
 net.jcm.vsch.client.renderer
 net.jcm.vsch.commands
+net.jcm.vsch.compat
 net.jcm.vsch.compat.cc.peripherals
 net.jcm.vsch.compat.create.ponder
 net.jcm.vsch.compat.create.ponder.scenes
@@ -34,6 +35,7 @@ net.jcm.vsch.network.c2s
 net.jcm.vsch.ship
 net.jcm.vsch.ship.dragger
 net.jcm.vsch.ship.gyro
+net.jcm.vsch.ship.magnet
 net.jcm.vsch.ship.thruster
 net.jcm.vsch.spacemods.ad_astra
 net.jcm.vsch.spacemods.ad_astra.events

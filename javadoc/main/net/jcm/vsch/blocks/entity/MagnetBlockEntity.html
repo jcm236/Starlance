@@ -82,11 +82,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeBlockEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
+<dd><code><a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></code>, <code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code>, <code>net.minecraftforge.common.capabilities.ICapabilityProvider</code>, <code>net.minecraftforge.common.capabilities.ICapabilityProviderImpl&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;</code>, <code>net.minecraftforge.common.capabilities.ICapabilitySerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code>, <code>net.minecraftforge.common.extensions.IForgeBlockEntity</code>, <code>net.minecraftforge.common.util.INBTSerializable&lt;net.minecraft.nbt.CompoundTag&gt;</code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MagnetBlockEntity</span>
-<span class="extends-implements">extends <a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</span></div>
+<span class="extends-implements">extends <a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;
+implements <a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -142,9 +143,67 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">The function used by this BE to create the entity object to spawn.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActivatablePower()" class="member-name-link">getActivatablePower</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAttractDistance()" class="member-name-link">getAttractDistance</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;net.minecraftforge.common.util.LazyOptional&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCapability(net.minecraftforge.common.capabilities.Capability,net.minecraft.core.Direction)" class="member-name-link">getCapability</a><wbr>(net.minecraftforge.common.capabilities.Capability&lt;T&gt;&nbsp;cap,
+ net.minecraft.core.Direction&nbsp;direction)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.joml.Vector3f</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFacing()" class="member-name-link">getFacing</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getIsGenerator()" class="member-name-link">getIsGenerator</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMaxAvaliablePower()" class="member-name-link">getMaxAvaliablePower</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPeripheralMode()" class="member-name-link">getPeripheralMode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPower()" class="member-name-link">getPower</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.joml.Vector3d</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldPos()" class="member-name-link">getWorldPos</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markPowerChanged()" class="member-name-link">markPowerChanged</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#neighborChanged(net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)" class="member-name-link">neighborChanged</a><wbr>(net.minecraft.world.level.block.Block&nbsp;block,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;moving)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.minecraft.world.InteractionResult</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUseWrench(net.minecraft.world.item.context.UseOnContext)" class="member-name-link">onUseWrench</a><wbr>(net.minecraft.world.item.context.UseOnContext&nbsp;ctx)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsGenerator(boolean)" class="member-name-link">setIsGenerator</a><wbr>(boolean&nbsp;isGenerator)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPeripheralMode(boolean)" class="member-name-link">setPeripheralMode</a><wbr>(boolean&nbsp;on)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float)" class="member-name-link">setPower</a><wbr>(float&nbsp;power)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPower(float,boolean)" class="member-name-link">setPower</a><wbr>(float&nbsp;power,
+ boolean&nbsp;update)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.core.BlockPos&nbsp;blockPos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -152,25 +211,28 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.jcm.vsch.blocks.custom.template.BlockEntityWithEntity">Methods inherited from class&nbsp;net.jcm.vsch.blocks.custom.template.<a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a></h3>
-<code><a href="../custom/template/BlockEntityWithEntity.html#load(net.minecraft.nbt.CompoundTag)">load</a>, <a href="../custom/template/BlockEntityWithEntity.html#removeLinkedEntity()">removeLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag)">saveAdditional</a>, <a href="../custom/template/BlockEntityWithEntity.html#spawnLinkedEntity()">spawnLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#spawnLinkedEntityIfNeeded()">spawnLinkedEntityIfNeeded</a>, <a href="../custom/template/BlockEntityWithEntity.html#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickParticles</a></code></div>
+<code><a href="../custom/template/BlockEntityWithEntity.html#getLinkedEntity()">getLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#getOrSpawnLinkedEntity()">getOrSpawnLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#removeLinkedEntity()">removeLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#respawnLinkedEntity()">respawnLinkedEntity</a>, <a href="../custom/template/BlockEntityWithEntity.html#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickParticles</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraft.world.level.block.entity.BlockEntity">Methods inherited from class&nbsp;net.minecraft.world.level.block.entity.BlockEntity</h3>
 <code>addEntityType, clearRemoved, fillCrashReportCategory, getBlockPos, getBlockState, getLevel, getPersistentData, getPosFromTag, getType, getUpdatePacket, getUpdateTag, hasLevel, isRemoved, loadStatic, onChunkUnloaded, onlyOpCanSetNbt, saveToItem, saveWithFullMetadata, saveWithId, saveWithoutMetadata, setBlockState, setChanged, setChanged, setLevel, setRemoved, triggerEvent</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraftforge.common.capabilities.CapabilityProvider">Methods inherited from class&nbsp;net.minecraftforge.common.capabilities.CapabilityProvider</h3>
-<code>areCapsCompatible, areCapsCompatible, deserializeCaps, gatherCapabilities, gatherCapabilities, gatherCapabilities, getCapabilities, getCapability, invalidateCaps, reviveCaps, serializeCaps</code></div>
+<code>areCapsCompatible, areCapsCompatible, deserializeCaps, gatherCapabilities, gatherCapabilities, gatherCapabilities, getCapabilities, invalidateCaps, reviveCaps, serializeCaps</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraftforge.common.capabilities.ICapabilityProvider">Methods inherited from interface&nbsp;net.minecraftforge.common.capabilities.ICapabilityProvider</h3>
-<code>getCapability, getCapability</code></div>
+<code>getCapability</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.minecraftforge.common.extensions.IForgeBlockEntity">Methods inherited from interface&nbsp;net.minecraftforge.common.extensions.IForgeBlockEntity</h3>
 <code>deserializeNBT, getModelData, getRenderBoundingBox, handleUpdateTag, hasCustomOutlineRendering, onDataPacket, onLoad, requestModelDataUpdate, serializeNBT</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-net.jcm.vsch.blocks.entity.template.ParticleBlockEntity">Methods inherited from interface&nbsp;net.jcm.vsch.blocks.entity.template.<a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></h3>
 <code><a href="template/ParticleBlockEntity.html#clientTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.template.ParticleBlockEntity)">clientTick</a>, <a href="template/ParticleBlockEntity.html#serverTick(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState,net.jcm.vsch.blocks.entity.template.ParticleBlockEntity)">serverTick</a></code></div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-net.jcm.vsch.blocks.custom.template.WrenchableBlock">Methods inherited from interface&nbsp;net.jcm.vsch.blocks.custom.template.<a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></h3>
+<code><a href="../custom/template/WrenchableBlock.html#onFocusWithWrench(net.minecraft.world.item.ItemStack,net.minecraft.world.level.Level,net.minecraft.world.entity.player.Player)">onFocusWithWrench</a></code></div>
 </section>
 </li>
 </ul>
@@ -198,17 +260,9 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">
-<h3>tickForce</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">tickForce</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="template/ParticleBlockEntity.html#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickForce</a></code>&nbsp;in interface&nbsp;<code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="../custom/template/BlockEntityWithEntity.html#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickForce</a></code>&nbsp;in class&nbsp;<code><a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</code></dd>
-</dl>
+<section class="detail" id="getAttractDistance()">
+<h3>getAttractDistance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getAttractDistance</span>()</div>
 </section>
 </li>
 <li>
@@ -225,6 +279,153 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>level</code> - Level, for help creating the entity object</dd>
 <dt>Returns:</dt>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getWorldPos()">
+<h3>getWorldPos</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.joml.Vector3d</span>&nbsp;<span class="element-name">getWorldPos</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getFacing()">
+<h3>getFacing</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">org.joml.Vector3f</span>&nbsp;<span class="element-name">getFacing</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPower()">
+<h3>getPower</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getPower</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>magnet target working power between -1.0~1.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMaxAvaliablePower()">
+<h3>getMaxAvaliablePower</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getMaxAvaliablePower</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the max power the magnet can activate based on the energy input</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getActivatablePower()">
+<h3>getActivatablePower</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getActivatablePower</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setPower(float)">
+<h3>setPower</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPower</span><wbr><span class="parameters">(float&nbsp;power)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="setPower(float,boolean)">
+<h3>setPower</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPower</span><wbr><span class="parameters">(float&nbsp;power,
+ boolean&nbsp;update)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPeripheralMode()">
+<h3>getPeripheralMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getPeripheralMode</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setPeripheralMode(boolean)">
+<h3>setPeripheralMode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPeripheralMode</span><wbr><span class="parameters">(boolean&nbsp;on)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getIsGenerator()">
+<h3>getIsGenerator</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getIsGenerator</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setIsGenerator(boolean)">
+<h3>setIsGenerator</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIsGenerator</span><wbr><span class="parameters">(boolean&nbsp;isGenerator)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="markPowerChanged()">
+<h3>markPowerChanged</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markPowerChanged</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onUseWrench(net.minecraft.world.item.context.UseOnContext)">
+<h3>onUseWrench</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">net.minecraft.world.InteractionResult</span>&nbsp;<span class="element-name">onUseWrench</span><wbr><span class="parameters">(net.minecraft.world.item.context.UseOnContext&nbsp;ctx)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../custom/template/WrenchableBlock.html#onUseWrench(net.minecraft.world.item.context.UseOnContext)">onUseWrench</a></code>&nbsp;in interface&nbsp;<code><a href="../custom/template/WrenchableBlock.html" title="interface in net.jcm.vsch.blocks.custom.template">WrenchableBlock</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCapability(net.minecraftforge.common.capabilities.Capability,net.minecraft.core.Direction)">
+<h3>getCapability</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>
+<span class="return-type">net.minecraftforge.common.util.LazyOptional&lt;T&gt;</span>&nbsp;<span class="element-name">getCapability</span><wbr><span class="parameters">(net.minecraftforge.common.capabilities.Capability&lt;T&gt;&nbsp;cap,
+ net.minecraft.core.Direction&nbsp;direction)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>getCapability</code>&nbsp;in interface&nbsp;<code>net.minecraftforge.common.capabilities.ICapabilityProvider</code></dd>
+<dt>Overrides:</dt>
+<dd><code>getCapability</code>&nbsp;in class&nbsp;<code>net.minecraftforge.common.capabilities.CapabilityProvider&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="saveAdditional(net.minecraft.nbt.CompoundTag)">
+<h3>saveAdditional</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">saveAdditional</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../custom/template/BlockEntityWithEntity.html#saveAdditional(net.minecraft.nbt.CompoundTag)">saveAdditional</a></code>&nbsp;in class&nbsp;<code><a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="load(net.minecraft.nbt.CompoundTag)">
+<h3>load</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(net.minecraft.nbt.CompoundTag&nbsp;tag)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../custom/template/BlockEntityWithEntity.html#load(net.minecraft.nbt.CompoundTag)">load</a></code>&nbsp;in class&nbsp;<code><a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="neighborChanged(net.minecraft.world.level.block.Block,net.minecraft.core.BlockPos,boolean)">
+<h3>neighborChanged</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">neighborChanged</span><wbr><span class="parameters">(net.minecraft.world.level.block.Block&nbsp;block,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ boolean&nbsp;moving)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">
+<h3>tickForce</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">tickForce</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;blockPos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="template/ParticleBlockEntity.html#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickForce</a></code>&nbsp;in interface&nbsp;<code><a href="template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="../custom/template/BlockEntityWithEntity.html#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)">tickForce</a></code>&nbsp;in class&nbsp;<code><a href="../custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="../../entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a>&gt;</code></dd>
 </dl>
 </section>
 </li>

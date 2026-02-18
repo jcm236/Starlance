@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html" title="class in net.jcm.vsch.blocks.custom">BaseThrusterBlock</a>&lt;<a href="net/jcm/vsch/blocks/custom/BaseThrusterBlock.html" title="type parameter in BaseThrusterBlock">T</a> extends <a href="net/jcm/vsch/blocks/thruster/AbstractThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.thruster">AbstractThrusterBlockEntity</a>&gt;</div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a> extends net.minecraft.world.entity.Entity&gt;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" title="class in net.jcm.vsch.blocks.custom.template">BlockEntityWithEntity</a>&lt;<a href="net/jcm/vsch/blocks/custom/template/BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a> extends net.minecraft.world.entity.Entity &amp; <a href="net/jcm/vsch/entity/IAttachableEntity.html" title="interface in net.jcm.vsch.entity">IAttachableEntity</a>&gt;</div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">A block entity for spawning and removing an entity with the block.</div>
 </div>
@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/util/CollisionUtil.html" title="class in net.jcm.vsch.util">CollisionUtil</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/jcm/vsch/CompatMods.html" title="enum class in net.jcm.vsch">CompatMods</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="net/jcm/vsch/compat/CompatMods.html" title="enum class in net.jcm.vsch.compat">CompatMods</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/entity/CreativeThrusterBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">CreativeThrusterBlockEntity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
@@ -149,37 +149,49 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/client/renderer/GyroRenderer.html" title="class in net.jcm.vsch.client.renderer">GyroRenderer</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/IGuiAccessor.html" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/entity/IAttachableEntity.html" title="interface in net.jcm.vsch.entity">IAttachableEntity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/ILevelAccessor.html" title="interface in net.jcm.vsch.accessor">ILevelAccessor</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/IGuiAccessor.html" title="interface in net.jcm.vsch.accessor">IGuiAccessor</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/network/INetworkPacket.html" title="interface in net.jcm.vsch.network">INetworkPacket</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/ILevelAccessor.html" title="interface in net.jcm.vsch.accessor">ILevelAccessor</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/items/IToggleableItem.html" title="interface in net.jcm.vsch.items">IToggleableItem</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/network/INetworkPacket.html" title="interface in net.jcm.vsch.network">INetworkPacket</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/api/block/IVentBlock.html" title="interface in net.jcm.vsch.api.block">IVentBlock</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/items/IToggleableItem.html" title="interface in net.jcm.vsch.items">IToggleableItem</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/api/block/IVentBlock.html" title="interface in net.jcm.vsch.api.block">IVentBlock</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/compat/jade/JadeCompat.html" title="class in net.jcm.vsch.compat.jade">JadeCompat</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelData.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelData</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelData.ClosestPlanetData.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelData.ClosestPlanetData</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelType.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelType</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/ship/IVSCHForceApplier.html" title="interface in net.jcm.vsch.ship">IVSCHForceApplier</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/custom/MagnetBlock.html" title="class in net.jcm.vsch.blocks.custom">MagnetBlock</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/compat/jade/JadeCompat.html" title="class in net.jcm.vsch.compat.jade">JadeCompat</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelData.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelData</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/compat/curios/MagnetBootCurio.html" title="class in net.jcm.vsch.compat.curios">MagnetBootCurio</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelData.ClosestPlanetData.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelData.ClosestPlanetData</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/spacemods/cosmic/wapi/LevelType.html" title="class in net.jcm.vsch.spacemods.cosmic.wapi">LevelType</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/accessor/LivingEntityAccessor.html" title="interface in net.jcm.vsch.accessor">LivingEntityAccessor</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/custom/MagnetBlock.html" title="class in net.jcm.vsch.blocks.custom">MagnetBlock</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/blocks/entity/MagnetBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/compat/curios/MagnetBootCurio.html" title="class in net.jcm.vsch.compat.curios">MagnetBootCurio</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/items/custom/MagnetBootItem.html" title="class in net.jcm.vsch.items.custom">MagnetBootItem</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/ship/magnet/MagnetData.html" title="class in net.jcm.vsch.ship.magnet">MagnetData</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="net/jcm/vsch/ship/magnet/MagnetData.ForceCalculator.html" title="interface in net.jcm.vsch.ship.magnet">MagnetData.ForceCalculator</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/entity/MagnetEntity.html" title="class in net.jcm.vsch.entity">MagnetEntity</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/entity/MagnetEntity.Renderer.html" title="class in net.jcm.vsch.entity">MagnetEntity.Renderer</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/ship/magnet/MagnetForceApplier.html" title="class in net.jcm.vsch.ship.magnet">MagnetForceApplier</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/compat/cc/peripherals/MagnetPeripheral.html" title="class in net.jcm.vsch.compat.cc.peripherals">MagnetPeripheral</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="net/jcm/vsch/mixin/minecraft/MixinChunkMap.html" title="class in net.jcm.vsch.mixin.minecraft">MixinChunkMap</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>

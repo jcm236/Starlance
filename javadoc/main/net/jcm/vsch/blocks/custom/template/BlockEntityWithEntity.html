@@ -68,7 +68,7 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">net.jcm.vsch.blocks.custom.template</a></div>
-<h1 title="Class BlockEntityWithEntity" class="title">Class BlockEntityWithEntity&lt;E extends net.minecraft.world.entity.Entity&gt;</h1>
+<h1 title="Class BlockEntityWithEntity" class="title">Class BlockEntityWithEntity&lt;E extends net.minecraft.world.entity.Entity &amp; <a href="../../../entity/IAttachableEntity.html" title="interface in net.jcm.vsch.entity">IAttachableEntity</a>&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">net.minecraftforge.common.capabilities.CapabilityProvider&lt;net.minecraft.world.level.block.entity.BlockEntity&gt;
@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="../../entity/MagnetBlockEntity.html" title="class in net.jcm.vsch.blocks.entity">MagnetBlockEntity</a></code></dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">BlockEntityWithEntity&lt;E extends net.minecraft.world.entity.Entity&gt;</span>
+<div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">BlockEntityWithEntity&lt;E extends net.minecraft.world.entity.Entity &amp; <a href="../../../entity/IAttachableEntity.html" title="interface in net.jcm.vsch.entity">IAttachableEntity</a>&gt;</span>
 <span class="extends-implements">extends net.minecraft.world.level.block.entity.BlockEntity
 implements <a href="../../entity/template/ParticleBlockEntity.html" title="interface in net.jcm.vsch.blocks.entity.template">ParticleBlockEntity</a></span></div>
 <div class="block">A block entity for spawning and removing an entity with the block.
@@ -160,6 +160,12 @@ implements <a href="../../entity/template/ParticleBlockEntity.html" title="inter
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">The function used by this BE to create the entity object to spawn.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLinkedEntity()" class="member-name-link">getLinkedEntity</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrSpawnLinkedEntity()" class="member-name-link">getOrSpawnLinkedEntity</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load(net.minecraft.nbt.CompoundTag)" class="member-name-link">load</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -167,24 +173,21 @@ implements <a href="../../entity/template/ParticleBlockEntity.html" title="inter
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeLinkedEntity()" class="member-name-link">removeLinkedEntity</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#respawnLinkedEntity()" class="member-name-link">respawnLinkedEntity</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnLinkedEntity()" class="member-name-link">spawnLinkedEntity</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveAdditional(net.minecraft.nbt.CompoundTag)" class="member-name-link">saveAdditional</a><wbr>(net.minecraft.nbt.CompoundTag&nbsp;tag)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnLinkedEntityIfNeeded()" class="member-name-link">spawnLinkedEntityIfNeeded</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
- net.minecraft.core.BlockPos&nbsp;pos,
- net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickForce(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickForce</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;level,
  net.minecraft.core.BlockPos&nbsp;pos,
  net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tickParticles(net.minecraft.world.level.Level,net.minecraft.core.BlockPos,net.minecraft.world.level.block.state.BlockState)" class="member-name-link">tickParticles</a><wbr>(net.minecraft.world.level.Level&nbsp;level,
+ net.minecraft.core.BlockPos&nbsp;pos,
+ net.minecraft.world.level.block.state.BlockState&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -234,24 +237,6 @@ implements <a href="../../entity/template/ParticleBlockEntity.html" title="inter
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="spawnLinkedEntity()">
-<h3>spawnLinkedEntity</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnLinkedEntity</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="spawnLinkedEntityIfNeeded()">
-<h3>spawnLinkedEntityIfNeeded</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnLinkedEntityIfNeeded</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="removeLinkedEntity()">
-<h3>removeLinkedEntity</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeLinkedEntity</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="createLinkedEntity(net.minecraft.server.level.ServerLevel,net.minecraft.core.BlockPos)">
 <h3>createLinkedEntity</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a></span>&nbsp;<span class="element-name">createLinkedEntity</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;level,
@@ -263,6 +248,30 @@ implements <a href="../../entity/template/ParticleBlockEntity.html" title="inter
 <dd><code>level</code> - Level, for help creating the entity object</dd>
 <dt>Returns:</dt>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getLinkedEntity()">
+<h3>getLinkedEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a></span>&nbsp;<span class="element-name">getLinkedEntity</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getOrSpawnLinkedEntity()">
+<h3>getOrSpawnLinkedEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BlockEntityWithEntity.html" title="type parameter in BlockEntityWithEntity">E</a></span>&nbsp;<span class="element-name">getOrSpawnLinkedEntity</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="respawnLinkedEntity()">
+<h3>respawnLinkedEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">respawnLinkedEntity</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="removeLinkedEntity()">
+<h3>removeLinkedEntity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeLinkedEntity</span>()</div>
 </section>
 </li>
 <li>
