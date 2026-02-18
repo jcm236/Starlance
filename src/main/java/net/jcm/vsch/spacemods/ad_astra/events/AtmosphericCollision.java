@@ -39,10 +39,13 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.List;
 
-public class AtmosphericCollision {
+public final class AtmosphericCollision {
 	public static void atmosphericCollisionTick(final ServerLevel level) {
-
 		final List<LoadedServerShip> ships = VSCHUtils.getLoadedShipsInLevel(level);
+		if (ships.isEmpty()) {
+			return;
+		}
+
 		ships.sort((a, b) -> {
 			final AABBdc aBox = a.getWorldAABB();
 			final AABBdc bBox = b.getWorldAABB();
@@ -59,66 +62,71 @@ public class AtmosphericCollision {
 		});
 
 		for (final LoadedServerShip ship : ships) {
-            final Vec3 shipCenter = VectorConversionsMCKt.toMinecraft(ship.getWorldAABB().center(new Vector3d()));
+			final Vector3d shipCenter = ship.getWorldAABB().center(new Vector3d());
 
-            ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-            if (shipCenter.y >= AdAstraConfig.atmosphereLeave) {
-                final ServerPlayer nearestPlayer = getShipNearestPlayer(ship, level);
-                if (nearestPlayer == null) continue;
-                if (attachment.landing) continue;
+			if (shipCenter.y < AdAstraConfig.atmosphereLeave) {
+				if ((shipCenter.y + 10) < AdAstraConfig.atmosphereLeave) {
+					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+					attachment.landing = false;
+				}
+				continue;
+			}
 
-                ShipTierAttachment tierAttachment = ShipTierAttachment.get(ship);
+			final ServerPlayer nearestPlayer = getShipNearestPlayer(ship, level);
+			if (nearestPlayer == null) {
+				continue;
+			}
+			final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+			if (attachment.landing) {
+				continue;
+			}
 
-                if (!(nearestPlayer.containerMenu instanceof PlanetsMenu)) {
-                    attachment.freezeShip(ship);
-                    openPlanetsScreen(tierAttachment.getHighestTier(), nearestPlayer);
-                }
-            } else {
-                if ((shipCenter.y + 10) < AdAstraConfig.atmosphereLeave) {
-                    attachment.landing = false;
-                }
-            }
-        }
+			final ShipTierAttachment tierAttachment = ShipTierAttachment.get(ship);
+			if (!(nearestPlayer.containerMenu instanceof PlanetsMenu)) {
+				attachment.freezeShip(ship);
+				openPlanetsScreen(tierAttachment.getHighestTier(), nearestPlayer);
+			}
+		}
 	}
 
-    /**
-     * Not a util function because its very specific to planetCollisionTick
-     * Gets the nearest player that is inside the ships AABB and previous AABB.
-     * @param ship
-     * @param level
-     * @return the nearest player found, or null
-     */
-    private static ServerPlayer getShipNearestPlayer(final Ship ship, final ServerLevel level) {
-        final AABBdc shipBox = ship.getWorldAABB();
-        final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
-        final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
+	/**
+	 * Not a util function because its very specific to planetCollisionTick
+	 * Gets the nearest player that is inside the ships AABB and previous AABB.
+	 * @param ship
+	 * @param level
+	 * @return the nearest player found, or null
+	 */
+	private static ServerPlayer getShipNearestPlayer(final Ship ship, final ServerLevel level) {
+		final AABBdc shipBox = ship.getWorldAABB();
+		final AABB currentWorldAABB = VectorConversionsMCKt.toMinecraft(shipBox).inflate(10);
+		final Vec3 center = VectorConversionsMCKt.toMinecraft(shipBox.center(new Vector3d()));
 
-        final List<ServerPlayer> players = level.getPlayers(
-                (player) -> player.getClass() == ServerPlayer.class && !player.isSpectator() && player.getBoundingBox().intersects(currentWorldAABB)
-        );
+		final List<ServerPlayer> players = level.getPlayers(
+			(player) -> player.getClass() == ServerPlayer.class && !player.isSpectator() && player.getBoundingBox().intersects(currentWorldAABB)
+		);
 
-        ServerPlayer nearestPlayer = null;
-        double nearestDistance = Double.MAX_VALUE;
-        for (final ServerPlayer player : players) {
-            final Entity root = player.getRootVehicle();
-            final Ship rootShip = VSGameUtilsKt.getShipManagingPos(level, root.blockPosition());
-            if (rootShip != null && rootShip.getId() != ship.getId()) {
-                continue;
-            }
-            final double distance = player.distanceToSqr(center);
-            if (distance < nearestDistance) {
-                nearestPlayer = player;
-                nearestDistance = distance;
-            }
-        }
-        return nearestPlayer;
-    }
+		ServerPlayer nearestPlayer = null;
+		double nearestDistance = Double.MAX_VALUE;
+		for (final ServerPlayer player : players) {
+			final Entity root = player.getRootVehicle();
+			final Ship rootShip = VSGameUtilsKt.getShipManagingPos(level, root.blockPosition());
+			if (rootShip != null && rootShip.getId() != ship.getId()) {
+				continue;
+			}
+			final double distance = player.distanceToSqr(center);
+			if (distance < nearestDistance) {
+				nearestPlayer = player;
+				nearestDistance = distance;
+			}
+		}
+		return nearestPlayer;
+	}
 
-    public static void openPlanetsScreen(int tier, ServerPlayer player) {
-        VSCHNetwork.sendToPlayer(new SyncMenuTierS2C(tier), player);
+	public static void openPlanetsScreen(int tier, ServerPlayer player) {
+		VSCHNetwork.sendToPlayer(new SyncMenuTierS2C(tier), player);
 
-        TaskUtil.queueTickStart(() -> {
-            MenuHooks.openMenu(player, new PlanetsMenuProvider());
-        });
-    }
+		TaskUtil.queueTickStart(() -> {
+			MenuHooks.openMenu(player, new PlanetsMenuProvider());
+		});
+	}
 }

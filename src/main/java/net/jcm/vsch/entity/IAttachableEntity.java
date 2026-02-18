@@ -13,12 +13,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  **/
-package net.jcm.vsch.compat.create.ponder;
+package net.jcm.vsch.entity;
 
-import net.createmod.ponder.foundation.PonderIndex;
+import net.minecraft.core.BlockPos;
 
-public class PonderRegister {
-	public static void add() {
-		PonderIndex.addPlugin(new VSCHPonderPlugin());
-	}
+public interface IAttachableEntity {
+	BlockPos getAttachedBlockPos();
+
+	void setAttachedBlockPos(BlockPos pos);
 }

@@ -15,7 +15,7 @@
  **/
 package net.jcm.vsch.network.c2s;
 
-import net.jcm.vsch.CompatMods;
+import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.items.IToggleableItem;
 import net.jcm.vsch.network.INetworkPacket;
 

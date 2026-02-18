@@ -11,34 +11,42 @@ import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class TierBlock extends Block {
-    public final int tier;
+	public final int tier;
 
-    public TierBlock(int tier, Properties properties) {
-        super(properties);
-        this.tier = tier;
-    }
+	public TierBlock(int tier, Properties properties) {
+		super(properties);
+		this.tier = tier;
+	}
 
-    @Override
-    public void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean movedByPiston) {
-        super.onPlace(state, level, pos, oldState, movedByPiston);
+	@Override
+	public void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean movedByPiston) {
+		super.onPlace(state, level, pos, oldState, movedByPiston);
 
-        if (!(level instanceof ServerLevel serverLevel)) return;
+		if (!(level instanceof final ServerLevel serverLevel)) {
+			return;
+		}
 
-        LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
-        if (ship == null) return;
+		final LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
+		if (ship == null) {
+			return;
+		}
 
-        ShipTierAttachment.get(ship).addTierMod(pos, tier);
-    }
+		ShipTierAttachment.get(ship).addTierMod(pos, tier);
+	}
 
-    @Override
-    public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston) {
-        super.onRemove(state, level, pos, newState, movedByPiston);
+	@Override
+	public void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston) {
+		super.onRemove(state, level, pos, newState, movedByPiston);
 
-        if (!(level instanceof ServerLevel serverLevel)) return;
+		if (!(level instanceof final ServerLevel serverLevel)) {
+			return;
+		}
 
-        LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
-        if (ship == null) return;
+		final LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
+		if (ship == null) {
+			return;
+		}
 
-        ShipTierAttachment.get(ship).removeTierMod(pos);
-    }
+		ShipTierAttachment.get(ship).removeTierMod(pos);
+	}
 }

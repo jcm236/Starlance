@@ -35,6 +35,8 @@
 	"config.jade.plugin_vsch.thruster_component_config": "Thruster Mode Details",
 	"curios.identifier.boots": "Boots",
 
+	"create.ponder.tag.starlance_ponders": "Starlance",
+	"create.ponder.tag.starlance_ponders.description": "Starlance blocks",
 	"vsch.ponder.drag_inducer.header": "Drag inducer",
 	"vsch.ponder.drag_inducer.text_1": "Sometimes, it can be hard to slow down in space",
 	"vsch.ponder.drag_inducer.text_2": "This is where the drag inducer comes in",
@@ -49,8 +51,6 @@
 	"vsch.ponder.thrusters.header": "Thrusters",
 	"vsch.ponder.thrusters.text_1": "Thrusters need to be powered with redstone to thrust",
 	"vsch.ponder.thrusters.text_2": "Redstone level can control strength",
-    "create.ponder.tag.starlance_ponders": "Starlance",
-    "create.ponder.tag.starlance_ponders.description": "Starlance blocks",
 
-    "vsch.lod_warning": "Warning: lodDetail is %s, which is below recommended minimum of 4096. Increase lodDetail in /config/valkyrienskies/vs_core_server.json and reload your game. Alternatively, disable this message in the Starlance (VSCH) common config."
+	"vsch.lod_warning": "Warning: lodDetail is %s, which is below recommended minimum of 4096. Increase lodDetail in /config/valkyrienskies/vs_core_server.json and reload your game. Alternatively, disable this message in the Starlance (VSCH) common config."
 }

@@ -17,7 +17,7 @@ package net.jcm.vsch.blocks.rocketassembler;
 
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.CompatMods;
+import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.config.VSCHServerConfig;
 import com.github.litermc.vtil.block.AbstractAssemblerBlockEntity;
 

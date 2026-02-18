@@ -69,6 +69,16 @@ public class VSCHServerConfig {
 	public static final ForgeConfigSpec.ConfigValue<Number> GYRO_MAX_SPEED;
 	public static final ForgeConfigSpec.BooleanValue GYRO_LIMIT_SPEED;
 
+	/* Magnetics */
+
+	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
+	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
+
+	public static final ForgeConfigSpec.ConfigValue<Double> MAGNET_BLOCK_DISTANCE;
+	public static final ForgeConfigSpec.ConfigValue<Double> MAGNET_BLOCK_MAX_FORCE;
+	public static final ForgeConfigSpec.ConfigValue<Integer> MAGNET_BLOCK_CONSUME_ENERGY;
+	public static final ForgeConfigSpec.BooleanValue MAGNET_BLOCK_GENERATOR;
+
 	/* Assembler */
 
 	public static final ForgeConfigSpec.IntValue ASSEMBLER_ENERGY_CONSUMPTION;
@@ -89,8 +99,6 @@ public class VSCHServerConfig {
 
 	public static final ForgeConfigSpec.BooleanValue CANCEL_ASSEMBLY;
 
-	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_DISTANCE;
-	public static final ForgeConfigSpec.ConfigValue<Number> MAGNET_BOOT_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Number> GRAVITY_MAX_FORCE;
 
@@ -140,6 +148,18 @@ public class VSCHServerConfig {
 
 		BUILDER.pop();
 
+		BUILDER.push("Magnetics");
+
+		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
+		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);
+
+		MAGNET_BLOCK_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet blocks will pull ships").define("magnet_block_distance", 6.0);
+		MAGNET_BLOCK_MAX_FORCE = BUILDER.comment("Max force one magnet block will apply at 1 block distance.").define("magnet_block_max_force", 50000.0);
+		MAGNET_BLOCK_CONSUME_ENERGY = BUILDER.comment("The energy a magnet block will consume when activate at max power.").define("magnet_block_consume_energy", 0);
+		MAGNET_BLOCK_GENERATOR = BUILDER.comment("If the magnet block can be used as generator. Warn: Generator have bugs for now.").define("magnet_block_generator", false);
+
+		BUILDER.pop();
+
 		BUILDER.push("RocketAssembler");
 
 		ASSEMBLER_ENERGY_CONSUMPTION = BUILDER.comment("Assemble Energy Consumption").defineInRange("energy_consumption", 0, 0, Integer.MAX_VALUE); // 100 default for next update
@@ -161,8 +181,6 @@ public class VSCHServerConfig {
 		MAX_SPEED = BUILDER.comment("Max speed to limit to. Blocks/tick I think. Default is highly recommended").define("max_speed", 150);
 		CANCEL_ASSEMBLY = BUILDER.comment("Cancel multi-block assemblies when above world height. This is a temporary fix, but for now ships made above world height have issues with starlance.").define("cancel_assembly", true);
 
-		MAGNET_BOOT_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet boots will pull you in").define("magnet_boot_distance", 6);
-		MAGNET_BOOT_MAX_FORCE = BUILDER.comment("Max acceleration magnet boots will apply at close distances to move the player downwards.").define("magnet_boot_max_force", 0.08);
 		GRAVITY_DISTANCE = BUILDER.comment("Distance (in blocks) at which gravity generator will pull you in").define("gravity_gen_distance", 6);
 		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.08);
 

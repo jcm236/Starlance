@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.blocks.custom;
 
-
 import net.jcm.vsch.blocks.custom.template.BlockWithEntity;
 import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
@@ -32,20 +31,23 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
+	public static final BooleanProperty GENERATOR = BooleanProperty.create("generator");
 
 	public MagnetBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState()
-				.setValue(FACING, Direction.NORTH));
+			.setValue(FACING, Direction.NORTH)
+			.setValue(GENERATOR, false));
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-		pBuilder.add(FACING);
+		pBuilder
+			.add(FACING)
+			.add(GENERATOR);
 	}
 
 	@Override
@@ -63,10 +65,9 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 		}
 
 		// ----- Remove this block from the force appliers for the current level ----- //
-		// I guess VS does this automatically when switching a shipyards dimension?
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 		if (ships != null) {
-			//ships.removeDragger(pos);
+			ships.removeMagnet(pos);
 		}
 	}
 
@@ -77,28 +78,14 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 			dir = dir.getOpposite();
 		}
 		return defaultBlockState()
-				.setValue(BlockStateProperties.FACING, dir);
+			.setValue(FACING, dir);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-
-		if (!(level instanceof final ServerLevel serverLevel)) {
-			return;
-		}
-
-		int signal = level.getBestNeighborSignal(pos);
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
-
-		if (ships != null) {
-			/*DraggerData data = ships.getDraggerAtPos(pos);
-
-			if (data != null) {
-				data.on = (signal > 0);
-			}*/
-		}
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean moving) {
+		super.neighborChanged(state, world, pos, neighbor, neighborPos, moving);
+		final MagnetBlockEntity be = (MagnetBlockEntity) world.getBlockEntity(pos);
+		be.neighborChanged(neighbor, neighborPos, moving);
 	}
 
 	public MagnetBlockEntity newBlockEntity(BlockPos pos, BlockState state) {

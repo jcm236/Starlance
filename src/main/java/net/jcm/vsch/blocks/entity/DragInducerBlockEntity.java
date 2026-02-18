@@ -18,7 +18,7 @@ package net.jcm.vsch.blocks.entity;
 import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
-import net.jcm.vsch.CompatMods;
+import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.DragInducerPeripheral;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.VSCHForceInducedShips;

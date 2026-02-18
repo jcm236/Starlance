@@ -18,6 +18,7 @@ package net.jcm.vsch;
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
 import net.jcm.vsch.commands.ModCommands;
+import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
 import net.jcm.vsch.compat.create.ponder.VSCHPonderRegistrateBlocks;
 import net.jcm.vsch.config.VSCHClientConfig;
@@ -67,7 +68,7 @@ public class VSCHMod {
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);
-        MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
+		MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoin);
 
 		modBus.addListener(this::onClientSetup);
 		modBus.addListener(this::onCommonSetup);
@@ -77,13 +78,13 @@ public class VSCHMod {
 			VSCHPonderRegistrateBlocks.register();
 		}
 
-        if (CompatMods.COSMIC.isLoaded()) {
-            MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
-        }
+		if (CompatMods.COSMIC.isLoaded()) {
+			MinecraftForge.EVENT_BUS.register(EventsWithCH.class);
+		}
 
-        if (CompatMods.AD_ASTRA.isLoaded()) {
-            MinecraftForge.EVENT_BUS.register(EventsWithAD.class);
-        }
+		if (CompatMods.AD_ASTRA.isLoaded()) {
+			MinecraftForge.EVENT_BUS.register(EventsWithAD.class);
+		}
 	}
 
 	// Idk why but this doesn't work in VSCHEvents (prob its only a server-side event listener)
@@ -106,22 +107,22 @@ public class VSCHMod {
 		});
 	}
 
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
-        if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
-            return;
-        }
+	public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent joinEvent) {
+		if (VSCoreConfig.SERVER.getPhysics().getLodDetail() >= 4096) {
+			return;
+		}
 
-        if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
-            return;
-        }
+		if (VSCHCommonConfig.DISABLE_LOD_WARNING.get()) {
+			return;
+		}
 
-        if (joinEvent.getEntity() instanceof ServerPlayer player) {
-            player.sendSystemMessage(
-                    Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
-                            .withStyle(ChatFormatting.YELLOW)
-            );
-        }
-    }
+		if (joinEvent.getEntity() instanceof ServerPlayer player) {
+			player.sendSystemMessage(
+					Component.translatable("vsch.lod_warning", VSCoreConfig.SERVER.getPhysics().getLodDetail())
+							.withStyle(ChatFormatting.YELLOW)
+			);
+		}
+	}
 
 	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		// event.registerEntityRenderer(VSCHEntities.MAGNET_ENTITY.get(), NoopRenderer::new);

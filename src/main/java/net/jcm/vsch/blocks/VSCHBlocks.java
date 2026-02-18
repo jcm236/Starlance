@@ -144,39 +144,17 @@ public class VSCHBlocks {
 		)
 	);
 
-    public static List<RegistryObject<Block>> TIER_BLOCKS = registerTierBlocks(5);
-
-    private static List<RegistryObject<Block>> registerTierBlocks(int amount) {
-        List<RegistryObject<Block>> result = new ArrayList<>();
-        for (int i = 1; i <= amount; i++) {
-            int finalI = i;
-            result.add(
-                    registerBlock(
-                            "tier_"+i,
-                            () -> new TierBlock(finalI,
-                                    BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-                                            .mapColor(MapColor.STONE)
-                                            .sound(SoundType.COPPER)
-                                            .strength(5f)
-                            )
-                    )
-            );
-        }
-        return result;
-    }
-
-
-	/*public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
-		"dock",
+	public static final RegistryObject<Block> DOCKER_BLOCK = registerBlock(
+		"docker",
 		() -> new DockerBlock(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 				.sound(SoundType.COPPER)
 				.strength(5f)
 				.noOcclusion()
 		)
-	);*/
+	);
 
-	/*public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock(
+	public static final RegistryObject<Block> MAGNET_BLOCK = registerBlock(
 		"magnet_block",
 		() -> new MagnetBlock(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
@@ -184,7 +162,29 @@ public class VSCHBlocks {
 				.strength(5f)
 				.noOcclusion()
 		)
-	);*/
+	);
+
+	public static List<RegistryObject<Block>> TIER_BLOCKS = registerTierBlocks(5);
+
+	private static List<RegistryObject<Block>> registerTierBlocks(final int maxTier) {
+		final List<RegistryObject<Block>> result = new ArrayList<>(maxTier);
+		for (int i = 1; i <= maxTier; i++) {
+			final int tier = i;
+			result.add(
+				registerBlock(
+					"tier_" + tier,
+					() -> new TierBlock(
+						tier,
+						BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+							.mapColor(MapColor.STONE)
+							.sound(SoundType.COPPER)
+							.strength(5f)
+					)
+				)
+			);
+		}
+		return result;
+	}
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
 		RegistryObject<T> toReturn = BLOCKS.register(name, block);

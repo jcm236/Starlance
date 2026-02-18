@@ -108,7 +108,6 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 		}
 
 		// ----- Remove the thruster from the force appliers for the current level ----- //
-		// I guess VS does this automatically when switching a shipyards dimension?
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
 		if (ships != null) {
 			ships.removeThruster(pos);

@@ -16,7 +16,7 @@
 package net.jcm.vsch.util;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.CompatMods;
+import net.jcm.vsch.compat.CompatMods;
 import net.lointain.cosmos.network.CosmosModVariables;
 
 import net.minecraft.ChatFormatting;

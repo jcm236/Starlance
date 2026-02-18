@@ -15,18 +15,25 @@
  **/
 package net.jcm.vsch.ship;
 
+import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
 import net.jcm.vsch.ship.gyro.GyroData;
 import net.jcm.vsch.ship.gyro.GyroForceApplier;
+import net.jcm.vsch.ship.magnet.MagnetData;
+import net.jcm.vsch.ship.magnet.MagnetForceApplier;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
+import net.jcm.vsch.util.VSCHUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
-import org.jetbrains.annotations.NotNull;
 import org.valkyrienskies.core.api.world.PhysLevel;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -49,11 +56,26 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 	/**
 	 * Don't mess with this unless you know what your doing. I'm making it public for all the people that do know what their doing.
 	 * Instead, look at {@link #addApplier(BlockPos, IVSCHForceApplier)} or {@link #removeApplier(BlockPos)} or {@link #getApplierAtPos(BlockPos)} or their respective thruster/dragger counterparts.
-	 * @see IVSCHForceApplier
+	 *
+	 *  @see IVSCHForceApplier
 	 */
 	public Map<BlockPos, IVSCHForceApplier> appliers = new ConcurrentHashMap<>();
 
 	public VSCHForceInducedShips() {}
+
+	public static VSCHForceInducedShips get(LoadedServerShip ship) {
+		VSCHForceInducedShips attachment = ship.getAttachment(VSCHForceInducedShips.class);
+		if (attachment == null) {
+			attachment = new VSCHForceInducedShips();
+			ship.setAttachment(attachment);
+		}
+		return attachment;
+	}
+
+	public static VSCHForceInducedShips get(ServerLevel level, BlockPos pos) {
+		LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(level, pos);
+		return ship != null ? get(ship) : null;
+	}
 
 	@Override
 	public void physTick(@NotNull PhysShip ship, @NotNull PhysLevel physLevel) {
@@ -94,9 +116,8 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof DraggerForceApplier dragger) {
 			return dragger.getData();
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	// ----- Thrusters ----- //
@@ -117,9 +138,8 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof ThrusterForceApplier thruster) {
 			return thruster.getData();
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	// ----- Gyros ----- //
@@ -139,24 +159,28 @@ public final class VSCHForceInducedShips implements ShipPhysicsListener {
 		IVSCHForceApplier applier = getApplierAtPos(pos);
 		if (applier instanceof GyroForceApplier gyro) {
 			return gyro.getData();
-		} else {
-			return null;
+		}
+		return null;
+	}
+
+	// ----- Magnets ----- //
+
+	public void addMagnet(BlockPos pos, MagnetData data) {
+		addApplier(pos, new MagnetForceApplier(data));
+	}
+
+	public void removeMagnet(BlockPos pos) {
+		if (getMagnetAtPos(pos) != null){
+			removeApplier(pos);
 		}
 	}
 
-	// ----- Force induced ships ----- //
-
-	public static VSCHForceInducedShips get(LoadedServerShip ship) {
-		VSCHForceInducedShips attachment = ship.getAttachment(VSCHForceInducedShips.class);
-		if (attachment == null) {
-			attachment = new VSCHForceInducedShips();
-			ship.setAttachment(attachment);
+	@Nullable
+	public MagnetData getMagnetAtPos(BlockPos pos) {
+		IVSCHForceApplier applier = getApplierAtPos(pos);
+		if (applier instanceof MagnetForceApplier magnet) {
+			return magnet.getData();
 		}
-		return attachment;
-	}
-
-	public static VSCHForceInducedShips get(ServerLevel level, BlockPos pos) {
-		LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(level, pos);
-		return ship != null ? get(ship) : null;
+		return null;
 	}
 }

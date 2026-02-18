@@ -42,7 +42,7 @@ public class EventsWithAD {
 	@SubscribeEvent
 	public static void onLevelLoad(LevelEvent.Load event) {
 		if (event.getLevel() instanceof final ServerLevel level) {
-            Gravity.updateFor(level);
+			Gravity.updateFor(level);
 		}
 	}
 }
