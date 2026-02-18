@@ -102,22 +102,13 @@ public class BaseThrusterBlock<T extends AbstractThrusterBlockEntity> extends Di
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
-<<<<<<< HEAD:src/main/java/net/jcm/vsch/blocks/custom/template/AbstractThrusterBlock.java
-		if (!(level instanceof ServerLevel)) {
-=======
 
 		if (!(level instanceof final ServerLevel serverLevel)) {
->>>>>>> main:src/main/java/net/jcm/vsch/blocks/custom/BaseThrusterBlock.java
 			return;
 		}
 
 		// ----- Remove the thruster from the force appliers for the current level ----- //
-<<<<<<< HEAD:src/main/java/net/jcm/vsch/blocks/custom/template/AbstractThrusterBlock.java
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
-=======
-		// I guess VS does this automatically when switching a shipyards dimension?
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
->>>>>>> main:src/main/java/net/jcm/vsch/blocks/custom/BaseThrusterBlock.java
 		if (ships != null) {
 			ships.removeThruster(pos);
 		}

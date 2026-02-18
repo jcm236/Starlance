@@ -1,17 +1,20 @@
 package net.jcm.vsch.ship.magnet;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
+import net.jcm.vsch.ship.IVSCHForceApplier;
 
 import net.minecraft.core.BlockPos;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.properties.ShipTransform;
-import org.valkyrienskies.core.api.ships.ships.PhysShip;
+import org.valkyrienskies.core.api.world.PhysLevel;
 
 public final class MagnetForceApplier implements IVSCHForceApplier {
+	private static final Vector3dc ZERO_VEC3D = new Vector3d();
+
 	private final MagnetData data;
 
 	public MagnetForceApplier(MagnetData data) {
@@ -24,7 +27,7 @@ public final class MagnetForceApplier implements IVSCHForceApplier {
 
 	@Override
 	public void applyForces(final BlockPos blockPos, final PhysShip ship, final PhysLevel physLevel) {
-		final Vector3d centerPos = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		final Vector3d centerPos = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
 		final Vector3f facing = data.facing;
 		final boolean isGenerator = data.isGenerator;
 		final MagnetData.ForceCalculator forceCalculator = data.forceCalculator;

@@ -54,22 +54,13 @@ public class DragInducerBlock extends Block implements EntityBlock {
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);
-<<<<<<< HEAD
-		if (!(level instanceof ServerLevel)) {
-			return;
-		}
-
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
-=======
 
 		if (!(level instanceof final ServerLevel serverLevel)) {
 			return;
 		}
 
 		// ----- Remove this block from the force appliers for the current level ----- //
-		// I guess VS does this automatically when switching a shipyards dimension?
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
->>>>>>> main
 		if (ships != null) {
 			ships.removeDragger(pos);
 		}
@@ -78,7 +69,7 @@ public class DragInducerBlock extends Block implements EntityBlock {
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean moving) {
 		super.neighborChanged(state, level, pos, neighbor, neighborPos, moving);
-		DragInducerBlockEntity be = (DragInducerBlockEntity) level.getBlockEntity(pos);
+		final DragInducerBlockEntity be = (DragInducerBlockEntity) level.getBlockEntity(pos);
 		be.neighborChanged(neighbor, neighborPos, moving);
 	}
 

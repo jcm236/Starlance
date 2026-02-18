@@ -21,7 +21,7 @@ import net.jcm.vsch.blocks.custom.template.BlockEntityWithEntity;
 import net.jcm.vsch.blocks.custom.MagnetBlock;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.cc.peripherals.MagnetPeripheral;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.entity.MagnetEntity;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
@@ -83,7 +83,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	private final DoubleAdder lastGenerated = new DoubleAdder();
 
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
-	private final MagnetEnergyStorage energyStorage = new MagnetEnergyStorage(VSCHConfig.MAGNET_BLOCK_CONSUME_ENERGY.get().intValue());
+	private final MagnetEnergyStorage energyStorage = new MagnetEnergyStorage(VSCHServerConfig.MAGNET_BLOCK_CONSUME_ENERGY.get().intValue());
 
 	private Map<MagnetBlockEntity, DuoVector3d> cachedForces = new HashMap<>();
 
@@ -95,7 +95,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	}
 
 	public float getAttractDistance() {
-		return VSCHConfig.MAGNET_BLOCK_DISTANCE.get().floatValue() + 1;
+		return VSCHServerConfig.MAGNET_BLOCK_DISTANCE.get().floatValue() + 1;
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 	}
 
 	private static Vector3d getStandardForceTo(Vector3d selfPos, float angle, Vector3d pos, Vector3d dest) {
-		final double maxForce = VSCHConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
+		final double maxForce = VSCHServerConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
 		pos.sub(selfPos, dest);
 		float force = (float)(maxForce / dest.lengthSquared() * Math.abs(Math.cos(angle)));
 		return dest.normalize(force);
@@ -370,7 +370,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> {
 			this.magnetData.forceCalculator = MagnetData.EMPTY_FORCE;
 		} else if (this.isGenerator) {
 			this.magnetData.forceCalculator = (physShip, totalForce, totalTorque) -> {};
-			// final double MAX_FORCE_MULTIPLIER = VSCHConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
+			// final double MAX_FORCE_MULTIPLIER = VSCHServerConfig.MAGNET_BLOCK_MAX_FORCE.get().doubleValue();
 			// Vector3d selfPosInShip = new Vector3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5).sub(selfShip.getTransform().getPositionInShip());
 			// double selfRadius = selfPosInShip.length();
 			// this.magnetData.forceCalculator = (physShip, totalForce, totalTorque) -> {

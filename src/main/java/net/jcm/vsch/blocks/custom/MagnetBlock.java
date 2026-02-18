@@ -64,13 +64,8 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 			return;
 		}
 
-<<<<<<< HEAD
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
-=======
 		// ----- Remove this block from the force appliers for the current level ----- //
-		// I guess VS does this automatically when switching a shipyards dimension?
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
->>>>>>> main
 		if (ships != null) {
 			ships.removeMagnet(pos);
 		}
@@ -87,30 +82,10 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean moving) {
 		super.neighborChanged(state, world, pos, neighbor, neighborPos, moving);
-		MagnetBlockEntity be = (MagnetBlockEntity) world.getBlockEntity(pos);
+		final MagnetBlockEntity be = (MagnetBlockEntity) world.getBlockEntity(pos);
 		be.neighborChanged(neighbor, neighborPos, moving);
-=======
-	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-
-		if (!(level instanceof final ServerLevel serverLevel)) {
-			return;
-		}
-
-		int signal = level.getBestNeighborSignal(pos);
-		VSCHForceInducedShips ships = VSCHForceInducedShips.get(serverLevel, pos);
-
-		if (ships != null) {
-			/*DraggerData data = ships.getDraggerAtPos(pos);
-
-			if (data != null) {
-				data.on = (signal > 0);
-			}*/
-		}
->>>>>>> main
 	}
 
 	public MagnetBlockEntity newBlockEntity(BlockPos pos, BlockState state) {

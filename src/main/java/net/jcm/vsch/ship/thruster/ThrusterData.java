@@ -15,6 +15,8 @@
  **/
 package net.jcm.vsch.ship.thruster;
 
+import org.joml.Vector3d;
+
 import net.minecraft.util.StringRepresentable;
 
 public final class ThrusterData {

@@ -15,8 +15,7 @@
  **/
 package net.jcm.vsch.ship;
 
-import net.jcm.vsch.api.force.IVSCHForceApplier;
-import net.jcm.vsch.config.VSCHConfig;
+import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
 import net.jcm.vsch.ship.gyro.GyroData;

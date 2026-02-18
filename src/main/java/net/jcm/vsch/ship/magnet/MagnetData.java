@@ -1,10 +1,8 @@
 package net.jcm.vsch.ship.magnet;
 
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-
-import java.util.function.BiConsumer;
+import org.valkyrienskies.core.api.ships.PhysShip;
 
 public class MagnetData {
 	public static final ForceCalculator EMPTY_FORCE = (s, a, b) -> {};
@@ -19,6 +17,6 @@ public class MagnetData {
 
 	@FunctionalInterface
 	public interface ForceCalculator {
-		void calc(PhysShipImpl physShip, Vector3d force1, Vector3d force2);
+		void calc(PhysShip physShip, Vector3d force1, Vector3d force2);
 	}
 }
