@@ -77,6 +77,7 @@ public class VSCHServerConfig {
 	public static final ForgeConfigSpec.ConfigValue<Double> MAGNET_BLOCK_DISTANCE;
 	public static final ForgeConfigSpec.ConfigValue<Double> MAGNET_BLOCK_MAX_FORCE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> MAGNET_BLOCK_CONSUME_ENERGY;
+	public static final ForgeConfigSpec.BooleanValue MAGNET_BLOCK_GENERATOR;
 
 	/* Assembler */
 
@@ -155,6 +156,7 @@ public class VSCHServerConfig {
 		MAGNET_BLOCK_DISTANCE = BUILDER.comment("Distance (in blocks) at which magnet blocks will pull ships").define("magnet_block_distance", 6.0);
 		MAGNET_BLOCK_MAX_FORCE = BUILDER.comment("Max force one magnet block will apply at 1 block distance.").define("magnet_block_max_force", 50000.0);
 		MAGNET_BLOCK_CONSUME_ENERGY = BUILDER.comment("The energy a magnet block will consume when activate at max power.").define("magnet_block_consume_energy", 0);
+		MAGNET_BLOCK_GENERATOR = BUILDER.comment("If the magnet block can be used as generator. Warn: Generator have bugs for now.").define("magnet_block_generator", false);
 
 		BUILDER.pop();
 
