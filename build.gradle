@@ -94,12 +94,15 @@ repositories {
 		}
 	}
 
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+
 	maven {
 		name = "Modrinth Maven"
 		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup("maven.modrinth")
-		}
 	}
 
 	// Unfortunately curse maven is slow, but we need it for jade
@@ -236,6 +239,8 @@ dependencies {
 		}
 	}
 
+    modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.3")
+
     spaceMod("maven.modrinth:ad-astra:${ad_astra_version}")
     spaceMod("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
 
@@ -264,9 +269,9 @@ dependencies {
 	modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 	modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-	// JEI (just for quality of life, not compat)
-	modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-
+    // JEI compat for making the tier blocks show up
+    modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    modImplementation("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 	// endregion
 }
 
