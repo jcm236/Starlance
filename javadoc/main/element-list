@@ -20,6 +20,7 @@ net.jcm.vsch.compat.create.ponder.scenes
 net.jcm.vsch.compat.curios
 net.jcm.vsch.compat.jade
 net.jcm.vsch.compat.jade.componentproviders
+net.jcm.vsch.compat.jei
 net.jcm.vsch.config
 net.jcm.vsch.entity
 net.jcm.vsch.items
