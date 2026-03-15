@@ -348,12 +348,12 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	protected ParticleOptions getThrusterParticleType() {
 		// TODO: Make custom particle
-		return ParticleTypes.ASH;//ParticleTypes.ASH;
+		return ParticleTypes.ASH;
 	}
 
 	protected ParticleOptions getThrusterSmokeParticleType() {
 		// TODO: Make custom particle
-		return ParticleTypes.ASH;//ParticleTypes.ASH;
+		return ParticleTypes.ASH;
 	}
 
 	protected abstract double getEvaporateDistance();

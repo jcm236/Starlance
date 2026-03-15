@@ -119,15 +119,6 @@ public class PlanetCollision {
 				continue;
 			}
 
-			{
-				final TeleportationHandler handler = handlers.get(targetDimension);
-				// TODO: hasShip will always returns false, since ships won't get added until next tick.
-				// It is not a critical problem, because TeleportHandler internally will ignore duplicated ships.
-				if (handler != null && handler.hasShip(ship)) {
-					continue;
-				}
-			}
-
 			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
 			final double distance = nearestPlanetData.distance();
 			if (distance > OUTER_RANGE) {
@@ -148,6 +139,9 @@ public class PlanetCollision {
 			}
 			if (!landingAttachment.frozen && ship.isStatic()) {
 				// Ignore static ships to allow build ring around planets? (why will people do that)
+				continue;
+			}
+			if (!landingAttachment.trySetTeleporting()) {
 				continue;
 			}
 
@@ -233,7 +227,6 @@ public class PlanetCollision {
 			handler.afterShipsAdded().thenAcceptAsync((void_) -> {
 				for (final LoadedServerShip ship : handler.getPendingShips()) {
 					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-					attachment.frozen = false;
 					attachment.setLanding();
 				}
 				handler.finalizeTeleport();

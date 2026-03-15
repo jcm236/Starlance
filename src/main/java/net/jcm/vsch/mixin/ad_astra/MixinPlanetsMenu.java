@@ -2,13 +2,14 @@ package net.jcm.vsch.mixin.ad_astra;
 
 import net.jcm.vsch.ship.ShipTierAttachment;
 import net.jcm.vsch.spacemods.ad_astra.ClientValues;
-import net.jcm.vsch.util.VSCHUtils;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 
 import earth.terrarium.adastra.common.entities.vehicles.Rocket;
@@ -17,18 +18,13 @@ import earth.terrarium.adastra.common.registry.ModEntityTypes;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlanetsMenu.class)
 public class MixinPlanetsMenu {
-	// TODO: replace the fields with @Shared LocalRef
-	@Unique
-	private int shipTier = 0;
-	@Unique
-	private boolean fakeRocket = false;
-
 	@WrapOperation(
 		method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Ljava/util/Set;Ljava/util/Map;Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;Ljava/util/Set;)V",
 		at = @At(
@@ -36,12 +32,17 @@ public class MixinPlanetsMenu {
 			target = "Lnet/minecraft/world/entity/player/Player;getVehicle()Lnet/minecraft/world/entity/Entity;"
 		)
 	)
-	private Entity injectVehicle(final Player player, final Operation<Entity> operation) {
-		if (player.level().isClientSide) {
+	private Entity player$getVehicle(
+		final Player player,
+		final Operation<Entity> operation,
+		final @Share("shipTier") LocalIntRef shipTier
+	) {
+		final Level level = player.level();
+		if (level.isClientSide) {
 			if (ClientValues.storedTier == null) {
 				return operation.call(player);
 			}
-			this.shipTier = ClientValues.storedTier;
+			shipTier.set(ClientValues.storedTier);
 		} else {
 			if (!(player instanceof final IEntityDraggingInformationProvider dragged)) {
 				return operation.call(player);
@@ -52,17 +53,15 @@ public class MixinPlanetsMenu {
 				return operation.call(player);
 			}
 
-			// TODO: use proper ship Query API
-			final LoadedServerShip serverShip = VSCHUtils.getLoadedShipsInLevel((ServerLevel) player.level()).stream().filter((s) -> s.getId() == id).findAny().orElse(null);
-			if (serverShip == null) {
+			final ServerLevel serverLevel = (ServerLevel) level;
+			final LoadedServerShip serverShip = VSGameUtilsKt.getShipObjectWorld(serverLevel).getLoadedShips().getById(id);
+			if (serverShip == null || !serverShip.getChunkClaimDimension().equals(VSGameUtilsKt.getDimensionId(serverLevel))) {
 				return operation.call(player);
 			}
 
 			final ShipTierAttachment tierAttachment = ShipTierAttachment.get(serverShip);
-			this.shipTier = tierAttachment.getHighestTier();
+			shipTier.set(tierAttachment.getHighestTier());
 		}
-
-		this.fakeRocket = true;
 
 		// Have to be an instance of Rocket to bypass a check
 		return ModEntityTypes.TIER_1_ROCKET.get().create(player.level());
@@ -70,13 +69,19 @@ public class MixinPlanetsMenu {
 
 	@WrapOperation(
 		method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Ljava/util/Set;Ljava/util/Map;Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;Ljava/util/Set;)V",
-		at = @At(value = "INVOKE", target = "Learth/terrarium/adastra/common/entities/vehicles/Rocket;tier()I", remap = false),
+		at = @At(
+			value = "INVOKE",
+			target = "Learth/terrarium/adastra/common/entities/vehicles/Rocket;tier()I",
+			remap = false
+		),
 		remap = false
 	)
-	private int injectTier(Rocket instance, Operation<Integer> original) {
-		if (this.fakeRocket) {
-			return this.shipTier;
-		}
-		return original.call(instance);
+	private int rocket$getTier(
+		final Rocket instance,
+		final Operation<Integer> original,
+		final @Share("shipTier") LocalIntRef shipTierRef
+	) {
+		final int shipTier = shipTierRef.get();
+		return shipTier != 0 ? shipTier : original.call(instance);
 	}
 }

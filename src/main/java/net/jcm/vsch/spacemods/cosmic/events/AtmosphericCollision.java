@@ -86,6 +86,9 @@ public class AtmosphericCollision {
 			if (landingAttachment.landing && shipY < atmoHeight + 128) {
 				continue;
 			}
+			if (!landingAttachment.trySetTeleporting()) {
+				continue;
+			}
 
 			// TODO: figure out how to detect ships in the way of us teleporting, and teleport a distance away
 			// TODO: map ship loaction around the planet instead of always spawn at same location

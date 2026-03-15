@@ -155,6 +155,7 @@ public class TeleportationHandler {
 		final Quaterniondc rotation,
 		Vector3dc velocity,
 		Vector3dc omega,
+		final Vector3d velocityDiff,
 		final List<Long> collected
 	) {
 		if (this.ships.containsKey(shipId)) {
@@ -164,20 +165,29 @@ public class TeleportationHandler {
 		if (ship == null) {
 			return;
 		}
+		collected.add(shipId);
+
 		final Vector3dc pos = ship.getTransform().getPositionInWorld();
 		final ShipLandingAttachment landingAttachment = ship.getAttachment(ShipLandingAttachment.class);
+		final Vector3dc velocity0, omega0;
 		if (ship.isStatic() && landingAttachment.frozen) {
-			velocity = landingAttachment.velocity;
-			omega = landingAttachment.omega;
+			velocity0 = landingAttachment.velocity;
+			omega0 = landingAttachment.omega;
 		} else {
-			if (velocity == null) {
-				velocity = new Vector3d(ship.getVelocity());
-			}
-			if (omega == null) {
-				omega = new Vector3d(ship.getOmega());
-			}
+			velocity0 = ship.getVelocity();
+			omega0 = ship.getAngularVelocity();
 		}
-		collected.add(shipId);
+		if (velocity == null) {
+			velocity = velocity0;
+			if (velocityDiff != null) {
+				velocity = velocity.add(velocityDiff, new Vector3d());
+			}
+		} else if (velocityDiff != null) {
+			velocity.sub(velocity0, velocityDiff);
+		}
+		if (omega == null) {
+			omega = omega0;
+		}
 
 		final Vector3d relPos = pos.sub(origin, new Vector3d());
 		final Quaterniond newRotataion = new Quaterniond(ship.getTransform().getShipToWorldRotation());
@@ -201,11 +211,11 @@ public class TeleportationHandler {
 		}
 
 		relPos.add(newPos);
-		final Vector3d velocity0 = new Vector3d(velocity);
-		final Vector3d omega0 = new Vector3d(omega);
+		final Vector3d velocity2 = new Vector3d(velocity);
+		final Vector3d omega2 = new Vector3d(omega);
 
 		MinecraftForge.EVENT_BUS.post(this.createPreShipTravelEvent(
-			ship, oldLevel.dimension(), newLevel.dimension(), relPos, newRotataion, velocity0, omega0
+			ship, oldLevel.dimension(), newLevel.dimension(), relPos, newRotataion, velocity2, omega2
 		));
 
 		this.ships.put(
@@ -213,8 +223,8 @@ public class TeleportationHandler {
 			new TeleportData(
 				relPos,
 				newRotataion,
-				velocity0,
-				omega0
+				velocity2,
+				omega2
 			)
 		);
 	}
@@ -234,12 +244,10 @@ public class TeleportationHandler {
 	) {
 		final CompletableFuture<long[]> connectivityFuture = new CompletableFuture();
 		final CompletableFuture<Void> collectFuture = connectivityFuture.thenAcceptAsync((shipIds) -> {
+			final Vector3d velocityDiff = velocity == null ? null : new Vector3d();
+			this.collectShipWithVelocity(shipId, origin, newPos, rotation, velocity, omega, velocityDiff, collected);
 			for (final long sId : shipIds) {
-				if (sId == shipId) {
-					this.collectShipWithVelocity(sId, origin, newPos, rotation, velocity, omega, collected);
-				} else {
-					this.collectShipWithVelocity(sId, origin, newPos, rotation, null, null, collected);
-				}
+				this.collectShipWithVelocity(sId, origin, newPos, rotation, null, null, velocityDiff, collected);
 			}
 		}, this.oldLevel.getServer());
 		TaskUtil.queuePhysicsTick(this.oldLevel, (world0) -> {
@@ -247,7 +255,7 @@ public class TeleportationHandler {
 			final List<PhysShip> ships = new ArrayList<>();
 			ships.add(world.getShipById(shipId));
 			this.collectConnectedAndNearbyShips(world, ships);
-			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).toArray());
+			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).filter((id) -> id != shipId).toArray());
 		});
 		return collectFuture;
 	}

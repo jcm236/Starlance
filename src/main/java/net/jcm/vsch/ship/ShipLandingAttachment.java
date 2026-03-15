@@ -44,6 +44,8 @@ public final class ShipLandingAttachment {
 	public boolean launching = false;
 	@JsonProperty
 	public boolean landing = false;
+	@JsonProperty
+	public boolean teleporting = false;
 	public ServerPlayer commander = null;
 
 	@JsonProperty
@@ -80,13 +82,28 @@ public final class ShipLandingAttachment {
 		);
 	}
 
+	public boolean trySetTeleporting() {
+		if (this.teleporting) {
+			return false;
+		}
+		this.teleporting = true;
+		return true;
+	}
+
+	private void clearTeleportingFlags() {
+		this.frozen = false;
+		this.teleporting = false;
+	}
+
 	public void setLaunching(final ResourceKey<Level> level, final ChunkPos pos) {
+		this.clearTeleportingFlags();
 		this.landing = false;
 		this.launching = true;
 		this.launchPositions.put(level, pos);
 	}
 
 	public void setLanding() {
+		this.clearTeleportingFlags();
 		this.launching = false;
 		this.landing = true;
 	}
