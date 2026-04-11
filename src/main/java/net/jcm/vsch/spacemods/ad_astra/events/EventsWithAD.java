@@ -15,6 +15,8 @@
  **/
 package net.jcm.vsch.spacemods.ad_astra.events;
 
+import net.jcm.vsch.config.VSCHCommonConfig;
+import net.jcm.vsch.config.VSCHServerConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -27,6 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class EventsWithAD {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
+        if (VSCHServerConfig.DISABLE_TELEPORT.get()) return;
 		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
