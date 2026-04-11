@@ -76,7 +76,6 @@ public class PlanetCollision {
 		if (!levelData.hasPlanets()) {
 			return;
 		}
-		final String dimension = level.dimension().location().toString();
 
 		final ShipLandingMode landingMode = VSCHServerConfig.SHIP_LANDING_MODE.get();
 		final int landingAccuracy = VSCHServerConfig.SHIP_LANDING_ACCURACY.get();

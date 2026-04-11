@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.blocks.custom;
 
-import net.jcm.vsch.VSCHMod;
 import net.jcm.vsch.blocks.entity.GyroBlockEntity;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
 import net.jcm.vsch.ship.VSCHForceInducedShips;

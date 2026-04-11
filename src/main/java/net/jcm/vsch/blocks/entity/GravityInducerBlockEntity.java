@@ -51,7 +51,7 @@ public class GravityInducerBlockEntity extends BlockEntity implements ParticleBl
 
 	@Override
 	public void tickForce(ServerLevel level, BlockPos pos, BlockState state) {
-		LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, pos);
+		LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(level, pos);
 		if (ship == null) {
 			return;
 		}

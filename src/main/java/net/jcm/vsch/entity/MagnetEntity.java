@@ -26,23 +26,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.phys.Vec3;
 
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.MagnetBlockEntity;
 
 public class MagnetEntity extends Entity implements IAttachableEntity {
-	public static final EntityTypeTest TESTER = EntityTypeTest.forClass(MagnetEntity.class);
+	public static final EntityTypeTest<Entity, MagnetEntity> TESTER = EntityTypeTest.forClass(MagnetEntity.class);
 
 	private BlockPos pos;
 	private int keepAlive = 0;
@@ -76,7 +68,7 @@ public class MagnetEntity extends Entity implements IAttachableEntity {
 	@Override
 	public void tick() {
 		Level level = this.level();
-		if (!(level instanceof ServerLevel serverLevel)) {
+		if (!(level instanceof ServerLevel)) {
 			return;
 		}
 		this.keepAlive--;

@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.ship.magnet;
 
-import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.IVSCHForceApplier;
 
 import net.minecraft.core.BlockPos;

@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.spacemods.ad_astra.events;
 
-import earth.terrarium.adastra.common.planets.AdAstraData;
 import earth.terrarium.adastra.common.systems.GravityApiImpl;
 import earth.terrarium.adastra.common.systems.OxygenApiImpl;
 import net.jcm.vsch.VSCHMod;

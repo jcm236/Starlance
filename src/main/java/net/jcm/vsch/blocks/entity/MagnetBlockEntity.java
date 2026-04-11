@@ -27,7 +27,6 @@ import net.jcm.vsch.entity.MagnetEntity;
 import net.jcm.vsch.entity.VSCHEntities;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.magnet.MagnetData;
-import net.jcm.vsch.util.VSCHUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,9 +53,7 @@ import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
 
-import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +109,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 	public Vector3d getWorldPos() {
 		final BlockPos pos = this.getBlockPos();
 		final Vector3d vec3 = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-		final Ship ship = VSGameUtilsKt.getShipObjectManagingPos(this.getLevel(), pos);
+		final Ship ship = VSGameUtilsKt.getLoadedShipManagingPos(this.getLevel(), pos);
 		if (ship != null) {
 			ship.getShipToWorld().transformPosition(vec3);
 		}
@@ -121,7 +118,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 
 	public Vector3f getFacing() {
 		Vector3f facing = this.facing.toVector3f();
-		final Ship ship = VSGameUtilsKt.getShipObjectManagingPos(this.getLevel(), this.getBlockPos());
+		final Ship ship = VSGameUtilsKt.getLoadedShipManagingPos(this.getLevel(), this.getBlockPos());
 		if (ship != null) {
 			facing = ship.getShipToWorld().transformDirection(facing);
 		}
@@ -217,7 +214,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 			return null;
 		}
 		final BlockPos blockPos = this.getBlockPos();
-		final ServerShip currentShip = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, blockPos);
+		final ServerShip currentShip = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, blockPos);
 		if (currentShip == null || currentShip.isStatic()) {
 			return Collections.emptyList();
 		}
@@ -252,7 +249,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 			if (block == null || block == this) {
 				return false;
 			}
-			final ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, magnet.getAttachedBlockPos());
+			final ServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, magnet.getAttachedBlockPos());
 			if (ship == currentShip) {
 				return false;
 			}
@@ -353,7 +350,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 			}
 		}
 
-		final Ship selfShip = VSGameUtilsKt.getShipObjectManagingPos(level, blockPos);
+		final Ship selfShip = VSGameUtilsKt.getLoadedShipManagingPos(level, blockPos);
 		if (selfShip == null) {
 			return;
 		}
@@ -445,7 +442,6 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 			}
 		} else {
 			this.magnetData.forceCalculator = (physShip, frontForce, backForce) -> {
-				final Vector3d selfPos = this.getWorldPos();
 				final Vector3f selfFacing = this.getFacing();
 				final Vector3d selfNorthPos = this.getNorthPolePos();
 				final Vector3d selfSouthPos = this.getSouthPolePos();
@@ -460,7 +456,6 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 						continue;
 					}
 
-					final Vector3d pos = other.getWorldPos();
 					final Vector3f facing = other.getFacing();
 					final Vector3d otherNorthPos = other.getNorthPolePos();
 					final Vector3d otherSouthPos = other.getSouthPolePos();

@@ -57,7 +57,7 @@ public class VSCHBlocks {
 
 	public static final RegistryObject<Block> THRUSTER_BLOCK = registerBlock(
 		"thruster_block",
-		() -> new BaseThrusterBlock(
+		() -> new BaseThrusterBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 				.sound(SoundType.COPPER)
 				.strength(5f)
@@ -69,7 +69,7 @@ public class VSCHBlocks {
 
 	public static final RegistryObject<Block> AIR_THRUSTER_BLOCK = registerBlock(
 		"air_thruster_block",
-		() -> new BaseThrusterBlock(
+		() -> new BaseThrusterBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 				.sound(SoundType.COPPER)
 				.strength(5f)
@@ -81,7 +81,7 @@ public class VSCHBlocks {
 
 	public static final RegistryObject<Block> POWERFUL_THRUSTER_BLOCK = registerBlock(
 		"powerful_thruster_block",
-		() -> new BaseThrusterBlock(
+		() -> new BaseThrusterBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 				.sound(SoundType.COPPER)
 				.strength(5f)
@@ -93,7 +93,7 @@ public class VSCHBlocks {
 
 	public static final RegistryObject<Block> CREATIVE_THRUSTER_BLOCK = registerBlock(
 		"creative_thruster_block",
-		() -> new BaseThrusterBlock(
+		() -> new BaseThrusterBlock<>(
 			BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
 				.sound(SoundType.COPPER)
 				.strength(5f)

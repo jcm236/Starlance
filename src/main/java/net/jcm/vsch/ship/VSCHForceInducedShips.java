@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.ship;
 
-import net.jcm.vsch.ship.IVSCHForceApplier;
 import net.jcm.vsch.ship.dragger.DraggerData;
 import net.jcm.vsch.ship.dragger.DraggerForceApplier;
 import net.jcm.vsch.ship.gyro.GyroData;
@@ -24,13 +23,9 @@ import net.jcm.vsch.ship.magnet.MagnetData;
 import net.jcm.vsch.ship.magnet.MagnetForceApplier;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.ship.thruster.ThrusterForceApplier;
-import net.jcm.vsch.util.VSCHUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3d;
-import org.joml.Vector3dc;
-import org.joml.Vector3f;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ShipPhysicsListener;
@@ -44,7 +39,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation")
 @JsonAutoDetect(
 	fieldVisibility = JsonAutoDetect.Visibility.NONE,
 	isGetterVisibility = JsonAutoDetect.Visibility.NONE,

@@ -22,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -93,7 +92,7 @@ public abstract class BlockEntityWithEntity<E extends Entity & IAttachableEntity
 	}
 
 	public void removeLinkedEntity() {
-		if (!(level instanceof ServerLevel serverLevel)) {
+		if (!(level instanceof ServerLevel)) {
 			return;
 		}
 		if (this.entityUUID == null) {

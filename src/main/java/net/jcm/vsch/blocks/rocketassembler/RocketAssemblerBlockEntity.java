@@ -23,7 +23,6 @@ import com.github.litermc.vtil.block.AbstractAssemblerBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +35,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
-
+import net.minecraftforge.registries.ForgeRegistries;
 import dan200.computercraft.shared.Capabilities;
 
 import org.joml.primitives.AABBi;
@@ -242,7 +241,7 @@ public class RocketAssemblerBlockEntity extends AbstractAssemblerBlockEntity imp
 
 	protected boolean canAssembleBlock(final BlockState state) {
 		final Block block = state.getBlock();
-		final ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
+		final ResourceLocation blockId = ForgeRegistries.BLOCKS.getKey(block);
 		if (VSCHServerConfig.getAssembleBlacklistSet().contains(blockId)) {
 			return false;
 		}

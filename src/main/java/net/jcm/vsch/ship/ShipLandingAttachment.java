@@ -111,7 +111,7 @@ public final class ShipLandingAttachment {
 	public void freezeShip(final LoadedServerShip ship) {
 		this.frozen = true;
 		this.velocity = new Vector3d(ship.getVelocity());
-		this.omega = new Vector3d(ship.getOmega());
+		this.omega = new Vector3d(ship.getAngularVelocity());
 		ship.setStatic(true);
 	}
 

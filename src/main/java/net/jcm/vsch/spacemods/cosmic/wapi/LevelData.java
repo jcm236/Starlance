@@ -39,7 +39,6 @@ import java.util.Map;
 
 public class LevelData {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
-	private static final double SQRT1_2 = Math.sqrt(1.0 / 2);
 
 	private final ResourceKey<Level> dimension;
 	private final String type;

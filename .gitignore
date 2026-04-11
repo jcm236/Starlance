@@ -17,6 +17,7 @@ run/
 
 .DS_Store
 .classpath
+.factorypath
 .metadata
 .project
 .settings

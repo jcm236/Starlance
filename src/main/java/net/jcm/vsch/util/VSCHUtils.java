@@ -29,8 +29,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.level.Level;
 
 import org.joml.Vector2i;
 import org.joml.Vector3d;
@@ -51,8 +50,6 @@ import java.util.function.BiPredicate;
  * The main class where all handy utility functions used by VSCH are stored.
  */
 public class VSCHUtils {
-
-	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
 
 	/**
 	 * Converts a normal dimension id string of
@@ -80,7 +77,7 @@ public class VSCHUtils {
 		if (parts.length != 4) {
 			throw new IllegalArgumentException("Unexpected dimension ID: " + dimension);
 		}
-		final ResourceKey levelId = ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation(parts[0], parts[1])), new ResourceLocation(parts[2], parts[3]));
+		final ResourceKey<Level> levelId = ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation(parts[0], parts[1])), new ResourceLocation(parts[2], parts[3]));
 		return ValkyrienSkiesMod.getCurrentServer().getLevel(levelId);
 	}
 

@@ -1,6 +1,5 @@
 package net.jcm.vsch.util.rot;
 
-import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 

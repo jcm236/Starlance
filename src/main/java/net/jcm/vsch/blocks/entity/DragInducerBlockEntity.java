@@ -134,7 +134,6 @@ public class DragInducerBlockEntity extends BlockEntity implements ParticleBlock
 
 		// ----- Add this block to the force appliers for the current level ----- //
 
-		int signal = level.getBestNeighborSignal(pos);
 		VSCHForceInducedShips ships = VSCHForceInducedShips.get(level, pos);
 		if (ships == null) {
 			return;

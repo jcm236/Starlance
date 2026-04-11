@@ -242,7 +242,7 @@ public class TeleportationHandler {
 		final Vector3dc omega,
 		final List<Long> collected
 	) {
-		final CompletableFuture<long[]> connectivityFuture = new CompletableFuture();
+		final CompletableFuture<long[]> connectivityFuture = new CompletableFuture<>();
 		final CompletableFuture<Void> collectFuture = connectivityFuture.thenAcceptAsync((shipIds) -> {
 			final Vector3d velocityDiff = velocity == null ? null : new Vector3d();
 			this.collectShipWithVelocity(shipId, origin, newPos, rotation, velocity, omega, velocityDiff, collected);
@@ -311,7 +311,7 @@ public class TeleportationHandler {
 			rotation.transform(offset);
 		}
 		for (final Long id : collected) {
-			final Vector3d newPos = this.ships.get(id).newPos();
+			final Vector3d newPos = this.ships.get(id.longValue()).newPos();
 			newPos.add(offset);
 		}
 	}

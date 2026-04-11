@@ -15,23 +15,16 @@
  **/
 package net.jcm.vsch.spacemods.cosmic.events;
 
-import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.util.EmptyChunkAccess;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import org.valkyrienskies.core.impl.config.VSCoreConfig;
 
 /**
  * This class will only be registered to the forge event bus if cosmic horizons is loaded

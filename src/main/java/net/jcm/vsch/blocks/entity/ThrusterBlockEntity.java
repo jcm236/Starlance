@@ -22,12 +22,12 @@ import net.jcm.vsch.config.VSCHServerConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
 		@Override
 		public boolean isValidFuel(int tank, Fluid fluid) {
-			String fluidName = BuiltInRegistries.FLUID.getKey(fluid).toString();
+			String fluidName = ForgeRegistries.FLUIDS.getKey(fluid).toString();
 			return this.fuelConsumeRates.containsKey(fluidName);
 		}
 
@@ -86,7 +86,7 @@ public class ThrusterBlockEntity extends AbstractThrusterBlockEntity {
 				context.setPower(0);
 				return;
 			}
-			final String fluidName = BuiltInRegistries.FLUID.getKey(fluid).toString();
+			final String fluidName = ForgeRegistries.FLUIDS.getKey(fluid).toString();
 			final int consumeRate = this.fuelConsumeRates.get(fluidName);
 			if (consumeRate == 0) {
 				return;

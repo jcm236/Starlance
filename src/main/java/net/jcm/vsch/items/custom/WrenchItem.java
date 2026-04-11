@@ -16,10 +16,8 @@
 package net.jcm.vsch.items.custom;
 
 import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
-import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;

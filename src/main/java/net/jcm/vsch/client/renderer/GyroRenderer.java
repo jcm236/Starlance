@@ -27,10 +27,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.phys.Vec3;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -41,7 +38,6 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 public class GyroRenderer implements BlockEntityRenderer<GyroBlockEntity> {
 	private static final Vector4f ONE4 = new Vector4f(1, 1, 1, 1);
-	private static final Vector3f HALF3 = new Vector3f(0.5f, 0.5f, 0.5f);
 	private static final Vector3i CORE_SIZE = new Vector3i(6, 6, 6);
 	private static final ModelTextures CORE_MODEL;
 
@@ -58,10 +54,7 @@ public class GyroRenderer implements BlockEntityRenderer<GyroBlockEntity> {
 		);
 	}
 
-	private final BlockEntityRendererProvider.Context ctx;
-
 	public GyroRenderer(BlockEntityRendererProvider.Context ctx) {
-		this.ctx = ctx;
 	}
 
 	@Override

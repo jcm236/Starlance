@@ -55,7 +55,6 @@ public class MagnetBlock extends BlockWithEntity<MagnetBlockEntity> {
 		return RenderShape.MODEL;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
 		super.onRemove(state, level, pos, newState, isMoving);

@@ -23,7 +23,6 @@ import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.thruster.ThrusterData;
 import net.jcm.vsch.util.NoSourceClipContext;
-import net.lointain.cosmos.init.CosmosModParticleTypes;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
@@ -189,6 +188,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction direction) {
+		@SuppressWarnings("unchecked")
 		LazyOptional<T> result = (LazyOptional<T>) capsCache.computeIfAbsent(cap, (c) -> this.brain.getCapability(c, direction).lazyMap(v -> v));
 		if (result.isPresent()) {
 			return result;
@@ -444,10 +444,6 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 				speed.x, speed.y, speed.z
 			);
 		}
-	}
-
-	private static float getPowerByRedstone(final Level level, final BlockPos pos) {
-		return (float)(level.getBestNeighborSignal(pos)) / 15;
 	}
 
 	private static void bfs(final BlockPos startPos, final Predicate<BlockPos> consumer) {

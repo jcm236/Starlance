@@ -16,7 +16,6 @@
 package net.jcm.vsch.items;
 
 import net.jcm.vsch.VSCHMod;
-import net.jcm.vsch.VSCHTab;
 import net.jcm.vsch.items.custom.MagnetBootItem;
 import net.jcm.vsch.items.custom.WrenchItem;
 
