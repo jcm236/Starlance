@@ -187,7 +187,7 @@ public class VSCHServerConfig {
 		GRAVITY_MAX_FORCE = BUILDER.comment("Max acceleration gravity generator will apply at close distances to move the player downwards.").define("gravity_gen_max_force", 0.08);
 
 		ENABLE_PLACE_SHIP_PLATFORM = BUILDER.comment("After enabled, the block placed by key N will be spawned as a ship.").define("enable_place_ship_platform", false);
-        DISABLE_TELEPORT = BUILDER.comment("Disable all teleport functionality for Cosmic Horizons or Ad Astra. Useful for modpack makers that want, for example, Ad Astra + Starlance without ships being able to go to space.").define("enable_place_ship_platform", false);
+        DISABLE_TELEPORT = BUILDER.comment("Disable all teleport functionality for Cosmic Horizons or Ad Astra. Useful for modpack makers that want, for example, Ad Astra + Starlance without ships being able to go to space.").define("disable_teleport", false);
 
 		BUILDER.pop();
 
