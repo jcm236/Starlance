@@ -18,7 +18,8 @@ curseforge {
                 relations {
                     requiredDependency 'kotlin-for-forge'
                     requiredDependency 'valkyrien-skies'
-                    requiredDependency 'cosmic-horizons'
+                    optionalDependency 'cosmic-horizons'
+                    optionalDependency 'ad-astra'
                 }
 
                 displayName = fileDisplayName
@@ -47,7 +48,8 @@ modrinth {
         required.project "valkyrien-skies"
         required.project "kotlin-for-forge"
         // Why cosmic horizons is a different id on modrinth, I have no idea
-        required.project "cosmic-horizons-cosmos"
-        optional.version "create", "1.20.1-0.5.1.j"
+        optional.project "cosmic-horizons-cosmos"
+        optional.project "ad-astra"
+        optional.project "create"
     }
 }
