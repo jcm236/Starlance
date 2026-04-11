@@ -19,6 +19,7 @@ import net.jcm.vsch.accessor.IGuiAccessor;
 import net.jcm.vsch.blocks.custom.BaseThrusterBlock;
 import net.jcm.vsch.blocks.custom.template.WrenchableBlock;
 import net.jcm.vsch.blocks.entity.template.ParticleBlockEntity;
+import net.jcm.vsch.client.VSCHParticleTypes;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 import net.jcm.vsch.ship.thruster.ThrusterData;
@@ -30,7 +31,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -346,15 +346,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		);
 	}
 
-	protected ParticleOptions getThrusterParticleType() {
-		// TODO: Make custom particle
-		return ParticleTypes.ASH;
-	}
+    protected ParticleOptions getThrusterParticleType() {
+        return VSCHParticleTypes.THRUSTED.get();
+    }
 
-	protected ParticleOptions getThrusterSmokeParticleType() {
-		// TODO: Make custom particle
-		return ParticleTypes.ASH;
-	}
+    protected ParticleOptions getThrusterSmokeParticleType() {
+        return VSCHParticleTypes.THRUST_SMOKE.get();
+    }
 
 	protected abstract double getEvaporateDistance();
 
@@ -438,7 +436,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			final Vec3 ppos = waterCenter.offsetRandom(level.random, 1.0f);
 			final Vec3 speed = Vec3.ZERO.offsetRandom(level.random, 0.5f);
 			level.addParticle(
-				ParticleTypes.ASH,
+                VSCHParticleTypes.AIR_THRUST.get(),
 				true,
 				ppos.x, ppos.y, ppos.z,
 				speed.x, speed.y, speed.z

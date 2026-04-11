@@ -1,0 +1,23 @@
+package net.jcm.vsch.client;
+
+import net.jcm.vsch.client.particle.AirThrustParticle;
+import net.jcm.vsch.client.particle.SmokeParticle;
+import net.jcm.vsch.client.particle.ThrustParticle;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(
+        bus = Mod.EventBusSubscriber.Bus.MOD,
+        value = {Dist.CLIENT}
+)
+public class VSCHParticles {
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(VSCHParticleTypes.THRUSTED.get(), ThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.BLUETHRUSTED.get(), ThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.AIR_THRUST.get(), AirThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.THRUST_SMOKE.get(), SmokeParticle::provider);
+    }
+}

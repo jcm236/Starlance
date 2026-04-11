@@ -17,6 +17,7 @@ package net.jcm.vsch;
 
 import net.jcm.vsch.blocks.VSCHBlocks;
 import net.jcm.vsch.blocks.entity.VSCHBlockEntities;
+import net.jcm.vsch.client.VSCHParticleTypes;
 import net.jcm.vsch.commands.ModCommands;
 import net.jcm.vsch.compat.CompatMods;
 import net.jcm.vsch.compat.create.ponder.PonderRegister;
@@ -33,6 +34,7 @@ import net.jcm.vsch.network.VSCHNetwork;
 import net.jcm.vsch.ship.ShipLandingAttachment;
 import net.jcm.vsch.ship.VSCHForceInducedShips;
 
+import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,6 +67,7 @@ public class VSCHMod {
 		VSCHServerConfig.register(context);
 		VSCHTab.register(modBus);
 		VSCHTags.register();
+        VSCHParticleTypes.register(modBus);
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);

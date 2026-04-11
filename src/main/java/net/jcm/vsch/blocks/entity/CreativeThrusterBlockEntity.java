@@ -18,6 +18,7 @@ package net.jcm.vsch.blocks.entity;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
+import net.jcm.vsch.client.VSCHParticleTypes;
 import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,15 +55,15 @@ public class CreativeThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		return this.new CreativeThrusterEngine();
 	}
 
-	@Override
-	protected ParticleOptions getThrusterParticleType() {
-		return ParticleTypes.ASH;
-	}
+    @Override
+    protected ParticleOptions getThrusterParticleType() {
+        return VSCHParticleTypes.AIR_THRUST.get();
+    }
 
-	@Override
-	protected ParticleOptions getThrusterSmokeParticleType() {
-		return ParticleTypes.ASH;
-	}
+    @Override
+    protected ParticleOptions getThrusterSmokeParticleType() {
+        return VSCHParticleTypes.AIR_THRUST.get();
+    }
 
 	@Override
 	protected double getEvaporateDistance() {

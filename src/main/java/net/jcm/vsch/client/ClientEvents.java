@@ -19,19 +19,16 @@ package net.jcm.vsch.client;
 import net.jcm.vsch.items.IToggleableItem;
 import net.jcm.vsch.items.custom.MagnetBootItem;
 
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)

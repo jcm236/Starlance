@@ -19,13 +19,12 @@ import net.jcm.vsch.VSCHTags;
 import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
+import net.jcm.vsch.client.VSCHParticleTypes;
 import net.jcm.vsch.config.VSCHServerConfig;
-import net.lointain.cosmos.init.CosmosModParticleTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -55,10 +54,10 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		);
 	}
 
-	@Override
-	protected ParticleOptions getThrusterParticleType() {
-		return ParticleTypes.ASH;
-	}
+    @Override
+    protected ParticleOptions getThrusterParticleType() {
+        return VSCHParticleTypes.BLUETHRUSTED.get();
+    }
 
 	@Override
 	protected double getEvaporateDistance() {
