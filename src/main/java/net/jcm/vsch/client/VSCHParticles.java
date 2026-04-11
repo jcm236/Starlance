@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.Mod;
 public class VSCHParticles {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(VSCHParticleTypes.THRUSTED.get(), ThrustParticle::provider);
-        event.registerSpriteSet(VSCHParticleTypes.BLUETHRUSTED.get(), ThrustParticle::provider);
-        event.registerSpriteSet(VSCHParticleTypes.AIR_THRUST.get(), AirThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.THRUST.get(), ThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.THRUST_BLUE.get(), ThrustParticle::provider);
+        event.registerSpriteSet(VSCHParticleTypes.THRUST_AIR.get(), AirThrustParticle::provider);
         event.registerSpriteSet(VSCHParticleTypes.THRUST_SMOKE.get(), SmokeParticle::provider);
     }
 }

@@ -19,11 +19,9 @@ import net.jcm.vsch.blocks.thruster.AbstractThrusterBlockEntity;
 import net.jcm.vsch.blocks.thruster.ThrusterEngine;
 import net.jcm.vsch.blocks.thruster.ThrusterEngineContext;
 import net.jcm.vsch.client.VSCHParticleTypes;
-import net.lointain.cosmos.init.CosmosModParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -57,12 +55,12 @@ public class CreativeThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
     @Override
     protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.AIR_THRUST.get();
+        return VSCHParticleTypes.THRUST_AIR.get();
     }
 
     @Override
     protected ParticleOptions getThrusterSmokeParticleType() {
-        return VSCHParticleTypes.AIR_THRUST.get();
+        return VSCHParticleTypes.THRUST_AIR.get();
     }
 
 	@Override

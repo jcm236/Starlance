@@ -68,7 +68,7 @@ public class DragInducerScene {
 		scene.world().toggleRedstonePower(util.select().fromTo(button, button));
 
 		scene.world().moveSection(baseplate, util.vector().of(-20, 0, 0), 50);
-		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 2.5), scene.effects().simpleParticleEmitter(VSCHParticleTypes.THRUSTED.get(), new Vec3(-10, 0, 0)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 2.5), scene.effects().simpleParticleEmitter(VSCHParticleTypes.THRUST.get(), new Vec3(-10, 0, 0)), 2, 10);
 
 		scene.idle(50);
 
@@ -113,7 +113,7 @@ public class DragInducerScene {
 		scene.idle(10);
 
 		scene.world().toggleRedstonePower(util.select().fromTo(button, button));
-		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 2.5), scene.effects().simpleParticleEmitter(VSCHParticleTypes.THRUSTED.get(), new Vec3(-10, 0, 0)), 2, 10);
+		scene.effects().emitParticles(util.vector().of(1.5, 1.5, 2.5), scene.effects().simpleParticleEmitter(VSCHParticleTypes.THRUST.get(), new Vec3(-10, 0, 0)), 2, 10);
 
 
 		for (int i = 0; i < 20; i++) {

@@ -58,12 +58,12 @@ public class AirThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
     @Override
     protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.AIR_THRUST.get();
+        return VSCHParticleTypes.THRUST_AIR.get();
     }
 
     @Override
     protected ParticleOptions getThrusterSmokeParticleType() {
-        return VSCHParticleTypes.AIR_THRUST.get();
+        return VSCHParticleTypes.THRUST_AIR.get();
     }
 
 	@Override

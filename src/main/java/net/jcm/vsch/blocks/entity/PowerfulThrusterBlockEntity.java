@@ -56,7 +56,7 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 
     @Override
     protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.BLUETHRUSTED.get();
+        return VSCHParticleTypes.THRUST_BLUE.get();
     }
 
 	@Override
