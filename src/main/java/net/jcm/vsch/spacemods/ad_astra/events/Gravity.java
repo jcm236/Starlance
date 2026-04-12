@@ -44,7 +44,7 @@ public class Gravity {
 			VSGameUtilsKt.getDimensionId(level),
 			new Vector3d(0, gravity, 0),
 			null,
-			OxygenApiImpl.API.hasOxygen(level) ? -1.0 : null
+			!OxygenApiImpl.API.hasOxygen(level) ? -1.0 : null
 		);
 	}
 }
