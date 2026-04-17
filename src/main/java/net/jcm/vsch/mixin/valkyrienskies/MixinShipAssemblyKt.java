@@ -44,7 +44,7 @@ public class MixinShipAssemblyKt {
 	// Goofy ahhh temporary fix but it'll atleast help out the kids who don't know not to do this
 	@Inject(method = "assembleToShipFull", at = @At(value = "INVOKE", target = "Lorg/valkyrienskies/core/internal/world/VsiServerShipWorld;createNewShipAtBlock(Lorg/joml/Vector3ic;ZDLjava/lang/String;)Lorg/valkyrienskies/core/api/ships/ServerShip;"), remap = false, cancellable = true)
 	private static void assembleToShipFull(ServerLevel level, Set<? extends BlockPos> blocks, double scale, CallbackInfoReturnable<ShipAssembler.AssembleContext> cir, @Local(name = "fromCenter") Vector3d fromCenter) {
-        // If block is higher than overworld height
+		// If block is higher than overworld height
 		if (fromCenter.y() > VSGameUtilsKt.getYRange(level).getMaxY()) {
 			if (VSCHServerConfig.CANCEL_ASSEMBLY.get()) {
 				level.getServer().getPlayerList().broadcastSystemMessage(

@@ -9,15 +9,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(
-        bus = Mod.EventBusSubscriber.Bus.MOD,
-        value = {Dist.CLIENT}
+	value = Dist.CLIENT,
+	bus = Mod.EventBusSubscriber.Bus.MOD
 )
 public class VSCHParticles {
-    @SubscribeEvent
-    public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(VSCHParticleTypes.THRUST.get(), ThrustParticle::provider);
-        event.registerSpriteSet(VSCHParticleTypes.THRUST_BLUE.get(), ThrustParticle::provider);
-        event.registerSpriteSet(VSCHParticleTypes.THRUST_AIR.get(), AirThrustParticle::provider);
-        event.registerSpriteSet(VSCHParticleTypes.THRUST_SMOKE.get(), SmokeParticle::provider);
-    }
+	@SubscribeEvent
+	public static void registerParticles(RegisterParticleProvidersEvent event) {
+		event.registerSpriteSet(VSCHParticleTypes.THRUST.get(), ThrustParticle::provider);
+		event.registerSpriteSet(VSCHParticleTypes.THRUST_BLUE.get(), ThrustParticle::provider);
+		event.registerSpriteSet(VSCHParticleTypes.THRUST_AIR.get(), AirThrustParticle::provider);
+		event.registerSpriteSet(VSCHParticleTypes.THRUST_SMOKE.get(), SmokeParticle::provider);
+	}
 }

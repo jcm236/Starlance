@@ -9,13 +9,13 @@ import net.minecraft.world.item.ItemStack;
 
 @JeiPlugin
 public class VSCHJEIPlugin implements IModPlugin {
-    @Override
-    public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath("vsch", "jei_plugin");
-    }
+	@Override
+	public ResourceLocation getPluginUid() {
+		return ResourceLocation.fromNamespaceAndPath("vsch", "jei_plugin");
+	}
 
-    @Override
-    public void registerExtraIngredients(IExtraIngredientRegistration registration) {
-        registration.addExtraItemStacks(VSCHBlocks.TIER_BLOCKS.stream().map(reg -> new ItemStack(reg.get().asItem())).toList());
-    }
+	@Override
+	public void registerExtraIngredients(IExtraIngredientRegistration registration) {
+		registration.addExtraItemStacks(VSCHBlocks.TIER_BLOCKS.stream().map(reg -> new ItemStack(reg.get().asItem())).toList());
+	}
 }

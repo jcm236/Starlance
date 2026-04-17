@@ -54,10 +54,10 @@ public class PowerfulThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		);
 	}
 
-    @Override
-    protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.THRUST_BLUE.get();
-    }
+	@Override
+	protected ParticleOptions getThrusterParticleType() {
+		return VSCHParticleTypes.THRUST_BLUE.get();
+	}
 
 	@Override
 	protected double getEvaporateDistance() {

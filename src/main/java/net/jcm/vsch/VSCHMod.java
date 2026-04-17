@@ -67,7 +67,7 @@ public class VSCHMod {
 		VSCHServerConfig.register(context);
 		VSCHTab.register(modBus);
 		VSCHTags.register();
-        VSCHParticleTypes.register(modBus);
+		VSCHParticleTypes.register(modBus);
 
 		// Register commands (I took this code from another one of my mods, can't be bothered to make it consistent with the rest of this)
 		MinecraftForge.EVENT_BUS.register(ModCommands.class);

@@ -15,7 +15,6 @@
  **/
 package net.jcm.vsch.spacemods.ad_astra.events;
 
-import net.jcm.vsch.config.VSCHCommonConfig;
 import net.jcm.vsch.config.VSCHServerConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent;
@@ -29,7 +28,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class EventsWithAD {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
-        if (VSCHServerConfig.DISABLE_TELEPORT.get()) return;
+		if (VSCHServerConfig.DISABLE_TELEPORT.get()) {
+			return;
+		}
 		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
@@ -43,7 +44,7 @@ public class EventsWithAD {
 	}
 
 	@SubscribeEvent
-	public static void onLevelLoad(LevelEvent.Load event) {
+	public static void onLevelLoad(final LevelEvent.Load event) {
 		if (event.getLevel() instanceof final ServerLevel level) {
 			Gravity.updateFor(level);
 		}

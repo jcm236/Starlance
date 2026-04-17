@@ -53,15 +53,15 @@ public class CreativeThrusterBlockEntity extends AbstractThrusterBlockEntity {
 		return this.new CreativeThrusterEngine();
 	}
 
-    @Override
-    protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.THRUST_AIR.get();
-    }
+	@Override
+	protected ParticleOptions getThrusterParticleType() {
+		return VSCHParticleTypes.THRUST_AIR.get();
+	}
 
-    @Override
-    protected ParticleOptions getThrusterSmokeParticleType() {
-        return VSCHParticleTypes.THRUST_AIR.get();
-    }
+	@Override
+	protected ParticleOptions getThrusterSmokeParticleType() {
+		return VSCHParticleTypes.THRUST_AIR.get();
+	}
 
 	@Override
 	protected double getEvaporateDistance() {
@@ -109,7 +109,7 @@ public class CreativeThrusterBlockEntity extends AbstractThrusterBlockEntity {
 			);
 		}
 		super.onFocusWithWrench(stack, level, player);
- 	}
+	}
 
 	private final class CreativeThrusterEngine extends ThrusterEngine {
 

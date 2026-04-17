@@ -346,13 +346,13 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 		);
 	}
 
-    protected ParticleOptions getThrusterParticleType() {
-        return VSCHParticleTypes.THRUST.get();
-    }
+	protected ParticleOptions getThrusterParticleType() {
+		return VSCHParticleTypes.THRUST.get();
+	}
 
-    protected ParticleOptions getThrusterSmokeParticleType() {
-        return VSCHParticleTypes.THRUST_SMOKE.get();
-    }
+	protected ParticleOptions getThrusterSmokeParticleType() {
+		return VSCHParticleTypes.THRUST_SMOKE.get();
+	}
 
 	protected abstract double getEvaporateDistance();
 
@@ -436,7 +436,7 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity implements
 			final Vec3 ppos = waterCenter.offsetRandom(level.random, 1.0f);
 			final Vec3 speed = Vec3.ZERO.offsetRandom(level.random, 0.5f);
 			level.addParticle(
-                VSCHParticleTypes.THRUST_AIR.get(),
+				VSCHParticleTypes.THRUST_AIR.get(),
 				true,
 				ppos.x, ppos.y, ppos.z,
 				speed.x, speed.y, speed.z

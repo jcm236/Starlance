@@ -31,12 +31,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * This class will only be registered to the forge event bus if cosmic horizons is loaded
  */
 public class EventsWithCH {
-
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onLevelTick(final TickEvent.LevelTickEvent event) {
-        if (VSCHServerConfig.DISABLE_TELEPORT.get()) return;
-
-        if (!(event.level instanceof ServerLevel serverLevel)) {
+		if (VSCHServerConfig.DISABLE_TELEPORT.get()) {
+			return;
+		}
+		if (!(event.level instanceof ServerLevel serverLevel)) {
 			return;
 		}
 		switch (event.phase) {
@@ -50,9 +50,9 @@ public class EventsWithCH {
 	}
 
 	@SubscribeEvent
-	public static void onLevelLoad(LevelEvent.Load event) {
+	public static void onLevelLoad(final LevelEvent.Load event) {
 		if (event.getLevel() instanceof final ServerLevel level) {
-            Gravity.updateFor(level);
+			Gravity.updateFor(level);
 		}
 	}
 
