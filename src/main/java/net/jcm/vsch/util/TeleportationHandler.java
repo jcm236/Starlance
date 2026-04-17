@@ -21,8 +21,6 @@ import net.jcm.vsch.ship.ShipLandingAttachment;
 
 import com.github.litermc.vtil.api.connectivity.ShipConnectivityApi;
 import com.github.litermc.vtil.api.teleport.TeleportUtil;
-import com.github.litermc.vtil.util.ShipQuerier;
-import com.github.litermc.vtil.util.TaskUtil;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
@@ -43,11 +41,9 @@ import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBdc;
 import org.joml.primitives.AABBic;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.internal.ShipTeleportData;
 import org.valkyrienskies.core.internal.physics.PhysicsEntityServer;
-import org.valkyrienskies.core.internal.world.VsiPhysLevel;
 import org.valkyrienskies.core.internal.world.VsiServerShipWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
@@ -58,7 +54,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 public class TeleportationHandler {
 
@@ -75,7 +70,6 @@ public class TeleportationHandler {
 	private ServerLevel newLevel;
 	private String oldLevelId;
 	private final boolean isReturning;
-	private final List<CompletableFuture<Void>> addingShips = new ArrayList<>();
 
 	public TeleportationHandler(final ServerLevel oldLevel, final ServerLevel newLevel, final boolean isReturning) {
 		this.shipWorld = newLevel == null ? null : VSGameUtilsKt.getShipObjectWorld(newLevel);
@@ -97,7 +91,7 @@ public class TeleportationHandler {
 	}
 
 	public boolean addedShip() {
-		return !this.addingShips.isEmpty();
+		return !this.ships.isEmpty();
 	}
 
 	public boolean hasShip(final ServerShip ship) {
@@ -116,25 +110,14 @@ public class TeleportationHandler {
 		this.greatestOffset = 0;
 		final List<Long> collected = new ArrayList<>();
 		final Vector3dc origin = ship.getTransform().getPositionInWorld();
-		this.addingShips.add(
-			this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected)
-				.thenAcceptAsync((void_) -> {
-					this.collectNearbyEntities(collected, origin, newPos, rotation);
-					this.finalizeCollect(collected, rotation);
-				}, this.oldLevel.getServer())
-		);
+		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, velocity, omega, collected);
+		this.collectNearbyEntities(collected, origin, newPos, rotation);
+		this.finalizeCollect(collected, rotation);
 	}
 
 	private LoadedServerShip getOldShip(final long id) {
 		final LoadedServerShip ship = this.shipWorld.getLoadedShips().getById(id);
 		return ship != null && ship.getChunkClaimDimension().equals(this.oldLevelId) ? ship : null;
-	}
-
-	public CompletableFuture<Void> afterShipsAdded() {
-		if (this.addingShips.isEmpty()) {
-			return CompletableFuture.completedFuture(null);
-		}
-		return CompletableFuture.allOf(this.addingShips.toArray(new CompletableFuture[this.addingShips.size()]));
 	}
 
 	public List<LoadedServerShip> getPendingShips() {
@@ -229,11 +212,11 @@ public class TeleportationHandler {
 		);
 	}
 
-	private CompletableFuture<Void> collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation, final List<Long> collected) {
-		return this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, null, null, collected);
+	private void collectShipAndConnected(final long shipId, final Vector3dc origin, final Vector3dc newPos, final Quaterniondc rotation, final List<Long> collected) {
+		this.collectShipAndConnectedWithVelocity(shipId, origin, newPos, rotation, null, null, collected);
 	}
 
-	private CompletableFuture<Void> collectShipAndConnectedWithVelocity(
+	private void collectShipAndConnectedWithVelocity(
 		final long shipId,
 		final Vector3dc origin,
 		final Vector3dc newPos,
@@ -242,55 +225,44 @@ public class TeleportationHandler {
 		final Vector3dc omega,
 		final List<Long> collected
 	) {
-		final CompletableFuture<long[]> connectivityFuture = new CompletableFuture<>();
-		final CompletableFuture<Void> collectFuture = connectivityFuture.thenAcceptAsync((shipIds) -> {
-			final Vector3d velocityDiff = velocity == null ? null : new Vector3d();
-			this.collectShipWithVelocity(shipId, origin, newPos, rotation, velocity, omega, velocityDiff, collected);
-			for (final long sId : shipIds) {
-				this.collectShipWithVelocity(sId, origin, newPos, rotation, null, null, velocityDiff, collected);
-			}
-		}, this.oldLevel.getServer());
-		TaskUtil.queuePhysicsTick(this.oldLevel, (world0) -> {
-			final VsiPhysLevel world = (VsiPhysLevel) world0;
-			final List<PhysShip> ships = new ArrayList<>();
-			ships.add(world.getShipById(shipId));
-			this.collectConnectedAndNearbyShips(world, ships);
-			connectivityFuture.complete(ships.stream().mapToLong(PhysShip::getId).filter((id) -> id != shipId).toArray());
-		});
-		return collectFuture;
+		final List<LoadedServerShip> ships = new ArrayList<>();
+		ships.add(this.shipWorld.getLoadedShips().getById(shipId));
+		this.collectConnectedAndNearbyShips(ships);
+		final long[] shipIds = ships.stream().mapToLong(LoadedServerShip::getId).filter((id) -> id != shipId).toArray();
+		final Vector3d velocityDiff = velocity == null ? null : new Vector3d();
+		this.collectShipWithVelocity(shipId, origin, newPos, rotation, velocity, omega, velocityDiff, collected);
+		for (final long sId : shipIds) {
+			this.collectShipWithVelocity(sId, origin, newPos, rotation, null, null, velocityDiff, collected);
+		}
 	}
 
 	private void collectConnectedAndNearbyShips(
-		final VsiPhysLevel world,
-		final List<PhysShip> physShips
+		final List<LoadedServerShip> ships
 	) {
-		final Set<PhysShip> physShipSet = new HashSet<>(physShips);
-		final Set<PhysShip> connectedShips = new HashSet<>();
-		final List<PhysShip> intersectShips = new ArrayList<>();
+		final Set<LoadedServerShip> shipSet = new HashSet<>(ships);
+		final List<LoadedServerShip> intersectShips = new ArrayList<>();
 		// Note: collected list will grow during the loop
-		for (int i = 0; i < physShips.size(); i++) {
-			final PhysShip ship = physShips.get(i);
-			final AABBdc shipBox = ShipQuerier.getShipWorldBox(ship);
+		for (int i = 0; i < ships.size(); i++) {
+			final LoadedServerShip ship = ships.get(i);
+			final AABBdc shipBox = ship.getWorldAABB();
 			final AABBd box = new AABBd(
 				shipBox.minX() - SHIP_COLLECT_RANGE, shipBox.minY() - SHIP_COLLECT_RANGE, shipBox.minZ() - SHIP_COLLECT_RANGE,
 				shipBox.maxX() + SHIP_COLLECT_RANGE, shipBox.maxY() + SHIP_COLLECT_RANGE, shipBox.maxZ() + SHIP_COLLECT_RANGE
 			);
-			ShipConnectivityApi.getAllConnectedShipsAndSelf(world, ship.getId(), connectedShips);
-			for (final PhysShip other : connectedShips) {
-				if (physShipSet.add(other)) {
-					physShips.add(other);
+			final Set<LoadedServerShip> connectedShips = ShipConnectivityApi.getAllConnectedShipsAndSelf(ship);
+			for (final LoadedServerShip other : connectedShips) {
+				if (shipSet.add(other)) {
+					ships.add(other);
 				}
 			}
 			connectedShips.clear();
-			ShipQuerier.getIntersecting(
-				world,
-				this.oldLevelId,
-				box,
-				(other) -> !physShipSet.contains(other),
-				intersectShips
-			);
-			physShipSet.addAll(intersectShips);
-			physShips.addAll(intersectShips);
+			for (LoadedServerShip other : this.shipWorld.getLoadedShips().getIntersecting(box, this.oldLevelId)) {
+				if (!shipSet.contains(other)) {
+					intersectShips.add(other);
+				}
+			}
+			shipSet.addAll(intersectShips);
+			ships.addAll(intersectShips);
 			intersectShips.clear();
 		}
 	}

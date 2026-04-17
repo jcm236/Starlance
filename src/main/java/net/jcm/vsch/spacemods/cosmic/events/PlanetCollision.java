@@ -223,13 +223,11 @@ public class PlanetCollision {
 		}
 
 		for (final TeleportationHandler handler : handlers.values()) {
-			handler.afterShipsAdded().thenAcceptAsync((void_) -> {
-				for (final LoadedServerShip ship : handler.getPendingShips()) {
-					final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-					attachment.setLanding();
-				}
-				handler.finalizeTeleport();
-			}, level.getServer());
+			for (final LoadedServerShip ship : handler.getPendingShips()) {
+				final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+				attachment.setLanding();
+			}
+			handler.finalizeTeleport();
 		}
 
 		if (VSCHCommonConfig.SHOW_ENTERING_PLANET_HINT.get()) {

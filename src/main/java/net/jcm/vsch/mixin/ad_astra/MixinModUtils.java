@@ -40,13 +40,11 @@ public abstract class MixinModUtils {
 
 		final TeleportationHandler handler = new TeleportationHandler(oldLevel, targetLevel, false);
 		handler.addShipWithVelocity(serverShip, new Vector3d(pos.x, pos.y, pos.z), serverShip.getTransform().getRotation(), newVelocity, null);
-		handler.afterShipsAdded().thenAcceptAsync((void_) -> {
-			for (final LoadedServerShip ship : handler.getPendingShips()) {
-				final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
-				attachment.setLanding();
-			}
-			handler.finalizeTeleport();
-		}, targetLevel.getServer());
+		for (final LoadedServerShip ship : handler.getPendingShips()) {
+			final ShipLandingAttachment attachment = ShipLandingAttachment.get(ship);
+			attachment.setLanding();
+		}
+		handler.finalizeTeleport();
 		ci.cancel();
 	}
 }

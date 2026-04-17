@@ -105,13 +105,11 @@ public class AtmosphericCollision {
 		if (!teleportHandler.addedShip()) {
 			return;
 		}
-		teleportHandler.afterShipsAdded().thenAcceptAsync((void_) -> {
-			for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
-				final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
-				final Vector3dc pos = ship.getTransform().getPositionInWorld();
-				landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
-			}
-			teleportHandler.finalizeTeleport();
-		}, level.getServer());
+		for (final LoadedServerShip ship : teleportHandler.getPendingShips()) {
+			final ShipLandingAttachment landingAttachment = ShipLandingAttachment.get(ship);
+			final Vector3dc pos = ship.getTransform().getPositionInWorld();
+			landingAttachment.setLaunching(dimension, new ChunkPos(SectionPos.blockToSectionCoord(pos.x()), SectionPos.blockToSectionCoord(pos.z())));
+		}
+		teleportHandler.finalizeTeleport();
 	}
 }
