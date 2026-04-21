@@ -15,6 +15,7 @@
  **/
 package net.jcm.vsch.blocks.entity;
 
+import com.github.litermc.vsmecha.util.ShipPeripheralHolder;
 import dan200.computercraft.shared.Capabilities;
 
 import net.jcm.vsch.blocks.custom.MagnetBlock;
@@ -85,6 +86,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
 	private final MagnetEnergyStorage energyStorage = new MagnetEnergyStorage(VSCHServerConfig.MAGNET_BLOCK_CONSUME_ENERGY.get().intValue());
+	private final Object /*ShipPeripheralHolder*/ shipPeripheralHolder = CompatMods.VSMECHA.isLoaded() ? new ShipPeripheralHolder(this, () -> null) : null;
 
 	private Map<MagnetBlockEntity, DuoVector3d> cachedForces = new HashMap<>();
 
@@ -271,16 +273,41 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 	}
 
 	@Override
+	public void setLevel(Level level) {
+		super.setLevel(level);
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		if (CompatMods.VSMECHA.isLoaded()) {
+			((ShipPeripheralHolder) this.shipPeripheralHolder).onSetLevel(serverLevel);
+		}
+	}
+
+	@Override
+	public void setRemoved() {
+		super.setRemoved();
+		if (CompatMods.VSMECHA.isLoaded()) {
+			((ShipPeripheralHolder) this.shipPeripheralHolder).onRemove();
+		}
+	}
+
+	@Override
 	public void saveAdditional(final CompoundTag tag) {
 		super.saveAdditional(tag);
 		tag.putFloat("Power", this.power);
 		tag.putInt("StoredEnergy", this.energyStorage.stored);
+		if (CompatMods.VSMECHA.isLoaded()) {
+			((ShipPeripheralHolder) this.shipPeripheralHolder).save(tag);
+		}
 	}
 
 	@Override
 	public void load(final CompoundTag tag) {
 		this.power = tag.getFloat("Power");
 		this.energyStorage.stored = tag.getInt("StoredEnergy");
+		if (CompatMods.VSMECHA.isLoaded()) {
+			((ShipPeripheralHolder) this.shipPeripheralHolder).load(tag);
+		}
 		super.load(tag);
 	}
 

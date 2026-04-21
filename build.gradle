@@ -94,11 +94,11 @@ repositories {
 		}
 	}
 
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
+	maven {
+		// location of the maven that hosts JEI files
+		name = "Progwml6 maven"
+		url = "https://dvs1.progwml6.com/files/maven/"
+	}
 
 	maven {
 		name = "Modrinth Maven"
@@ -172,23 +172,23 @@ repositories {
 		}
 	}
 
-    maven {
-        url "https://maven.resourcefulbees.com/repository/maven-public/"
-    }
+	maven {
+		url "https://maven.resourcefulbees.com/repository/maven-public/"
+	}
 }
 
 def spaceMod(String mod) {
-    dependencies.add("modCompileOnly", mod)
-    if (project.runtime_space_mod.toString().trim() == mod.split(":")[1]) {
-        dependencies.add("modRuntimeOnly", mod) { transitive = true }
-    }
+	dependencies.add("modCompileOnly", mod)
+	if (project.runtime_space_mod.toString().trim() == mod.split(":")[1]) {
+		dependencies.add("modRuntimeOnly", mod) { transitive = true }
+	}
 }
 
 def spaceModDep(String mod, String runWith) {
-    dependencies.add("compileOnlyApi", mod)
-    if (project.runtime_space_mod.toString().trim() == runWith) {
-        dependencies.add("modRuntimeOnly", mod) { transitive = true }
-    }
+	dependencies.add("compileOnlyApi", mod)
+	if (project.runtime_space_mod.toString().trim() == runWith) {
+		dependencies.add("modRuntimeOnly", mod) { transitive = true }
+	}
 }
 
 dependencies {
@@ -203,8 +203,8 @@ dependencies {
 	}
 	// endregion
 
-    //modImplementation("curse.maven:vs-tournament-reforged:1.0.0")
-    modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.2")
+	//modImplementation("curse.maven:vs-tournament-reforged:1.0.0")
+	modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.2")
 
 	// region Valkyrien Skies
 	implementation("org.valkyrienskies.core:api:${vs_core_version}") { transitive = false
@@ -239,16 +239,16 @@ dependencies {
 		}
 	}
 
-    modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.3")
+	modCompileOnly("maven.modrinth:vs-tournament-reforged:1.0.3")
 
-    spaceMod("maven.modrinth:ad-astra:${ad_astra_version}")
-    spaceMod("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
+	spaceMod("maven.modrinth:ad-astra:${ad_astra_version}")
+	spaceMod("maven.modrinth:cosmic-horizons-cosmos:${cosmos_version}")
 
-    spaceModDep("earth.terrarium.botarium:botarium-forge-${minecraft_version}:2.3.3", "ad-astra")
-    spaceModDep("com.teamresourceful.resourcefullib:resourcefullib-forge-${minecraft_version}:2.1.23", "ad-astra")
-    spaceModDep("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-${minecraft_version}:2.1.2", "ad-astra")
+	spaceModDep("earth.terrarium.botarium:botarium-forge-${minecraft_version}:2.3.3", "ad-astra")
+	spaceModDep("com.teamresourceful.resourcefullib:resourcefullib-forge-${minecraft_version}:2.1.23", "ad-astra")
+	spaceModDep("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-${minecraft_version}:2.1.2", "ad-astra")
 
-    // endregion
+	// endregion
 
 	// region Compat deps
 
@@ -269,9 +269,13 @@ dependencies {
 	modRuntimeOnly("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
 	modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    // JEI compat for making the tier blocks show up
-    modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    modImplementation("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+	// VS Mecha
+	modImplementation("com.github.litermc.vsmecha:VSMecha-forge-${minecraft_version}:${vsmecha_version}")
+
+	// JEI compat for making the tier blocks show up
+	modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+	modImplementation("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
 	// endregion
 }
 

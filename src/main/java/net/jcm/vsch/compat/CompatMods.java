@@ -26,7 +26,8 @@ public enum CompatMods {
 	COSMIC("cosmos"),
 	CREATE("create"),
 	CURIOS("curios"),
-	JADE("jade");
+	JADE("jade"),
+	VSMECHA("vsmecha");
 
 	private final String modId;
 
