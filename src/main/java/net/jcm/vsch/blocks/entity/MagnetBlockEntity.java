@@ -86,7 +86,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 
 	private LazyOptional<Object> lazyPeripheral = LazyOptional.empty();
 	private final MagnetEnergyStorage energyStorage = new MagnetEnergyStorage(VSCHServerConfig.MAGNET_BLOCK_CONSUME_ENERGY.get().intValue());
-	private final Object /*ShipPeripheralHolder*/ shipPeripheralHolder = CompatMods.VSMECHA.isLoaded() ? new ShipPeripheralHolder(this, () -> null) : null;
+	private final Object /*ShipPeripheralHolder*/ shipPeripheralHolder = isVSMechaAndCCLoaded() ? new ShipPeripheralHolder(this, () -> null) : null;
 
 	private Map<MagnetBlockEntity, DuoVector3d> cachedForces = new HashMap<>();
 
@@ -278,7 +278,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 		if (!(level instanceof ServerLevel serverLevel)) {
 			return;
 		}
-		if (CompatMods.VSMECHA.isLoaded()) {
+		if (isVSMechaAndCCLoaded()) {
 			((ShipPeripheralHolder) this.shipPeripheralHolder).onSetLevel(serverLevel);
 		}
 	}
@@ -286,7 +286,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		if (CompatMods.VSMECHA.isLoaded()) {
+		if (isVSMechaAndCCLoaded()) {
 			((ShipPeripheralHolder) this.shipPeripheralHolder).onRemove();
 		}
 	}
@@ -296,7 +296,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 		super.saveAdditional(tag);
 		tag.putFloat("Power", this.power);
 		tag.putInt("StoredEnergy", this.energyStorage.stored);
-		if (CompatMods.VSMECHA.isLoaded()) {
+		if (isVSMechaAndCCLoaded()) {
 			((ShipPeripheralHolder) this.shipPeripheralHolder).save(tag);
 		}
 	}
@@ -305,7 +305,7 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 	public void load(final CompoundTag tag) {
 		this.power = tag.getFloat("Power");
 		this.energyStorage.stored = tag.getInt("StoredEnergy");
-		if (CompatMods.VSMECHA.isLoaded()) {
+		if (isVSMechaAndCCLoaded()) {
 			((ShipPeripheralHolder) this.shipPeripheralHolder).load(tag);
 		}
 		super.load(tag);
@@ -524,6 +524,10 @@ public class MagnetBlockEntity extends BlockEntityWithEntity<MagnetEntity> imple
 	private static float getPowerByRedstone(Level level, BlockPos pos) {
 		int signal = level.getBestNeighborSignal(pos);
 		return signal == 0 ? -1 : (float)(signal - 1) / 14 * 2 - 1;
+	}
+
+	private static boolean isVSMechaAndCCLoaded() {
+		return CompatMods.VSMECHA.isLoaded() && CompatMods.COMPUTERCRAFT.isLoaded();
 	}
 
 	private class MagnetEnergyStorage implements IEnergyStorage {
