@@ -22,7 +22,10 @@ import net.minecraft.server.level.ServerLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.joml.Math;
 import org.joml.Vector3d;
+import org.valkyrienskies.core.api.util.AerodynamicUtils;
+import org.valkyrienskies.core.api.world.LevelYRange;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 /**
@@ -30,7 +33,6 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
  */
 public class Gravity {
 	private static final Logger LOGGER = LogManager.getLogger(VSCHMod.MODID);
-	private static final Double NEG1D = Double.valueOf(-1);
 
 	/**
 	 * Update the gravity for the target dimension as defined in the datapacks.
@@ -47,7 +49,7 @@ public class Gravity {
 				VSGameUtilsKt.getDimensionId(level),
 				new Vector3d(0, gravity, 0),
 				null,
-				data.isSpace() ? NEG1D : null
+				getAtmoHeightFromFriction(level, data.getFriction())
 			);
 		} catch (Exception e) {
 			LOGGER.error("[starlance]: Failed to set gravity for dimension " + dimId, e);
@@ -55,4 +57,22 @@ public class Gravity {
 		}
 		LOGGER.info("[starlance]: Set gravity for dimension " + dimId + " to " + gravity);
 	}
+
+    private static Double getAtmoHeightFromFriction(ServerLevel level, double friction) {
+        // invert friction (CH does it wrong)
+        friction = (1 - friction);
+
+        // If friction is 1 (aka overworld/default), we just return null, so that datapack system can set the maxY instead of us
+        if (friction == 1) return null;
+
+        // If friction is 0 (aka space), we just return -1 so no atmosphere
+        if (friction == 0) return -1d;
+
+        double maxY = AerodynamicUtils.DEFAULT_MAX;
+        double minY = AerodynamicUtils.DEFAULT_SEA_LEVEL;
+
+        // Friction (in range of 0=space 1=overworld) multiplied by (maxY + |minY|)-|minY| to make it effect atmosphereY
+        // so that 0=atmosphere y is minY, and 1=atmosphere y is maxY.
+        return (friction * (maxY-minY))+minY;
+    }
 }

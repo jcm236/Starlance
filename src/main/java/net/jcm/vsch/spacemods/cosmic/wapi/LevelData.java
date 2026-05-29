@@ -43,7 +43,7 @@ public class LevelData {
 	private final ResourceKey<Level> dimension;
 	private final String type;
 	private double gravity = 1;
-	private double friction = 0.98;
+	private double friction = 0;
 
 	private ResourceKey<Level> upperDimension = null;
 	private double atmosphereY = 0;
