@@ -20,4 +20,4 @@ Planned features:
 
 ## Contributing
 We welcome contributions, and will generally approve PR's if we agree with their features.
-Please read [the contributing guide](CONTRIBUTING.md) for more info
+Please read [the contributing guide](CONTRIBUTING.md) for more info.
